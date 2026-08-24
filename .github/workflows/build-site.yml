@@ -21,6 +21,8 @@ on:
       - "**/*.html"
       - "content/log/**"
       - "llms.txt"
+      - "feed.xml"
+      - "sitemap.xml"
       - "scripts/build_site.py"
       - ".github/workflows/build-site.yml"
   pull_request:
@@ -28,6 +30,8 @@ on:
       - "**/*.html"
       - "content/log/**"
       - "llms.txt"
+      - "feed.xml"
+      - "sitemap.xml"
       - "scripts/build_site.py"
       - ".github/workflows/build-site.yml"
 
