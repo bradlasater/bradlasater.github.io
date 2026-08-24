@@ -12,9 +12,16 @@ Usage:
 
 Add --commit to create the git commit as well.
 
-The script refuses to touch anything already published: it only ever appends,
-and it re-runs the full validator before writing. That is deliberate — the
-track record's credibility rests on it being impossible to revise quietly.
+The script only ever appends, and re-runs the full validator on the whole
+document before writing, so a bad append never lands on disk.
+
+It does NOT enforce the append-only guarantee — that lives in CI, in
+validate_track_record.py --check-append-only, which compares against git
+history. This script only sees the file in front of it, so a locally tampered
+file will still append cleanly here and be rejected on push. That split is
+deliberate: local tooling is convenience, CI is the guarantee.
+
+Exit codes: 0 ok, 1 refused, 2 could not run.
 """
 
 from __future__ import annotations
@@ -25,31 +32,34 @@ import json
 import pathlib
 import subprocess
 import sys
+from typing import Any
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from validate_track_record import Failure, validate_structure  # noqa: E402
 
-PATH = pathlib.Path("data/track-record.json")
-
-
-def read() -> dict:
-    return json.loads(PATH.read_text())
-
-
-def write(doc: dict) -> None:
-    PATH.write_text(json.dumps(doc, indent=2) + "\n")
+from validate_track_record import (  # noqa: E402
+    DEFAULT_PATH,
+    REPO_ROOT,
+    CannotRun,
+    Failure,
+    load,
+    validate_structure,
+)
 
 
-def append_observation(doc: dict, args: argparse.Namespace) -> str:
-    observations = doc["observations"]
+def write(doc: dict[str, Any], path: pathlib.Path) -> None:
+    path.write_text(json.dumps(doc, indent=2) + "\n")
+
+
+def append_observation(doc: dict[str, Any], args: argparse.Namespace) -> None:
+    observations = doc.setdefault("observations", [])
     date = dt.date.fromisoformat(args.date)
 
     if observations:
         last = dt.date.fromisoformat(observations[-1]["date"])
         if date <= last:
             raise Failure(
-                f"refusing to append {date}: the last published observation is {last}. "
-                "Observations are append-only and strictly ascending."
+                f"refusing to append {date}: the last published observation is "
+                f"{last}. Observations are append-only and strictly ascending."
             )
 
     observations.append(
@@ -66,15 +76,26 @@ def append_observation(doc: dict, args: argparse.Namespace) -> str:
     if doc.get("inception") is None:
         doc["inception"] = args.date
 
-    return f"track record: add {args.date} (nav {args.nav}, mode {args.mode})"
 
-
-def append_mode_change(doc: dict, args: argparse.Namespace) -> str:
+def append_mode_change(doc: dict[str, Any], args: argparse.Namespace) -> None:
     changes = doc.setdefault("mode_changes", [])
     current = changes[-1]["to"] if changes else "paper"
+    date = dt.date.fromisoformat(args.date)
 
     if current == args.mode_change:
         raise Failure(f"mode is already {current!r}; nothing to record")
+
+    # Same bounds the validator applies, checked here so the script fails with
+    # a clear message instead of writing a file it is about to reject.
+    if date > dt.date.today():
+        raise Failure(f"refusing to record a transition dated {date}: it is in the future")
+    if changes:
+        last = dt.date.fromisoformat(changes[-1]["date"])
+        if date <= last:
+            raise Failure(
+                f"refusing to record {date}: the last transition is {last}. "
+                "Transitions are append-only and strictly ascending."
+            )
 
     changes.append(
         {
@@ -84,12 +105,19 @@ def append_mode_change(doc: dict, args: argparse.Namespace) -> str:
             "note": args.note or "",
         }
     )
-    return f"track record: record {current} -> {args.mode_change} on {args.date}"
 
 
-def git_commit(message: str) -> None:
-    subprocess.run(["git", "add", str(PATH)], check=True)
-    subprocess.run(["git", "commit", "-m", message], check=True)
+def git_commit(message: str, path: pathlib.Path) -> None:
+    """Commit only `path`.
+
+    The pathspec matters: a bare `git commit -m` would sweep whatever else
+    happens to be staged into the observation commit, and the value of the
+    history as a timestamp trail depends on those commits staying clean.
+    """
+    subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "commit", "-m", message, "--", str(path)],
+        check=True,
+    )
 
 
 def main() -> int:
@@ -107,6 +135,7 @@ def main() -> int:
     )
     parser.add_argument("--note", help="note attached to a mode change")
     parser.add_argument("--commit", action="store_true", help="git commit the change")
+    parser.add_argument("--path", type=pathlib.Path, default=DEFAULT_PATH)
     args = parser.parse_args()
 
     try:
@@ -120,26 +149,31 @@ def main() -> int:
         return 1
 
     try:
-        doc = read()
-        message = (
+        doc = load(args.path)
+        if args.mode_change:
             append_mode_change(doc, args)
-            if args.mode_change
-            else append_observation(doc, args)
-        )
+            message = f"track record: record transition to {args.mode_change} on {args.date}"
+        else:
+            append_observation(doc, args)
+            message = f"track record: add {args.date} (nav {args.nav}, mode {args.mode})"
+
         # Validate the whole document before it is written, so a bad append
         # never lands on disk.
         notes = validate_structure(doc)
     except Failure as exc:
         print(f"FAIL  {exc}", file=sys.stderr)
         return 1
+    except CannotRun as exc:
+        print(f"ERROR {exc}", file=sys.stderr)
+        return 2
 
-    write(doc)
+    write(doc, args.path)
     print(f"OK    {message}")
     print(f"      {'; '.join(notes)}")
 
     if args.commit:
         try:
-            git_commit(message)
+            git_commit(message, args.path)
         except subprocess.CalledProcessError as exc:
             print(f"FAIL  git commit failed: {exc}", file=sys.stderr)
             return 1

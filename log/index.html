@@ -7,12 +7,21 @@
 <meta name="description" content="A dated research log for my volatility trading system: what I tried, what I expected, what happened, and what I had wrong.">
 <link rel="canonical" href="https://bradlasater.com/log/">
 <meta name="theme-color" content="#14171c">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<link rel="alternate" type="application/atom+xml" title="Brad Lasater — Research Log" href="/feed.xml">
+<link rel="me" href="https://github.com/bradlasater">
+<link rel="me" href="https://www.linkedin.com/in/bradlasater">
 
 <meta property="og:type" content="blog">
 <meta property="og:url" content="https://bradlasater.com/log/">
 <meta property="og:title" content="Research Log — Brad Lasater">
 <meta property="og:description" content="What I tried, what I expected, what happened, and what I had wrong.">
 <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta property="og:site_name" content="Brad Lasater">
+<meta property="og:locale" content="en_US">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:modified_time" content="2026-08-23T22:19:51-06:00">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -20,6 +29,39 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
 <link rel="stylesheet" href="/assets/css/site.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Blog",
+      "@id": "https://bradlasater.com/log/#blog",
+      "url": "https://bradlasater.com/log/",
+      "name": "Research Log — Brad Lasater",
+      "description": "Dated entries on building a systematic volatility trading system: what was tried, what was expected, what happened, and what was wrong. Negative results are entries too.",
+      "inLanguage": "en-US",
+      "dateModified": "2026-08-23T22:19:51-06:00",
+      "author": { "@id": "https://bradlasater.com/#brad" },
+      "publisher": { "@id": "https://bradlasater.com/#brad" },
+      "isPartOf": { "@id": "https://bradlasater.com/#website" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://bradlasater.com/#brad",
+      "name": "Brad Lasater",
+      "url": "https://bradlasater.com/"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://bradlasater.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Research Log" }
+      ]
+    }
+  ]
+}
+</script>
 <script src="/assets/js/analytics.js" defer></script>
 </head>
 <body>
@@ -55,38 +97,36 @@
   <section class="shell shell--narrow section">
 
     <!-- =====================================================================
-         ENTRY TEMPLATE — copy this block, fill it in, and place newest first.
-         Delete the .pending block below once the first real entry ships.
+         Entries are NOT authored here. Each one is a fragment in content/log/,
+         and `python3 scripts/build_site.py` renders it into its own page at
+         /log/<slug>.html, lists it below, and adds it to feed.xml, sitemap.xml,
+         and llms.txt.
 
-    <article class="card" style="margin-bottom: var(--sp-5);">
-      <div class="role__meta">
-        <time class="badge" datetime="2026-09-01">2026-09-01</time>
-        <span class="badge">Surface construction</span>
-      </div>
-      <h2 class="card__title" style="margin-top: var(--sp-3);">
-        Short, specific title — the finding, not the topic
-      </h2>
-      <div class="card__body">
-        <p><strong>Expected:</strong> what I predicted before running it, stated precisely
-           enough to have been wrong.</p>
-        <p><strong>Observed:</strong> what actually happened, with the numbers.</p>
-        <p><strong>Diagnosis:</strong> why. This is the section a hiring manager reads.</p>
-        <p><strong>Changed as a result:</strong> the concrete change to the system or the protocol.</p>
-      </div>
-    </article>
+         Per-entry URLs are the point: retrieval engines return passages, so an
+         entry that shares a URL with twenty others cannot be cited on its own.
 
+         To add an entry, copy content/log/TEMPLATE.html.example and rebuild.
+         Everything between the BUILD markers below is overwritten.
          ===================================================================== -->
 
+    <!-- BUILD:LOG-ENTRIES:START -->
     <div class="pending">
       <strong>No entries yet</strong>
-      The first entries land as the data and surface-construction stages come together. Each one
-      follows the same structure: expected, observed, diagnosis, changed as a result.
+      The first entries land as the data and surface-construction stages come together.
+      Each one follows the same structure: expected, observed, diagnosis, changed as a result.
     </div>
+<!-- BUILD:LOG-ENTRIES:END -->
 
     <div class="actions">
       <a class="btn btn--primary" href="/vol/">The system</a>
       <a class="btn" href="/vol/methodology.html">Evaluation protocol</a>
+      <a class="btn" href="/feed.xml">Atom feed</a>
     </div>
+
+    <p class="muted" style="margin-top: var(--sp-6);">
+      This page was last updated <time class="page-updated__time" datetime="2026-08-23T22:19:51-06:00">August 23, 2026</time>.
+      Entries are never revised silently; a correction is a new dated commit.
+    </p>
 
   </section>
 

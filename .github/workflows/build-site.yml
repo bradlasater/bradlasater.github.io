@@ -1,0 +1,87 @@
+name: Build site metadata
+
+# sitemap.xml, feed.xml, llms.txt, the log entry pages, and every dateModified
+# on the site are derived from the log-entry sources and from git history. This
+# workflow keeps them honest in both directions:
+#
+#   * On a pull request it only CHECKS, so a reviewer sees that the generated
+#     files match their sources before anything merges.
+#   * On the default branch it REBUILDS and commits, so a page edited directly
+#     in the GitHub web UI still ends up with a correct lastmod rather than a
+#     silently stale one.
+#
+# Freshness is a genuine ranking input for search and AI answer engines, which
+# makes a hand-maintained "last updated" an invitation to fabricate one. Every
+# date this workflow writes comes from the commit that actually changed the file.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.html"
+      - "content/log/**"
+      - "llms.txt"
+      - "feed.xml"
+      - "sitemap.xml"
+      - "scripts/build_site.py"
+      - ".github/workflows/build-site.yml"
+  pull_request:
+    paths:
+      - "**/*.html"
+      - "content/log/**"
+      - "llms.txt"
+      - "feed.xml"
+      - "sitemap.xml"
+      - "scripts/build_site.py"
+      - ".github/workflows/build-site.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history: every timestamp is computed from the commit that last
+          # touched the file, so a shallow clone would invent wrong dates.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify generated files are up to date
+        run: python3 scripts/build_site.py --check
+
+  rebuild:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild derived files
+        run: python3 scripts/build_site.py
+
+      - name: Commit if anything changed
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "Nothing to rebuild."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          # This subject line is excluded from the timestamp computation in
+          # build_site.py. Changing it here without changing it there would make
+          # the build chase its own tail and never reach a fixed point.
+          git commit -m "chore: rebuild derived site metadata"
+          git push

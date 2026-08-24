@@ -7,12 +7,21 @@
 <meta name="description" content="The evaluation protocol for my volatility trading system: purged cross-validation, mandatory baselines, cost modelling, deflated performance statistics, and pre-committed kill criteria.">
 <link rel="canonical" href="https://bradlasater.com/vol/methodology.html">
 <meta name="theme-color" content="#14171c">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<link rel="alternate" type="application/atom+xml" title="Brad Lasater — Research Log" href="/feed.xml">
+<link rel="me" href="https://github.com/bradlasater">
+<link rel="me" href="https://www.linkedin.com/in/bradlasater">
 
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bradlasater.com/vol/methodology.html">
 <meta property="og:title" content="Evaluation protocol — fixed before results">
 <meta property="og:description" content="Purged cross-validation, mandatory baselines, modelled costs, deflated Sharpe, and pre-committed kill criteria.">
 <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta property="og:site_name" content="Brad Lasater">
+<meta property="og:locale" content="en_US">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:modified_time" content="2026-08-23T22:19:51-06:00">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -20,6 +29,96 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
 <link rel="stylesheet" href="/assets/css/site.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://bradlasater.com/vol/methodology.html#article",
+      "mainEntityOfPage": "https://bradlasater.com/vol/methodology.html",
+      "headline": "Evaluation protocol for a systematic volatility trading system",
+      "description": "The pre-committed rules for judging a volatility trading system: purged and embargoed cross-validation, mandatory baselines, cost and friction modelling, deflated performance statistics, and kill criteria fixed in advance.",
+      "inLanguage": "en-US",
+      "dateModified": "2026-08-23T22:19:51-06:00",
+      "author": { "@id": "https://bradlasater.com/#brad" },
+      "publisher": { "@id": "https://bradlasater.com/#brad" },
+      "image": "https://bradlasater.com/assets/og.png",
+      "isPartOf": { "@id": "https://bradlasater.com/#website" },
+      "keywords": "purged cross-validation, embargo, deflated Sharpe ratio, probability of backtest overfitting, walk-forward, transaction cost modelling, kill criteria"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://bradlasater.com/vol/methodology.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "@id": "https://bradlasater.com/vol/methodology.html#why",
+          "name": "Why pre-commit to an evaluation protocol before running a backtest?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The failure mode in systematic trading research is not bad mathematics. It is a thousand small, individually reasonable decisions \u2014 a slightly different lookback, a filtered universe, an excluded month \u2014 each made after seeing what it does to the equity curve. The result is a strategy fitted to its own evaluation, which performs beautifully until the moment real money is behind it. The defence is to fix the judging criteria first and count every decision made afterwards." }
+        },
+        {
+          "@type": "Question",
+          "@id": "https://bradlasater.com/vol/methodology.html#data",
+          "name": "What data and universe does the system trade, and how is survivorship bias avoided?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The system trades liquid, listed, optionable US underlyings, and every input is reconstructed as it stood at the decision timestamp rather than as it stands today. Liquidity screens are applied on the date of the decision rather than retrospectively, since selecting today's liquid names and testing them over history is survivorship bias wearing a lab coat. Any field that cannot be reconstructed point-in-time is excluded from the model." }
+        },
+        {
+          "@type": "Question",
+          "@id": "https://bradlasater.com/vol/methodology.html#splitting",
+          "name": "How do you cross-validate a trading strategy without leaking the future?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Standard k-fold cross-validation is invalid on overlapping financial labels, because a position held for three weeks shares information with three weeks of neighbouring observations. This system uses purged k-fold with an embargo for model selection: training observations whose label windows overlap the validation window are purged, and an embargo period after each validation fold is dropped entirely to handle serial correlation. Walk-forward testing produces the reported number, and a final held-out period is used exactly once." }
+        },
+        {
+          "@type": "Question",
+          "@id": "https://bradlasater.com/vol/methodology.html#baselines",
+          "name": "What baselines must a volatility forecast beat before it is allowed to size a position?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Four baselines are mandatory: implied volatility itself as the forecast of realised volatility, HAR-RV on high-frequency realised variance, a GARCH-family conditional variance model, and \u2014 for the strategy as a whole \u2014 naive short-variance carry, unconditionally sized. A learned model that cannot beat HAR-RV is not a discovery. It is a defect, and it gets debugged rather than deployed." }
+        },
+        {
+          "@type": "Question",
+          "@id": "https://bradlasater.com/vol/methodology.html#costs",
+          "name": "How are execution costs and frictions modelled in an options backtest?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Fills are never assumed at the mid, because in options the spread is frequently larger than the entire modelled edge. The cost model charges half-spread crossing scaled by quoted width and order size relative to displayed depth, commissions and exchange fees per contract, legging risk on multi-leg structures, delta-hedging costs at the actual rebalancing frequency including the hedge's own spread, early-assignment risk on short American options, borrow cost where shorting stock, and margin requirements modelled well enough to know whether a drawdown becomes a forced liquidation." }
+        },
+        {
+          "@type": "Question",
+          "@id": "https://bradlasater.com/vol/methodology.html#statistics",
+          "name": "Which performance statistics are reported with every result?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Every result reports seven statistics together: raw Sharpe, deflated Sharpe, the trial count behind them, the probability of backtest overfitting estimated by combinatorially symmetric cross-validation, maximum drawdown and time to recover, turnover and cost share of gross P&L, and return attribution by Greek. A raw Sharpe ratio on its own is not a result \u2014 without knowing how many configurations produced it, it is uninterpretable." }
+        },
+        {
+          "@type": "Question",
+          "@id": "https://bradlasater.com/vol/methodology.html#kill",
+          "name": "What pre-committed conditions retire a strategy?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Any one of four conditions retires a strategy to the research log rather than the portfolio: a deflated Sharpe not distinguishable from zero at the chosen confidence level; live out-of-sample performance below the lower bound of the backtest's predicted range for a pre-set window; realised costs exceeding modelled costs by more than a pre-set margin; or return attribution showing the P&L came from an exposure the strategy was not intended to take, even if that P&L is positive. A strategy that makes money for reasons other than its thesis is not a working strategy; it is an unmeasured risk that has not yet been paid for." }
+        },
+        {
+          "@type": "Question",
+          "@id": "https://bradlasater.com/vol/methodology.html#publishing",
+          "name": "What gets published, including the failures?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Four things are published regardless of how they reflect on the system: every result with its full statistics table and never a headline number alone, every dead hypothesis with what was expected and what actually happened, every material change to the protocol dated and reasoned, and trade-level logs behind any live track record so the reported statistics can be recomputed independently." }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://bradlasater.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Volatility System", "item": "https://bradlasater.com/vol/" },
+        { "@type": "ListItem", "position": 3, "name": "Evaluation Protocol" }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://bradlasater.com/#brad",
+      "name": "Brad Lasater",
+      "url": "https://bradlasater.com/"
+    }
+  ]
+}
+</script>
 <script src="/assets/js/analytics.js" defer></script>
 </head>
 <body>
@@ -57,7 +156,7 @@
   <section class="shell shell--narrow section">
     <article class="prose">
 
-      <h2 id="why">Why pre-commit</h2>
+      <h2 id="why">Why pre-commit to an evaluation protocol before running a backtest?</h2>
       <p>
         The failure mode in systematic trading research is not bad mathematics. It is a thousand
         small, individually reasonable decisions — a slightly different lookback, a filtered
@@ -70,7 +169,12 @@
         Everything below is that commitment, stated in public so that departing from it is costly.
       </p>
 
-      <h2 id="data">Data and universe</h2>
+      <h2 id="data">What data and universe does the system trade, and how is survivorship bias avoided?</h2>
+      <p>
+        The system trades liquid, listed, optionable US underlyings, and every input is
+        reconstructed as it stood at the decision timestamp rather than as it stands today.
+        Three rules make that concrete:
+      </p>
       <ul>
         <li>
           <strong>Universe:</strong> liquid, listed, optionable US underlyings, with liquidity
@@ -89,7 +193,13 @@
         </li>
       </ul>
 
-      <h2 id="splitting">Splitting and validation</h2>
+      <h2 id="splitting">How do you cross-validate a trading strategy without leaking the future?</h2>
+      <p>
+        Standard k-fold cross-validation is invalid on overlapping financial labels, because a
+        position held for three weeks shares information with three weeks of neighbouring
+        observations. This system uses purged and embargoed k-fold for model selection, walk-forward
+        for the reported number, and a final held-out period used exactly once:
+      </p>
       <ul>
         <li>
           <strong>Purged k-fold with embargo.</strong> Options labels span time — a position held
@@ -110,10 +220,11 @@
         </li>
       </ul>
 
-      <h2 id="baselines">Baselines that must be beaten</h2>
+      <h2 id="baselines">What baselines must a volatility forecast beat before it is allowed to size a position?</h2>
       <p>
-        A model is not evaluated against zero. It is evaluated against the cheapest thing that
-        already works, and it must win out of sample before it is allowed to size a position:
+        A volatility model is never evaluated against zero. It is evaluated against the cheapest
+        forecast that already works, and it must beat that forecast out of sample before it is
+        allowed anywhere near a position. Four baselines are mandatory here:
       </p>
       <ul>
         <li>Implied volatility itself as the forecast of realised volatility.</li>
@@ -126,9 +237,11 @@
         debugged rather than deployed.
       </p>
 
-      <h2 id="costs">Cost and friction modelling</h2>
+      <h2 id="costs">How are execution costs and frictions modelled in an options backtest?</h2>
       <p>
-        Fills are never assumed at the mid. The cost model includes, at minimum:
+        Fills are never assumed at the mid, because in options the spread is frequently larger than
+        the entire modelled edge. Every backtested trade in this system is charged for the following,
+        at minimum:
       </p>
       <ul>
         <li>Half-spread crossing, scaled by quoted width at the decision time and by order size relative to displayed depth.</li>
@@ -144,11 +257,13 @@
         the mid.
       </p>
 
-      <h2 id="statistics">Performance statistics</h2>
+      <h2 id="statistics">Which performance statistics are reported with every result?</h2>
       <p>
-        Reported results carry all of the following, together. A raw Sharpe ratio on its own is
-        not a result, because without knowing how many configurations produced it, it is
-        uninterpretable.
+        Every result published from this system reports seven statistics together: raw Sharpe,
+        deflated Sharpe, the trial count behind them, the probability of backtest overfitting,
+        maximum drawdown and time to recover, turnover and cost share of gross P&amp;L, and return
+        attribution by Greek. A raw Sharpe ratio on its own is not a result — without knowing how
+        many configurations produced it, it is uninterpretable.
       </p>
       <div class="table-wrap">
         <table>
@@ -168,10 +283,12 @@
         </table>
       </div>
 
-      <h2 id="kill">Kill criteria</h2>
+      <h2 id="kill">What pre-committed conditions retire a strategy?</h2>
       <p>
-        Committed in advance, because the temptation to keep adjusting a losing strategy is the
-        expensive one. Any of the following retires a strategy to the log rather than the portfolio:
+        Kill criteria are fixed in advance, because the temptation to keep adjusting a losing
+        strategy is the expensive one and it is strongest exactly when judgement is worst. Any one
+        of the following retires a strategy from this system to the research log rather than the
+        portfolio:
       </p>
       <ul>
         <li>Deflated Sharpe not distinguishable from zero at the chosen confidence level.</li>
@@ -184,7 +301,12 @@
         is not a working strategy; it is an unmeasured risk that has not yet been paid for.
       </p>
 
-      <h2 id="publishing">What gets published</h2>
+      <h2 id="publishing">What gets published, including the failures?</h2>
+      <p>
+        Publication is not selective, because a research record that only contains successes is
+        indistinguishable from one that has been curated after the fact. Four things go up
+        regardless of how they reflect on the system:
+      </p>
       <ul>
         <li>Every result with its full statistics table, never a headline number alone.</li>
         <li>Every dead hypothesis, with what was expected and what actually happened.</li>
@@ -193,7 +315,8 @@
       </ul>
 
       <p class="muted">
-        This protocol is versioned in the repository. Changes are commits, not edits.
+        This protocol is versioned in the repository. Changes are commits, not edits —
+        last revised <time class="page-updated__time" datetime="2026-08-23T22:19:51-06:00">August 23, 2026</time>.
       </p>
 
       <div class="actions">
