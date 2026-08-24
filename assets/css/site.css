@@ -429,6 +429,9 @@ main { flex: 1; }
   gap: var(--sp-3);
   flex-wrap: wrap;
 }
+/* Implementation status on each volatility-system stage card. Kept out of the
+   heading so the accessible name stays the stage name alone. */
+.card__status { margin: 0 0 var(--sp-4); }
 .card__body { color: var(--c-text-secondary); font-size: var(--step--1); }
 .card__body > * + * { margin-top: var(--sp-3); }
 
