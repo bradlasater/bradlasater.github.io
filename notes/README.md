@@ -7,10 +7,14 @@ me" page is not the goal.
 
 ## Start here
 
+**The actionable list is [`../ROADMAP.md`](../ROADMAP.md)** — the survey worklist
+that used to live here has been merged into it, alongside the items derived from
+the codebase itself, so there is one prioritised list rather than two competing
+ones. The files below are the evidence behind it.
+
 | File | What it is |
 |---|---|
-| `worklist.md` | **The actionable list.** Ordered by signal per unit of effort, with checkboxes. This is the one to work from. |
-| `quant-site-playbook.html` | The readable compiled version. Open in a browser. Same content as the worklist plus the post template, phrasing conventions, and the reference-site tables. |
+| `quant-site-playbook.html` | The readable compiled version. Open in a browser. The survey findings in full, plus the post template, phrasing conventions, and the reference-site tables. |
 | `baseline-audit.md` | State of the site as of 2026-08-23, before any of this landed. What was already strong, and what the gaps were. |
 
 ## Raw research
