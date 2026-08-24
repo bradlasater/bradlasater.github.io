@@ -12,6 +12,8 @@ exclude:
   - content        # log-entry source fragments; rendered into /log/*.html
   - scripts        # build and validation tooling
   - notes          # working notes and peer research; candid, deliberately unpublished
+  - README.md      # contributor docs; also records DNS/email config
+  - ROADMAP.md     # candid outstanding-work list, incl. the salary target
 
 # Nothing below is used by the site, but Jekyll warns without them.
 plugins: []
