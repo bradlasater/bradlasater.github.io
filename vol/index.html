@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Volatility System — Brad Lasater</title>
+<meta name="description" content="An end-to-end systematic volatility trading system built from scratch: data ingestion, surface construction, forecasting, sizing, execution, and evaluation — documented in the open.">
+<link rel="canonical" href="https://bradlasater.com/vol/">
+<meta name="theme-color" content="#14171c">
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bradlasater.com/vol/">
+<meta property="og:title" content="An end-to-end volatility trading system">
+<meta property="og:description" content="Built from scratch — data, surface, forecast, sizing, execution, evaluation. Documented in the open, including the parts that don't work.">
+<meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href="/">Brad Lasater<span class="brand__dot">.</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="/vol/" aria-current="page">Volatility System</a></li>
+        <li><a href="/log/">Research Log</a></li>
+        <li><a href="/cv.html">CV</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="shell hero">
+    <span class="badge badge--active badge--dot">In development</span>
+    <h1 class="hero__name" style="margin-top: var(--sp-4);">The volatility system</h1>
+    <p class="hero__thesis" style="--thesis-measure: 27ch;">Options are a market in forecasts. The trade is the forecast error.</p>
+    <p class="hero__bio">
+      An end-to-end systematic volatility trading system, built from scratch and documented as it
+      goes. Every stage below is something I&rsquo;m building myself rather than importing: options
+      data ingestion and cleaning, arbitrage-free surface construction, volatility forecasting,
+      position sizing against a risk budget, execution with modelled frictions, and an evaluation
+      layer designed to make the results hard to believe rather than easy.
+    </p>
+    <div class="actions">
+      <a class="btn btn--primary" href="/vol/methodology.html">Evaluation protocol</a>
+      <a class="btn" href="/log/">Research log</a>
+      <a class="btn" href="https://github.com/bradlasater">Source</a>
+    </div>
+  </section>
+
+  <section class="shell section" id="thesis" aria-labelledby="thesis-title">
+    <div class="section__head">
+      <span class="section__eyebrow">01 · Premise</span>
+      <h2 class="section__title" id="thesis-title">Why volatility</h2>
+    </div>
+    <div class="prose">
+      <p>
+        An option price is a statement about the distribution of future returns. Implied volatility
+        is that statement made legible. It is also, persistently and measurably, a biased forecast:
+        implied volatility exceeds subsequently realised volatility most of the time, across most
+        underlyings, because someone is being paid to carry the risk of it not doing so.
+      </p>
+      <p>
+        That premium is well documented, which means it is not an edge by itself. Harvesting it
+        naively is a strategy that makes money for years and then returns all of it in a fortnight.
+        The interesting questions are the ones underneath: <strong>when</strong> is the premium
+        unusually rich relative to the risk being assumed, <strong>how much</strong> should be
+        risked given a specific portfolio of Greeks, and <strong>what</strong> does the position
+        actually cost to put on and hedge after spreads, slippage, and assignment risk.
+      </p>
+      <p>
+        Those are estimation and optimisation problems under uncertainty — which is what I have
+        spent a decade doing in other domains. The system below is my attempt to do it properly
+        in this one.
+      </p>
+      <blockquote>
+        Trading is a game of edges, and the edge is usually in the execution and the risk
+        management rather than the prediction.
+        <cite>— the working assumption, after Euan Sinclair</cite>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="shell section" id="architecture" aria-labelledby="architecture-title">
+    <div class="section__head">
+      <span class="section__eyebrow">02 · Architecture</span>
+      <h2 class="section__title" id="architecture-title">System stages</h2>
+      <p class="section__lede">
+        Each stage is independently testable and independently loggable. Failures are attributed to
+        a stage, not to &ldquo;the model.&rdquo;
+      </p>
+    </div>
+
+    <div class="grid">
+
+      <article class="card">
+        <h3 class="card__title">Data &amp; cleaning</h3>
+        <div class="card__body">
+          <p>
+            End-of-day and intraday options chains, underlying prices, dividend schedules, and the
+            discount curve. The cleaning layer is the unglamorous half of the edge: dropping stale
+            and crossed quotes, filtering by open interest and spread width, reconstructing the
+            forward from put&ndash;call parity rather than trusting a vendor field, and flagging
+            quotes that violate static no-arbitrage bounds.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3 class="card__title">Surface construction</h3>
+        <div class="card__body">
+          <p>
+            Implied volatility inversion, then a parametric fit in total implied variance
+            (SVI per-slice, moving toward SSVI for a globally consistent surface). Calendar-spread
+            and butterfly no-arbitrage constraints are enforced on the fit, not checked afterwards,
+            so downstream Greeks are internally consistent.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3 class="card__title">Volatility forecasting</h3>
+        <div class="card__body">
+          <p>
+            Realised volatility estimators that use the full bar (Parkinson, Garman&ndash;Klass,
+            Yang&ndash;Zhang) rather than close-to-close, feeding HAR-RV and GARCH-family baselines.
+            Learned models must beat those baselines out of sample before they are allowed anywhere
+            near a position — a machine-learning model that cannot outperform HAR-RV is not a
+            finding, it is a bug.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3 class="card__title">Signal &amp; sizing</h3>
+        <div class="card__body">
+          <p>
+            The spread between forecast realised and market implied volatility becomes a signal only
+            after it clears modelled costs. Sizing separates direction from conviction via
+            meta-labelling: one model decides whether to act, a second sizes the bet, and the
+            portfolio is constrained by vega, gamma, and net-liquidation budgets rather than by
+            notional.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3 class="card__title">Risk &amp; hedging</h3>
+        <div class="card__body">
+          <p>
+            Continuous Greek accounting, discrete delta-hedging with an explicit rebalancing band
+            (hedging error is a cost to be optimised, not a nuisance), scenario and stress grids
+            across spot and vol shocks, and margin modelling — because the strategy that survives
+            a drawdown on paper can still be closed out by a margin call.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3 class="card__title">Execution</h3>
+        <div class="card__body">
+          <p>
+            Fills are modelled at achievable prices, not at the mid. Multi-leg structures carry
+            legging risk; American options carry early-assignment risk; short options carry borrow
+            and pin risk. Any backtest that quietly assumes mid fills is measuring the size of its
+            own assumption.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3 class="card__title">Evaluation</h3>
+        <div class="card__body">
+          <p>
+            Purged and embargoed cross-validation, walk-forward testing, deflated Sharpe ratios
+            reported alongside raw ones, and an explicit count of every configuration tried so that
+            the probability of backtest overfitting can be estimated rather than ignored.
+          </p>
+          <p><a href="/vol/methodology.html">Read the full protocol &rarr;</a></p>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3 class="card__title">Operations &amp; logging</h3>
+        <div class="card__body">
+          <p>
+            Structured logs at every stage, daily reconciliation of expected against actual
+            positions and P&amp;L, and an alerting layer for silent failures — a stale data feed
+            that produces plausible-looking numbers is far more dangerous than one that crashes.
+          </p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="shell section" id="results" aria-labelledby="results-title">
+    <div class="section__head">
+      <span class="section__eyebrow">03 · Results</span>
+      <h2 class="section__title" id="results-title">Track record</h2>
+      <p class="section__lede">
+        Nothing is published here until the evaluation protocol has been run end-to-end and the
+        out-of-sample clock has been running long enough for the number to mean something.
+      </p>
+    </div>
+
+    <!-- Publish here ONLY once the protocol in methodology.html has actually been executed.
+         Report deflated alongside raw. Never a raw Sharpe on its own. -->
+    <div class="pending">
+      <strong>Not yet published</strong>
+      Live out-of-sample tracking has not started. When it does, this section will carry the start
+      date, the full configuration count behind the reported numbers, and both raw and deflated
+      performance statistics — with the underlying trade log downloadable.
+    </div>
+  </section>
+
+  <section class="shell section" id="postmortems" aria-labelledby="postmortems-title">
+    <div class="section__head">
+      <span class="section__eyebrow">04 · Failures</span>
+      <h2 class="section__title" id="postmortems-title">Post-mortems</h2>
+      <p class="section__lede">
+        Every losing period and every dead hypothesis gets written up: what I expected, what
+        happened, what I had wrong, and what changed as a result. These are the most useful pages
+        on this site and the hardest ones to fake.
+      </p>
+    </div>
+    <div class="actions">
+      <a class="btn btn--primary" href="/log/">Read the research log</a>
+    </div>
+  </section>
+
+  <section class="shell section" id="influences" aria-labelledby="influences-title">
+    <div class="section__head">
+      <span class="section__eyebrow">05 · Sources</span>
+      <h2 class="section__title" id="influences-title">What this is built on</h2>
+    </div>
+    <dl class="deflist">
+      <div class="deflist__item">
+        <dt>Euan Sinclair — <em>Volatility Trading</em>, <em>Positional Option Trading</em></dt>
+        <dd>
+          The mechanics and economics: where the premium comes from, why hedging error matters as
+          much as the forecast, and how position sizing rather than prediction separates traders
+          who survive from those who do not.
+        </dd>
+      </div>
+      <div class="deflist__item">
+        <dt>Marcos López de Prado — <em>Advances in Financial Machine Learning</em>, <em>Machine Learning for Asset Managers</em></dt>
+        <dd>
+          The statistics of self-deception: why standard cross-validation leaks in time series,
+          how to purge and embargo, why a Sharpe ratio without a trial count is uninterpretable,
+          and how meta-labelling separates the decision to act from the size of the bet.
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <span>&copy; 2026 Brad Lasater</span>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/log/">Research Log</a></li>
+      <li><a href="/cv.html">CV</a></li>
+      <li><a href="mailto:brad@bradlasater.com">Email</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>
