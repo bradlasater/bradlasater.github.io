@@ -20,6 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
 <link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/js/analytics.js" defer></script>
 </head>
 <body>
 
@@ -215,13 +216,23 @@
       </p>
     </div>
 
-    <!-- Publish here ONLY once the protocol in methodology.html has actually been executed.
-         Report deflated alongside raw. Never a raw Sharpe on its own. -->
-    <div class="pending">
-      <strong>Not yet published</strong>
-      Live out-of-sample tracking has not started. When it does, this section will carry the start
-      date, the full configuration count behind the reported numbers, and both raw and deflated
-      performance statistics — with the underlying trade log downloadable.
+    <div class="prose">
+      <p>
+        The live record has its own page. It is append-only: each observation is a
+        separate dated commit, and CI rejects any edit to a day that has already been
+        published, so the elapsed time is verifiable rather than asserted. Every
+        statistic on it is computed in the browser from the raw data file.
+      </p>
+      <p>
+        It reports the minimum track record length next to the Sharpe ratio — how long
+        the record would have to run before that Sharpe could be told apart from luck.
+        While it is too short to mean anything, the page says so.
+      </p>
+    </div>
+
+    <div class="actions">
+      <a class="btn btn--primary" href="/vol/track-record.html">Live track record</a>
+      <a class="btn" href="/data/track-record.json">Raw data</a>
     </div>
   </section>
 

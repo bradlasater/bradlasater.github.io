@@ -123,8 +123,11 @@ a:hover { color: var(--c-accent-hover); }
   border-radius: var(--radius-sm);
 }
 
-/* All numeric data uses lining tabular figures so columns align. */
-.num, table, time, .stat__value, .metric {
+/* Tabular figures only where numbers stack vertically and must align —
+   table rows and axis ticks. Large standalone values keep proportional
+   figures, because equal-width digits make a number like 121 look loose
+   at display sizes. */
+.num, table, time, .chart__tick {
   font-variant-numeric: tabular-nums lining-nums;
 }
 
@@ -590,6 +593,141 @@ td.numeric, th.numeric { text-align: right; font-family: var(--font-mono); }
   text-align: center;
 }
 .pending strong { color: var(--c-text-secondary); display: block; margin-bottom: var(--sp-2); }
+
+/* --------------------------------------------------------------------------
+   14b. Track record — hero figure, stat tiles, verdict, charts
+   -------------------------------------------------------------------------- */
+
+/* Hero figure: the elapsed-time number, which is the one thing a track record
+   cannot fake. Same sans as everything else, proportional figures. */
+.figure-hero { display: flex; align-items: baseline; gap: var(--sp-3); flex-wrap: wrap; }
+.figure-hero__value {
+  font-size: clamp(3rem, 2.2rem + 4vw, 5rem);
+  font-weight: 620;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--c-text);
+}
+.figure-hero__unit { font-size: var(--step-1); color: var(--c-text-secondary); font-weight: 500; }
+.figure-hero__note { color: var(--c-text-muted); font-size: var(--step--1); margin-top: var(--sp-3); }
+
+.stats {
+  display: grid;
+  gap: 1px;
+  background: var(--c-border);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+}
+.stat { background: var(--c-bg-subtle); padding: var(--sp-4) var(--sp-5); }
+.stat__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  margin-bottom: var(--sp-2);
+}
+.stat__value {
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--c-text);
+  line-height: 1.2;
+}
+.stat__hint { display: block; margin-top: var(--sp-1); font-size: 0.78rem; color: var(--c-text-muted); }
+
+/* The verdict banner — whether the record is long enough to mean anything. */
+.verdict {
+  border: 1px solid var(--c-border-strong);
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  padding: var(--sp-5);
+  background: var(--c-bg-subtle);
+}
+.verdict--pending { border-left-color: var(--c-warn); }
+.verdict--ok { border-left-color: var(--c-pos); }
+.verdict__title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  margin-bottom: var(--sp-2);
+}
+.verdict p { color: var(--c-text-secondary); font-size: var(--step--1); max-width: var(--measure); }
+
+.chart { position: relative; margin-top: var(--sp-4); }
+.chart__svg { width: 100%; height: auto; display: block; overflow: visible; touch-action: pan-y; }
+.chart__caption {
+  font-size: var(--step--1);
+  color: var(--c-text-muted);
+  margin-top: var(--sp-2);
+}
+
+.chart__grid { stroke: var(--c-border); stroke-width: 1; }
+.chart__zero { stroke: var(--c-border-strong); stroke-width: 1; }
+.chart__tick { fill: var(--c-text-muted); font-size: 11px; font-family: var(--font-mono); }
+
+.chart__line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart__line--equity { stroke: var(--c-accent); }
+.chart__line--drawdown { stroke: var(--c-neg); }
+
+.chart__area { stroke: none; }
+.chart__area--equity { fill: var(--c-accent); opacity: 0.10; }
+.chart__area--drawdown { fill: var(--c-neg); opacity: 0.10; }
+
+/* 2px ring in the surface colour keeps the end-dot legible over the line. */
+.chart__ring { fill: var(--c-bg); }
+.chart__dot--equity { fill: var(--c-accent); }
+.chart__dot--drawdown { fill: var(--c-neg); }
+
+.chart__boundary { stroke: var(--c-warn); stroke-width: 1; opacity: 0.7; }
+.chart__boundary-label {
+  fill: var(--c-warn);
+  font-size: 10px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+
+.chart__hover { opacity: 0; transition: opacity 0.1s var(--ease); }
+.chart__hover.is-on { opacity: 1; }
+.chart__crosshair { stroke: var(--c-border-strong); stroke-width: 1; }
+
+.chart__tip {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  background: var(--c-surface);
+  border: 1px solid var(--c-border-strong);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-2) var(--sp-3);
+  font-size: 0.8rem;
+  pointer-events: none;
+  white-space: nowrap;
+  display: flex;
+  gap: var(--sp-3);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.4);
+}
+.chart__tip[hidden] { display: none; }
+.chart__tip-date { color: var(--c-text-muted); font-variant-numeric: tabular-nums; }
+.chart__tip-value { color: var(--c-text); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+details.tableview { margin-top: var(--sp-5); }
+details.tableview > summary {
+  cursor: pointer;
+  color: var(--c-text-secondary);
+  font-size: var(--step--1);
+  padding: var(--sp-2) 0;
+  list-style-position: inside;
+}
+details.tableview > summary:hover { color: var(--c-text); }
+details.tableview > .table-wrap { margin-top: var(--sp-3); max-height: 26rem; overflow: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .chart__hover { transition: none; }
+}
 
 /* --------------------------------------------------------------------------
    15. Footer

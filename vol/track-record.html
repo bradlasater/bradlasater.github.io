@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Track Record — Brad Lasater</title>
+<meta name="description" content="Live out-of-sample track record for my systematic volatility system. Every observation is a dated commit; CI rejects any edit to published history.">
+<link rel="canonical" href="https://bradlasater.com/vol/track-record.html">
+<meta name="theme-color" content="#14171c">
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bradlasater.com/vol/track-record.html">
+<meta property="og:title" content="Live out-of-sample track record">
+<meta property="og:description" content="Append-only, timestamped by git history, with the minimum track record length reported next to the Sharpe.">
+<meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/js/analytics.js" defer></script>
+<script src="/assets/js/track-record.js" defer></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href="/">Brad Lasater<span class="brand__dot">.</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="/vol/" aria-current="page">Volatility System</a></li>
+        <li><a href="/log/">Research Log</a></li>
+        <li><a href="/cv.html">CV</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="shell hero">
+    <span class="hero__role">Volatility System · Track Record</span>
+    <h1 class="hero__name" style="font-size: var(--step-3); margin-top: var(--sp-3);">
+      Live out-of-sample record
+    </h1>
+    <p class="hero__bio">
+      Every observation below is appended once and never revised. Each one is a
+      separate dated commit, and CI rejects any change to an already-published
+      day — so the elapsed time is verifiable rather than asserted. That
+      property, not the returns, is what makes this page worth reading.
+    </p>
+    <div class="actions">
+      <a class="btn" href="/vol/methodology.html">Evaluation protocol</a>
+      <a class="btn" href="https://github.com/bradlasater/bradlasater.github.io/commits/main/data/track-record.json">Commit history</a>
+      <a class="btn" href="/data/track-record.json">Raw data</a>
+    </div>
+  </section>
+
+  <section class="shell section" id="tr-root" data-source="/data/track-record.json">
+
+    <p id="tr-error" class="pending" hidden></p>
+
+    <!-- Shown until the first real observation is appended. No sample or
+         placeholder numbers are ever rendered here. -->
+    <div id="tr-empty" class="pending">
+      <strong>Tracking has not started</strong>
+      No observations have been published yet. When the first one is appended,
+      this page will show elapsed time, the equity curve, drawdowns, and the
+      full statistics table — all computed in the browser from
+      <a href="/data/track-record.json">the data file</a>.
+    </div>
+
+    <div id="tr-live" hidden>
+
+      <div class="figure-hero">
+        <span class="figure-hero__value" id="tr-days">—</span>
+        <span class="figure-hero__unit">days live</span>
+        <span class="badge badge--dot badge--active" id="tr-mode">—</span>
+      </div>
+      <p class="figure-hero__note">
+        Inception <span id="tr-inception">—</span> ·
+        latest observation <span id="tr-latest">—</span> ·
+        <span id="tr-obs">—</span> trading days recorded
+      </p>
+
+      <div class="verdict verdict--pending" id="tr-verdict" style="margin-top: var(--sp-6);">
+        <div class="verdict__title">Is this long enough to mean anything?</div>
+        <p id="tr-verdict-body"></p>
+      </div>
+
+      <h2 class="section__title" style="margin-top: var(--sp-7);">Cumulative return</h2>
+      <div class="chart" id="tr-chart-equity"></div>
+      <p class="chart__caption">
+        Indexed to 0% at inception, net of all modelled frictions. Hover for
+        daily values, or open the table below.
+      </p>
+
+      <h2 class="section__title" style="margin-top: var(--sp-7);">Drawdown from peak</h2>
+      <div class="chart" id="tr-chart-drawdown"></div>
+      <p class="chart__caption">
+        Distance below the running high-water mark. Plotted separately rather
+        than on a second axis, so neither scale distorts the other.
+      </p>
+
+      <h2 class="section__title" style="margin-top: var(--sp-7);">Statistics</h2>
+      <div class="stats">
+        <div class="stat">
+          <span class="stat__label">Cumulative</span>
+          <span class="stat__value" id="tr-cum">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Annualised</span>
+          <span class="stat__value" id="tr-ann">—</span>
+          <span class="stat__hint" id="tr-ann-hint">Withheld under 20 observations</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Ann. volatility</span>
+          <span class="stat__value" id="tr-vol">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Sharpe (ann.)</span>
+          <span class="stat__value" id="tr-sharpe">—</span>
+          <span class="stat__hint">Raw — read with MinTRL</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">PSR vs zero</span>
+          <span class="stat__value" id="tr-psr">—</span>
+          <span class="stat__hint">P(true Sharpe &gt; 0)</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">MinTRL</span>
+          <span class="stat__value" id="tr-mintrl">—</span>
+          <span class="stat__hint">Observations needed at 95%</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Max drawdown</span>
+          <span class="stat__value" id="tr-maxdd">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Current drawdown</span>
+          <span class="stat__value" id="tr-curdd">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Skewness</span>
+          <span class="stat__value" id="tr-skew">—</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Kurtosis</span>
+          <span class="stat__value" id="tr-kurt">—</span>
+          <span class="stat__hint">Raw; normal = 3</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Cost share</span>
+          <span class="stat__value" id="tr-costshare">—</span>
+          <span class="stat__hint">Of gross P&amp;L</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Total costs</span>
+          <span class="stat__value" id="tr-costs">—</span>
+        </div>
+      </div>
+
+      <details class="tableview">
+        <summary>Table view — every observation</summary>
+        <div class="table-wrap">
+          <table>
+            <caption class="visually-hidden">All published observations, newest first</caption>
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col" class="numeric">NAV</th>
+                <th scope="col" class="numeric">Return</th>
+                <th scope="col" class="numeric">Gross P&amp;L</th>
+                <th scope="col" class="numeric">Costs</th>
+                <th scope="col" class="numeric">Positions</th>
+                <th scope="col">Mode</th>
+              </tr>
+            </thead>
+            <tbody id="tr-tbody"></tbody>
+          </table>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <section class="shell section">
+    <div class="section__head">
+      <span class="section__eyebrow">Integrity</span>
+      <h2 class="section__title">Why you can trust the dates</h2>
+    </div>
+    <div class="prose">
+      <p>
+        A track record is only evidence if it cannot be revised after the fact.
+        Three things enforce that here, and all three are checkable by anyone:
+      </p>
+      <ul>
+        <li>
+          <strong>Every observation is a separate dated commit.</strong> The git
+          history is the timestamp trail — you can see when any number here first
+          appeared.
+        </li>
+        <li>
+          <strong>CI rejects edits to published history.</strong> A validator runs
+          on every push and fails the build if an existing observation is modified,
+          removed, or reordered. Appending is the only legal change.
+        </li>
+        <li>
+          <strong>Every statistic is computed in your browser</strong> from the raw
+          data file, so this page cannot quietly disagree with the numbers behind it.
+        </li>
+      </ul>
+      <p>
+        The reported Sharpe ratio is deliberately not the headline. Alongside it
+        sits the minimum track record length — how long this record would have to
+        run before that Sharpe could be told apart from luck at 95% confidence.
+        While the record is short, the page says so plainly.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <span>&copy; 2026 Brad Lasater</span>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/vol/">Volatility System</a></li>
+      <li><a href="mailto:brad@bradlasater.com">Email</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>

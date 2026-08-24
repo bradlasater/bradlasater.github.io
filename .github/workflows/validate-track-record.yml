@@ -1,0 +1,32 @@
+name: Validate track record
+
+# The published track record is only evidence if it cannot be revised after the
+# fact. This workflow fails the build if any already-published observation is
+# modified, removed, or reordered — appending is the only legal edit.
+
+on:
+  push:
+    paths:
+      - "data/track-record.json"
+      - "scripts/validate_track_record.py"
+      - ".github/workflows/validate-track-record.yml"
+  pull_request:
+    paths:
+      - "data/track-record.json"
+      - "scripts/validate_track_record.py"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Need the parent commit to diff against for the append-only check.
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate structure and append-only history
+        run: python3 scripts/validate_track_record.py --check-append-only
