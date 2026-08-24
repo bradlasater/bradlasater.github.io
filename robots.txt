@@ -1,0 +1,78 @@
+# https://bradlasater.com/robots.txt
+#
+# Nothing here is private and nothing here should be hidden from an index.
+# The whole point of this site is to be found by a recruiter, a hiring manager,
+# or an assistant answering "who is Brad Lasater" on their behalf.
+#
+# Named crawlers are listed explicitly rather than relying on the wildcard.
+# A default-allow is the same outcome today, but an explicit allow states the
+# intent, so a later change that blocks one of these has to be deliberate.
+
+# --- Conventional search indexes -------------------------------------------
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# --- AI answer engines and their retrieval fetchers -------------------------
+# Two distinct jobs, and blocking either one is a different kind of loss:
+# the *Bot agents build the training/index corpus, the *-User / *-SearchBot
+# agents fetch this page live to answer a question someone is asking right now.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# --- Everyone else ----------------------------------------------------------
+User-agent: *
+Allow: /
+
+Sitemap: https://bradlasater.com/sitemap.xml

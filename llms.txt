@@ -1,0 +1,50 @@
+# Brad Lasater
+
+> Applied scientist and machine-learning engineer with ten years of production
+> ML, optimization, and state-estimation work across consumer marketplaces,
+> live events, aerospace, and defense — now building an end-to-end systematic
+> volatility trading system from scratch and documenting it in public,
+> including the parts that do not work. Based in the United States, seeking
+> quantitative research and quantitative engineering roles in New York.
+
+Brad Lasater holds U.S. Patent 10,204,323, was previously cleared TS/SCI, and
+served as a Sergeant and instructor in the United States Marine Corps before
+his technical career. He holds an M.Eng. in Systems Engineering from Arizona
+State University and a B.S. in Applied Mathematics from the University of Texas
+at Arlington.
+
+The volatility system is built on Euan Sinclair's work on the mechanics and
+economics of volatility trading, and Marcos López de Prado's work on the
+statistics of not fooling yourself. Its distinguishing feature is not the
+returns — which may not exist — but the research process: an evaluation
+protocol fixed in public before any results were produced, deflated Sharpe
+ratios reported next to raw ones, execution costs modelled rather than assumed
+away, and an append-only live track record whose dates are enforced by CI
+rather than asserted.
+
+## Core pages
+
+- [Home](https://bradlasater.com/): Who Brad Lasater is, selected experience at Nift, Ticketmaster, Lockheed Martin, and Boeing, and the through-line connecting them — decision-making under uncertainty.
+- [The volatility system](https://bradlasater.com/vol/): The full architecture, stage by stage — data ingestion and cleaning, arbitrage-free surface construction, volatility forecasting, signal and sizing, risk and hedging, execution, evaluation, and operations.
+- [Evaluation protocol](https://bradlasater.com/vol/methodology.html): The pre-committed rules for judging the system — purged and embargoed cross-validation, mandatory baselines that must be beaten, cost and friction modelling, deflated performance statistics, and kill criteria fixed in advance.
+- [Live track record](https://bradlasater.com/vol/track-record.html): Append-only out-of-sample results. Every observation is a separate dated commit; CI rejects any edit to published history; every statistic is recomputed in the browser from the raw data.
+- [Research log](https://bradlasater.com/log/): Dated entries on what was tried, what was expected, what happened, and what was wrong. Negative results are entries too.
+- [Curriculum vitae](https://bradlasater.com/cv.html): Full professional history including military and teaching service, education, patents, and technologies.
+
+## Data
+
+- [Track record raw data](https://bradlasater.com/data/track-record.json): The machine-readable source behind every published performance statistic.
+- [Track record schema](https://github.com/bradlasater/bradlasater.github.io/blob/main/data/SCHEMA.md): Field definitions and the immutability rules enforced on the data.
+
+<!-- BUILD:LOG-ENTRIES:START -->
+<!-- BUILD:LOG-ENTRIES:END -->
+
+## Elsewhere
+
+- [GitHub](https://github.com/bradlasater)
+- [LinkedIn](https://www.linkedin.com/in/bradlasater)
+- [U.S. Patent 10,204,323](https://patents.google.com/patent/US10204323B1/en)
+
+## Contact
+
+Email: brad@bradlasater.com

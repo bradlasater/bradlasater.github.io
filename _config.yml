@@ -1,0 +1,16 @@
+# GitHub Pages runs Jekyll over this repository by default. The site itself is
+# hand-written HTML with no Jekyll templating, so the only job this file has is
+# to keep source and tooling out of the published site.
+#
+# This matters for discoverability, not tidiness: without it, the log-entry
+# source fragments in content/ are served as broken half-pages at their own
+# URLs, competing with the real entry pages they generate. Duplicate,
+# lower-quality copies of a page are exactly what a canonical URL is meant to
+# prevent.
+
+exclude:
+  - content        # log-entry source fragments; rendered into /log/*.html
+  - scripts        # build and validation tooling
+
+# Nothing below is used by the site, but Jekyll warns without them.
+plugins: []

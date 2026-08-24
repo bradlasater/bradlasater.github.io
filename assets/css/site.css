@@ -787,3 +787,12 @@ details.tableview > .table-wrap { margin-top: var(--sp-3); max-height: 26rem; ov
   a { text-decoration: none; color: #000; }
   a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 8pt; color: #555; }
 }
+
+/* Build hook. scripts/build_site.py rewrites the datetime attribute and the
+   text of every .page-updated__time from git history, so this class is how a
+   date on the page stays tied to the commit that actually produced it. Styled
+   here only so it never appears as an unstyled orphan class. */
+.page-updated__time {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

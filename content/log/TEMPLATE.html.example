@@ -1,0 +1,46 @@
+<!--meta
+title: Short, specific title — state the finding, not the topic
+date: 2026-09-01
+stage: Surface construction
+summary: One sentence a stranger can understand out of context. It becomes the meta description, the feed summary, and the index card, so it must stand alone.
+-->
+
+<!--
+  Body starts here. Plain HTML — <p>, <ul>, <h2>, <table>, <blockquote>, <code>.
+  Do not add an <h1>; the page supplies one from the title above.
+
+  Two rules that matter for whether this entry gets found and cited:
+
+  1. THE ISLAND TEST. Every <h2> section must make sense if it is the only
+     thing a reader ever sees. Retrieval engines return passages, not pages.
+     A paragraph beginning "This approach also..." is unquotable.
+
+  2. KEEP THE NUMBERS. "Cut RMSE from 0.081 to 0.049 across 412 surface fits"
+     is citable. "Improved accuracy substantially" is not.
+
+  Rename this file to YYYY-MM-DD-a-short-slug.html — the filename becomes the
+  URL — then run: python3 scripts/build_site.py
+-->
+
+<h2>What I expected</h2>
+<p>
+  The prediction, stated precisely enough that it could have been wrong. Write this
+  before running anything.
+</p>
+
+<h2>What happened</h2>
+<p>
+  The result, with the numbers, the sample size, and the evaluation window.
+</p>
+
+<h2>Diagnosis</h2>
+<p>
+  Why. This is the section a hiring manager actually reads — it is the one that
+  cannot be faked by a good backtest.
+</p>
+
+<h2>What changed as a result</h2>
+<p>
+  The concrete change to the system or to the evaluation protocol. If nothing
+  changed, say that and say why.
+</p>
