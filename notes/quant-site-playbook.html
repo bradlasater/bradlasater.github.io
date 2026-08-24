@@ -1,0 +1,1618 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Quant Site Playbook</title>
+<style>
+  :root {
+    color-scheme: light;
+
+    --paper:      #F5F6F7;
+    --surface:    #FFFFFF;
+    --surface-2:  #EDEFF1;
+    --ink:        #14171B;
+    --ink-2:      #464C54;
+    --ink-3:      #767D86;
+    --rule:       #D5DADE;
+    --rule-strong:#9AA3AB;
+    --accent:     #14514E;
+    --accent-2:   #0C3E3C;
+    --accent-wash:#E2EDEC;
+    --flag:       #8A2F28;
+    --flag-wash:  #F5E6E4;
+
+    --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+    --measure: 43rem;
+    --wide: 58rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --paper:      #131619;
+      --surface:    #1A1E22;
+      --surface-2:  #22272C;
+      --ink:        #E6E9EB;
+      --ink-2:      #A9B1B8;
+      --ink-3:      #7C858D;
+      --rule:       #2E353B;
+      --rule-strong:#4C555D;
+      --accent:     #63B5AE;
+      --accent-2:   #8CCFC8;
+      --accent-wash:#18302F;
+      --flag:       #D98A80;
+      --flag-wash:  #2E1E1C;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --paper:      #131619;
+    --surface:    #1A1E22;
+    --surface-2:  #22272C;
+    --ink:        #E6E9EB;
+    --ink-2:      #A9B1B8;
+    --ink-3:      #7C858D;
+    --rule:       #2E353B;
+    --rule-strong:#4C555D;
+    --accent:     #63B5AE;
+    --accent-2:   #8CCFC8;
+    --accent-wash:#18302F;
+    --flag:       #D98A80;
+    --flag-wash:  #2E1E1C;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.62;
+    margin: 0;
+    padding: 0 1.5rem 6rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: var(--wide); margin: 0 auto; }
+  .col  { max-width: var(--measure); }
+
+  /* ---------- masthead ---------- */
+
+  .masthead {
+    padding: 4rem 0 2rem;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 2.5rem;
+  }
+  .kicker {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 1.25rem;
+  }
+  h1 {
+    font-size: clamp(2.1rem, 1.5rem + 2.4vw, 3.1rem);
+    line-height: 1.08;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 1rem;
+    text-wrap: balance;
+  }
+  .standfirst {
+    font-size: 1.15rem;
+    color: var(--ink-2);
+    max-width: var(--measure);
+    margin: 0 0 2rem;
+  }
+  .provenance {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    line-height: 1.75;
+    color: var(--ink-3);
+    display: grid;
+    gap: 0.15rem;
+    max-width: var(--measure);
+  }
+  .provenance b { color: var(--ink-2); font-weight: 500; }
+
+  /* ---------- contents ---------- */
+
+  .contents {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 4rem;
+    max-width: var(--measure);
+  }
+  .contents h2 {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 1rem;
+    font-weight: 500;
+  }
+  .contents ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+    counter-reset: toc;
+  }
+  .contents li { counter-increment: toc; display: flex; gap: 0.9rem; align-items: baseline; }
+  .contents li::before {
+    content: counter(toc, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--ink-3);
+    flex: none;
+  }
+  .contents a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .contents a:hover { border-bottom-color: var(--accent); color: var(--accent); }
+
+  /* ---------- sections ---------- */
+
+  section { margin-bottom: 4.5rem; }
+
+  .sec-head {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 0.6rem;
+    margin-bottom: 1.75rem;
+  }
+  .sec-num {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    flex: none;
+    letter-spacing: 0.08em;
+  }
+  h2.sec-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  h3 {
+    font-size: 1.12rem;
+    font-weight: 600;
+    margin: 2.5rem 0 0.75rem;
+    letter-spacing: -0.005em;
+  }
+  h4 {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 500;
+    margin: 2rem 0 0.75rem;
+  }
+
+  p { max-width: var(--measure); margin: 0 0 1.1rem; }
+  p.lede { font-size: 1.06rem; color: var(--ink-2); }
+
+  a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+  a:hover { color: var(--accent-2); }
+  a:focus-visible, .contents a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+
+  code, .m { font-family: var(--mono); font-size: 0.86em; }
+
+  ul.body-list, ol.body-list { max-width: var(--measure); padding-left: 1.2rem; margin: 0 0 1.2rem; }
+  ul.body-list li, ol.body-list li { margin-bottom: 0.5rem; }
+
+  /* ---------- callouts ---------- */
+
+  .callout {
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    padding: 1.25rem 1.5rem;
+    margin: 1.75rem 0;
+    max-width: var(--measure);
+  }
+  .callout.warn { border-left-color: var(--flag); background: var(--flag-wash); }
+  .callout > :last-child { margin-bottom: 0; }
+  .callout-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.6rem;
+  }
+  .callout.warn .callout-label { color: var(--flag); }
+
+  blockquote {
+    margin: 1.5rem 0;
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--rule-strong);
+    color: var(--ink-2);
+    max-width: var(--measure);
+    font-style: italic;
+  }
+  blockquote cite {
+    display: block;
+    margin-top: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-style: normal;
+    color: var(--ink-3);
+    letter-spacing: 0.03em;
+  }
+
+  /* ---------- ranked items ---------- */
+
+  .items { display: grid; gap: 0; max-width: var(--measure); border-top: 1px solid var(--rule); }
+  .item {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0 1rem;
+    padding: 1.35rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .item-rank {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    padding-top: 0.28rem;
+    letter-spacing: 0.04em;
+  }
+  .item-body > :last-child { margin-bottom: 0; }
+  .item-title { font-weight: 600; margin: 0 0 0.4rem; }
+  .item p { margin-bottom: 0.6rem; font-size: 0.97rem; }
+  .who {
+    font-family: var(--mono);
+    font-size: 0.73rem;
+    color: var(--ink-3);
+    line-height: 1.6;
+    display: block;
+    margin-top: 0.5rem;
+  }
+  .who b { color: var(--ink-2); font-weight: 500; }
+  .move {
+    background: var(--accent-wash);
+    padding: 0.6rem 0.85rem;
+    margin-top: 0.7rem;
+    font-size: 0.94rem;
+  }
+  .move::before {
+    content: "Your move ";
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  /* ---------- tables (booktabs) ---------- */
+
+  .scroll { overflow-x: auto; margin: 1.5rem 0; max-width: var(--wide); }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.88rem;
+    font-variant-numeric: tabular-nums;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+  thead th {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--ink-2);
+    border-bottom: 1px solid var(--rule-strong);
+    padding: 0.6rem 0.9rem 0.6rem 0;
+    white-space: nowrap;
+  }
+  tbody td { padding: 0.6rem 0.9rem 0.6rem 0; vertical-align: top; border-bottom: 1px solid var(--rule); }
+  tbody tr:last-child td { border-bottom: none; }
+  td.url { font-family: var(--mono); font-size: 0.78rem; white-space: nowrap; }
+  .caption {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--ink-3);
+    margin: 0.6rem 0 0;
+    max-width: var(--wide);
+    line-height: 1.6;
+  }
+  .caption b { color: var(--ink-2); font-weight: 500; }
+
+  /* ---------- template block ---------- */
+
+  pre.tpl {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    padding: 1.25rem 1.4rem;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.75;
+    max-width: var(--wide);
+    margin: 1.5rem 0;
+    color: var(--ink-2);
+  }
+  pre.tpl b { color: var(--ink); font-weight: 600; }
+  pre.tpl i { color: var(--accent); font-style: normal; }
+
+  /* ---------- phrase lists ---------- */
+
+  .phrases { max-width: var(--measure); margin: 1.25rem 0; display: grid; gap: 0.45rem; }
+  .phrases div {
+    font-size: 0.95rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--rule);
+    color: var(--ink-2);
+  }
+  .phrases.kill div { border-left-color: var(--flag); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0 1.5rem; max-width: var(--measure); }
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    padding: 0.25rem 0.6rem;
+    background: var(--flag-wash);
+    color: var(--flag);
+    border: 1px solid transparent;
+  }
+
+  footer {
+    border-top: 2px solid var(--ink);
+    padding-top: 1.5rem;
+    margin-top: 5rem;
+    max-width: var(--wide);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--ink-3);
+    line-height: 1.8;
+  }
+
+  @media (max-width: 640px) {
+    body { font-size: 16px; padding: 0 1.1rem 4rem; }
+    .item { grid-template-columns: 1.9rem 1fr; }
+    .masthead { padding-top: 2.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">Peer survey &amp; implementation order</p>
+  <h1>Quant Site Playbook</h1>
+  <p class="standfirst">
+    What the personal sites of working quants — at Jane Street, HRT, Citadel Securities, Tower,
+    Two Sigma, AQR, Balyasny, Arrowstreet, Headlands, Radix, SIG — actually do, and the order to
+    build it in.
+  </p>
+  <div class="provenance">
+    <span><b>Method</b> · Five parallel crawls, August 2026. Every URL cited was loaded and inspected directly.</span>
+    <span><b>Sample</b> · ~80 distinct personal sites, plus 20+ hiring-side sources (firm career pages, named practitioners, recruiters).</span>
+    <span><b>Discovery</b> · GitHub Users API by bio text was the highest-yield channel by far; generic web search returned only interview-prep SEO.</span>
+    <span><b>Not covered</b> · reddit.com and quantnet.com were inaccessible to the crawlers, so no forum opinion is cited anywhere below.</span>
+  </div>
+</header>
+
+<nav class="contents">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#calibration">The calibration — read this before building anything</a></li>
+    <li><a href="#constraint">The structural constraint you're under</a></li>
+    <li><a href="#tier1">Tier 1 — Evidence content</a></li>
+    <li><a href="#tier2">Tier 2 — Positioning &amp; structure</a></li>
+    <li><a href="#tier3">Tier 3 — Research-post craft</a></li>
+    <li><a href="#tier4">Tier 4 — Mechanics &amp; discoverability</a></li>
+    <li><a href="#template">The post template</a></li>
+    <li><a href="#track">The track-record spec</a></li>
+    <li><a href="#phrasing">Phrasing conventions</a></li>
+    <li><a href="#redflags">Anti-patterns</a></li>
+    <li><a href="#stop">What not to build</a></li>
+    <li><a href="#sites">Reference sites</a></li>
+  </ol>
+</nav>
+
+<!-- ============================================================= -->
+
+<section id="calibration">
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title">The calibration — read this before building anything</h2>
+  </div>
+
+  <p class="lede">
+    The hiring-side evidence says a personal site matters less than you probably hope. This
+    changes what the site should be, not whether to build it.
+  </p>
+
+  <div class="callout warn">
+    <span class="callout-label">The uncomfortable finding</span>
+    <p>
+      Giuseppe "Gappy" Paleologo — Global Head of Quantitative Research at Balyasny, previously
+      Head of Risk at HRT, Head of Enterprise Risk at Millennium, Director of Equities QR at
+      Citadel, self-described screener of <em>"a couple thousand résumés"</em> — published roughly
+      fifteen pages of buy-side quant career advice in December 2025. It mentions personal
+      websites, blogs, GitHub, and side projects <strong>exactly zero times.</strong> Not
+      dismissed — absent from the model.
+    </p>
+    <p>
+      Same zero-mention result on Jane Street's interviewing page and 25-question FAQ, HRT's
+      interviewing post, and the Two Sigma, D. E. Shaw, SIG, and Optiver careers pages.
+    </p>
+  </div>
+
+  <p>
+    Even the most project-favourable source found — a writer who landed PM offers at Citadel,
+    Millennium, BlueCrest, Rokos and Brevan largely through personal projects — concedes the
+    consensus verbatim: <em>"most people (including interviewers, practitioners that are way more
+    experienced than me), view personal projects as nothing more than a 'show of interest'."</em>
+    The honest calibration comes from a recruiting-side source: GitHub gets checked
+    <em>"especially when deciding between similar candidates."</em> <strong>Tiebreaker, not
+    door-opener.</strong>
+  </p>
+
+  <h3>But the switcher door itself is wide open</h3>
+
+  <p>
+    This is firm-official, not forum folklore. Every quote below is from a company's own careers
+    material:
+  </p>
+
+  <ul class="body-list">
+    <li><strong>Jane Street</strong> — <em>"Problem-solving mindset: required. Finance background: optional."</em> and <em>"Do I need a background in finance? Nope! We'll teach you everything you need to know."</em></li>
+    <li><strong>Two Sigma</strong> — <em>"more than half of Two Sigma's employees come from outside the finance industry."</em> And a literal posted qualification: <em>"Performed an in-depth research project, examining real-world data."</em></li>
+    <li><strong>SIG</strong> — <em>"The ability to develop a new idea or approach to a problem is far more valued than having a preexisting knowledge of finance."</em> They budget a three-month in-house finance class; finance knowledge is not the scarce input.</li>
+    <li><strong>Optiver</strong> — wants people <em>"comfortable reasoning about noisy data, imperfect signals, and risk."</em> That is a description of state-estimation work.</li>
+    <li><strong>HRT</strong> — evaluates research on <em>"simplicity, reproducibility, and generality,"</em> and writes that <em>"it is easy to lie to ourselves while resolving small differences in our low signal-to-noise domain."</em></li>
+  </ul>
+
+  <p>
+    One number worth recalibrating against: D. E. Shaw's posted NYC quantitative analyst base is
+    <strong>$275k</strong> for UG/MS and <strong>$300k</strong> for PhD. A $250k target is
+    conservative for the roles you're aiming at.
+  </p>
+
+  <div class="callout">
+    <span class="callout-label">The reframe</span>
+    <p>
+      Stop conceiving of the site as lead generation. It is a <strong>defensibility
+      instrument</strong> — the thing that converts a warm reader from "plausible" to "worth an
+      hour," and the thing that makes you unshakeable when someone probes a claim in an interview.
+    </p>
+    <p>
+      Its highest-leverage content is not the best strategy you have found. It is documented
+      evidence that you know how easily you could have fooled yourself, and what you did about it.
+      That is the one thing a career switcher can offer that a strong résumé cannot — and per
+      Paleologo's polled managers, per HRT's own blog, and per Feynman via both, it is exactly
+      what the buyers say they want.
+    </p>
+  </div>
+
+  <h4>Ranked expected value of your channels</h4>
+  <ol class="body-list">
+    <li><strong>Referral or warm introduction</strong> into a specific team. Every source points here.</li>
+    <li><strong>A specific, quantified résumé</strong> applied promptly to posted roles. The one artifact universally named.</li>
+    <li><strong>Specialist recruiter relationships</strong> — Selby Jennings, Durlston, H.W. Anderson, Oxford Knight.</li>
+    <li><strong>Interview readiness</strong> — probability, stats, and the ability to defend everything you have ever written down.</li>
+    <li><strong>The site and GitHub</strong> — conversion and tiebreaking. Real, but downstream of 1–4.</li>
+    <li><strong>Public writing at scale over years</strong> — highest ceiling, longest horizon, least reliable on a job-search timeline.</li>
+  </ol>
+</section>
+
+<!-- ============================================================= -->
+
+<section id="constraint">
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title">The structural constraint you're under</h2>
+  </div>
+
+  <p class="lede">
+    Across the prop and HFT lane, employer badge and content volume are almost perfectly inversely
+    correlated. This single fact determines which architecture is available to you.
+  </p>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Register</th><th>Who</th><th>What the site is</th><th>Employer</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Badge-forward</strong></td>
+          <td>Ming Fong (Headlands), Nick Georgakopoulos (Radix), A. Tuan Nguyen (Jane Street), Tim Lau (DRW), Annie Bryan (Arrowstreet), Jonathan Lacotte (Tower)</td>
+          <td>~250 words total. Name, one line, outbound links. Evidence lives elsewhere.</td>
+          <td>Named</td>
+        </tr>
+        <tr>
+          <td><strong>Content-forward</strong></td>
+          <td>Mark Best, Kipp Rogers (<em>Mechanical Markets</em>), Colin Swaney, Mike DeCrescenzo, David Álvarez Rosa</td>
+          <td>Tens of thousands of words. 3,000–7,000-word essays. The archive is the credential.</td>
+          <td>Never named</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="caption">
+    <b>Read:</b> the badge substitutes for the writing, and the writing substitutes for the badge.
+    You have no badge, so the minimal architecture is unavailable to you — everything below assumes
+    the second register.
+  </p>
+
+  <p>
+    The prop/HFT lane has already solved the problem you're solving, because they face the same
+    constraint for a different reason: they can't publish their employer's work. Their workarounds
+    are directly transferable — move research onto public or crypto data, write about infrastructure
+    rather than alpha, fence pre-employment work behind an explicit date range, and state exactly
+    what you are <em>not</em> claiming.
+  </p>
+
+  <div class="callout warn">
+    <span class="callout-label">Critical negative finding</span>
+    <p>
+      <strong>Not one person in the prop/HFT lane publishes an equity curve with a headline
+      Sharpe.</strong> In that population it reads as either a compliance violation or an overfit.
+      The only performance-shaped artifact anyone published was a paper-vs-live reconciliation
+      where the divergence is explained mechanistically.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+
+<section id="tier1">
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <h2 class="sec-title">Tier 1 — Evidence content</h2>
+  </div>
+
+  <p class="lede">
+    Ranked by signal per unit of effort. These are the things that actually move a quant hiring
+    manager, and they are all content, not design.
+  </p>
+
+  <div class="items">
+
+    <div class="item">
+      <span class="item-rank">1</span>
+      <div class="item-body">
+        <p class="item-title">A visible record of research that failed, framed as normal</p>
+        <p>
+          Rarest and highest-value signal found, ranked first independently by two lanes. Nobody
+          fabricating results writes these sentences.
+        </p>
+        <blockquote>
+          Almost all of what I have looked at has been a dead end… most research ends up in the bin.
+          <cite>Mark Best · markrbest.github.io</cite>
+        </blockquote>
+        <span class="who"><b>Also:</b> Kinlay discards a metric that gave him the answer he wanted, because no null had been run. Allocate Smartly's entire "Beware Strategies That Fall Down on Good Data" is a demolition of a result they'd have preferred to keep.</span>
+        <div class="move">
+          Promote post-mortems to a <strong>named top-level nav item</strong>. Nobody in the prop/HFT
+          lane has one, and your evaluation protocol already commits you to writing them. This is the
+          single clearest differentiator available to you.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">2</span>
+      <div class="item-body">
+        <p class="item-title">An explicit "what this does not show" section in every post</p>
+        <p>
+          Jonathan Kinlay runs this as a fixed section in every article, alongside a second fixed
+          section named <em>"Failure modes I actually saw."</em> Every bullet begins "It does not
+          show that…". Nothing else so cheaply proves you are not selling something.
+        </p>
+        <blockquote>
+          It does not show that this kind of CNN-based repair is useful on real data. … It does not,
+          on its own, justify a production system.
+          <cite>Jonathan Kinlay · "Deep Learning for Volatility Surface Repair"</cite>
+        </blockquote>
+        <div class="move">
+          Make it a literal required heading in your post template. It costs one paragraph and it is
+          the highest trust-per-word content available.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">3</span>
+      <div class="item-body">
+        <p class="item-title">Uncertainty attached to every headline number</p>
+        <p>
+          Kinlay reports <code>0.0184 ± 0.0010</code> and states the SE formula
+          (<code>std(ddof=1)/√N</code>). He publishes confidence intervals on correlations:
+          <code>+0.15 [−0.02, +0.37]</code> against <code>+0.82 [+0.67, +0.91]</code>. Abdelmessih
+          wrote an entire post whose purpose was showing a correlation's CI is <code>[+0.02,
+          +0.72]</code>. David Álvarez Rosa leads with the coefficient of variation rather than the
+          mean.
+        </p>
+        <div class="move">
+          Every number on the site gets a dispersion measure. Your MinTRL treatment already does this
+          for Sharpe — extend the habit to forecast errors, cost estimates, and fit quality.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">4</span>
+      <div class="item-body">
+        <p class="item-title">Trial count disclosed, then a deflation applied to it</p>
+        <p>
+          Almost nobody does this, which is exactly why it lands. The Refutation discloses 55
+          configs and 320 variants. López de Prado's own warning is the reason it matters:
+          <em>"It typically takes about 20 such iterations to discover a (false) investment
+          strategy"</em> at 5% significance.
+        </p>
+        <div class="callout warn" style="margin: 0.9rem 0 0;">
+          <span class="callout-label">Watch this specifically</span>
+          <p style="font-size: 0.95rem; margin: 0;">
+            López de Prado, verbatim: <em>"It does not matter if the backtest is a walk-forward
+            out-of-sample. The fact that we are repeating a test over and over on the same data will
+            likely lead to a false discovery."</em> Your live out-of-sample record is valuable
+            <em>only</em> with the trial count, the pre-registration date, the sample size, and
+            honest error bars. "Out-of-sample" used as a magic word is a red flag, not a defence.
+          </p>
+        </div>
+        <div class="move">
+          Your protocol already promises automatic trial-count logging. Surface the running count as a
+          live number on the site — a counter that only goes up is unfakeable and nobody else has one.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">5</span>
+      <div class="item-body">
+        <p class="item-title">Paper-vs-live reconciliation, with divergence explained mechanistically</p>
+        <p>
+          The only performance artifact the prop/HFT lane publishes at all. Mark Best's four-part
+          slippage series gives a simulation-vs-paper-vs-live table, and the value is not the
+          number — it's <em>"the forecast takes about 200 ms to calculate on a new bar thus in paper
+          and live the orders are sent later than in sim"</em> and <em>"crypto exchanges lack
+          sequence IDs."</em> Naming the mechanism of your own slippage is the strongest possible
+          evidence you have run a real system.
+        </p>
+        <div class="move">
+          Frame your live record around divergence explanation rather than returns. Backtest curve,
+          hard vertical line at go-live, realized path after it, and the gap quantified and
+          attributed.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">6</span>
+      <div class="item-body">
+        <p class="item-title">A standing "this analysis may contain errors" disclaimer</p>
+        <p>
+          The most transferable single artifact in the entire survey, three clauses long:
+        </p>
+        <blockquote>
+          Kipp Rogers began studying market data in his free time, later founding Anamnesis LLC…
+          The contents of this blog are purely his opinions, do not represent the views of Anamnesis
+          LLC, are <strong>the products of analysis which may have errors</strong>, and do not
+          constitute any sort of trading or investment advice.
+          <cite>Kipp Rogers · mechanicalmarkets.wordpress.com</cite>
+        </blockquote>
+        <p>
+          Paired with a per-post invitation: <em>"Please feel free to discuss anything that looks
+          wrong in the comments section or over email with me."</em>
+        </p>
+        <div class="move">
+          Costs nothing, buys enormous credibility with an audience whose job is scrutinising claims.
+          Add Carver's companion line too — explicitly not regulated, not selling courses or signals.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">7</span>
+      <div class="item-body">
+        <p class="item-title">Exact data provenance, with defects acknowledged</p>
+        <p>
+          Markwick names the exact API and its ten-year history limit, then enumerates all 59 ETFs
+          in the universe. Kinlay discloses "synthetic only" up front. Allocate Smartly explains
+          precisely when its simulated pre-ETF data is invalid. Vague provenance reads as
+          sloppiness or concealment.
+        </p>
+        <div class="move">
+          Vendor, instruments, exact date range, how it was obtained, what you had to pay for or
+          proxy, and what's wrong with it. Your <code>data_ingest_infra</code> repo already says
+          "Polygon" — put that on the site.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">8</span>
+      <div class="item-body">
+        <p class="item-title">A named baseline you compare against — and sometimes lose to</p>
+        <p>
+          Kinlay benchmarks his CNN against plain interpolation and reports that the gap is small
+          and may not survive real data. That's the clearest tell separating real research from a
+          backtest.
+        </p>
+        <div class="move">
+          Your protocol already names HAR-RV, GARCH, implied-as-forecast, and naive short carry.
+          Publish a result where one of them wins.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">9</span>
+      <div class="item-body">
+        <p class="item-title">Replication of a named paper, with the delta reported</p>
+        <p>
+          Markwick replicates Nick Baltas's <em>Cross-Asset Skew</em>, cites it, credits the podcast
+          where he heard about it, and says plainly: <em>"the results are not as conclusive as the
+          original paper."</em>
+        </p>
+        <div class="move">
+          This is the safest possible first post — it proves competence with zero risk of an
+          unfalsifiable claim, and it ships before your own system has results. Candidates: a
+          Bakshi–Kapadia–Madan variance-risk-premium replication, or Carr–Madan variance-swap
+          replication under real option chains.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">10</span>
+      <div class="item-body">
+        <p class="item-title">Infrastructure writing as a safe competence proxy</p>
+        <p>
+          Latency, logging, OMS design, reconciliation, benchmark methodology. It proves engineering
+          seriousness, is fully verifiable by the reader, and contains zero alpha. Four separate
+          people in the prop/HFT lane lean on it.
+        </p>
+        <div class="move">
+          Your structured logging, daily reconciliation, and silent-failure alerting are not boring
+          side-details — they are the most publishable thing you have that carries no claim risk.
+          Write them up before you have any results at all.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">11</span>
+      <div class="item-body">
+        <p class="item-title">Open-source code that somebody else uses</p>
+        <p>
+          Third-party adoption is unfakeable and IP-free. The best eleven words in the survey come
+          from Ties de Kok describing his own package: <em>"Officially integrated into Stata as of
+          Stata 17."</em> Sepp maintains <code>qis</code>, <code>stochvolmodels</code>,
+          <code>optimalportfolios</code>; Markwick maintains <code>HawkesProcesses.jl</code>; Letian
+          Wang ships <code>quanttrader</code> on PyPI.
+        </p>
+        <div class="move">
+          Extract one genuinely reusable piece — an SVI/SSVI arbitrage-free fitter, or a
+          deflated-Sharpe/PBO implementation — and ship it as a named, installable package.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">12</span>
+      <div class="item-body">
+        <p class="item-title">Downstream evaluation, not just metric improvement</p>
+        <p>
+          Kinlay checks whether repaired surfaces produce better SVI fits, not merely lower RMSE.
+        </p>
+        <div class="move">
+          Does a better vol forecast produce better P&amp;L <em>after hedging costs</em> — not just
+          lower MSE? Answer that in public and you've demonstrated the thing most ML-into-finance
+          candidates never grasp.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================= -->
+
+<section id="tier2">
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <h2 class="sec-title">Tier 2 — Positioning &amp; structure</h2>
+  </div>
+
+  <div class="items">
+
+    <div class="item">
+      <span class="item-rank">13</span>
+      <div class="item-body">
+        <p class="item-title">Lead with a falsifiable market thesis, not a self-description</p>
+        <blockquote>
+          Volatility regimes migrate across asset classes, and models that feel robust fail at the
+          worst moment. I build frameworks designed to survive regime change.
+          <cite>Artur Sepp · Risk Magazine Quant of the Year 2024</cite>
+        </blockquote>
+        <p>
+          You have no fund name to lead with, so a thesis is the only substitute — and it's the
+          better asset anyway, because it's checkable.
+        </p>
+        <div class="move">
+          Your <em>"Options are a market in forecasts. The trade is the forecast error"</em> is
+          already the right shape. It's buried on <code>/vol/</code>; it belongs on the homepage
+          above the biography.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">14</span>
+      <div class="item-body">
+        <p class="item-title">Isomorphism in sentence one</p>
+        <p>
+          Two Sigma's own switcher stories all turn on the same move — <em>"the basic problem set is
+          very similar"</em> (Rob, from the intelligence community), <em>"let's do a similar thing in
+          finance"</em> (Mike, ex-Google). Noisy sensor state estimation → noisy, non-stationary
+          market signal.
+        </p>
+        <div class="move">
+          Your Lockheed particle-filter line already does this well. Push it higher and use
+          <em>Optiver's own words</em> back at them: "reasoning about noisy data, imperfect signals,
+          and risk."
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">15</span>
+      <div class="item-body">
+        <p class="item-title">Depth in one named sub-specialty, visible at a glance</p>
+        <p>
+          The unit of credibility is a <em>thread</em>, not a portfolio. Markwick = Hawkes processes
+          and execution; Sepp = log-normal stochastic volatility. Neither says "quantitative
+          finance."
+        </p>
+        <p>
+          The counterexample proves it: Peter Cotton's site indexes eighteen research domains, each
+          with papers and shipped software, and is genuinely more accomplished than most sites in
+          the survey — but a hiring manager scanning it cannot state what he does.
+        </p>
+        <div class="move">
+          Your capability tag clouds (three groups, 26 tags) are the flat-breadth pattern. Cut them
+          hard, or replace them with the one thread you want to be known for.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">16</span>
+      <div class="item-body">
+        <p class="item-title">Give the system a name, a repo, and a version</p>
+        <p>
+          Everyone credible has named artifacts: Sepp's ROSAA and his log-normal beta SV model,
+          López de Prado's purged CV / deflated Sharpe / meta-labeling, Markwick's
+          <code>HawkesProcesses.jl</code>. Once a method has your name on it, breadth elsewhere
+          becomes free.
+        </p>
+        <div class="move">
+          "The volatility system" cannot be cited, starred, or referenced by anyone else. Name it,
+          version it, and make it the thing your posts are about.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">17</span>
+      <div class="item-body">
+        <p class="item-title">A boring five-item nav that separates kinds of evidence</p>
+        <p>
+          Best information architecture in the survey is Ties de Kok's: <strong>About me · Research ·
+          Code &amp; Data · Talks &amp; Classes · Blog Posts · CV.</strong> A hiring manager wants to
+          jump straight to the type of evidence they trust, and each nav item should be exactly one
+          type.
+        </p>
+        <div class="move">
+          Yours is Volatility System / Research Log / CV / Contact. The gap: <strong>Code &amp;
+          Data</strong> and <strong>Post-mortems</strong> as their own destinations.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">18</span>
+      <div class="item-body">
+        <p class="item-title">Abstracts inline — assume 45 seconds and no clicks</p>
+        <p>
+          De Kok expands full abstracts on the research page. Abdelmessih puts a one-line finding
+          under every post title ("Futures lead the cash"). Chinco's publication entries each carry a
+          plain-language findings paragraph. Mark Best's feed shows 60–80 word excerpts.
+        </p>
+        <div class="move">
+          Nothing on your site should require a click to evaluate. Every log entry gets its finding —
+          not its topic — visible in the listing.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">19</span>
+      <div class="item-body">
+        <p class="item-title">Fence pre-employment and non-proprietary work with an explicit date range</p>
+        <p>
+          Nick Georgakopoulos heads his section "Math Papers and Code <strong>(2017–2022)</strong>";
+          Sunny Balasubramanian writes "<strong>Formerly</strong> at Citadel, AQR." Signalling that
+          you know where the line is <em>is itself</em> the signal that you can be trusted near
+          proprietary information.
+        </p>
+        <div class="move">
+          State plainly that the vol system is built entirely on your own time with purchased retail
+          data, and contains nothing from any employer.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">20</span>
+      <div class="item-body">
+        <p class="item-title">Group by theme once the archive passes ~10 items — never by year alone</p>
+        <p>
+          A chronological blog decays; a themed index compounds. Newfound names its research
+          programs (Liquidity Cascades, Rebalance Timing Luck); Moontower uses topic clusters;
+          Qiwen Cui groups publications under four research themes so a reader sees four coherent
+          programs rather than eleven scattered papers.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================= -->
+
+<section id="tier3">
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <h2 class="sec-title">Tier 3 — Research-post craft</h2>
+  </div>
+
+  <div class="items">
+
+    <div class="item">
+      <span class="item-rank">21</span>
+      <div class="item-body">
+        <p class="item-title">Byline and date on every post — non-negotiable</p>
+        <p>
+          The Hull Tactical blog, where Euan Sinclair writes, is active, expert, and carries
+          <strong>no author attribution on any post.</strong> Unattributed research accrues to
+          nobody. Meanwhile three otherwise-credible reference sites in the survey are 2–3.5 years
+          stale, which reads worse than having no research section at all.
+        </p>
+        <div class="move">
+          If you can't sustain a cadence, present a fixed set of finished pieces with no dates
+          implying a schedule. A visibly abandoned log is worse than no log.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">22</span>
+      <div class="item-body">
+        <p class="item-title">Numbered, captioned figures referenced in the prose</p>
+        <p>
+          Gundersen bounds every figure with hairline rules and a bold <code>Figure N.</code> label.
+          Newfound puts a bold caption above and a standardized source line below —
+          "Calculations by …". Cheap, and it does more to make a page read as research than any
+          other single change.
+        </p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">23</span>
+      <div class="item-body">
+        <p class="item-title">Booktabs tables — horizontal rules only</p>
+        <p>
+          Gundersen: 2px top rule, 1px bottom, 1px under the header, no vertical rules anywhere.
+          Vertical rules and zebra striping read as spreadsheet export, not analysis.
+        </p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">24</span>
+      <div class="item-body">
+        <p class="item-title">Real math, rendered — pre-rendered at build time</p>
+        <p>
+          Math rendering is present on essentially every serious site in the prop/HFT lane; its
+          absence on a quant site is a negative signal, and a broken CDN reference is worse than
+          nothing. Gundersen's Black–Scholes post contains 186 pre-rendered
+          <code>&lt;span class="katex"&gt;</code> blocks and <em>zero math JavaScript at runtime</em>.
+        </p>
+        <div class="move">
+          Render KaTeX at build time in your existing <code>build_site.py</code>, ship
+          <code>katex.min.css</code> only, self-hosted, one version.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">25</span>
+      <div class="item-body">
+        <p class="item-title">Real citations to primary sources, with anchors</p>
+        <p>
+          Gundersen carries six properly formatted author-year citations on a single blog post, with
+          anchor IDs. Kinlay cites Bailey &amp; López de Prado, Harvey–Liu–Zhu, White's Reality
+          Check, and McLean &amp; Pontiff inline. Kipp Rogers grounds the square-root impact law in
+          published empirics across three asset classes.
+        </p>
+        <div class="move">
+          Cite the specific results, not the names. "Sinclair and López de Prado" as influences is
+          weaker than one correctly formatted reference to Bailey &amp; López de Prado (2014) on the
+          deflated Sharpe ratio.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">26</span>
+      <div class="item-body">
+        <p class="item-title">Reproducible code tied to the specific figure</p>
+        <p>
+          Ranked ordering from the survey: <strong>linked repo at an exact commit &gt; inline
+          snippet &gt; nothing &gt; a screenshot of code.</strong> Kinlay ships an ~800-line
+          self-contained script headed "CPU-friendly" — a deliberate reproducibility signal.
+          Markwick's Julia is complete and runnable inside the post.
+        </p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">27</span>
+      <div class="item-body">
+        <p class="item-title">Costs stated as specific numbers</p>
+        <p>
+          Allocate Smartly: "0.10% per trade / 0.20% round-trip," executed at the 4pm close. Carver
+          reports his <em>actual</em> slippage bill and what his execution algo saved — 78bp, about
+          40%. For an options system: bid/ask, exchange fees, and delta-hedge slippage, quantified
+          rather than waved at.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================= -->
+
+<section id="tier4">
+  <div class="sec-head">
+    <span class="sec-num">06</span>
+    <h2 class="sec-title">Tier 4 — Mechanics &amp; discoverability</h2>
+  </div>
+
+  <div class="callout">
+    <span class="callout-label">Verdict on your stack</span>
+    <p>
+      <strong>Stay where you are. Do not migrate.</strong> Hand-written HTML on GitHub Pages with a
+      custom domain puts you at or above the median of the entire survey, and ahead of nearly all of
+      it on structured data. Your hand-rolled inline SVG charts beat both Plotly bloat and static
+      PNGs. No Vercel, Astro, or Next.js appears anywhere in the quant cohort — Jekyll dominates,
+      Quarto is the one validated notebook path.
+    </p>
+  </div>
+
+  <p>
+    Two calibration points worth internalizing before spending another hour on design: Peter
+    Jäckel — author of <em>"Let's Be Rational,"</em> the implied-vol inversion algorithm the
+    industry runs on — publishes hand-written HTML containing IE6 workarounds and a flat list of
+    forty PDFs. <strong>López de Prado's own homepage is a 357-byte <code>&lt;frameset&gt;</code>
+    served from IIS.</strong> Campbell Harvey's 176-paper research page is Netscape-era framesets.
+    Bryan Kelly, Head of ML at AQR, is on Wix. Lasse Pedersen, an AQR principal, is on Google Sites.
+  </p>
+
+  <div class="items">
+
+    <div class="item">
+      <span class="item-rank">28</span>
+      <div class="item-body">
+        <p class="item-title">Sitemap, robots.txt, and an RSS/Atom feed</p>
+        <p>
+          A feed is how Quantocracy — still the best live aggregator in this niche — picks you up,
+          which puts you in the same daily roundup as Carver and Kinlay. It's the cheapest real
+          distribution available.
+        </p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">29</span>
+      <div class="item-body">
+        <p class="item-title">Make your GitHub profile carry the same positioning as the site</p>
+        <p>
+          The highest-yield discovery channel in the entire survey was the GitHub Users API filtered
+          by bio text and <code>location:"New York"</code>. That's a query a technically-minded
+          recruiter genuinely runs — and your profile currently has no bio, no location, no website
+          field, no profile README, and two near-duplicate repos
+          (<code>data_ingest_infra</code> and <code>data_ingestion_infra</code>).
+        </p>
+        <div class="move">
+          Bio, <code>location: New York, NY</code>, <code>blog: bradlasater.com</code>, a profile
+          README linking the system and the log, descriptions on every repo, and delete the
+          duplicate. Your site says "documented in the open" and links "Source" to a bare profile.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">30</span>
+      <div class="item-body">
+        <p class="item-title">Write the meta description in the third person, naming city and specialty</p>
+        <p>
+          Gundersen's is the model: <em>"Gregory Gundersen is a quantitative researcher in New
+          York."</em> Sunny Balasubramanian's names his prior employers outright — deliberate
+          recruiter-SEO and the single most copyable move in that lane. Search engines surface the
+          description verbatim, so it's the one sentence a recruiter is most likely to read before
+          deciding whether to click.
+        </p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">31</span>
+      <div class="item-body">
+        <p class="item-title">Ship both CV formats</p>
+        <p>
+          Recruiters forward PDFs and applicant-tracking systems ingest PDFs; hiring managers read
+          HTML. You have the HTML; add <code>/cv.pdf</code>.
+        </p>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">32</span>
+      <div class="item-body">
+        <p class="item-title">Protect the domain — it's a decaying asset</p>
+        <p>
+          Two reference sites in this survey have already been lost. <code>frouah.com</code>, the
+          standard free reference for Heston derivations, and <code>kthohr.com</code>, an NYU PhD's
+          site, both lapsed and now serve online-casino spam under their owners' names. A lapsed
+          registration doesn't go quiet — it gets bought <em>because</em> it has inbound links.
+        </p>
+        <div class="move">
+          Auto-renew plus registrar lock on <code>bradlasater.com</code>, and never retire the
+          <code>bradlasater.github.io</code> fallback, which cannot be seized.
+        </div>
+      </div>
+    </div>
+
+    <div class="item">
+      <span class="item-rank">33</span>
+      <div class="item-body">
+        <p class="item-title">Self-host the fonts and finish the analytics</p>
+        <p>
+          Google Fonts is a render-blocking third-party request; the serious sites either self-host
+          or use a system stack. Separately, your GoatCounter <code>CODE</code> is still empty, so
+          nothing is being measured — you currently have no idea whether anyone reads this.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================= -->
+
+<section id="template">
+  <div class="sec-head">
+    <span class="sec-num">07</span>
+    <h2 class="sec-title">The post template</h2>
+  </div>
+
+  <p class="lede">
+    Derived by merging Kinlay's fixed skeleton with the conventions recurring across the vol lane.
+    Two of these sections essentially never appear on retail sites, which is exactly why they work.
+  </p>
+
+<pre class="tpl"><b>&lt;Specific, falsifiable title — a claim or a question, never a topic&gt;</b>
+Byline · Date · Read time
+
+<b>## The question</b>
+  The decision it affects. The prior you held going in.
+
+<b>## Data</b>
+  Source named exactly. Universe enumerated. N. Exclusions.
+  Known defects. Point-in-time discipline.
+
+<b>## Method</b>
+  Reimplementable by a reader. Every parameter and how it was chosen.
+  <i>Variants tested before this one: N.</i>
+  Named baselines. Costs as numbers, not adjectives.
+
+<b>## Results</b>
+  Headline number ± SE or CI. Tables over prose.
+  ≤2 figures: bold caption above, source line below.
+  Median and quartiles, not only the mean.
+
+<b>## Robustness</b>
+  OOS split date chosen before fitting. Multiple IS/OOS windows.
+  An out-of-distribution family. Bootstrap.
+  Deflated Sharpe / PBO-CSCV <i>with the trial count</i>.
+  ±30% parameter perturbation. Opposite-rule sign test.
+
+<b>## What this shows and does not show</b>          <i>← non-negotiable</i>
+  Every bullet begins "It does not show that…"
+
+<b>## Failure modes I actually saw</b>
+  Name your own model's weaknesses before a reader finds them.
+
+<b>## What I'd do next</b>
+  Ranked. Cheapest decisive test first.
+
+<b>## Code &amp; references</b>
+  The exact commit that produced every figure. Runtime and hardware.
+  Real author-year citations with anchors.
+</pre>
+
+  <p class="caption">
+    <b>Length:</b> 1,800–4,500 words is the observed norm. Kipp Rogers runs 3,000–7,000.
+    <b>Register:</b> first person, about decisions and tradeoffs — never third-person marketing copy.
+  </p>
+</section>
+
+<!-- ============================================================= -->
+
+<section id="track">
+  <div class="sec-head">
+    <span class="sec-num">08</span>
+    <h2 class="sec-title">The track-record spec</h2>
+  </div>
+
+  <p class="lede">
+    Rob Carver's twelve-year public series is the reference implementation. Almost nobody else in
+    the survey has a live record at all — which makes yours a genuine differentiator, provided it
+    carries this genre's caveat conventions. Without them it looks like every other backtest.
+  </p>
+
+  <h3>What Carver does, in order</h3>
+  <ol class="body-list">
+    <li><strong>Leads with the worst number.</strong> His year-11 post opens "it's my worst ever." A track record that only surfaces in good years is not a track record.</li>
+    <li><strong>States the exact accounting basis.</strong> Mark-to-market <em>and</em> net-of-everything, side by side, with the currency and the period boundaries named.</li>
+    <li><strong>Decomposes the P&amp;L.</strong> −16.3% total = −14.5% futures + −0.64% cash ETFs + −2.7% FX, then by market and by trading rule. Decomposition is the strongest anti-cherry-picking signal available, because it exposes every component including the losers.</li>
+    <li><strong>Benchmarks against named third-party indices, with correlations.</strong> SG CTA Index and AHL at 0.68 and 0.56 — which simultaneously proves he isn't levered beta and situates the result in the peer distribution.</li>
+    <li><strong>Reports costs as a first-class result.</strong> "Without my execution algo I would have paid 1.34% in slippage; my simple algo earned 78bp and cut the bill by around 40%."</li>
+    <li><strong>Deducts the risk-free rate, or says he didn't.</strong></li>
+    <li><strong>Shows the full path,</strong> not a summary statistic.</li>
+    <li><strong>Admits discretionary errors by name.</strong> "(yes, bad move in retrospect, and another failure of discretionary trading on my part)."</li>
+  </ol>
+
+  <div class="callout">
+    <span class="callout-label">Four gaps even Carver leaves open</span>
+    <p>These are genuine differentiation, not table stakes — nobody in the survey does them:</p>
+    <ul class="body-list" style="margin-bottom: 0;">
+      <li><strong>A live-vs-backtest overlay.</strong> Backtest equity curve, a hard vertical line at go-live, the realized path after it, and the gap quantified.</li>
+      <li><strong>A confidence interval on your own realized Sharpe.</strong> <code>SE(SR) ≈ √((1 + SR²/2)/N)</code>. On eighteen months it will be humiliatingly wide. Publishing it anyway is the single most credible thing you can put on that page.</li>
+      <li><strong>A frozen, pre-registered definition.</strong> "Parameters were frozen on &lt;date&gt;; config hash &lt;hash&gt;; nothing below has been re-fit." Verifiable against your git history — which your CI already makes tamper-evident.</li>
+      <li><strong>A change log.</strong> Every intervention, override, and parameter change, dated, with the reason. Silence about changes reads as changes concealed.</li>
+    </ul>
+  </div>
+
+  <div class="callout warn">
+    <span class="callout-label">How it goes wrong</span>
+    <p style="margin-bottom: 0.6rem;">Observed in the survey, all of it disqualifying with this audience:</p>
+    <ul class="body-list" style="margin-bottom: 0;">
+      <li>A dashboard with no methodology behind it, or the methodology paywalled.</li>
+      <li>Cumulative return only — no vol, no drawdown, no benchmark, no costs.</li>
+      <li>Headline Sharpe with no interval and no trial count. One demonstration in the survey shows a 0.39 daily Sharpe deflating <em>below zero</em> once 100 trials are accounted for.</li>
+      <li>Gross-of-costs presented as live. Any results section that doesn't state its cost assumption is assumed to have none.</li>
+      <li>Restarted or re-based records that don't disclose what came before.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+
+<section id="phrasing">
+  <div class="sec-head">
+    <span class="sec-num">09</span>
+    <h2 class="sec-title">Phrasing conventions</h2>
+  </div>
+
+  <h4>Scope limitation — use these constructions literally</h4>
+  <div class="phrases">
+    <div>"It does not show that ___ is useful on real data."</div>
+    <div>"It does not show that ___ is the right architecture for this task."</div>
+    <div>"It does not, on its own, justify a production system."</div>
+    <div>"Whether ___ survives a real-data test is an open question."</div>
+    <div>"The synthetic surfaces have no calibration drift, no quote-time-of-day noise, no microstructure asymmetries."</div>
+  </div>
+
+  <h4>Calibrated confidence</h4>
+  <div class="phrases">
+    <div>"I would not defend it further than 'worth running properly.'"</div>
+    <div>"Should be read as an order of magnitude, not a point estimate."</div>
+    <div>"Treat the <em>ordering</em> as the result and the <em>levels</em> as approximate."</div>
+    <div>"This is a small one, and it does not come out where I expected."</div>
+    <div>"Necessary, but not sufficient."</div>
+  </div>
+
+  <h4>Naming your own failure modes</h4>
+  <div class="phrases">
+    <div>"The heteroscedastic head undercovers."</div>
+    <div>"The convergence is slow and the validation curve is still improving slightly at epoch 60."</div>
+    <div>"We have neglected the trading costs and potential capacity… that is a problem to solve for another day."</div>
+  </div>
+
+  <h4>Reporting a null, and steelmanning against yourself</h4>
+  <div class="phrases">
+    <div>"I'm taking the absence of any contradictory evidence as evidence that I should continue to do what I've done before."</div>
+    <div>"We unfortunately can't reject the null hypothesis."</div>
+    <div>"Is it possible that a weak edge existed but was hidden by imperfections in the data? Absolutely."</div>
+    <div>"The test confidently says 'nothing to see here.' It's technically correct."</div>
+  </div>
+
+  <h4>Delete on sight</h4>
+  <div class="tags">
+    <span class="tag">proven</span>
+    <span class="tag">consistently</span>
+    <span class="tag">robust (unqualified)</span>
+    <span class="tag">proprietary</span>
+    <span class="tag">cutting-edge</span>
+    <span class="tag">passionate about</span>
+    <span class="tag">significant returns</span>
+    <span class="tag">battle-tested</span>
+    <span class="tag">alpha-generating</span>
+    <span class="tag">any Sharpe without a period, a cost assumption, and an interval</span>
+  </div>
+
+  <h4>The bio, in four sentences</h4>
+  <blockquote>
+    Euan Sinclair is an option trader with over 25 years of professional trading experience. He has
+    traded options on indexes, stocks, commodities and interest rate products. He currently trades
+    equity options at Bluefin Capital Management. He holds a PhD in theoretical physics from the
+    University of Bristol and has written three books: <em>Volatility Trading</em>, <em>Option
+    Trading</em> and <em>Positional Option Trading</em>, all published by Wiley.
+    <cite>Risk.net author bio</cite>
+  </blockquote>
+  <p>
+    Years → what instruments → current seat → credentials and artifacts. No adjectives. Copy the
+    shape, not the content. Note also that Sinclair's authority on Robot Wealth is asserted by the
+    site owner, not by himself — <em>"one of the most respected options traders and authors in the
+    world."</em> The specialist never self-praises.
+  </p>
+</section>
+
+<!-- ============================================================= -->
+
+<section id="redflags">
+  <div class="sec-head">
+    <span class="sec-num">10</span>
+    <h2 class="sec-title">Anti-patterns</h2>
+  </div>
+
+  <p class="lede">
+    Ranked by how much damage each does with this specific audience. The first four are
+    disqualifying in a way that having no number at all is not.
+  </p>
+
+  <ol class="body-list">
+    <li><strong>A headline return or Sharpe with no trial count.</strong> Read as evidence of not knowing that trials must be controlled for — which is worse than publishing nothing.</li>
+    <li><strong>"Out-of-sample" used as a magic word</strong> without pre-registration date, sample size, and error bars.</li>
+    <li><strong>Implausible numbers.</strong> One live site in the survey advertises "250%+ annual returns (pre-costs)" and a "1.7 Sharpe Ratio" with no methodology.</li>
+    <li><strong>Results with no cost, slippage, or capacity model.</strong> Instantly visible to a vol person.</li>
+    <li><strong>No risk section.</strong> A vol strategy with no drawdown behaviour, tail exposure, gap risk, or stated failure conditions reads as naive about short-vol payoffs specifically.</li>
+    <li><strong>"AI trading bot" framing, or complexity presented as the achievement.</strong> HRT: <em>"an incremental 0.1% improvement in the accuracy of a neural network's ability to distinguish dog breeds might not translate to predicting the price of a stock."</em></li>
+    <li><strong>Skills walls and technology laundry lists.</strong> <em>"Interviewers will pick the most obscure item on your list."</em> Same applies to a badge grid of libraries.</li>
+    <li><strong>Anything you cannot defend for twenty minutes.</strong> Naming "combinatorially symmetric cross-validation" without having implemented it is worse than not mentioning it.</li>
+    <li><strong>Vague accomplishment language.</strong> <em>"'Developed quantitative models' tells a recruiter nothing. Which models? What data? What was the result?"</em></li>
+    <li><strong>Design investment visibly exceeding research investment.</strong> The best-designed site in the hedge-fund lane was the least technically credible.</li>
+    <li><strong>A bare artifact dump with no framing</strong> — and its inverse, a beautiful landing page with nothing behind it. One site in the survey has genuinely strong volatility research behind a landing page that reads "Notebook Reports" plus six bare <code>.html</code> links. No name, no bio, no findings.</li>
+    <li><strong>Burying the transferable work.</strong> State estimation and real-time optimization must be surfaced and translated into market vocabulary, or they read as generic ML résumé filler.</li>
+    <li><strong>Overclaiming the identity.</strong> "Engineer building a volatility research program" is defensible. "Quantitative researcher," on a site with no desk experience, invites a comparison you lose.</li>
+    <li><strong>Non-work content in the primary nav</strong>, mixed-topic dilution, and undated content.</li>
+    <li><strong>Dormancy.</strong> Worse than having no research section, because it reads as an abandoned project.</li>
+  </ol>
+
+  <div class="callout warn">
+    <span class="callout-label">The site most dangerous for you to imitate</span>
+    <p>
+      One site in the prop/HFT sweep is technically well-built — Next.js, Tailwind, genuinely
+      polished — and stacks three job titles, names sections "Technical Arsenal" and "GitHub
+      Impact," and quotes a "20% Sharpe ratio improvement" unsourced against a CV that doesn't
+      support its HFT market-making positioning. It is the closest in <em>ambition</em> to what you
+      might build, and that positioning-versus-CV gap is precisely what this audience is trained to
+      spot.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+
+<section id="stop">
+  <div class="sec-head">
+    <span class="sec-num">11</span>
+    <h2 class="sec-title">What not to build</h2>
+  </div>
+
+  <p class="lede">
+    Effort you would be spending against the evidence. Each of these was checked across the whole
+    sample.
+  </p>
+
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Don't</th><th>Evidence from the survey</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>A dark theme</strong></td>
+          <td>Across ~80 sites, essentially one ships a real toggle, and not one site in the hedge-fund lane implements dark mode at all. Every serious research site is light-only with a near-grayscale palette. Your dark-only design system is the outlier — spend the effort on the light palette instead.</td>
+        </tr>
+        <tr>
+          <td><strong>A JS charting library</strong></td>
+          <td>Exactly one site out of twenty uses interactive charts; it cost them ten scripts and thirteen stylesheets on a landing page. Charts in this field are overwhelmingly static images with numbered captions. Your hand-rolled SVG is the better middle path.</td>
+        </tr>
+        <tr>
+          <td><strong>Migrating to Astro / Next / Vercel</strong></td>
+          <td>None of them appear anywhere in the quant cohort. Jekyll dominates; Quarto is the one validated notebook path, and only if you later want <code>.ipynb</code> publishing in a subdirectory.</td>
+        </tr>
+        <tr>
+          <td><strong>Hosted search</strong></td>
+          <td>Your site is far too small. Nobody at this scale has it.</td>
+        </tr>
+        <tr>
+          <td><strong>A CSS framework or SPA</strong></td>
+          <td>Not one site in the hedge-fund lane uses a JS framework for the site itself. Two sites in the prop lane render literally nothing without JavaScript — an unforced total failure.</td>
+        </tr>
+        <tr>
+          <td><strong>More visual polish generally</strong></td>
+          <td>Three top-tier people's sites aren't mobile-responsive at all, and one deliberately loads <code>non-responsive.css</code>. Design is not the binding constraint for this audience — and visible design effort exceeding research effort is itself a negative signal.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <span class="callout-label">Two things to fix in what you already have</span>
+    <p>
+      There is a <code>TODO(brad)</code> comment shipped in your homepage source, flagging that the
+      "roughly 60%" Ticketmaster forecast-error claim doesn't name its metric or baseline. The TODO's
+      instinct is right — that's the first number a quant interviewer pushes on — but it currently
+      reads as a public note-to-self admitting the claim is unqualified. Name the metric, name the
+      baseline, or cut the number.
+    </p>
+    <p style="margin-bottom: 0;">
+      And the site is presently all promise: the research log has zero entries, the track record has
+      zero observations, and there is no chart, no equation, and no code anywhere on it. Everything
+      in Tier 1 is content. That's where the whole gap is.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================= -->
+
+<section id="sites">
+  <div class="sec-head">
+    <span class="sec-num">12</span>
+    <h2 class="sec-title">Reference sites</h2>
+  </div>
+
+  <p class="lede">
+    Every URL below was loaded and inspected. Start with the first four.
+  </p>
+
+  <h4>Study these closely</h4>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Site</th><th>Who</th><th>Why</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="url"><a href="https://gregorygundersen.com/blog/">gregorygundersen.com</a></td>
+          <td>Quantitative researcher, Tudor Investment, NYC</td>
+          <td>The best template in the sample. Nine years of continuous writing laid out like journal articles. 6,040-byte stylesheet, one typeface, pre-rendered KaTeX, real bibliographies, archive grouped by year.</td>
+        </tr>
+        <tr>
+          <td class="url"><a href="https://jonathankinlay.com/">jonathankinlay.com</a></td>
+          <td>Head of Quantitative Trading, Systematic Strategies LLC</td>
+          <td>The rigor exemplar. "What this shows and does not show" in every post. Has a "Deep Learning for Volatility Surface Repair" article that is almost exactly your target domain.</td>
+        </tr>
+        <tr>
+          <td class="url"><a href="https://dm13450.github.io/">dm13450.github.io</a></td>
+          <td>Dean Markwick — execution quant, PhD Statistical Science, UCL</td>
+          <td>The closest structural analogue to your site. Jekyll on GitHub Pages, 100+ posts since 2014, runnable inline code, MathJax, RSS, paper replications.</td>
+        </tr>
+        <tr>
+          <td class="url"><a href="https://artursepp.com/">artursepp.com</a></td>
+          <td>Head of Quantitative Analytics, LGT; Risk Quant of the Year 2024</td>
+          <td>Closest to your stated ambition. Publishes vol research, maintains open-source Python libraries, cross-links every identity from the header, opens with a market thesis rather than a self-description.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Content-forward, no employer named — your register</h4>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Site</th><th>Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="url"><a href="https://markrbest.github.io">markrbest.github.io</a></td><td>The most transferable site in the prop/HFT lane. Publishes dead ends as normal; four-part sim-vs-paper-vs-live slippage series.</td></tr>
+        <tr><td class="url"><a href="https://mechanicalmarkets.wordpress.com">mechanicalmarkets.wordpress.com</a></td><td>Kipp Rogers. 7,000-word microstructure essays built entirely on public data. Source of the standing-disclaimer template. Dormant since 2023.</td></tr>
+        <tr><td class="url"><a href="https://qoppac.blogspot.com/">qoppac.blogspot.com</a></td><td>Rob Carver, ex-AHL. Twelve years of public live track record. On Blogger, at a blogspot subdomain, and one of the most-read systematic trading blogs in the world.</td></tr>
+        <tr><td class="url"><a href="https://blog.moontower.ai/">blog.moontower.ai</a></td><td>Kris Abdelmessih, 21 years in options, traded in the pits at SIG. The practitioner-voice register; heavy footnoting for trader-honest caveats.</td></tr>
+        <tr><td class="url"><a href="https://www.allocatesmartly.com/">allocatesmartly.com</a></td><td>The best live/out-of-sample presentation model found, and the best example of steelmanning against your own result.</td></tr>
+        <tr><td class="url"><a href="https://cswaney.github.io">cswaney.github.io</a></td><td>NYC quant researcher, finance PhD, no employer named. Strong microstructure work — undermined by three display typefaces including a handwriting face.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Badge-forward, for contrast</h4>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Site</th><th>Stated role</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="url"><a href="https://www.tiesdekok.com">tiesdekok.com</a></td><td>Quant Researcher, Arrowstreet Capital — best information architecture in the survey</td></tr>
+        <tr><td class="url"><a href="https://leo.adberg.com">leo.adberg.com</a></td><td>Algorithm engineer, Hudson River Trading (HRT AI Labs) — live in-browser demos</td></tr>
+        <tr><td class="url"><a href="https://florianwechsung.github.io">florianwechsung.github.io</a></td><td>Quantitative Researcher, Citadel GQS, NYC — academic homepage that survived the move to industry</td></tr>
+        <tr><td class="url"><a href="https://evilpegasus.github.io/">evilpegasus.github.io</a></td><td>Quantitative Researcher, Headlands Technologies — ~250 words total</td></tr>
+        <tr><td class="url"><a href="https://sunnybala.com/">sunnybala.com</a></td><td>Formerly Citadel, AQR — meta description names prior employers outright as deliberate recruiter-SEO</td></tr>
+        <tr><td class="url"><a href="https://oneraynyday.github.io/about/">oneraynyday.github.io</a></td><td>UCLA CS → HRT Algorithm Engineer, NYC — the closest positive career-switcher case; the mechanism is demonstrated clarity of thought, not a track record</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Calibration — substance carries this audience entirely</h4>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr><th>Site</th><th>What it is</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="url"><a href="http://www.jaeckel.org/">jaeckel.org</a></td><td>Peter Jäckel, author of "Let's Be Rational." Hand-written HTML with IE6 workarounds, no CSS or JS files, a flat list of ~40 PDFs — and updated five days before capture.</td></tr>
+        <tr><td class="url"><a href="https://www.quantresearch.org/">quantresearch.org</a></td><td>Marcos López de Prado. A 357-byte HTML <code>&lt;frameset&gt;</code> served from IIS. Also hosts the reference <code>DSR.py</code> and CSCV/PBO implementations.</td></tr>
+        <tr><td class="url"><a href="https://jgatheral.github.io/">jgatheral.github.io</a></td><td>Jim Gatheral, author of "The Volatility Surface." Jekyll on a bare <code>*.github.io</code> — no custom domain, 4KB homepage, zero external scripts.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="caption" style="margin-top: 1.5rem;">
+    <b>Note:</b> Euan Sinclair has no personal site — <code>euansinclair.com</code> does not resolve
+    and never has. He writes as a contributor on Robot Wealth and on the Hull Tactical blog, the
+    latter carrying no bylines at all. Neither does Gappy Paleologo, Nick Baltas, Andrew Ang, or
+    Igor Halperin. That space is genuinely open.
+  </p>
+</section>
+
+<footer>
+  Compiled from five parallel web crawls, August 2026 · ~80 distinct personal sites plus 20+
+  hiring-side sources · every cited URL loaded and inspected directly · reddit.com and quantnet.com
+  were inaccessible, so no forum opinion is cited
+</footer>
+
+</div>
+</body>
+</html>
