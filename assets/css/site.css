@@ -327,6 +327,40 @@ main { flex: 1; }
   margin-top: var(--sp-5);
 }
 
+/* CV identity block — the portrait appears here and nowhere else.
+   A face above the homepage thesis would trade a research signal for a
+   portfolio one: across the peer survey, sites carrying a photo are academic
+   homepages and badge-forward one-pagers, while the content-forward research
+   sites have none. On a CV it is conventional and a recruiter mid-screen
+   expects it, so this is the one page where it earns its place. */
+.hero--cv { display: grid; gap: var(--sp-5); }
+
+@media (min-width: 42rem) {
+  .hero--cv {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--sp-6);
+    align-items: start;
+  }
+}
+
+/* <picture> is inline by default, which would leave a descender gap under the
+   portrait and make the grid track size against a text baseline. */
+.hero--cv picture { display: block; }
+
+.hero__portrait {
+  width: clamp(6rem, 16vw, 8.5rem);
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+  border-radius: var(--radius);
+  border: 1px solid var(--c-border);
+}
+
+/* The role label carries a top margin so it can follow body copy elsewhere.
+   Inside the identity column it is the first child, and that margin would
+   drop the text a few pixels below the portrait's top edge. */
+.hero--cv .hero__role { margin-top: 0; }
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -801,6 +835,14 @@ details.tableview > .table-wrap { margin-top: var(--sp-3); max-height: 26rem; ov
   @page { margin: 14mm; }
 
   .site-header, .skip-link, .pending { display: none !important; }
+
+  /* The portrait is screen-only by default. A printed or PDF-exported CV is
+     the copy that gets forwarded into an applicant-tracking system, and some
+     US employers route photo-bearing résumés aside to avoid bias exposure.
+     The screen page keeps the face; the artifact that travels stays neutral.
+     To print it after all, delete this rule. */
+  .hero--cv picture { display: none !important; }
+  .hero--cv { grid-template-columns: 1fr; }
 
   /* The contact links live ONLY inside .actions and the footer. Hiding both
      printed a CV with no way to reach the candidate — the most expensive
