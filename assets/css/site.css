@@ -18,7 +18,7 @@
   --c-surface-hover:  oklch(0.250 0.015 255);
 
   --c-border:         oklch(0.300 0.015 255);
-  --c-border-strong:  oklch(0.400 0.018 255);
+  --c-border-strong:  oklch(0.520 0.018 255);
 
   /* Never pure white on dark — halation makes it harder to read, not easier. */
   --c-text:           oklch(0.955 0.004 255);
@@ -120,7 +120,16 @@ a:hover { color: var(--c-accent-hover); }
 :focus-visible {
   outline: none;
   box-shadow: var(--ring);
-  border-radius: var(--radius-sm);
+}
+
+/* box-shadow is not painted under forced-colors, and the rule above removes
+   the outline — leaving keyboard users in Windows High Contrast with no focus
+   indicator at all. */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 2px solid CanvasText;
+    outline-offset: 2px;
+  }
 }
 
 /* Tabular figures only where numbers stack vertically and must align —
@@ -247,8 +256,8 @@ main { flex: 1; }
   transition: color 0.15s var(--ease);
 }
 .site-nav a:hover { color: var(--c-text); }
-.site-nav a[aria-current="page"] { color: var(--c-text); }
-.site-nav a[aria-current="page"]::after {
+.site-nav a[aria-current] { color: var(--c-text); }
+.site-nav a[aria-current]::after {
   content: "";
   display: block;
   height: 2px;
@@ -527,6 +536,7 @@ main { flex: 1; }
    -------------------------------------------------------------------------- */
 
 .prose { max-width: var(--measure); }
+.prose, .card__body, .deflist__item > dd { overflow-wrap: break-word; }
 .prose > * + * { margin-top: var(--sp-4); }
 .prose h2 { font-size: var(--step-2); margin-top: var(--sp-7); }
 .prose h3 { font-size: var(--step-1); margin-top: var(--sp-6); }
@@ -561,6 +571,7 @@ main { flex: 1; }
    13. Data tables
    -------------------------------------------------------------------------- */
 
+.table-wrap:focus-visible { box-shadow: var(--ring); }
 .table-wrap { overflow-x: auto; border: 1px solid var(--c-border); border-radius: var(--radius); }
 table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
 th, td { padding: var(--sp-3) var(--sp-4); text-align: left; }
@@ -779,12 +790,44 @@ details.tableview > .table-wrap { margin-top: var(--sp-3); max-height: 26rem; ov
     --c-text: #000; --c-text-secondary: #222; --c-text-muted: #555;
     --c-border: #ccc; --c-border-strong: #999; --c-accent: #0b57d0;
   }
+  /* Semantic colours need resetting too — the dark-theme green, red and amber
+     all fall below 2.9:1 on white paper. */
+  :root {
+    --c-pos: #076b4e;
+    --c-neg: #a5231b;
+    --c-warn: #7a5600;
+  }
   body { font-size: 10.5pt; line-height: 1.45; }
-  .site-header, .site-footer, .actions, .skip-link, .pending { display: none !important; }
-  .section { padding-block: 0.6rem; break-inside: avoid; }
-  .role, .card { break-inside: avoid; }
+  @page { margin: 14mm; }
+
+  .site-header, .skip-link, .pending { display: none !important; }
+
+  /* The contact links live ONLY inside .actions and the footer. Hiding both
+     printed a CV with no way to reach the candidate — the most expensive
+     possible defect on a page recruiters are expected to print. Nav-style
+     action rows are still suppressed; the contact row is kept. */
+  .actions { display: none !important; }
+  .hero .actions { display: flex !important; gap: 0 1rem; flex-wrap: wrap; }
+  .hero .actions .btn {
+    border: 0;
+    padding: 0;
+    min-height: 0;
+    font-weight: 400;
+    background: none !important;
+    color: #000 !important;
+  }
+  .site-footer { border-top: 1px solid #ccc; padding-block: 0.5rem; }
+  .site-footer ul { gap: 1rem; }
+
+  /* break-inside on .section is unsatisfiable — a section is taller than a
+     page, so browsers drop the rule. The per-item rules are what actually
+     keep a role or card from splitting. */
+  .section { padding-block: 0.6rem; }
+  .role, .card, .deflist__item, .stat { break-inside: avoid; }
   .feature { background: none; border: 1px solid #ccc; }
   a { text-decoration: none; color: #000; }
+  /* No mailto rule: the printed contact row's link text is already the
+     address, so expanding the href would just repeat it. */
   a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 8pt; color: #555; }
 }
 
