@@ -55,7 +55,7 @@
       "givenName": "Brad",
       "familyName": "Lasater",
       "url": "https://bradlasater.com/",
-      "image": "https://bradlasater.com/assets/og.png",
+      "image": "https://bradlasater.com/assets/headshot.jpg",
       "email": "mailto:brad@bradlasater.com",
       "jobTitle": "Applied Scientist",
       "description": "Applied scientist and machine-learning engineer with ten years of production ML, optimization, and state-estimation work at Nift, Ticketmaster, Lockheed Martin, and Boeing. Now building an end-to-end systematic volatility trading system in public, and seeking quantitative research and quantitative engineering roles in New York.",
@@ -157,19 +157,33 @@
 
 <main id="main">
 
-  <section class="shell hero">
-    <span class="hero__role">Curriculum Vitae</span>
-    <h1 class="hero__name" style="font-size: var(--step-3); margin-top: var(--sp-3);">Brad Lasater</h1>
-    <p class="hero__bio">
-      Applied scientist and machine-learning engineer, ten years across consumer marketplaces,
-      live events, aerospace, and defense. Patent holder. Previously held TS/SCI. Prior service,
-      United States Marine Corps. Currently building a systematic volatility trading system and
-      seeking quantitative roles in New York.
-    </p>
-    <div class="actions">
-      <a class="btn btn--primary" href="mailto:brad@bradlasater.com">brad@bradlasater.com</a>
-      <a class="btn" href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a>
-      <a class="btn" href="https://github.com/bradlasater" rel="me">GitHub</a>
+  <section class="shell hero hero--cv">
+    <picture>
+      <source
+        type="image/webp"
+        srcset="/assets/headshot-320.webp 320w, /assets/headshot-720.webp 720w"
+        sizes="(min-width: 42rem) 8.5rem, 6rem">
+      <img
+        class="hero__portrait"
+        src="/assets/headshot.jpg"
+        width="720" height="720"
+        alt="Brad Lasater"
+        decoding="async">
+    </picture>
+    <div class="hero__identity">
+      <span class="hero__role">Curriculum Vitae</span>
+      <h1 class="hero__name" style="font-size: var(--step-3); margin-top: var(--sp-3);">Brad Lasater</h1>
+      <p class="hero__bio">
+        Applied scientist and machine-learning engineer, ten years across consumer marketplaces,
+        live events, aerospace, and defense. Patent holder. Previously held TS/SCI. Prior service,
+        United States Marine Corps. Currently building a systematic volatility trading system and
+        seeking quantitative roles in New York.
+      </p>
+      <div class="actions">
+        <a class="btn btn--primary" href="mailto:brad@bradlasater.com">brad@bradlasater.com</a>
+        <a class="btn" href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a>
+        <a class="btn" href="https://github.com/bradlasater" rel="me">GitHub</a>
+      </div>
     </div>
   </section>
 
