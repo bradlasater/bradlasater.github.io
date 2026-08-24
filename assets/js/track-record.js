@@ -9,18 +9,53 @@
    Minimum Track Record Length: how long this record would have to run before
    its Sharpe could be distinguished from zero. A short record says so.
 
-   References: Bailey & López de Prado (2012), "The Sharpe Ratio Efficient
-   Frontier" — probabilistic Sharpe ratio and minimum track record length.
+   CONVENTIONS a reader needs in order to check these numbers:
+     - Sharpe is excess of a 0% risk-free rate, i.e. mean/stdev of returns.
+     - Sample standard deviation (ddof = 1).
+     - Skewness and kurtosis are the biased sample moments g1 and b2
+       (population sd in the denominator), matching scipy.stats.skew(bias=True)
+       and scipy.stats.kurtosis(fisher=False, bias=True). Kurtosis is raw, so a
+       normal distribution gives 3. NOTE pandas' .skew()/.kurt() default to the
+       bias-corrected G1/G2 and will differ slightly.
+     - PSR and MinTRL use the PER-PERIOD Sharpe, never the annualised one, and
+       a benchmark Sharpe of zero, one-sided at 95%.
+
+   Reference: Bailey & Lopez de Prado (2012), "The Sharpe Ratio Efficient
+   Frontier", eq. 7 (PSR) and eq. 12 (MinTRL).
+
+   INFERENTIAL vs DESCRIPTIVE. Cumulative return, drawdown and costs are facts
+   about what happened and are always shown. Sharpe, PSR, MinTRL, skewness and
+   kurtosis are inferences about an unknown distribution; below MIN_RETURNS
+   they are not merely imprecise but actively misleading (a two-day sample can
+   produce an annualised Sharpe in the thousands), so they are withheld. This
+   asymmetry is the whole point of the page.
    ========================================================================== */
 
 (function () {
   "use strict";
 
-  var Z95 = 1.6448536269514722; // one-sided 95%
+  /** Phi^-1(0.95), one-sided. */
+  var Z95 = 1.6448536269514722;
+
+  /** Returns needed before any inferential statistic is displayed. */
+  var MIN_RETURNS = 20;
+
+  /** Annualised Sharpe above this is a numerical artefact, not a result. */
+  var MAX_PLAUSIBLE_SHARPE = 30;
+
+  /** Relative floor for the standard deviation, guarding against a NAV series
+      that is smooth to within floating-point noise. */
+  var REL_SD_FLOOR = 1e-8;
 
   /* ---------------------------------------------------------------- math -- */
 
-  // Abramowitz & Stegun 7.1.26 — plenty accurate for a confidence readout.
+  /**
+   * Error function, Abramowitz & Stegun 7.1.26.
+   * Max absolute error 1.5e-7 — far below the precision of a displayed
+   * percentage, so no higher-order method is warranted.
+   * @param {number} x
+   * @returns {number}
+   */
   function erf(x) {
     var sign = x < 0 ? -1 : 1;
     x = Math.abs(x);
@@ -36,17 +71,22 @@
     return sign * y;
   }
 
+  /** Standard normal CDF. @param {number} x @returns {number} */
   function normalCdf(x) {
     return 0.5 * (1 + erf(x / Math.SQRT2));
   }
 
+  /** @param {number[]} xs @returns {number} */
   function mean(xs) {
     var s = 0;
     for (var i = 0; i < xs.length; i++) s += xs[i];
     return s / xs.length;
   }
 
-  // Sample standard deviation (ddof = 1), matching the Sharpe convention.
+  /**
+   * Sample standard deviation (ddof = 1), matching the Sharpe convention.
+   * @param {number[]} xs @param {number} mu @returns {number}
+   */
   function stdev(xs, mu) {
     if (xs.length < 2) return NaN;
     var s = 0;
@@ -54,15 +94,40 @@
     return Math.sqrt(s / (xs.length - 1));
   }
 
-  // Standardised moment of order k. Kurtosis here is raw, so normal => 3.
-  function moment(xs, mu, sd, k) {
+  /**
+   * Biased standardised moment of order k — divides by the POPULATION sd, so
+   * k=3 gives g1 and k=4 gives b2. Using the ddof=1 sd here instead would
+   * produce a hybrid estimator matching neither scipy nor pandas.
+   * @param {number[]} xs @param {number} mu @param {number} sdSample
+   * @param {number} k @returns {number}
+   */
+  function standardisedMoment(xs, mu, sdSample, k) {
+    var n = xs.length;
+    var sdPop = sdSample * Math.sqrt((n - 1) / n);
     var s = 0;
-    for (var i = 0; i < xs.length; i++) s += Math.pow((xs[i] - mu) / sd, k);
-    return s / xs.length;
+    for (var i = 0; i < n; i++) s += Math.pow((xs[i] - mu) / sdPop, k);
+    return s / n;
   }
 
   /* --------------------------------------------------------- statistics -- */
 
+  /**
+   * @typedef {Object} Stats
+   * @property {number} n observations
+   * @property {number} nReturns
+   * @property {boolean} inferential whether the sample supports inference
+   * @property {?number} cumulative
+   * @property {?number} sharpeAnnual
+   * @property {?number} psr
+   * @property {?number} minTRL in RETURNS, not observations
+   */
+
+  /**
+   * Derive every displayed statistic from the observation list.
+   * @param {Array<Object>} observations sorted, validated
+   * @param {number} periodsPerYear
+   * @returns {Stats}
+   */
   function computeStats(observations, periodsPerYear) {
     var navs = observations.map(function (o) {
       return o.nav;
@@ -76,6 +141,7 @@
     var out = {
       n: observations.length,
       nReturns: returns.length,
+      inferential: false,
       returns: returns,
       cumulative: navs.length ? navs[navs.length - 1] / navs[0] - 1 : null,
       sharpeAnnual: null,
@@ -87,10 +153,13 @@
       kurtosis: null,
       maxDrawdown: null,
       currentDrawdown: null,
-      costShare: null
+      costShare: null,
+      costTotal: null,
+      grossTotal: null,
+      costsComplete: true
     };
 
-    /* Drawdowns work from the first observation. */
+    /* Descriptive: drawdowns. Always shown — these are facts, not estimates. */
     if (navs.length) {
       var peak = navs[0];
       var maxDd = 0;
@@ -103,45 +172,65 @@
       out.currentDrawdown = navs[navs.length - 1] / peak - 1;
     }
 
-    /* Cost share of gross P&L. Only meaningful when gross P&L is positive —
-       otherwise there is no gross edge for costs to be a share of. */
+    /* Descriptive: costs. A missing field is NOT zero — reporting "$0 costs"
+       on a page advertising "net of all modelled frictions" would be an
+       affirmative false claim, so incompleteness suppresses the figure. */
     var grossTotal = 0;
     var costTotal = 0;
     observations.forEach(function (o) {
-      grossTotal += o.gross_pnl || 0;
-      costTotal += o.costs || 0;
+      if (typeof o.costs !== "number" || typeof o.gross_pnl !== "number") {
+        out.costsComplete = false;
+        return;
+      }
+      grossTotal += o.gross_pnl;
+      costTotal += o.costs;
     });
-    out.grossTotal = grossTotal;
-    out.costTotal = costTotal;
-    if (grossTotal > 0) out.costShare = costTotal / grossTotal;
+    if (out.costsComplete) {
+      out.grossTotal = grossTotal;
+      out.costTotal = costTotal;
+      if (grossTotal > 0) out.costShare = costTotal / grossTotal;
+    }
 
-    if (returns.length < 2) return out;
+    /* Everything below is inferential. */
+    if (returns.length < MIN_RETURNS) return out;
 
     var mu = mean(returns);
     var sd = stdev(returns, mu);
-    if (!isFinite(sd) || sd <= 0) return out;
+
+    // A constant-growth NAV leaves a standard deviation of ~1e-16 — pure
+    // floating-point residue, which a `sd <= 0` test does not catch and which
+    // yields an annualised Sharpe of ~1e14.
+    if (!isFinite(sd) || sd <= 1e-12 || sd <= REL_SD_FLOOR * Math.abs(mu)) {
+      return out;
+    }
 
     var srPeriod = mu / sd;
-    var g3 = moment(returns, mu, sd, 3);
-    var g4 = moment(returns, mu, sd, 4);
+    var sharpeAnnual = srPeriod * Math.sqrt(periodsPerYear);
+    if (!isFinite(sharpeAnnual) || Math.abs(sharpeAnnual) > MAX_PLAUSIBLE_SHARPE) {
+      return out;
+    }
 
+    var g3 = standardisedMoment(returns, mu, sd, 3);
+    var g4 = standardisedMoment(returns, mu, sd, 4);
+    if (!isFinite(g3) || !isFinite(g4)) return out;
+
+    out.inferential = true;
     out.skew = g3;
     out.kurtosis = g4;
     out.volAnnual = sd * Math.sqrt(periodsPerYear);
-    out.sharpeAnnual = srPeriod * Math.sqrt(periodsPerYear);
+    out.sharpeAnnual = sharpeAnnual;
 
-    // Annualising a return from a handful of days produces a number that is
-    // arithmetically correct and practically nonsense, so it is gated.
-    if (returns.length >= 20 && out.cumulative > -1) {
+    if (out.cumulative > -1) {
       out.returnAnnual =
         Math.pow(1 + out.cumulative, periodsPerYear / returns.length) - 1;
     }
 
-    /* Probabilistic Sharpe Ratio and Minimum Track Record Length, both
-       against a benchmark Sharpe of zero. The variance term corrects for
-       the non-normality that makes a naive Sharpe optimistic. */
+    /* PSR and MinTRL, benchmark Sharpe zero. The variance term corrects for
+       the non-normality that makes a naive Sharpe optimistic. It can go
+       non-positive on small or extreme samples, in which case neither
+       statistic is defined and both stay null — the verdict must handle that
+       rather than falling through to a significance claim. */
     var variance = 1 - g3 * srPeriod + ((g4 - 1) / 4) * srPeriod * srPeriod;
-
     if (variance > 0) {
       out.psr = normalCdf(
         (srPeriod * Math.sqrt(returns.length - 1)) / Math.sqrt(variance)
@@ -156,22 +245,28 @@
 
   /* ------------------------------------------------------------ format -- */
 
+  function isNum(x) {
+    return typeof x === "number" && isFinite(x);
+  }
+
   function pct(x, digits) {
-    if (x === null || x === undefined || !isFinite(x)) return "—";
-    return (x * 100).toFixed(digits === undefined ? 2 : digits) + "%";
+    if (!isNum(x)) return "—";
+    var s = (x * 100).toFixed(digits === undefined ? 2 : digits);
+    if (/^-0\.?0*$/.test(s)) s = s.slice(1); // avoid "-0.0%"
+    return s + "%";
   }
 
   function num(x, digits) {
-    if (x === null || x === undefined || !isFinite(x)) return "—";
-    return x.toFixed(digits === undefined ? 2 : digits);
+    return isNum(x) ? x.toFixed(digits === undefined ? 2 : digits) : "—";
   }
 
   function money(x, currency) {
-    if (x === null || x === undefined || !isFinite(x)) return "—";
+    if (!isNum(x)) return "—";
+    var code = /^[A-Z]{3}$/.test(currency || "") ? currency : "USD";
     try {
       return new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: currency || "USD",
+        currency: code,
         maximumFractionDigits: 0
       }).format(x);
     } catch (e) {
@@ -179,13 +274,16 @@
     }
   }
 
-  function daysBetween(a, b) {
-    return Math.round((b - a) / 86400000);
+  /** Parse as UTC so a rendered date never shifts by a day in some zones. */
+  function parseDate(s) {
+    return new Date(s + "T00:00:00Z");
   }
 
-  function parseDate(s) {
-    // Parse as UTC so the rendered date never shifts by a day in some zones.
-    return new Date(s + "T00:00:00Z");
+  /** Whole UTC days between two dates, floored — never rounded up. */
+  function daysBetweenUTC(a, b) {
+    var da = Date.UTC(a.getUTCFullYear(), a.getUTCMonth(), a.getUTCDate());
+    var db = Date.UTC(b.getUTCFullYear(), b.getUTCMonth(), b.getUTCDate());
+    return Math.floor((db - da) / 86400000);
   }
 
   function fmtDate(d) {
@@ -211,23 +309,35 @@
     return node;
   }
 
+  /**
+   * Axis ticks at round values covering [min, max].
+   * Computed by index rather than by accumulating `v += step`, because
+   * accumulation drifts and leaves the zero tick at ~1e-18, which then fails
+   * an equality test and silently loses the emphasised zero baseline.
+   * @returns {number[]}
+   */
   function niceTicks(min, max, count) {
     var span = max - min;
-    if (span <= 0) return [min];
+    if (!(span > 0)) return [min];
     var raw = span / count;
     var mag = Math.pow(10, Math.floor(Math.log10(raw)));
     var norm = raw / mag;
-    var step = (norm >= 5 ? 10 : norm >= 2 ? 5 : norm >= 1 ? 2 : 1) * mag;
+    var step = (norm > 5 ? 10 : norm > 2 ? 5 : norm > 1 ? 2 : 1) * mag;
+    var start = Math.ceil(min / step);
     var ticks = [];
-    for (var v = Math.ceil(min / step) * step; v <= max + 1e-9; v += step) {
+    for (var i = 0; start + i <= max / step + 1e-9; i++) {
+      var v = (start + i) * step;
+      if (Math.abs(v) < step * 1e-9) v = 0; // snap float dust to exact zero
       ticks.push(v);
     }
     return ticks;
   }
 
   /**
-   * One chart. `kind` is "equity" (line + wash, y in % return from inception)
-   * or "drawdown" (area hanging from zero).
+   * Render one chart into `container`.
+   * @param {HTMLElement} container
+   * @param {Array<{date: Date, value: number}>} series
+   * @param {{kind: string, height?: number, boundaries?: Array, ariaLabel?: string}} opts
    */
   function drawChart(container, series, opts) {
     container.textContent = "";
@@ -275,8 +385,11 @@
     }
 
     /* Gridlines + y ticks — hairline, solid, recessive. */
-    var ticks = niceTicks(lo, hi, 4);
-    ticks.forEach(function (t) {
+    var seen = {};
+    niceTicks(lo, hi, 4).forEach(function (t) {
+      var label = pct(t, 1);
+      if (seen[label]) return; // never two identically-labelled ticks
+      seen[label] = true;
       var y = sy(t);
       svg.appendChild(
         el("line", {
@@ -287,22 +400,21 @@
           class: t === 0 ? "chart__zero" : "chart__grid"
         })
       );
-      var label = el("text", {
+      var text = el("text", {
         x: M.left + plotW + 8,
         y: y + 4,
         class: "chart__tick"
       });
-      label.textContent = pct(t, 1);
-      svg.appendChild(label);
+      text.textContent = label;
+      svg.appendChild(text);
     });
 
-    /* Area wash then line. */
+    /* Area wash then line. Anchor the wash to zero whenever zero is on screen,
+       so area above the line reads as gain and below as loss; falling back to
+       the plot floor would shade losses as though they were gains. */
     var linePts = series.map(function (p, i) {
       return sx(i) + "," + sy(p.value);
     });
-    // Anchor the wash to zero whenever zero is on screen, so area above the
-    // line reads as gain and area below as loss. Falling back to the plot
-    // floor would shade losses as though they were gains.
     var zeroInRange = lo <= 0 && hi >= 0;
     var baseline = opts.kind === "drawdown" || zeroInRange ? sy(0) : sy(lo);
 
@@ -310,17 +422,9 @@
       svg.appendChild(
         el("path", {
           d:
-            "M" +
-            sx(0) +
-            "," +
-            baseline +
-            " L" +
-            linePts.join(" L") +
-            " L" +
-            sx(series.length - 1) +
-            "," +
-            baseline +
-            " Z",
+            "M" + sx(0) + "," + baseline +
+            " L" + linePts.join(" L") +
+            " L" + sx(series.length - 1) + "," + baseline + " Z",
           class: "chart__area chart__area--" + opts.kind
         })
       );
@@ -337,10 +441,7 @@
       var x = sx(b.index);
       svg.appendChild(
         el("line", {
-          x1: x,
-          y1: M.top,
-          x2: x,
-          y2: M.top + plotH,
+          x1: x, y1: M.top, x2: x, y2: M.top + plotH,
           class: "chart__boundary"
         })
       );
@@ -349,7 +450,7 @@
       svg.appendChild(t);
     });
 
-    /* Endpoint marker + direct label — the only labelled point. */
+    /* Endpoint marker + 2px surface ring — the only labelled point. */
     if (series.length) {
       var lastI = series.length - 1;
       var lx = sx(lastI);
@@ -367,24 +468,18 @@
       svg.appendChild(first);
       if (series.length > 1) {
         var last = el("text", {
-          x: M.left + plotW,
-          y: H - 10,
-          class: "chart__tick",
-          "text-anchor": "end"
+          x: M.left + plotW, y: H - 10,
+          class: "chart__tick", "text-anchor": "end"
         });
         last.textContent = fmtDate(series[series.length - 1].date);
         svg.appendChild(last);
       }
     }
 
-    /* Hover layer: crosshair + tooltip. Values stay reachable via the table
-       view below, so the tooltip enhances rather than gates. */
+    /* Hover layer. Values stay reachable via the table view below, so the
+       tooltip enhances rather than gates. */
     var hover = el("g", { class: "chart__hover", "aria-hidden": "true" });
-    var vline = el("line", {
-      y1: M.top,
-      y2: M.top + plotH,
-      class: "chart__crosshair"
-    });
+    var vline = el("line", { y1: M.top, y2: M.top + plotH, class: "chart__crosshair" });
     var hdot = el("circle", { r: 4, class: "chart__dot chart__dot--" + opts.kind });
     hover.appendChild(vline);
     hover.appendChild(hdot);
@@ -398,8 +493,7 @@
       if (series.length < 2) return;
       var box = svg.getBoundingClientRect();
       var xInView = ((ev.clientX - box.left) / box.width) * W;
-      var ratio = (xInView - M.left) / plotW;
-      var idx = Math.round(ratio * (series.length - 1));
+      var idx = Math.round(((xInView - M.left) / plotW) * (series.length - 1));
       idx = Math.max(0, Math.min(series.length - 1, idx));
       var p = series[idx];
       var px = sx(idx);
@@ -410,14 +504,20 @@
       hdot.setAttribute("cy", py);
       hover.classList.add("is-on");
       tip.hidden = false;
-      tip.innerHTML =
-        '<span class="chart__tip-date">' +
-        fmtDate(p.date) +
-        '</span><span class="chart__tip-value">' +
-        pct(p.value) +
-        "</span>";
+      tip.textContent = "";
+      var dateEl = document.createElement("span");
+      dateEl.className = "chart__tip-date";
+      dateEl.textContent = fmtDate(p.date);
+      var valEl = document.createElement("span");
+      valEl.className = "chart__tip-value";
+      valEl.textContent = pct(p.value);
+      tip.appendChild(dateEl);
+      tip.appendChild(valEl);
+      // Clamp by the tooltip's own half-width — it is translateX(-50%), so
+      // clamping the centre to the box edges hangs it half off the chart.
+      var half = tip.offsetWidth / 2;
       var left = (px / W) * box.width;
-      tip.style.left = Math.max(0, Math.min(box.width - 10, left)) + "px";
+      tip.style.left = Math.max(half, Math.min(box.width - half, left)) + "px";
     });
 
     svg.addEventListener("pointerleave", function () {
@@ -436,193 +536,277 @@
     if (node) node.textContent = value;
   }
 
-  function render(doc) {
-    var root = document.getElementById("tr-root");
-    var observations = doc.observations || [];
-    var periods = doc.periods_per_year || 252;
+  /**
+   * Validate the fetched document before anything is rendered.
+   * Bailing out here rather than mid-render is what prevents a half-built
+   * page: partial statistics, NaN path data and an error banner at once.
+   * @returns {Array<Object>} observations, sorted ascending by date
+   */
+  function normalise(doc) {
+    if (!doc || typeof doc !== "object") throw new Error("data is not an object");
+    var observations = doc.observations;
+    if (!Array.isArray(observations)) throw new Error("observations is not an array");
 
-    var empty = document.getElementById("tr-empty");
-    var live = document.getElementById("tr-live");
+    observations.forEach(function (o, i) {
+      if (!o || typeof o !== "object") throw new Error("observation " + i + " is not an object");
+      if (typeof o.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(o.date)) {
+        throw new Error("observation " + i + " has an invalid date");
+      }
+      if (!isNum(o.nav) || o.nav <= 0) {
+        throw new Error("observation " + i + " has an invalid nav");
+      }
+    });
 
-    if (!observations.length) {
-      if (empty) empty.hidden = false;
-      if (live) live.hidden = true;
-      return;
+    var sorted = observations.slice().sort(function (a, b) {
+      return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+    });
+    for (var i = 1; i < sorted.length; i++) {
+      if (sorted[i].date === sorted[i - 1].date) {
+        throw new Error("duplicate observation date " + sorted[i].date);
+      }
     }
+    return sorted;
+  }
 
-    if (empty) empty.hidden = true;
-    if (live) live.hidden = false;
-
-    var stats = computeStats(observations, periods);
+  function renderHero(doc, observations, stats) {
     var inception = parseDate(observations[0].date);
     var latest = parseDate(observations[observations.length - 1].date);
-    var calendarDays = daysBetween(inception, new Date()) + 1;
-
-    /* Hero: elapsed time, because that is the thing that cannot be faked. */
-    setText("tr-days", String(calendarDays));
+    setText("tr-days", String(daysBetweenUTC(inception, new Date()) + 1));
     setText("tr-inception", fmtDate(inception));
     setText("tr-latest", fmtDate(latest));
     setText("tr-obs", String(stats.n));
 
-    /* Capital mode. */
-    var modes = {};
-    observations.forEach(function (o) {
-      modes[o.mode] = (modes[o.mode] || 0) + 1;
-    });
     var modeNode = document.getElementById("tr-mode");
     if (modeNode) {
       var current = observations[observations.length - 1].mode;
-      modeNode.textContent =
-        current === "live" ? "Real capital" : "Paper — simulated";
+      modeNode.textContent = current === "live" ? "Real capital" : "Paper — simulated";
       modeNode.className =
         "badge badge--dot " + (current === "live" ? "badge--live" : "badge--active");
     }
+  }
 
-    setText("tr-cum", pct(stats.cumulative));
-    setText("tr-ann", pct(stats.returnAnnual));
+  function renderStats(doc, stats) {
+    [
+      ["tr-cum", pct(stats.cumulative)],
+      ["tr-ann", pct(stats.returnAnnual)],
+      ["tr-vol", pct(stats.volAnnual)],
+      ["tr-sharpe", num(stats.sharpeAnnual)],
+      ["tr-psr", isNum(stats.psr) ? pct(stats.psr, 1) : "—"],
+      ["tr-mintrl", isNum(stats.minTRL) ? String(Math.ceil(stats.minTRL)) : "—"],
+      ["tr-maxdd", pct(stats.maxDrawdown)],
+      ["tr-curdd", pct(stats.currentDrawdown)],
+      ["tr-skew", num(stats.skew)],
+      ["tr-kurt", num(stats.kurtosis)],
+      ["tr-costshare", isNum(stats.costShare) ? pct(stats.costShare, 1) : "—"],
+      ["tr-costs", stats.costsComplete ? money(stats.costTotal, doc.base_currency) : "—"]
+    ].forEach(function (pair) {
+      setText(pair[0], pair[1]);
+    });
+
     setText(
       "tr-ann-hint",
-      stats.returnAnnual === null
-        ? "Withheld under 20 observations"
-        : "Geometric, " + periods + "-day basis"
+      stats.inferential
+        ? "Geometric, " + (doc.periods_per_year || 252) + "-day basis"
+        : "Withheld under " + (MIN_RETURNS + 1) + " observations"
     );
-    setText("tr-vol", pct(stats.volAnnual));
-    setText("tr-sharpe", num(stats.sharpeAnnual));
-    setText("tr-psr", stats.psr === null ? "—" : pct(stats.psr, 1));
-    setText("tr-maxdd", pct(stats.maxDrawdown));
-    setText("tr-curdd", pct(stats.currentDrawdown));
-    setText("tr-skew", num(stats.skew));
-    setText("tr-kurt", num(stats.kurtosis));
-    setText(
-      "tr-costshare",
-      stats.costShare === null ? "—" : pct(stats.costShare, 1)
-    );
-    setText("tr-costs", money(stats.costTotal, doc.base_currency));
+  }
 
-    /* The verdict banner. This is the honest headline: whether the record is
-       long enough for its Sharpe to mean anything at all. */
+  /**
+   * The honest headline: whether the record is long enough to mean anything.
+   * Every branch must terminate in a definite message — an undefined MinTRL
+   * must never fall through to the significance claim.
+   */
+  function renderVerdict(stats) {
     var verdict = document.getElementById("tr-verdict");
-    if (verdict) {
-      var needed = stats.minTRL === null ? null : Math.ceil(stats.minTRL);
-      setText("tr-mintrl", needed === null ? "—" : String(needed));
+    if (!verdict) return;
 
-      var body;
-      var tone = "pending";
-      if (stats.nReturns < 2) {
-        body =
-          "Too few observations to compute a Sharpe ratio at all. The record " +
-          "needs to run before any performance statistic here is worth reading.";
-      } else if (stats.sharpeAnnual === null || stats.sharpeAnnual <= 0) {
-        body =
-          "The observed Sharpe ratio is at or below zero, so there is nothing " +
-          "to distinguish from zero yet. That is reported rather than hidden.";
-      } else if (needed !== null && stats.nReturns < needed) {
-        body =
-          "This track record is too short to be statistically meaningful. Given " +
-          "the observed Sharpe, skewness, and kurtosis, distinguishing it from " +
-          "zero at 95% confidence would take about " +
-          needed +
-          " observations. It has " +
-          stats.nReturns +
-          ". Read the numbers below as provisional.";
-      } else {
-        tone = "ok";
-        body =
-          "The observed Sharpe ratio is distinguishable from zero at 95% " +
-          "confidence: the record has " +
-          stats.nReturns +
-          " observations against a minimum of about " +
-          needed +
-          ". The probabilistic Sharpe ratio is " +
-          pct(stats.psr, 1) +
-          ".";
-      }
-      verdict.className = "verdict verdict--" + tone;
-      var bodyNode = document.getElementById("tr-verdict-body");
-      if (bodyNode) bodyNode.textContent = body;
+    var needed = isNum(stats.minTRL) ? Math.ceil(stats.minTRL) : null;
+    var tone = "pending";
+    var body;
+
+    if (stats.nReturns < MIN_RETURNS) {
+      body =
+        "Too short to support any inference. Performance statistics are " +
+        "withheld until there are at least " + MIN_RETURNS + " daily returns (" +
+        (MIN_RETURNS + 1) + " observations); this record has " + stats.nReturns +
+        ". A Sharpe ratio computed from a handful of days can run into the " +
+        "thousands and means nothing, so it is not shown at all.";
+    } else if (!stats.inferential) {
+      body =
+        "The return series is too smooth or too extreme for these statistics " +
+        "to be numerically meaningful at this sample size, so they are withheld.";
+    } else if (!isNum(stats.sharpeAnnual)) {
+      body = "The Sharpe ratio is undefined for this sample.";
+    } else if (stats.sharpeAnnual <= 0) {
+      body =
+        "The observed Sharpe ratio is at or below zero, so there is nothing to " +
+        "distinguish from zero yet. That is reported rather than hidden.";
+    } else if (needed === null) {
+      body =
+        "The Sharpe estimate is too unstable at this sample size for a minimum " +
+        "track record length to be defined, so no significance claim is made.";
+    } else if (stats.nReturns < needed) {
+      body =
+        "This track record is too short to be statistically meaningful. Given " +
+        "the observed Sharpe, skewness, and kurtosis, distinguishing it from " +
+        "zero at 95% confidence would take about " + needed + " returns. It has " +
+        stats.nReturns + ". Read the numbers below as provisional.";
+    } else {
+      tone = "ok";
+      body =
+        "The observed Sharpe ratio is distinguishable from zero at 95% " +
+        "confidence: the record has " + stats.nReturns + " returns against a " +
+        "minimum of about " + needed + ". The probabilistic Sharpe ratio is " +
+        pct(stats.psr, 1) + ".";
     }
 
-    /* Charts. Equity is indexed to 0% at inception; drawdown hangs from 0. */
+    verdict.className = "verdict verdict--" + tone;
+    setText("tr-verdict-body", body);
+  }
+
+  function buildSeries(doc, observations) {
     var base = observations[0].nav;
-    var equitySeries = observations.map(function (o) {
+    var equity = observations.map(function (o) {
       return { date: parseDate(o.date), value: o.nav / base - 1 };
     });
 
     var peak = observations[0].nav;
-    var ddSeries = observations.map(function (o) {
+    var drawdown = observations.map(function (o) {
       if (o.nav > peak) peak = o.nav;
       return { date: parseDate(o.date), value: o.nav / peak - 1 };
     });
 
+    /* Boundaries: compare parsed dates, and skip any transition that falls
+       outside the observed range rather than silently dropping or pinning it
+       to index 0. */
     var boundaries = [];
-    (doc.mode_changes || []).forEach(function (change) {
+    var changes = Array.isArray(doc.mode_changes) ? doc.mode_changes : [];
+    changes.forEach(function (change) {
+      if (!change || typeof change.date !== "string") return;
+      var when = parseDate(change.date).getTime();
       for (var i = 0; i < observations.length; i++) {
-        if (observations[i].date >= change.date) {
-          boundaries.push({ index: i, label: change.to === "live" ? "Real capital" : "Paper" });
-          break;
+        if (parseDate(observations[i].date).getTime() >= when) {
+          if (i === 0 && when < parseDate(observations[0].date).getTime()) return;
+          boundaries.push({
+            index: i,
+            label: change.to === "live" ? "Real capital" : "Paper"
+          });
+          return;
         }
       }
+      // Dated after every observation — nothing to draw yet.
     });
+
+    return { equity: equity, drawdown: drawdown, boundaries: boundaries };
+  }
+
+  /** Table view — the WCAG-clean twin. Built with textContent, never
+      innerHTML: the JSON is author-controlled but public, and the CI
+      validator is a schema check, not an HTML sanitiser. */
+  function renderTable(observations) {
+    var tbody = document.getElementById("tr-tbody");
+    if (!tbody) return;
+    tbody.textContent = "";
+
+    for (var i = observations.length - 1; i >= 0; i--) {
+      var o = observations[i];
+      var ret = i === 0 ? null : o.nav / observations[i - 1].nav - 1;
+      var row = document.createElement("tr");
+
+      [
+        { text: o.date, cls: "" },
+        { text: o.nav.toFixed(2), cls: "numeric" },
+        {
+          text: ret === null ? "—" : pct(ret),
+          cls: "numeric " + (ret === null ? "" : ret >= 0 ? "pos" : "neg")
+        },
+        { text: isNum(o.gross_pnl) ? o.gross_pnl.toFixed(2) : "—", cls: "numeric" },
+        { text: isNum(o.costs) ? o.costs.toFixed(2) : "—", cls: "numeric" },
+        { text: String(o.positions), cls: "numeric" },
+        { text: String(o.mode), cls: "" }
+      ].forEach(function (cell) {
+        var td = document.createElement("td");
+        if (cell.cls.trim()) td.className = cell.cls.trim();
+        td.textContent = cell.text;
+        row.appendChild(td);
+      });
+
+      tbody.appendChild(row);
+    }
+  }
+
+  function hideLoading() {
+    var loading = document.getElementById("tr-loading");
+    if (loading) loading.hidden = true;
+  }
+
+  function showEmpty() {
+    hideLoading();
+    var empty = document.getElementById("tr-empty");
+    var live = document.getElementById("tr-live");
+    if (empty) empty.hidden = false;
+    if (live) live.hidden = true;
+  }
+
+  function showError(message) {
+    hideLoading();
+    var fail = document.getElementById("tr-error");
+    var empty = document.getElementById("tr-empty");
+    var live = document.getElementById("tr-live");
+    if (live) live.hidden = true;
+    if (empty) empty.hidden = true;
+    if (fail) {
+      fail.hidden = false;
+      fail.textContent = "Could not load the track record data (" + message + ").";
+    }
+  }
+
+  function render(doc) {
+    var observations = normalise(doc);
+
+    if (!observations.length) {
+      showEmpty();
+      return;
+    }
+
+    var periods = doc.periods_per_year || 252;
+    var stats = computeStats(observations, periods);
+
+    hideLoading();
+    var empty = document.getElementById("tr-empty");
+    var live = document.getElementById("tr-live");
+    if (empty) empty.hidden = true;
+    if (live) live.hidden = false;
+
+    renderHero(doc, observations, stats);
+    renderStats(doc, stats);
+    renderVerdict(stats);
+
+    var series = buildSeries(doc, observations);
 
     var eqNode = document.getElementById("tr-chart-equity");
     if (eqNode) {
-      drawChart(eqNode, equitySeries, {
+      drawChart(eqNode, series.equity, {
         kind: "equity",
-        boundaries: boundaries,
+        boundaries: series.boundaries,
         ariaLabel:
-          "Cumulative return since inception: " +
-          pct(stats.cumulative) +
-          " over " +
-          stats.n +
-          " observations. Full values are in the table below."
+          "Cumulative return since inception: " + pct(stats.cumulative) +
+          " over " + stats.n + " observations. Full values are in the table below."
       });
     }
 
     var ddNode = document.getElementById("tr-chart-drawdown");
     if (ddNode) {
-      drawChart(ddNode, ddSeries, {
+      drawChart(ddNode, series.drawdown, {
         kind: "drawdown",
         height: 180,
         ariaLabel:
-          "Drawdown from running peak. Maximum drawdown " +
-          pct(stats.maxDrawdown) +
+          "Drawdown from running peak. Maximum drawdown " + pct(stats.maxDrawdown) +
           ". Full values are in the table below."
       });
     }
 
-    /* Table view — the WCAG-clean twin. Every plotted value is here. */
-    var tbody = document.getElementById("tr-tbody");
-    if (tbody) {
-      var rows = observations
-        .map(function (o, i) {
-          var ret = i === 0 ? null : o.nav / observations[i - 1].nav - 1;
-          var cls = ret === null ? "" : ret >= 0 ? "pos" : "neg";
-          return (
-            "<tr><td>" +
-            o.date +
-            '</td><td class="numeric">' +
-            o.nav.toFixed(2) +
-            '</td><td class="numeric ' +
-            cls +
-            '">' +
-            (ret === null ? "—" : pct(ret)) +
-            '</td><td class="numeric">' +
-            (o.gross_pnl || 0).toFixed(2) +
-            '</td><td class="numeric">' +
-            (o.costs || 0).toFixed(2) +
-            '</td><td class="numeric">' +
-            o.positions +
-            "</td><td>" +
-            o.mode +
-            "</td></tr>"
-          );
-        })
-        .reverse()
-        .join("");
-      tbody.innerHTML = rows;
-    }
-
-    if (root) root.setAttribute("data-state", "loaded");
+    renderTable(observations);
   }
 
   /* --------------------------------------------------------------- boot -- */
@@ -632,21 +816,25 @@
     if (!root) return;
     var src = root.getAttribute("data-source") || "/data/track-record.json";
 
-    fetch(src, { cache: "no-cache" })
+    // A hung request would otherwise leave the page on the empty state
+    // forever, silently claiming tracking has not started.
+    var controller = typeof AbortController === "function" ? new AbortController() : null;
+    var timer = setTimeout(function () {
+      if (controller) controller.abort();
+    }, 15000);
+
+    fetch(src, { cache: "no-cache", signal: controller ? controller.signal : undefined })
       .then(function (r) {
         if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
       })
-      .then(render)
+      .then(function (doc) {
+        clearTimeout(timer);
+        render(doc);
+      })
       .catch(function (err) {
-        var fail = document.getElementById("tr-error");
-        if (fail) {
-          fail.hidden = false;
-          fail.textContent =
-            "Could not load the track record data (" + err.message + ").";
-        }
-        var empty = document.getElementById("tr-empty");
-        if (empty) empty.hidden = true;
+        clearTimeout(timer);
+        showError(err && err.message ? err.message : String(err));
       });
   });
 })();

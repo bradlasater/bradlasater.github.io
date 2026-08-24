@@ -1,32 +1,79 @@
 name: Validate track record
 
 # The published track record is only evidence if it cannot be revised after the
-# fact. This workflow fails the build if any already-published observation is
-# modified, removed, or reordered — appending is the only legal edit.
+# fact. This workflow fails the build if any already-published observation or
+# immutable metadata field is modified, removed, or reordered.
+#
+# Two properties matter and both were previously missing:
+#
+#   * It inspects EVERY commit in the push, not just the tip. A push carries
+#     many commits but fires one workflow run, so checking only HEAD against
+#     HEAD^ let an earlier commit in the same push rewrite history unseen.
+#   * It rejects force-pushes outright. Rewriting history destroys the
+#     timestamp trail the whole record rests on, and no file-level check can
+#     detect it after the fact.
 
 on:
   push:
     paths:
       - "data/track-record.json"
       - "scripts/validate_track_record.py"
+      - "scripts/append_observation.py"
       - ".github/workflows/validate-track-record.yml"
   pull_request:
     paths:
       - "data/track-record.json"
       - "scripts/validate_track_record.py"
+      - "scripts/append_observation.py"
+      - ".github/workflows/validate-track-record.yml"
+
+permissions:
+  contents: read
 
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
+      - name: Reject force-pushes to published history
+        if: github.event_name == 'push' && github.event.forced
+        run: |
+          echo "::error::Force-push detected. Published track-record history must" \
+               "never be rewritten — the git history is the timestamp trail."
+          exit 1
+
       - uses: actions/checkout@v4
         with:
-          # Need the parent commit to diff against for the append-only check.
-          fetch-depth: 2
+          # Full history: the append-only walk needs every commit in the push,
+          # not just the tip and its parent.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
+      - name: Determine baseline commit
+        id: baseline
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = "pull_request" ]; then
+            ref="$PR_BASE"
+          else
+            ref="$BEFORE"
+          fi
+          # All-zeros means a newly created branch with no prior tip; fall back
+          # to the point where it diverged from the default branch.
+          if [ -z "$ref" ] || [ "$ref" = "0000000000000000000000000000000000000000" ]; then
+            git fetch --quiet origin "${{ github.event.repository.default_branch }}"
+            ref="$(git merge-base FETCH_HEAD HEAD)"
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "Baseline for append-only walk: $ref"
+
       - name: Validate structure and append-only history
-        run: python3 scripts/validate_track_record.py --check-append-only
+        run: |
+          python3 scripts/validate_track_record.py \
+            --check-append-only --ref "${{ steps.baseline.outputs.ref }}"
