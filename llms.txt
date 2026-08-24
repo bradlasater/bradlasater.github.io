@@ -1,7 +1,7 @@
 # Brad Lasater
 
 > Applied scientist and machine-learning engineer with ten years of production
-> ML, forecasting, optimization, and state-estimation work across consumer
+> ML, forecasting, optimisation, and state-estimation work across consumer
 > marketplaces, live events, aerospace, and defense, owning the full lifecycle
 > from research design and point-in-time data pipelines through deployment,
 > calibration, and monitoring. His current research applies that same
