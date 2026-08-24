@@ -7,12 +7,21 @@
 <meta name="description" content="Live out-of-sample track record for my systematic volatility system. Every observation is a dated commit; CI rejects any edit to published history.">
 <link rel="canonical" href="https://bradlasater.com/vol/track-record.html">
 <meta name="theme-color" content="#14171c">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<link rel="alternate" type="application/atom+xml" title="Brad Lasater — Research Log" href="/feed.xml">
+<link rel="me" href="https://github.com/bradlasater">
+<link rel="me" href="https://www.linkedin.com/in/bradlasater">
 
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bradlasater.com/vol/track-record.html">
 <meta property="og:title" content="Live out-of-sample track record">
 <meta property="og:description" content="Append-only, timestamped by git history, with the minimum track record length reported next to the Sharpe.">
 <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta property="og:site_name" content="Brad Lasater">
+<meta property="og:locale" content="en_US">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:modified_time" content="2026-08-23T20:48:34-06:00">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -20,6 +29,65 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
 <link rel="stylesheet" href="/assets/css/site.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://bradlasater.com/vol/track-record.html#article",
+      "mainEntityOfPage": "https://bradlasater.com/vol/track-record.html",
+      "headline": "Live out-of-sample track record",
+      "description": "An append-only live track record for a systematic volatility system. Every observation is a separate dated commit, CI rejects any edit to published history, and every statistic is recomputed in the browser from the raw data.",
+      "inLanguage": "en-US",
+      "dateModified": "2026-08-23T20:48:34-06:00",
+      "author": { "@id": "https://bradlasater.com/#brad" },
+      "publisher": { "@id": "https://bradlasater.com/#brad" },
+      "image": "https://bradlasater.com/assets/og.png",
+      "isPartOf": { "@id": "https://bradlasater.com/#website" },
+      "mainEntity": { "@id": "https://bradlasater.com/vol/track-record.html#dataset" }
+    },
+    {
+      "@type": "Dataset",
+      "@id": "https://bradlasater.com/vol/track-record.html#dataset",
+      "name": "Live out-of-sample track record — systematic volatility system",
+      "description": "Daily net asset value, gross P&L, modelled costs, and open position count for a systematic volatility trading system, recorded out of sample. The file is append-only and enforced by continuous integration: every observation lands as its own dated commit, and any modification to an already-published day fails the build.",
+      "url": "https://bradlasater.com/vol/track-record.html",
+      "creator": { "@id": "https://bradlasater.com/#brad" },
+      "isAccessibleForFree": true,
+      "inLanguage": "en-US",
+      "keywords": "track record, out-of-sample, deflated Sharpe ratio, minimum track record length, systematic volatility",
+      "measurementTechnique": "Daily mark-to-market net asset value with modelled execution costs, validated against an append-only schema in continuous integration.",
+      "variableMeasured": [
+        { "@type": "PropertyValue", "name": "Net asset value" },
+        { "@type": "PropertyValue", "name": "Gross P&L" },
+        { "@type": "PropertyValue", "name": "Modelled execution costs" },
+        { "@type": "PropertyValue", "name": "Open positions" }
+      ],
+      "distribution": {
+        "@type": "DataDownload",
+        "encodingFormat": "application/json",
+        "contentUrl": "https://bradlasater.com/data/track-record.json"
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://bradlasater.com/#brad",
+      "name": "Brad Lasater",
+      "url": "https://bradlasater.com/"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://bradlasater.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Volatility System", "item": "https://bradlasater.com/vol/" },
+        { "@type": "ListItem", "position": 3, "name": "Track Record" }
+      ]
+    }
+  ]
+}
+</script>
 <script src="/assets/js/analytics.js" defer></script>
 <script src="/assets/js/track-record.js" defer></script>
 </head>
@@ -65,9 +133,31 @@
 
     <p id="tr-error" class="pending" hidden></p>
 
-    <!-- Shown until the first real observation is appended. No sample or
-         placeholder numbers are ever rendered here. -->
-    <div id="tr-empty" class="pending">
+    <!-- Default state is "loading", never "tracking has not started". The
+         figures are computed in the browser, so without JavaScript this page
+         cannot know whether the record is empty — and asserting that it is
+         would be a false statement on a page whose whole claim is that its
+         numbers can be checked. -->
+    <div id="tr-loading" class="pending">
+      <strong>Loading the track record</strong>
+      Every figure on this page is computed in your browser from
+      <a href="/data/track-record.json">the data file</a>, which you can read
+      directly.
+    </div>
+
+    <noscript>
+      <div class="pending">
+        <strong>JavaScript is required for the figures</strong>
+        This page derives its statistics in the browser rather than serving
+        precomputed numbers, so that the page cannot disagree with the data
+        behind it. The underlying record is plain JSON and is readable without
+        JavaScript: <a href="/data/track-record.json">/data/track-record.json</a>.
+      </div>
+    </noscript>
+
+    <!-- Shown only once JS has confirmed there are no observations. No sample
+         or placeholder numbers are ever rendered here. -->
+    <div id="tr-empty" class="pending" hidden>
       <strong>Tracking has not started</strong>
       No observations have been published yet. When the first one is appended,
       this page will show elapsed time, the equity curve, drawdowns, and the
@@ -135,7 +225,7 @@
         <div class="stat">
           <span class="stat__label">MinTRL</span>
           <span class="stat__value" id="tr-mintrl">—</span>
-          <span class="stat__hint">Observations needed at 95%</span>
+          <span class="stat__hint">Returns needed at 95%</span>
         </div>
         <div class="stat">
           <span class="stat__label">Max drawdown</span>
@@ -220,6 +310,10 @@
         sits the minimum track record length — how long this record would have to
         run before that Sharpe could be told apart from luck at 95% confidence.
         While the record is short, the page says so plainly.
+      </p>
+      <p class="muted">
+        This page was last updated <time class="page-updated__time" datetime="2026-08-23T20:48:34-06:00">August 23, 2026</time>.
+        The observations themselves carry their own commit dates, which is the timestamp that matters.
       </p>
     </div>
   </section>

@@ -7,12 +7,21 @@
 <meta name="description" content="An end-to-end systematic volatility trading system built from scratch: data ingestion, surface construction, forecasting, sizing, execution, and evaluation — documented in the open.">
 <link rel="canonical" href="https://bradlasater.com/vol/">
 <meta name="theme-color" content="#14171c">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<link rel="alternate" type="application/atom+xml" title="Brad Lasater — Research Log" href="/feed.xml">
+<link rel="me" href="https://github.com/bradlasater">
+<link rel="me" href="https://www.linkedin.com/in/bradlasater">
 
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bradlasater.com/vol/">
 <meta property="og:title" content="An end-to-end volatility trading system">
 <meta property="og:description" content="Built from scratch — data, surface, forecast, sizing, execution, evaluation. Documented in the open, including the parts that don't work.">
 <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta property="og:site_name" content="Brad Lasater">
+<meta property="og:locale" content="en_US">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:modified_time" content="2026-08-23T20:48:34-06:00">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -20,6 +29,52 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
 <link rel="stylesheet" href="/assets/css/site.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://bradlasater.com/vol/#article",
+      "mainEntityOfPage": "https://bradlasater.com/vol/",
+      "headline": "An end-to-end systematic volatility trading system",
+      "description": "The full architecture of a volatility trading system built from scratch: options data ingestion and cleaning, arbitrage-free surface construction, volatility forecasting, signal and sizing, risk and hedging, execution with modelled frictions, evaluation, and operations.",
+      "inLanguage": "en-US",
+      "dateModified": "2026-08-23T20:48:34-06:00",
+      "author": { "@id": "https://bradlasater.com/#brad" },
+      "publisher": { "@id": "https://bradlasater.com/#brad" },
+      "image": "https://bradlasater.com/assets/og.png",
+      "isPartOf": { "@id": "https://bradlasater.com/#website" },
+      "about": [
+        { "@type": "Thing", "name": "Volatility trading" },
+        { "@type": "Thing", "name": "Options market making" },
+        { "@type": "Thing", "name": "Quantitative finance" }
+      ],
+      "keywords": "volatility trading, implied volatility surface, SVI, SSVI, HAR-RV, GARCH, delta hedging, meta-labelling, systematic trading",
+      "citation": [
+        { "@type": "Book", "name": "Volatility Trading", "author": { "@type": "Person", "name": "Euan Sinclair" } },
+        { "@type": "Book", "name": "Positional Option Trading", "author": { "@type": "Person", "name": "Euan Sinclair" } },
+        { "@type": "Book", "name": "Advances in Financial Machine Learning", "author": { "@type": "Person", "name": "Marcos López de Prado" } },
+        { "@type": "Book", "name": "Machine Learning for Asset Managers", "author": { "@type": "Person", "name": "Marcos López de Prado" } }
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://bradlasater.com/#brad",
+      "name": "Brad Lasater",
+      "url": "https://bradlasater.com/"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://bradlasater.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Volatility System" }
+      ]
+    }
+  ]
+}
+</script>
 <script src="/assets/js/analytics.js" defer></script>
 </head>
 <body>
@@ -105,12 +160,12 @@
 
     <div class="grid">
 
-      <article class="card">
-        <h3 class="card__title">Data &amp; cleaning</h3>
+      <article class="card" id="stage-data" aria-labelledby="stage-data-title">
+        <h3 class="card__title" id="stage-data-title">Data &amp; cleaning</h3>
         <div class="card__body">
           <p>
-            End-of-day and intraday options chains, underlying prices, dividend schedules, and the
-            discount curve. The cleaning layer is the unglamorous half of the edge: dropping stale
+            The ingestion layer takes end-of-day and intraday options chains, underlying prices,
+            dividend schedules, and the discount curve. Cleaning is the unglamorous half of the edge: dropping stale
             and crossed quotes, filtering by open interest and spread width, reconstructing the
             forward from put&ndash;call parity rather than trusting a vendor field, and flagging
             quotes that violate static no-arbitrage bounds.
@@ -118,24 +173,26 @@
         </div>
       </article>
 
-      <article class="card">
-        <h3 class="card__title">Surface construction</h3>
+      <article class="card" id="stage-surface" aria-labelledby="stage-surface-title">
+        <h3 class="card__title" id="stage-surface-title">Surface construction</h3>
         <div class="card__body">
           <p>
-            Implied volatility inversion, then a parametric fit in total implied variance
-            (SVI per-slice, moving toward SSVI for a globally consistent surface). Calendar-spread
+            Surface construction inverts quotes to implied volatility, then fits a parametric
+            surface in total implied variance — SVI per slice, moving toward SSVI for a globally
+            consistent surface. Calendar-spread
             and butterfly no-arbitrage constraints are enforced on the fit, not checked afterwards,
             so downstream Greeks are internally consistent.
           </p>
         </div>
       </article>
 
-      <article class="card">
-        <h3 class="card__title">Volatility forecasting</h3>
+      <article class="card" id="stage-forecasting" aria-labelledby="stage-forecasting-title">
+        <h3 class="card__title" id="stage-forecasting-title">Volatility forecasting</h3>
         <div class="card__body">
           <p>
-            Realised volatility estimators that use the full bar (Parkinson, Garman&ndash;Klass,
-            Yang&ndash;Zhang) rather than close-to-close, feeding HAR-RV and GARCH-family baselines.
+            Forecasting starts from realised volatility estimators that use the full bar
+            (Parkinson, Garman&ndash;Klass, Yang&ndash;Zhang) rather than close-to-close, feeding
+            HAR-RV and GARCH-family baselines.
             Learned models must beat those baselines out of sample before they are allowed anywhere
             near a position — a machine-learning model that cannot outperform HAR-RV is not a
             finding, it is a bug.
@@ -143,8 +200,8 @@
         </div>
       </article>
 
-      <article class="card">
-        <h3 class="card__title">Signal &amp; sizing</h3>
+      <article class="card" id="stage-sizing" aria-labelledby="stage-sizing-title">
+        <h3 class="card__title" id="stage-sizing-title">Signal &amp; sizing</h3>
         <div class="card__body">
           <p>
             The spread between forecast realised and market implied volatility becomes a signal only
@@ -156,11 +213,12 @@
         </div>
       </article>
 
-      <article class="card">
-        <h3 class="card__title">Risk &amp; hedging</h3>
+      <article class="card" id="stage-risk" aria-labelledby="stage-risk-title">
+        <h3 class="card__title" id="stage-risk-title">Risk &amp; hedging</h3>
         <div class="card__body">
           <p>
-            Continuous Greek accounting, discrete delta-hedging with an explicit rebalancing band
+            Risk management runs on continuous Greek accounting, with discrete delta-hedging
+            against an explicit rebalancing band
             (hedging error is a cost to be optimised, not a nuisance), scenario and stress grids
             across spot and vol shocks, and margin modelling — because the strategy that survives
             a drawdown on paper can still be closed out by a margin call.
@@ -168,11 +226,13 @@
         </div>
       </article>
 
-      <article class="card">
-        <h3 class="card__title">Execution</h3>
+      <article class="card" id="stage-execution" aria-labelledby="stage-execution-title">
+        <h3 class="card__title" id="stage-execution-title">Execution</h3>
         <div class="card__body">
           <p>
-            Fills are modelled at achievable prices, not at the mid. Multi-leg structures carry
+            Execution models fills at achievable prices rather than at the mid, because in
+            options the quoted spread is frequently wider than the modelled edge.
+            Multi-leg structures carry
             legging risk; American options carry early-assignment risk; short options carry borrow
             and pin risk. Any backtest that quietly assumes mid fills is measuring the size of its
             own assumption.
@@ -180,24 +240,24 @@
         </div>
       </article>
 
-      <article class="card">
-        <h3 class="card__title">Evaluation</h3>
+      <article class="card" id="stage-evaluation" aria-labelledby="stage-evaluation-title">
+        <h3 class="card__title" id="stage-evaluation-title">Evaluation</h3>
         <div class="card__body">
           <p>
-            Purged and embargoed cross-validation, walk-forward testing, deflated Sharpe ratios
-            reported alongside raw ones, and an explicit count of every configuration tried so that
+            Evaluation uses purged and embargoed cross-validation, walk-forward testing, and
+            deflated Sharpe ratios reported alongside raw ones, and an explicit count of every configuration tried so that
             the probability of backtest overfitting can be estimated rather than ignored.
           </p>
           <p><a href="/vol/methodology.html">Read the full protocol &rarr;</a></p>
         </div>
       </article>
 
-      <article class="card">
-        <h3 class="card__title">Operations &amp; logging</h3>
+      <article class="card" id="stage-operations" aria-labelledby="stage-operations-title">
+        <h3 class="card__title" id="stage-operations-title">Operations &amp; logging</h3>
         <div class="card__body">
           <p>
-            Structured logs at every stage, daily reconciliation of expected against actual
-            positions and P&amp;L, and an alerting layer for silent failures — a stale data feed
+            Operations means structured logs at every stage, daily reconciliation of expected
+            against actual positions and P&amp;L, and an alerting layer for silent failures — a stale data feed
             that produces plausible-looking numbers is far more dangerous than one that crashes.
           </p>
         </div>
@@ -274,6 +334,10 @@
         </dd>
       </div>
     </dl>
+    <p class="muted" style="margin-top: var(--sp-6);">
+      This page was last updated <time class="page-updated__time" datetime="2026-08-23T20:48:34-06:00">August 23, 2026</time>.
+      Every stage above is versioned in the repository; changes are commits, not edits.
+    </p>
   </section>
 
 </main>
