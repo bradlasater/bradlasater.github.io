@@ -2,201 +2,326 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brad Lasater — Applied Scientist & ML Engineer</title>
-<meta name="description" content="Brad Lasater — Applied Scientist and Principal Machine Learning Engineer. 10+ years building production ML, optimization, and decision systems.">
-<style>
-  :root {
-    --bg: #0f1216;
-    --panel: #171c23;
-    --border: #262e38;
-    --text: #e8ecf1;
-    --muted: #9aa7b4;
-    --accent: #5ea2ff;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.6;
-  }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brad Lasater — Applied Scientist, Systematic Volatility</title>
+<meta name="description" content="Applied scientist and ML engineer building an end-to-end systematic volatility trading system. Ten years of production ML, optimization, and state estimation across marketplaces, live events, aerospace, and defense.">
+<link rel="canonical" href="https://bradlasater.com/">
+<meta name="theme-color" content="#14171c">
 
-  header { padding: 96px 0 48px; }
-  header h1 { font-size: 2.4rem; letter-spacing: -0.5px; }
-  header .tagline { color: var(--accent); font-size: 1.15rem; margin-top: 6px; font-weight: 600; }
-  header .bio { color: var(--muted); margin-top: 16px; max-width: 62ch; }
+<!-- Open Graph — referrals happen in Slack and LinkedIn DMs; a blank card costs conversions. -->
+<meta property="og:type" content="profile">
+<meta property="og:url" content="https://bradlasater.com/">
+<meta property="og:title" content="Brad Lasater — Applied Scientist, Systematic Volatility">
+<meta property="og:description" content="Building an end-to-end systematic volatility trading system, documented in the open. Ten years of production ML, optimization, and state estimation.">
+<meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta property="og:image:alt" content="Brad Lasater — Applied Scientist, Systematic Volatility">
+<meta name="twitter:card" content="summary_large_image">
 
-  nav { margin-top: 28px; display: flex; gap: 14px; flex-wrap: wrap; }
-  nav a {
-    color: var(--text); text-decoration: none; font-size: 0.95rem;
-    border: 1px solid var(--border); border-radius: 8px; padding: 8px 16px;
-    transition: border-color .15s, background .15s;
-  }
-  nav a:hover { border-color: var(--accent); background: var(--panel); }
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css">
 
-  section { padding: 40px 0; border-top: 1px solid var(--border); }
-  h2 { font-size: 1.25rem; margin-bottom: 22px; letter-spacing: 0.3px; }
-
-  .job { margin-bottom: 28px; }
-  .job:last-child { margin-bottom: 0; }
-  .job .role { font-weight: 600; }
-  .job .meta { color: var(--muted); font-size: 0.9rem; margin: 2px 0 8px; }
-  .job ul { list-style: none; }
-  .job li { color: var(--muted); font-size: 0.95rem; padding-left: 18px; position: relative; margin-bottom: 4px; }
-  .job li::before { content: "▸"; color: var(--accent); position: absolute; left: 0; }
-
-  .skills { color: var(--muted); }
-  .skills .group { margin-bottom: 14px; }
-  .skills .label { color: var(--text); font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; display: block; margin-bottom: 6px; }
-  .skills span.tag {
-    display: inline-block; border: 1px solid var(--border); border-radius: 999px;
-    padding: 3px 13px; margin: 3px 5px 0 0; font-size: 0.86rem;
-  }
-
-  .credential { margin-bottom: 18px; }
-  .credential .title { font-weight: 600; font-size: 0.98rem; }
-  .credential .detail { color: var(--muted); font-size: 0.92rem; }
-
-  .edu div { margin-bottom: 10px; color: var(--muted); font-size: 0.95rem; }
-  .edu strong { color: var(--text); font-weight: 600; }
-
-  .contact p { color: var(--muted); margin-bottom: 14px; max-width: 60ch; }
-  .contact a.button {
-    display: inline-block; background: var(--accent); color: #0b0e12;
-    font-weight: 600; text-decoration: none; padding: 10px 22px; border-radius: 8px;
-  }
-  .contact a.button:hover { background: #7db4ff; }
-
-  footer { padding: 32px 0 48px; color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--border); }
-
-  @media (max-width: 600px) {
-    header { padding: 64px 0 36px; }
-    header h1 { font-size: 1.9rem; }
-  }
-</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Brad Lasater",
+  "url": "https://bradlasater.com/",
+  "email": "brad@bradlasater.com",
+  "jobTitle": "Applied Scientist",
+  "sameAs": [
+    "https://github.com/bradlasater",
+    "https://www.linkedin.com/in/bradlasater"
+  ],
+  "knowsAbout": [
+    "Systematic volatility trading",
+    "Options pricing",
+    "Financial machine learning",
+    "Mathematical optimization",
+    "State estimation and filtering"
+  ]
+}
+</script>
+<script src="/assets/js/analytics.js" defer></script>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
-    <h1>Brad Lasater</h1>
-    <div class="tagline">Applied Scientist · Principal Machine Learning Engineer</div>
-    <p class="bio">
-      Senior data scientist and ML engineer with 10+ years building production machine-learning,
-      optimization, and decision systems across consumer marketplaces, live events, aerospace,
-      and defense. I own the full modeling lifecycle — problem framing and data design through
-      training, calibration, deployment, and monitoring. Remote; previously held TS/SCI.
-    </p>
-    <nav>
-      <a href="https://github.com/bradlasater">GitHub</a>
-      <a href="https://www.linkedin.com/in/bradlasater">LinkedIn</a>
-      <a href="#contact">Contact</a>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href="/">Brad Lasater<span class="brand__dot">.</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="/vol/">Volatility System</a></li>
+        <li><a href="/log/">Research Log</a></li>
+        <li><a href="/cv.html">CV</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
     </nav>
-  </header>
+  </div>
+</header>
 
-  <section id="experience">
-    <h2>Experience</h2>
+<main id="main">
 
-    <div class="job">
-      <div class="role">Senior Data Scientist — Nift</div>
-      <div class="meta">Oct 2023 – Present · Remote</div>
-      <ul>
-        <li>Own modeling and optimization for a multi-brand auction and ranking system serving millions of users per month</li>
-        <li>Built end-to-end data pipelines and feature stores enabling real-time inference and offline training</li>
-        <li>Established model-health and retraining frameworks covering calibration, drift, data quality, and segment performance</li>
-        <li>Partner with CEO and CTO to convert ambiguous business goals into experiments and evidence-based decisions</li>
-      </ul>
-    </div>
-
-    <div class="job">
-      <div class="role">Lead Data Scientist — Ticketmaster</div>
-      <div class="meta">Aug 2021 – Mar 2025</div>
-      <ul>
-        <li>Improved live-event sales forecast accuracy by ~60% via temporally dynamic boosted trees</li>
-        <li>Translated business strategy into feasible technical roadmaps and led the team delivering DS products</li>
-        <li>Developed feature-selection optimization enabling faster deployment of new models to production</li>
-      </ul>
-    </div>
-
-    <div class="job">
-      <div class="role">Lead Space Algorithm Developer — Lockheed Martin, Special Programs</div>
-      <div class="meta">Oct 2018 – Aug 2021</div>
-      <ul>
-        <li>Developed a binary linear-programming solution for real-time sensor scheduling, optimizing space surveillance operations</li>
-        <li>Implemented particle filters to produce actionable ephemeris for space-surveillance; enhanced missile interceptor performance through algorithm development</li>
-        <li>Designed Kalman/Singer filter instantiation processes improving convergence on late threat detections</li>
-      </ul>
-    </div>
-
-    <div class="job">
-      <div class="role">Data Scientist, Defense Analytics — Boeing</div>
-      <div class="meta">Feb 2016 – Oct 2018</div>
-      <ul>
-        <li>Patented the F/A-18 Fleet Upgrade Model — discrete-event simulation optimizing production under stochastic demand</li>
-        <li>Developed genetic algorithms for multi-echelon inventory optimization, resulting in awarded production funding</li>
-        <li>Led the data science arm of the T-45 Physiological Events investigation, driving root-cause identification</li>
-      </ul>
-    </div>
-
-    <div class="job">
-      <div class="role">Earlier — Teach for America · U.S. Marine Corps</div>
-      <div class="meta">2006 – 2016</div>
-      <ul>
-        <li>Teacher and football coach with Teach for America (2013–2016); Sergeant and Instructor, U.S. Marine Corps (2006–2010)</li>
-      </ul>
+  <section class="shell hero">
+    <h1 class="hero__name">Brad Lasater</h1>
+    <span class="hero__role">Applied Scientist · Systematic Volatility · Optimization &amp; State Estimation</span>
+    <p class="hero__thesis">Estimating what uncertainty is worth, then trading the difference.</p>
+    <p class="hero__bio">
+      Ten years building production machine-learning, optimization, and state-estimation systems
+      across consumer marketplaces, live events, aerospace, and defense — auction design and
+      real-time ranking at scale, nonlinear filtering for object tracking, and large-scale
+      scheduling under uncertainty. I&rsquo;m now pointing that toolkit at options: building an
+      end-to-end systematic volatility trading system from data ingestion through execution,
+      documented in the open — including the parts that don&rsquo;t work.
+    </p>
+    <div class="actions">
+      <a class="btn btn--primary" href="/vol/">See the volatility system</a>
+      <a class="btn" href="/cv.html">Full CV</a>
+      <a class="btn" href="https://github.com/bradlasater" rel="me">GitHub</a>
+      <a class="btn" href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a>
     </div>
   </section>
 
-  <section id="skills">
-    <h2>Technologies</h2>
-    <div class="skills">
-      <div class="group">
-        <span class="label">Languages & ML</span>
-        <span class="tag">Python</span><span class="tag">SQL</span><span class="tag">PySpark</span><span class="tag">PyTorch</span><span class="tag">XGBoost</span><span class="tag">scikit-learn</span><span class="tag">Optuna</span><span class="tag">SHAP</span>
-      </div>
-      <div class="group">
-        <span class="label">Data, Cloud & MLOps</span>
-        <span class="tag">Databricks</span><span class="tag">Delta Lake</span><span class="tag">MLflow</span><span class="tag">SageMaker</span><span class="tag">S3</span><span class="tag">CI/CD</span><span class="tag">Feature Stores</span>
-      </div>
-      <div class="group">
-        <span class="label">Focus Areas</span>
-        <span class="tag">Ranking & Recommenders</span><span class="tag">Marketplace Auctions</span><span class="tag">Conversion Modeling</span><span class="tag">Probability Calibration</span><span class="tag">Time-Series Forecasting</span><span class="tag">Causal Inference</span><span class="tag">Operations Research</span>
+  <section class="shell section" id="current-work" aria-labelledby="current-work-title">
+    <div class="feature">
+      <span class="badge badge--active badge--dot">In development</span>
+      <h2 class="feature__title" id="current-work-title" style="margin-top: var(--sp-4);">
+        An end-to-end volatility trading system
+      </h2>
+      <div class="feature__body">
+        <p>
+          A complete system built from scratch — options data ingestion and cleaning, surface
+          construction, forecasting realised and implied volatility, position sizing under a
+          risk budget, and execution modelled with real frictions. The intellectual spine is
+          Euan Sinclair on the mechanics and economics of volatility trading, and Marcos López
+          de Prado on the statistics of not fooling yourself.
+        </p>
+        <p>
+          The point of publishing it is not the equity curve. It&rsquo;s the research process:
+          an evaluation protocol fixed <em>before</em> results are looked at, deflated performance
+          statistics reported next to raw ones, execution costs modelled rather than assumed away,
+          and written post-mortems whenever the system loses money or a hypothesis dies.
+        </p>
+        <div class="actions">
+          <a class="btn btn--primary" href="/vol/">System overview</a>
+          <a class="btn" href="/vol/methodology.html">Evaluation protocol</a>
+          <a class="btn" href="/log/">Research log</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="credentials">
-    <h2>Patents & Education</h2>
-
-    <div class="credential">
-      <div class="title">U.S. Patent 10,204,323 — F/A-18 Fleet Upgrade Model & Discrete Event Simulation</div>
-      <div class="detail">Production-planning optimization under stochastic demand, resource, and mission-availability constraints</div>
+  <section class="shell section" id="experience" aria-labelledby="experience-title">
+    <div class="section__head">
+      <span class="section__eyebrow">Background</span>
+      <h2 class="section__title" id="experience-title">Selected experience</h2>
+      <p class="section__lede">
+        The through-line is decision-making under uncertainty: estimating hidden state from noisy
+        observations, and allocating scarce resources against those estimates in real time.
+      </p>
     </div>
 
-    <div class="credential">
-      <div class="title">Presenter — Boeing Technical Excellence Conference</div>
-      <div class="detail">SherFire: Multi-Echelon Inventory Optimization via Genetic Algorithms</div>
+    <div class="roles">
+
+      <article class="role">
+        <div class="role__when">Oct 2023 &ndash; Present</div>
+        <div>
+          <div class="role__where">
+            <h3 class="role__title">Senior Data Scientist</h3>
+            <span class="role__org">Nift &middot; Remote</span>
+            <div class="role__meta"><span class="badge">Concurrent role</span></div>
+          </div>
+          <ul class="role__points">
+            <li>Own modelling and optimisation for a multi-brand auction and ranking system serving
+                millions of users per month — allocation under budget and inventory constraints,
+                with the same bid/allocation/clearing structure as an electronic market.</li>
+            <li>Built the data pipelines and feature store backing both real-time inference and
+                offline training, keeping serving-time and training-time features consistent.</li>
+            <li>Established model-health and retraining frameworks covering calibration drift,
+                data quality, and segment-level performance decay.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="role">
+        <div class="role__when">Aug 2021 &ndash; Mar 2025</div>
+        <div>
+          <div class="role__where">
+            <h3 class="role__title">Lead Data Scientist</h3>
+            <span class="role__org">Ticketmaster</span>
+            <div class="role__meta"><span class="badge">Concurrent role</span></div>
+          </div>
+          <ul class="role__points">
+            <!-- TODO(brad): name the exact error metric here — MAPE, WAPE, RMSE? An unqualified
+                 percentage is the first thing a quant interviewer will push on. -->
+            <li>Cut live-event sales forecast error by roughly 60% against the incumbent baseline
+                using temporally dynamic gradient-boosted trees.</li>
+            <li>Led the team delivering data-science products, translating commercial strategy into
+                technical roadmaps.</li>
+            <li>Developed feature-selection optimisation that shortened the path from candidate model
+                to production deployment.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="role">
+        <div class="role__when">Oct 2018 &ndash; Aug 2021</div>
+        <div>
+          <div class="role__where">
+            <h3 class="role__title">Lead Space Algorithm Developer</h3>
+            <span class="role__org">Lockheed Martin &middot; Special Programs</span>
+          </div>
+          <ul class="role__points">
+            <li>Implemented particle filters producing actionable ephemeris for space surveillance —
+                recovering latent state from sparse, noisy, irregularly sampled observations, which
+                is structurally the same problem as filtering latent volatility from discrete quotes.</li>
+            <li>Built a binary linear program for real-time sensor scheduling, allocating a constrained
+                set of sensors across competing targets under hard latency requirements.</li>
+            <li>Designed Kalman and Singer filter instantiation procedures that improved convergence
+                on late threat detections.</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="role">
+        <div class="role__when">Feb 2016 &ndash; Oct 2018</div>
+        <div>
+          <div class="role__where">
+            <h3 class="role__title">Data Scientist, Defense Analytics</h3>
+            <span class="role__org">Boeing</span>
+          </div>
+          <ul class="role__points">
+            <li>Patented the F/A-18 Fleet Upgrade Model — a discrete-event simulation optimising
+                production plans under stochastic demand and resource constraints.</li>
+            <li>Developed genetic algorithms for multi-echelon inventory optimisation; the work
+                secured production funding.</li>
+            <li>Led the data-science arm of the T-45 physiological events investigation, driving
+                root-cause identification.</li>
+          </ul>
+        </div>
+      </article>
+
     </div>
 
-    <div class="edu" style="margin-top: 24px;">
-      <div><strong>Doctoral Studies, Optimization & Machine Learning</strong> — University of Missouri S&amp;T, 2016</div>
-      <div><strong>M.Eng., Systems Engineering</strong> — Arizona State University, 2015</div>
-      <div><strong>B.S., Applied Mathematics</strong> — University of Texas at Arlington, 2013</div>
+    <div class="actions">
+      <a class="btn" href="/cv.html">Full history, including military and teaching service</a>
     </div>
   </section>
 
-  <section id="contact" class="contact">
-    <h2>Get in Touch</h2>
-    <p>I'm always happy to talk about interesting modeling, optimization, or decision-systems problems. Email is the fastest way to reach me — I read everything and reply quickly.</p>
-    <a class="button" href="mailto:brad@bradlasater.com">brad@bradlasater.com</a>
+  <section class="shell section" id="capabilities" aria-labelledby="capabilities-title">
+    <div class="section__head">
+      <span class="section__eyebrow">Toolkit</span>
+      <h2 class="section__title" id="capabilities-title">Capabilities</h2>
+    </div>
+
+    <div class="taggroup">
+      <span class="taggroup__label">Quantitative methods</span>
+      <ul class="tags">
+        <li>Options pricing &amp; Greeks</li>
+        <li>Volatility surface construction</li>
+        <li>State estimation &amp; filtering</li>
+        <li>Time-series forecasting</li>
+        <li>Probability calibration</li>
+        <li>Causal inference</li>
+        <li>Stochastic optimisation</li>
+        <li>Operations research</li>
+      </ul>
+    </div>
+
+    <div class="taggroup">
+      <span class="taggroup__label">Research hygiene</span>
+      <ul class="tags">
+        <li>Purged &amp; embargoed cross-validation</li>
+        <li>Deflated Sharpe ratio</li>
+        <li>Probability of backtest overfitting</li>
+        <li>Meta-labelling</li>
+        <li>Transaction-cost modelling</li>
+        <li>Walk-forward evaluation</li>
+      </ul>
+    </div>
+
+    <div class="taggroup">
+      <span class="taggroup__label">Engineering</span>
+      <ul class="tags">
+        <li>Python</li>
+        <li>SQL</li>
+        <li>PySpark</li>
+        <li>PyTorch</li>
+        <li>XGBoost</li>
+        <li>scikit-learn</li>
+        <li>Optuna</li>
+        <li>Databricks</li>
+        <li>Delta Lake</li>
+        <li>MLflow</li>
+        <li>SageMaker</li>
+        <li>CI/CD</li>
+      </ul>
+    </div>
   </section>
 
-  <footer>
-    &copy; 2026 Brad Lasater &middot; bradlasater.com
-  </footer>
+  <section class="shell section" id="recognition" aria-labelledby="recognition-title">
+    <div class="section__head">
+      <span class="section__eyebrow">Credentials</span>
+      <h2 class="section__title" id="recognition-title">Patents &amp; education</h2>
+    </div>
 
-</div>
+    <dl class="deflist">
+      <div class="deflist__item">
+        <dt>U.S. Patent 10,204,323 — F/A-18 Fleet Upgrade Model &amp; Discrete Event Simulation</dt>
+        <dd>Production-planning optimisation under stochastic demand, resource, and mission-availability constraints.</dd>
+      </div>
+      <div class="deflist__item">
+        <dt>Presenter — Boeing Technical Excellence Conference</dt>
+        <dd>SherFire: multi-echelon inventory optimisation via genetic algorithms.</dd>
+      </div>
+      <div class="deflist__item">
+        <dt>M.Eng., Systems Engineering — Arizona State University, 2015</dt>
+        <dd>B.S., Applied Mathematics — University of Texas at Arlington, 2013.</dd>
+      </div>
+      <div class="deflist__item">
+        <dt>Doctoral coursework, Optimisation &amp; Machine Learning — Missouri S&amp;T</dt>
+        <dd>
+          Begun while working full-time at Boeing and discontinued by choice: a patent and rapid
+          progression made the remaining years a poor trade against what industry was already
+          teaching me.
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="shell section" id="contact" aria-labelledby="contact-title">
+    <div class="section__head">
+      <span class="section__eyebrow">Contact</span>
+      <h2 class="section__title" id="contact-title">Get in touch</h2>
+      <p class="section__lede">
+        I&rsquo;m interested in quantitative research and quantitative engineering roles in New York —
+        volatility and systematic strategies especially. Happy to talk about any hard modelling,
+        optimisation, or decision-systems problem. Email is fastest; I read everything.
+      </p>
+    </div>
+    <div class="actions">
+      <a class="btn btn--primary" href="mailto:brad@bradlasater.com">brad@bradlasater.com</a>
+      <a class="btn" href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <span>&copy; 2026 Brad Lasater</span>
+    <ul>
+      <li><a href="/vol/">Volatility System</a></li>
+      <li><a href="/log/">Research Log</a></li>
+      <li><a href="/cv.html">CV</a></li>
+      <li><a href="https://github.com/bradlasater">GitHub</a></li>
+    </ul>
+  </div>
+</footer>
+
 </body>
 </html>

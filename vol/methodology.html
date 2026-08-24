@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evaluation Protocol — Brad Lasater</title>
+<meta name="description" content="The evaluation protocol for my volatility trading system: purged cross-validation, mandatory baselines, cost modelling, deflated performance statistics, and pre-committed kill criteria.">
+<link rel="canonical" href="https://bradlasater.com/vol/methodology.html">
+<meta name="theme-color" content="#14171c">
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bradlasater.com/vol/methodology.html">
+<meta property="og:title" content="Evaluation protocol — fixed before results">
+<meta property="og:description" content="Purged cross-validation, mandatory baselines, modelled costs, deflated Sharpe, and pre-committed kill criteria.">
+<meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script src="/assets/js/analytics.js" defer></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href="/">Brad Lasater<span class="brand__dot">.</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="/vol/" aria-current="page">Volatility System</a></li>
+        <li><a href="/log/">Research Log</a></li>
+        <li><a href="/cv.html">CV</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="shell hero shell--narrow">
+    <span class="hero__role">Volatility System · Evaluation Protocol</span>
+    <h1 class="hero__name" style="font-size: var(--step-3); margin-top: var(--sp-3);">
+      How I intend to avoid fooling myself
+    </h1>
+    <p class="hero__bio">
+      This document is written before the results exist, and is versioned so that any later change
+      to it is visible. That is the whole point: a backtest is only evidence if the rules for
+      judging it were fixed in advance.
+    </p>
+  </section>
+
+  <section class="shell shell--narrow section">
+    <article class="prose">
+
+      <h2 id="why">Why pre-commit</h2>
+      <p>
+        The failure mode in systematic trading research is not bad mathematics. It is a thousand
+        small, individually reasonable decisions — a slightly different lookback, a filtered
+        universe, an excluded month — each made after seeing what it does to the equity curve. The
+        result is a strategy fitted to its own evaluation, which performs beautifully until the
+        moment real money is behind it.
+      </p>
+      <p>
+        The defence is to fix the judging criteria first and count every decision made afterwards.
+        Everything below is that commitment, stated in public so that departing from it is costly.
+      </p>
+
+      <h2 id="data">Data and universe</h2>
+      <ul>
+        <li>
+          <strong>Universe:</strong> liquid, listed, optionable US underlyings, with liquidity
+          screens applied on the date of the decision rather than retrospectively. Selecting today&rsquo;s
+          liquid names and testing them over history is survivorship bias wearing a lab coat.
+        </li>
+        <li>
+          <strong>Point-in-time discipline:</strong> every input must be as it was available at the
+          decision timestamp — including dividends, splits, index membership, and the discount
+          curve. Any field that cannot be reconstructed point-in-time is excluded from the model.
+        </li>
+        <li>
+          <strong>Quote hygiene:</strong> stale, crossed, and locked quotes dropped; static
+          no-arbitrage bounds enforced; forward implied from put&ndash;call parity rather than
+          taken from a vendor field.
+        </li>
+      </ul>
+
+      <h2 id="splitting">Splitting and validation</h2>
+      <ul>
+        <li>
+          <strong>Purged k-fold with embargo.</strong> Options labels span time — a position held
+          for three weeks overlaps three weeks of subsequent observations. Standard k-fold leaks
+          that overlap directly into the validation set. Training observations whose label windows
+          overlap the validation window are purged, and an embargo period after each validation
+          fold is dropped entirely to handle serial correlation.
+        </li>
+        <li>
+          <strong>Walk-forward as the headline.</strong> Cross-validation is for model selection.
+          The number that gets reported is walk-forward: train on the past, trade the next period,
+          roll forward, never look back.
+        </li>
+        <li>
+          <strong>A held-out final period,</strong> untouched until the system is otherwise frozen,
+          and used exactly once. If it disagrees with the development results, the development
+          results were wrong.
+        </li>
+      </ul>
+
+      <h2 id="baselines">Baselines that must be beaten</h2>
+      <p>
+        A model is not evaluated against zero. It is evaluated against the cheapest thing that
+        already works, and it must win out of sample before it is allowed to size a position:
+      </p>
+      <ul>
+        <li>Implied volatility itself as the forecast of realised volatility.</li>
+        <li>HAR-RV on high-frequency realised variance.</li>
+        <li>A GARCH-family conditional variance model.</li>
+        <li>For the strategy as a whole: naive short-variance carry, unconditionally sized.</li>
+      </ul>
+      <p>
+        A learned model that cannot beat HAR-RV is not a discovery. It is a defect, and it gets
+        debugged rather than deployed.
+      </p>
+
+      <h2 id="costs">Cost and friction modelling</h2>
+      <p>
+        Fills are never assumed at the mid. The cost model includes, at minimum:
+      </p>
+      <ul>
+        <li>Half-spread crossing, scaled by quoted width at the decision time and by order size relative to displayed depth.</li>
+        <li>Commissions and exchange fees per contract.</li>
+        <li>Legging risk on multi-leg structures.</li>
+        <li>Delta-hedging costs at the actual rebalancing frequency, including the hedge&rsquo;s own spread.</li>
+        <li>Early-assignment risk on short American options, and borrow cost where shorting stock.</li>
+        <li>Margin requirements, modelled well enough to know whether a drawdown becomes a forced liquidation.</li>
+      </ul>
+      <p>
+        Every reported result states its assumed fill convention. A strategy whose edge disappears
+        under a realistic spread assumption is reported as such rather than quietly re-run at
+        the mid.
+      </p>
+
+      <h2 id="statistics">Performance statistics</h2>
+      <p>
+        Reported results carry all of the following, together. A raw Sharpe ratio on its own is
+        not a result, because without knowing how many configurations produced it, it is
+        uninterpretable.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <caption class="visually-hidden">Statistics reported with every result</caption>
+          <thead>
+            <tr><th scope="col">Statistic</th><th scope="col">Why it is reported</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Raw Sharpe</td><td>The conventional headline, and the least informative number here.</td></tr>
+            <tr><td>Deflated Sharpe</td><td>Adjusts for the number of trials, non-normal returns, and sample length. The number I actually believe.</td></tr>
+            <tr><td>Trial count</td><td>Every configuration evaluated, logged automatically rather than recalled. Deflation is meaningless without it.</td></tr>
+            <tr><td>Probability of backtest overfitting</td><td>Estimated by combinatorially symmetric cross-validation.</td></tr>
+            <tr><td>Maximum drawdown &amp; time to recover</td><td>What determines whether a strategy is survivable in practice.</td></tr>
+            <tr><td>Turnover &amp; cost share of gross P&amp;L</td><td>If most of the gross edge is eaten by frictions, the edge is the cost model&rsquo;s error bar.</td></tr>
+            <tr><td>Return attribution by Greek</td><td>Separates the intended vega edge from unintended delta or gamma exposure.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="kill">Kill criteria</h2>
+      <p>
+        Committed in advance, because the temptation to keep adjusting a losing strategy is the
+        expensive one. Any of the following retires a strategy to the log rather than the portfolio:
+      </p>
+      <ul>
+        <li>Deflated Sharpe not distinguishable from zero at the chosen confidence level.</li>
+        <li>Live out-of-sample performance below the lower bound of the backtest&rsquo;s predicted range for a pre-set window.</li>
+        <li>Realised costs exceeding modelled costs by more than a pre-set margin — the model was wrong about the world, whatever the P&amp;L says.</li>
+        <li>Return attribution showing the P&amp;L came from an exposure the strategy was not intended to take, even if that P&amp;L is positive.</li>
+      </ul>
+      <p>
+        That last one matters most. A strategy that makes money for reasons other than its thesis
+        is not a working strategy; it is an unmeasured risk that has not yet been paid for.
+      </p>
+
+      <h2 id="publishing">What gets published</h2>
+      <ul>
+        <li>Every result with its full statistics table, never a headline number alone.</li>
+        <li>Every dead hypothesis, with what was expected and what actually happened.</li>
+        <li>Every material change to this protocol, dated, with the reasoning.</li>
+        <li>Trade-level logs behind any live track record, so the reported statistics can be recomputed independently.</li>
+      </ul>
+
+      <p class="muted">
+        This protocol is versioned in the repository. Changes are commits, not edits.
+      </p>
+
+      <div class="actions">
+        <a class="btn btn--primary" href="/vol/">Back to the system</a>
+        <a class="btn" href="/log/">Research log</a>
+      </div>
+
+    </article>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <span>&copy; 2026 Brad Lasater</span>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/vol/">Volatility System</a></li>
+      <li><a href="mailto:brad@bradlasater.com">Email</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>

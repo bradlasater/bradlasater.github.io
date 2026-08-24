@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "strategy": "Systematic volatility — end-to-end system",
+  "inception": null,
+  "base_currency": "USD",
+  "periods_per_year": 252,
+  "mode_changes": [],
+  "observations": []
+}

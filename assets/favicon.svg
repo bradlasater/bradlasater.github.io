@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Brad Lasater">
+  <rect width="64" height="64" rx="14" fill="#14171c"/>
+  <!-- Volatility smile: implied vol high at both wings, low near the money. -->
+  <path d="M12 20 C 22 46, 42 46, 52 20"
+        fill="none" stroke="#5EB7F5" stroke-width="6"
+        stroke-linecap="round"/>
+  <circle cx="32" cy="41" r="4" fill="#5EB7F5"/>
+</svg>
