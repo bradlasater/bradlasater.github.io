@@ -25,6 +25,19 @@ which the `file://` origin blocks. Always go through a local server.
 
 There is no bundler, no package manager and no dependency install step.
 
+### Pre-commit hook (one-time setup)
+
+A pre-commit hook auto-runs `scripts/build_site.py` before every commit so
+derived files stay in sync.  To activate it:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+After that, `python3 scripts/build_site.py` runs automatically on each commit
+and the CI `check` job will always pass.
+
 ## Publishing
 
 Push to `main`. GitHub Pages rebuilds automatically, typically within a minute.
