@@ -49,12 +49,13 @@ real-world data." D. E. Shaw's posted NYC quantitative analyst base is $275k
 - [ ] **Set the GoatCounter `CODE`** in `assets/js/analytics.js:18`. It is an
       empty string, so the script returns before injecting anything: zero
       pageviews, zero events, no way to know whether any of this works. *(repo)*
-- [ ] **Resolve the "roughly 60%" claim and delete the `TODO(brad)` comments**
-      in `index.html` and `cv.html`. The comments ship to the browser and are
-      visible in view-source, reading as a public note-to-self that the number is
-      unqualified. Name the error metric (MAPE / WAPE / RMSE) and the baseline, or
-      cut the number. An unqualified percentage is the first thing a quant
-      interviewer pushes on. *(repo + survey)*
+- [ ] **Resolve the "roughly 60%" claim.** The two `TODO(brad)` comments are
+      deleted (they were shipping to view-source), but the number is still
+      unqualified: it reads "forecast error ... against the incumbent baseline"
+      with no metric named. Name the error metric (MAPE / WAPE / RMSE) in
+      `index.html`, `cv.html`, and the CV opening paragraph, or cut the number.
+      An unqualified percentage is the first thing a quant interviewer pushes
+      on. *(repo + survey)*
 - [ ] **Fix the GitHub profile.** Currently `bio: null`, `location: null`,
       `blog: ""`, `name: "bradlasater"`, no profile README, no repo descriptions,
       and two near-duplicate repos (`data_ingest_infra`, `data_ingestion_infra`).
@@ -166,6 +167,7 @@ claim is prospective.
 - [ ] **Cut the capability tag clouds** (three groups, 26 tags). This is the
       flat-breadth pattern that destroys depth signal. Skills walls are a named red
       flag: "interviewers will pick the most obscure item on your list."
+      *Still outstanding after the 2026-08-24 repositioning pass.*
 - [ ] **Add `Code & Data` and `Post-mortems` as nav destinations.** Best
       information architecture found is Ties de Kok's — About / Research / Code &
       Data / Talks & Classes / Blog Posts / CV. One nav item per *kind of
@@ -261,10 +263,11 @@ Outstanding:
       produces a correct printed CV, so this is close to free.)
 - [ ] **Self-host Inter / Newsreader / JetBrains Mono as woff2.** Google Fonts is
       a render-blocking third-party request.
-- [ ] **Rewrite the meta description in the third person, naming city and
-      specialty.** Gundersen's is the model: "Gregory Gundersen is a quantitative
-      researcher in New York." Search engines surface it verbatim, so it is the one
-      sentence a recruiter is most likely to read before deciding to click.
+- [x] **Rewrite the meta description in the third person, naming city and
+      specialty.** Done: the homepage description now opens "Brad Lasater is an
+      applied scientist and machine-learning engineer in New York…", following
+      Gundersen's model. `cv.html` and the Open Graph tags were brought into
+      line at the same time.
 - [ ] **Submit the feed to Quantocracy** once there are 2–3 real entries. Best live
       aggregator in this niche and the cheapest real distribution available — it
       puts the log in the same daily roundup as Carver and Kinlay.
@@ -351,9 +354,14 @@ call. A light-mode variant would mean redefining the token block under
 7. Skills walls and technology laundry lists.
 8. Anything that cannot be defended for twenty minutes.
 9. Vague accomplishment language.
-10. Overclaiming the identity — "engineer building a volatility research program"
-    is defensible; "quantitative researcher", on a site with no desk experience,
-    invites a comparison that is lost.
+10. Overclaiming the identity. **Amended 2026-08-24:** the homepage descriptor
+    now reads "Applied Scientist · Quantitative Research · Systematic
+    Volatility", adopting *Quantitative Research* as the term recruiters
+    actually search on. This was a deliberate override of the original rule,
+    which held that "quantitative researcher" on a site with no desk experience
+    invites a comparison that is lost. The rule still binds everywhere else: the
+    site does not claim desk experience, a trading seat, or institutional P&L,
+    and `jobTitle` in JSON-LD remains "Applied Scientist".
 
 **Delete on sight:** proven · consistently · robust (unqualified) · proprietary ·
 cutting-edge · passionate about · significant returns · battle-tested ·

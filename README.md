@@ -5,8 +5,10 @@ HTML and CSS with two small vanilla-JS files, served by GitHub Pages from the
 `main` branch at the repository root.
 
 Its purpose is narrow: it is a recruiting instrument aimed at quantitative
-finance roles, built around an end-to-end systematic volatility trading system
-and — more importantly — the research process behind it.
+finance roles, built around an end-to-end systematic volatility research and
+execution platform — Phase 1 trades defined-risk SPX and XSP structures at
+roughly 7–45 days to expiry — and, more importantly, the research process
+behind it.
 
 ---
 
@@ -35,9 +37,9 @@ There is no deploy script and no build artefact to commit beyond what
 |---|---|
 | `index.html` | Home — positioning, selected experience, capabilities, contact |
 | `cv.html` | Full CV, including military and teaching service |
-| `vol/index.html` | Volatility system overview: premise, architecture, sources |
+| `vol/index.html` | Volatility system overview: premise, architecture with per-stage status, sources |
 | `vol/methodology.html` | The evaluation protocol, written before results exist |
-| `vol/track-record.html` | Live out-of-sample record (see below) |
+| `vol/track-record.html` | Build status and live out-of-sample record (see below) |
 | `log/index.html` | Research log index |
 | `404.html` | Custom 404 (`noindex`) |
 | `assets/css/site.css` | The entire design system — dark-only, OKLCH tokens |
@@ -170,9 +172,11 @@ GitHub domain-verified (takeover protection); adding the
 
 ## Conventions
 
-- **British spelling** in prose (`optimisation`, `modelling`).
-- The nav is hand-maintained in seven HTML files *and* in
-  `scripts/build_site.py`. Changing it means editing both, or generated log
+- **British spelling** in prose (`optimisation`, `modelling`). The deliberate
+  exceptions are JSON-LD and the third-person "Who is Brad Lasater?" block on
+  the homepage, which use American spelling for search reasons.
+- The nav is hand-maintained in seven HTML files *and* in the `nav()` function
+  of `scripts/build_site.py`. Changing it means editing both, or generated log
   pages will drift from the static ones.
 - `aria-current="page"` marks the page you are on; `aria-current="true"` marks
   an ancestor section (used on `vol/methodology.html`, whose nav highlights

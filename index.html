@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Brad Lasater — Applied Scientist, Systematic Volatility</title>
-<meta name="description" content="Applied scientist and ML engineer building an end-to-end systematic volatility trading system. Ten years of production ML, optimization, and state estimation across marketplaces, live events, aerospace, and defense.">
+<title>Brad Lasater — Applied Scientist, Quantitative Research, Systematic Volatility</title>
+<meta name="description" content="Brad Lasater is an applied scientist and machine-learning engineer in New York with ten years of production ML, optimization, and state-estimation work, now building an end-to-end systematic volatility research and execution platform.">
 <link rel="canonical" href="https://bradlasater.com/">
 <meta name="theme-color" content="#14171c">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -15,8 +15,8 @@
 <!-- Open Graph — referrals happen in Slack and LinkedIn DMs; a blank card costs conversions. -->
 <meta property="og:type" content="profile">
 <meta property="og:url" content="https://bradlasater.com/">
-<meta property="og:title" content="Brad Lasater — Applied Scientist, Systematic Volatility">
-<meta property="og:description" content="Building an end-to-end systematic volatility trading system, documented in the open. Ten years of production ML, optimization, and state estimation.">
+<meta property="og:title" content="Brad Lasater — Applied Scientist, Quantitative Research, Systematic Volatility">
+<meta property="og:description" content="Ten years building production forecasting, optimization, and state-estimation systems. Now building an end-to-end systematic volatility research and execution platform, documented in the open.">
 <meta property="og:image" content="https://bradlasater.com/assets/og.png">
 <meta property="og:image:alt" content="Brad Lasater — Applied Scientist, Systematic Volatility">
 <meta property="og:site_name" content="Brad Lasater">
@@ -43,7 +43,7 @@
       "@id": "https://bradlasater.com/#website",
       "url": "https://bradlasater.com/",
       "name": "Brad Lasater",
-      "description": "Systematic volatility, optimization, and state estimation — a trading system built and documented in the open.",
+      "description": "Systematic volatility research and execution, optimization, and state estimation — a platform built and documented in the open.",
       "inLanguage": "en-US",
       "publisher": { "@id": "https://bradlasater.com/#brad" }
     },
@@ -68,7 +68,7 @@
       "image": "https://bradlasater.com/assets/headshot.jpg",
       "email": "mailto:brad@bradlasater.com",
       "jobTitle": "Applied Scientist",
-      "description": "Applied scientist and machine-learning engineer with ten years of production ML, optimization, and state-estimation work at Nift, Ticketmaster, Lockheed Martin, and Boeing. Now building an end-to-end systematic volatility trading system in public, and seeking quantitative research and quantitative engineering roles in New York.",
+      "description": "Applied scientist and machine-learning engineer with ten years of production ML, forecasting, optimization, and state-estimation work at Nift, Ticketmaster, Lockheed Martin, and Boeing. Owns the full research-to-production lifecycle, and is building an end-to-end systematic volatility research and execution platform for defined-risk SPX and XSP structures. Pursuing quantitative research, research-engineering, and quantitative developer roles in New York.",
       "disambiguatingDescription": "The Brad Lasater who holds U.S. Patent 10,204,323, served as a Sergeant in the United States Marine Corps, and publishes a systematic volatility trading system and its evaluation protocol at bradlasater.com.",
       "sameAs": [
         "https://github.com/bradlasater",
@@ -76,6 +76,8 @@
       ],
       "knowsAbout": [
         "Systematic volatility trading",
+        "Variance risk premium",
+        "Index options",
         "Options pricing and Greeks",
         "Volatility surface construction",
         "Financial machine learning",
@@ -121,7 +123,7 @@
       },
       "seeks": {
         "@type": "Demand",
-        "name": "Quantitative research and quantitative engineering roles in New York"
+        "name": "Quantitative research, research-engineering, and quantitative developer roles in New York"
       }
     },
     {
@@ -149,7 +151,7 @@
     <nav class="site-nav" aria-label="Primary">
       <ul>
         <li><a href="/vol/">Volatility System</a></li>
-        <li><a href="/vol/track-record.html">Track Record</a></li>
+        <li><a href="/vol/track-record.html">Build Status</a></li>
         <li><a href="/log/">Research Log</a></li>
         <li><a href="/cv.html">CV</a></li>
         <li><a href="/#contact">Contact</a></li>
@@ -162,16 +164,24 @@
 
   <section class="shell hero">
     <h1 class="hero__name">Brad Lasater</h1>
-    <span class="hero__role">Applied Scientist · Systematic Volatility · Optimization &amp; State Estimation</span>
+    <span class="hero__role">Applied Scientist · Quantitative Research · Systematic Volatility</span>
     <p class="hero__thesis">Estimating what uncertainty is worth, then trading the difference.</p>
     <p class="hero__bio">
-      I&rsquo;m Brad Lasater, an applied scientist and machine-learning engineer with ten years
-      building production machine-learning, optimization, and state-estimation systems
-      across consumer marketplaces, live events, aerospace, and defense — auction design and
-      real-time ranking at scale, nonlinear filtering for object tracking, and large-scale
-      scheduling under uncertainty. I&rsquo;m now pointing that toolkit at options: building an
-      end-to-end systematic volatility trading system from data ingestion through execution,
-      documented in the open — including the parts that don&rsquo;t work.
+      I build production decision systems for noisy, constrained environments. Over ten years
+      I have built machine-learning, forecasting, state-estimation, and optimisation systems
+      across consumer marketplaces, live events, aerospace, and defense — real-time auction and
+      ranking systems serving millions of users, live-event demand forecasting that cut forecast
+      error by roughly 60% against the incumbent baseline, particle filters and constrained
+      real-time sensor scheduling, and a patented stochastic production-planning model.
+    </p>
+    <p class="hero__bio">
+      My current research applies that same research-to-production discipline to systematic
+      volatility. I am building a full-stack options platform spanning point-in-time data,
+      arbitrage-aware volatility surfaces, physical-variance forecasting, risk-neutral variance
+      extraction, variance-risk-premium signals, Greek-aware portfolio construction, event-driven
+      backtesting, execution, and live monitoring. The work is versioned and evaluated under a
+      protocol committed in public before any results existed, designed to separate genuine edge
+      from backtest noise.
     </p>
     <div class="actions">
       <a class="btn btn--primary" href="/vol/">See the volatility system</a>
@@ -185,21 +195,21 @@
     <div class="feature">
       <span class="badge badge--active badge--dot">In development</span>
       <h2 class="feature__title" id="current-work-title" style="margin-top: var(--sp-4);">
-        An end-to-end volatility trading system
+        An end-to-end volatility system, under active construction
       </h2>
       <div class="feature__body">
         <p>
-          A complete system built from scratch — options data ingestion and cleaning, surface
-          construction, forecasting realised and implied volatility, position sizing under a
-          risk budget, and execution modelled with real frictions. The intellectual spine is
-          Euan Sinclair on the mechanics and economics of volatility trading, and Marcos López
-          de Prado on the statistics of not fooling yourself.
+          A research and execution platform for defined-risk index-volatility strategies,
+          beginning with SPX and XSP at roughly 7–45 days to expiry. The system links
+          point-in-time options data, arbitrage-aware surface construction, physical-variance
+          forecasts, risk-neutral variance extraction, a no-trade gate, Greek-constrained sizing,
+          event-driven backtesting, and execution under observed spreads and slippage.
         </p>
         <p>
-          The point of publishing it is not the equity curve. It&rsquo;s the research process:
-          an evaluation protocol fixed <em>before</em> results are looked at, deflated performance
-          statistics reported next to raw ones, execution costs modelled rather than assumed away,
-          and written post-mortems whenever the system loses money or a hypothesis dies.
+          The evaluation rules are fixed <em>before</em> any results are inspected: every trial is
+          logged, validation is purged and walk-forward, costs are modelled from executable quotes
+          rather than assumed away, and live observations are append-only. Post-mortems are written
+          whenever the system loses money or a hypothesis dies.
         </p>
         <div class="actions">
           <a class="btn btn--primary" href="/vol/">System overview</a>
@@ -228,12 +238,12 @@
           <div class="role__where">
             <h3 class="role__title">Senior Data Scientist</h3>
             <span class="role__org">Nift &middot; Remote</span>
-            <div class="role__meta"><span class="badge">Concurrent role</span></div>
+            <div class="role__meta"><span class="badge">Part-time, concurrent with Ticketmaster</span></div>
           </div>
           <ul class="role__points">
             <li>Own modelling and optimisation for a multi-brand auction and ranking system serving
-                millions of users per month — allocation under budget and inventory constraints,
-                with the same bid/allocation/clearing structure as an electronic market.</li>
+                millions of users per month — online allocation under budget and inventory
+                constraints.</li>
             <li>Built the data pipelines and feature store backing both real-time inference and
                 offline training, keeping serving-time and training-time features consistent.</li>
             <li>Established model-health and retraining frameworks covering calibration drift,
@@ -248,11 +258,8 @@
           <div class="role__where">
             <h3 class="role__title">Lead Data Scientist</h3>
             <span class="role__org">Ticketmaster</span>
-            <div class="role__meta"><span class="badge">Concurrent role</span></div>
           </div>
           <ul class="role__points">
-            <!-- TODO(brad): name the exact error metric here — MAPE, WAPE, RMSE? An unqualified
-                 percentage is the first thing a quant interviewer will push on. -->
             <li>Cut live-event sales forecast error by roughly 60% against the incumbent baseline
                 using temporally dynamic gradient-boosted trees.</li>
             <li>Led the team delivering data-science products, translating commercial strategy into
@@ -271,9 +278,8 @@
             <span class="role__org">Lockheed Martin &middot; Special Programs</span>
           </div>
           <ul class="role__points">
-            <li>Implemented particle filters producing actionable ephemeris for space surveillance —
-                recovering latent state from sparse, noisy, irregularly sampled observations, which
-                is structurally the same problem as filtering latent volatility from discrete quotes.</li>
+            <li>Implemented particle filters producing actionable ephemeris for space surveillance,
+                recovering latent state from sparse, noisy, irregularly sampled observations.</li>
             <li>Built a binary linear program for real-time sensor scheduling, allocating a constrained
                 set of sensors across competing targets under hard latency requirements.</li>
             <li>Designed Kalman and Singer filter instantiation procedures that improved convergence
@@ -380,9 +386,7 @@
       <div class="deflist__item">
         <dt>Doctoral coursework, Optimisation &amp; Machine Learning — Missouri S&amp;T</dt>
         <dd>
-          Begun while working full-time at Boeing and discontinued by choice: a patent and rapid
-          progression made the remaining years a poor trade against what industry was already
-          teaching me.
+          Taken part-time while working full-time at Boeing.
         </dd>
       </div>
     </dl>
@@ -396,21 +400,25 @@
     <div class="prose">
       <p>
         Brad Lasater is an applied scientist and machine-learning engineer with ten years of
-        production experience in machine learning, mathematical optimization, and state estimation.
-        He has worked on auction design and real-time ranking at Nift, live-event demand forecasting
-        at Ticketmaster, particle filters and sensor scheduling for space surveillance at Lockheed
-        Martin, and discrete-event simulation for production planning at Boeing, where he was
-        awarded U.S. Patent 10,204,323. He holds an M.Eng. in Systems Engineering from Arizona State
-        University and a B.S. in Applied Mathematics from the University of Texas at Arlington, and
-        served as a Sergeant and instructor in the United States Marine Corps.
+        experience building production systems for probabilistic forecasting, state estimation,
+        ranking, and constrained optimization. At Nift he owns modeling and optimization for a
+        multi-brand marketplace serving millions of users. Previously he led live-event demand
+        forecasting at Ticketmaster, developed particle-filter and sensor-scheduling algorithms for
+        space surveillance at Lockheed Martin, and patented a stochastic production-planning model
+        at Boeing, where he was awarded U.S. Patent 10,204,323. He holds an M.Eng. in Systems
+        Engineering from Arizona State University and a B.S. in Applied Mathematics from the
+        University of Texas at Arlington, and served as a Sergeant and instructor in the United
+        States Marine Corps.
       </p>
       <p>
-        He is currently building an end-to-end systematic volatility trading system from scratch —
-        options data ingestion, arbitrage-free surface construction, volatility forecasting, position
-        sizing, and execution with modelled frictions — and publishing the research process behind
-        it, including an evaluation protocol committed in public before any results existed and an
-        append-only live track record whose dates are enforced by continuous integration. He is
-        seeking quantitative research and quantitative engineering roles in New York.
+        His current research focuses on systematic volatility and the variance risk premium. He is
+        building an end-to-end research and execution platform for defined-risk SPX and XSP
+        structures at roughly 7–45 days to expiry, covering point-in-time market data,
+        volatility-surface construction, physical and risk-neutral variance estimation, signal
+        validation, portfolio risk, execution, and live monitoring — with an evaluation protocol
+        committed in public before any results existed and an append-only live record whose dates
+        are enforced by continuous integration. He is pursuing quantitative research,
+        research-engineering, and quantitative developer roles in New York.
       </p>
     </div>
   </section>
@@ -420,9 +428,11 @@
       <span class="section__eyebrow">Contact</span>
       <h2 class="section__title" id="contact-title">Get in touch</h2>
       <p class="section__lede">
-        I&rsquo;m interested in quantitative research and quantitative engineering roles in New York —
-        volatility and systematic strategies especially. Happy to talk about any hard modelling,
-        optimisation, or decision-systems problem. Email is fastest; I read everything.
+        I am pursuing experienced-hire roles in quantitative research, systematic strategy research,
+        and research engineering in New York, with particular interest in volatility and
+        derivatives. My strongest fit is work that combines statistical research with ownership of
+        the data, validation, implementation, deployment, and live operating lifecycle. Email is
+        fastest; I read everything.
       </p>
     </div>
     <div class="actions">

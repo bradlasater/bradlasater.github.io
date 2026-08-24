@@ -39,7 +39,7 @@
       "@id": "https://bradlasater.com/vol/methodology.html#article",
       "mainEntityOfPage": "https://bradlasater.com/vol/methodology.html",
       "headline": "Evaluation protocol for a systematic volatility trading system",
-      "description": "The pre-committed rules for judging a volatility trading system: purged and embargoed cross-validation, mandatory baselines, cost and friction modelling, deflated performance statistics, and kill criteria fixed in advance.",
+      "description": "The pre-committed rules for judging a systematic volatility research and execution platform, whose Phase 1 universe is defined-risk SPX and XSP structures at roughly 7-45 days to expiry: purged and embargoed cross-validation, mandatory baselines, cost and friction modelling, deflated performance statistics, and kill criteria fixed in advance.",
       "inLanguage": "en-US",
       "dateModified": "2026-08-24T21:09:45+00:00",
       "author": { "@id": "https://bradlasater.com/#brad" },
@@ -61,7 +61,7 @@
           "@type": "Question",
           "@id": "https://bradlasater.com/vol/methodology.html#data",
           "name": "What data and universe does the system trade, and how is survivorship bias avoided?",
-          "acceptedAnswer": { "@type": "Answer", "text": "The system trades liquid, listed, optionable US underlyings, and every input is reconstructed as it stood at the decision timestamp rather than as it stands today. Liquidity screens are applied on the date of the decision rather than retrospectively, since selecting today's liquid names and testing them over history is survivorship bias wearing a lab coat. Any field that cannot be reconstructed point-in-time is excluded from the model." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Phase 1 trades defined-risk SPX and XSP structures at roughly 7-45 days to expiry. Both are European-style and cash-settled, which removes early assignment and share delivery from the Phase 1 risk surface. Every input is reconstructed as it stood at the decision timestamp rather than as it stands today. Liquidity screens are applied on the date of the decision rather than retrospectively, since selecting today's liquid names and testing them over history is survivorship bias wearing a lab coat. Any field that cannot be reconstructed point-in-time is excluded from the model." }
         },
         {
           "@type": "Question",
@@ -79,7 +79,7 @@
           "@type": "Question",
           "@id": "https://bradlasater.com/vol/methodology.html#costs",
           "name": "How are execution costs and frictions modelled in an options backtest?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Fills are never assumed at the mid, because in options the spread is frequently larger than the entire modelled edge. The cost model charges half-spread crossing scaled by quoted width and order size relative to displayed depth, commissions and exchange fees per contract, legging risk on multi-leg structures, delta-hedging costs at the actual rebalancing frequency including the hedge's own spread, early-assignment risk on short American options, borrow cost where shorting stock, and margin requirements modelled well enough to know whether a drawdown becomes a forced liquidation." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Fills are never assumed at the mid, because in options the spread is frequently larger than the entire modelled edge. The cost model charges half-spread crossing scaled by quoted width and order size relative to displayed depth, commissions and exchange fees per contract, legging risk on multi-leg structures, delta-hedging costs at the actual rebalancing frequency including the hedge's own spread, early-assignment and borrow costs where the system extends beyond the European, cash-settled Phase 1 universe, and margin requirements modelled well enough to know whether a drawdown becomes a forced liquidation." }
         },
         {
           "@type": "Question",
@@ -131,7 +131,7 @@
     <nav class="site-nav" aria-label="Primary">
       <ul>
         <li><a href="/vol/" aria-current="true">Volatility System</a></li>
-        <li><a href="/vol/track-record.html">Track Record</a></li>
+        <li><a href="/vol/track-record.html">Build Status</a></li>
         <li><a href="/log/">Research Log</a></li>
         <li><a href="/cv.html">CV</a></li>
         <li><a href="/#contact">Contact</a></li>
@@ -172,15 +172,18 @@
 
       <h2 id="data">What data and universe does the system trade, and how is survivorship bias avoided?</h2>
       <p>
-        The system trades liquid, listed, optionable US underlyings, and every input is
-        reconstructed as it stood at the decision timestamp rather than as it stands today.
-        Three rules make that concrete:
+        Phase 1 trades defined-risk SPX and XSP structures at roughly 7&ndash;45 days to expiry, and
+        every input is reconstructed as it stood at the decision timestamp rather than as it stands
+        today. Three rules make that concrete:
       </p>
       <ul>
         <li>
-          <strong>Universe:</strong> liquid, listed, optionable US underlyings, with liquidity
-          screens applied on the date of the decision rather than retrospectively. Selecting today&rsquo;s
-          liquid names and testing them over history is survivorship bias wearing a lab coat.
+          <strong>Universe:</strong> defined-risk SPX and XSP structures at roughly 7&ndash;45 days
+          to expiry. Both are European-style and cash-settled, which removes early assignment and
+          share delivery from the Phase 1 risk surface. Liquidity screens are applied on the date of
+          the decision rather than retrospectively; when the universe extends beyond the index
+          complex, selecting today&rsquo;s liquid names and testing them over history is
+          survivorship bias wearing a lab coat.
         </li>
         <li>
           <strong>Point-in-time discipline:</strong> every input must be as it was available at the
@@ -249,7 +252,9 @@
         <li>Commissions and exchange fees per contract.</li>
         <li>Legging risk on multi-leg structures.</li>
         <li>Delta-hedging costs at the actual rebalancing frequency, including the hedge&rsquo;s own spread.</li>
-        <li>Early-assignment risk on short American options, and borrow cost where shorting stock.</li>
+        <li>Early-assignment and borrow costs, which do not apply to the European, cash-settled
+            Phase 1 universe and are modelled only when the system extends to American-style
+            products.</li>
         <li>Margin requirements, modelled well enough to know whether a drawdown becomes a forced liquidation.</li>
       </ul>
       <p>

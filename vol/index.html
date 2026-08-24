@@ -14,8 +14,8 @@
 
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bradlasater.com/vol/">
-<meta property="og:title" content="An end-to-end volatility trading system">
-<meta property="og:description" content="Built from scratch — data, surface, forecast, sizing, execution, evaluation. Documented in the open, including the parts that don't work.">
+<meta property="og:title" content="An end-to-end volatility system, under active construction">
+<meta property="og:description" content="Defined-risk SPX and XSP at roughly 7-45 days to expiry — data, surface, forecast, sizing, execution, evaluation. Each stage labelled with its current status.">
 <meta property="og:image" content="https://bradlasater.com/assets/og.png">
 <meta property="og:site_name" content="Brad Lasater">
 <meta property="og:locale" content="en_US">
@@ -39,7 +39,7 @@
       "@id": "https://bradlasater.com/vol/#article",
       "mainEntityOfPage": "https://bradlasater.com/vol/",
       "headline": "An end-to-end systematic volatility trading system",
-      "description": "The full architecture of a volatility trading system built from scratch: options data ingestion and cleaning, arbitrage-free surface construction, volatility forecasting, signal and sizing, risk and hedging, execution with modelled frictions, evaluation, and operations.",
+      "description": "The architecture of a systematic volatility research and execution platform, beginning with defined-risk SPX and XSP structures at roughly 7-45 days to expiry: point-in-time options data and cleaning, arbitrage-free surface construction, volatility forecasting, signal and sizing, risk and hedging, execution with modelled frictions, evaluation, and operations. Each stage is labelled with its current implementation status.",
       "inLanguage": "en-US",
       "dateModified": "2026-08-24T21:09:45+00:00",
       "author": { "@id": "https://bradlasater.com/#brad" },
@@ -87,7 +87,7 @@
     <nav class="site-nav" aria-label="Primary">
       <ul>
         <li><a href="/vol/" aria-current="page">Volatility System</a></li>
-        <li><a href="/vol/track-record.html">Track Record</a></li>
+        <li><a href="/vol/track-record.html">Build Status</a></li>
         <li><a href="/log/">Research Log</a></li>
         <li><a href="/cv.html">CV</a></li>
         <li><a href="/#contact">Contact</a></li>
@@ -103,16 +103,17 @@
     <h1 class="hero__name" style="margin-top: var(--sp-4);">The volatility system</h1>
     <p class="hero__thesis" style="--thesis-measure: 27ch;">Options are a market in forecasts. The trade is the forecast error.</p>
     <p class="hero__bio">
-      An end-to-end systematic volatility trading system, built from scratch and documented as it
-      goes. Every stage below is something I&rsquo;m building myself rather than importing: options
-      data ingestion and cleaning, arbitrage-free surface construction, volatility forecasting,
-      position sizing against a risk budget, execution with modelled frictions, and an evaluation
-      layer designed to make the results hard to believe rather than easy.
+      An end-to-end research and execution platform for defined-risk index-volatility strategies,
+      under active construction and documented as it goes. <strong>Phase 1 focuses on defined-risk
+      SPX and XSP structures at roughly 7–45 days to expiry.</strong> The architecture is designed
+      to generalise to additional underlyings and strategy families once the initial research and
+      execution loop is validated. Every stage below is something I am building myself rather than
+      importing.
     </p>
     <div class="actions">
       <a class="btn btn--primary" href="/vol/methodology.html">Evaluation protocol</a>
       <a class="btn" href="/log/">Research log</a>
-      <a class="btn" href="https://github.com/bradlasater">Source</a>
+      <a class="btn" href="https://github.com/bradlasater" rel="me">GitHub</a>
     </div>
   </section>
 
@@ -125,8 +126,9 @@
       <p>
         An option price is a statement about the distribution of future returns. Implied volatility
         is that statement made legible. It is also, persistently and measurably, a biased forecast:
-        implied volatility exceeds subsequently realised volatility most of the time, across most
-        underlyings, because someone is being paid to carry the risk of it not doing so.
+        is that statement made legible. It is also, persistently and measurably, a biased forecast:
+        implied volatility exceeds subsequently realised volatility most of the time in index
+        options, because someone is being paid to carry the risk of it not doing so.
       </p>
       <p>
         That premium is well documented, which means it is not an edge by itself. Harvesting it
@@ -134,7 +136,7 @@
         The interesting questions are the ones underneath: <strong>when</strong> is the premium
         unusually rich relative to the risk being assumed, <strong>how much</strong> should be
         risked given a specific portfolio of Greeks, and <strong>what</strong> does the position
-        actually cost to put on and hedge after spreads, slippage, and assignment risk.
+        actually cost to put on and hedge after spreads, slippage, and hedging costs.
       </p>
       <p>
         Those are estimation and optimisation problems under uncertainty — which is what I have
@@ -155,7 +157,8 @@
       <h2 class="section__title" id="architecture-title">System stages</h2>
       <p class="section__lede">
         Each stage is independently testable and independently loggable. Failures are attributed to
-        a stage, not to &ldquo;the model.&rdquo;
+        a stage, not to &ldquo;the model.&rdquo; Status labels are current: what runs today, what is
+        being checked, and what is designed but not yet built.
       </p>
     </div>
 
@@ -163,6 +166,7 @@
 
       <article class="card" id="stage-data" aria-labelledby="stage-data-title">
         <h3 class="card__title" id="stage-data-title">Data &amp; cleaning</h3>
+        <p class="card__status"><span class="badge badge--live badge--dot">Operational</span></p>
         <div class="card__body">
           <p>
             The ingestion layer takes end-of-day and intraday options chains, underlying prices,
@@ -176,6 +180,7 @@
 
       <article class="card" id="stage-surface" aria-labelledby="stage-surface-title">
         <h3 class="card__title" id="stage-surface-title">Surface construction</h3>
+        <p class="card__status"><span class="badge badge--active badge--dot">Under validation</span></p>
         <div class="card__body">
           <p>
             Surface construction inverts quotes to implied volatility, then fits a parametric
@@ -189,6 +194,7 @@
 
       <article class="card" id="stage-forecasting" aria-labelledby="stage-forecasting-title">
         <h3 class="card__title" id="stage-forecasting-title">Volatility forecasting</h3>
+        <p class="card__status"><span class="badge">Planned</span></p>
         <div class="card__body">
           <p>
             Forecasting starts from realised volatility estimators that use the full bar
@@ -203,6 +209,7 @@
 
       <article class="card" id="stage-sizing" aria-labelledby="stage-sizing-title">
         <h3 class="card__title" id="stage-sizing-title">Signal &amp; sizing</h3>
+        <p class="card__status"><span class="badge">Planned</span></p>
         <div class="card__body">
           <p>
             The spread between forecast realised and market implied volatility becomes a signal only
@@ -216,6 +223,7 @@
 
       <article class="card" id="stage-risk" aria-labelledby="stage-risk-title">
         <h3 class="card__title" id="stage-risk-title">Risk &amp; hedging</h3>
+        <p class="card__status"><span class="badge">Planned</span></p>
         <div class="card__body">
           <p>
             Risk management runs on continuous Greek accounting, with discrete delta-hedging
@@ -229,20 +237,24 @@
 
       <article class="card" id="stage-execution" aria-labelledby="stage-execution-title">
         <h3 class="card__title" id="stage-execution-title">Execution</h3>
+        <p class="card__status"><span class="badge">Planned</span></p>
         <div class="card__body">
           <p>
             Execution models fills at achievable prices rather than at the mid, because in
-            options the quoted spread is frequently wider than the modelled edge.
-            Multi-leg structures carry
-            legging risk; American options carry early-assignment risk; short options carry borrow
-            and pin risk. Any backtest that quietly assumes mid fills is measuring the size of its
-            own assumption.
+            options the quoted spread is frequently wider than the modelled edge. Multi-leg
+            structures carry legging risk, and index settlement carries hazards of its own —
+            AM-settled SPX expiries print off the opening auction, not the close. Early
+            assignment, stock borrow, and share delivery do not apply to European, cash-settled
+            index options; they become first-class risks only when the system extends to
+            American-style products. Any backtest that quietly assumes mid fills is measuring the
+            size of its own assumption.
           </p>
         </div>
       </article>
 
       <article class="card" id="stage-evaluation" aria-labelledby="stage-evaluation-title">
         <h3 class="card__title" id="stage-evaluation-title">Evaluation</h3>
+        <p class="card__status"><span class="badge">Planned</span></p>
         <div class="card__body">
           <p>
             Evaluation uses purged and embargoed cross-validation, walk-forward testing, and
@@ -255,6 +267,7 @@
 
       <article class="card" id="stage-operations" aria-labelledby="stage-operations-title">
         <h3 class="card__title" id="stage-operations-title">Operations &amp; logging</h3>
+        <p class="card__status"><span class="badge">Planned</span></p>
         <div class="card__body">
           <p>
             Operations means structured logs at every stage, daily reconciliation of expected
