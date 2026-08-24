@@ -49,13 +49,12 @@ real-world data." D. E. Shaw's posted NYC quantitative analyst base is $275k
 - [ ] **Set the GoatCounter `CODE`** in `assets/js/analytics.js:18`. It is an
       empty string, so the script returns before injecting anything: zero
       pageviews, zero events, no way to know whether any of this works. *(repo)*
-- [ ] **Resolve the "roughly 60%" claim.** The two `TODO(brad)` comments are
-      deleted (they were shipping to view-source), but the number is still
-      unqualified: it reads "forecast error ... against the incumbent baseline"
-      with no metric named. Name the error metric (MAPE / WAPE / RMSE) in
-      `index.html`, `cv.html`, and the CV opening paragraph, or cut the number.
-      An unqualified percentage is the first thing a quant interviewer pushes
-      on. *(repo + survey)*
+- [x] **Resolve the "roughly 60%" claim.** Done. The two `TODO(brad)` comments
+      are deleted (they were shipping to view-source), and the number is now
+      qualified everywhere it appears: **WAPE, against a prior-season-average
+      baseline**, in the homepage hero, the CV opening paragraph, and the
+      Ticketmaster role bullets on both pages. An unqualified percentage is the
+      first thing a quant interviewer pushes on. *(repo + survey)*
 - [ ] **Fix the GitHub profile.** Currently `bio: null`, `location: null`,
       `blog: ""`, `name: "bradlasater"`, no profile README, no repo descriptions,
       and two near-duplicate repos (`data_ingest_infra`, `data_ingestion_infra`).
