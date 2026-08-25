@@ -12,6 +12,7 @@ exclude:
   - content        # log-entry source fragments; rendered into /log/*.html
   - scripts        # build and validation tooling
   - notes          # working notes and peer research; candid, deliberately unpublished
+  - data/SCHEMA.md # data-contract docs; llms.txt points at the GitHub copy instead
   - README.md      # contributor docs; also records DNS/email config
   - ROADMAP.md     # candid outstanding-work list, incl. the salary target
 
