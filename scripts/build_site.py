@@ -202,8 +202,16 @@ def esc(text: str) -> str:
     return html.escape(text, quote=True)
 
 
+# strftime('%B') follows the process locale, so a non-English dev machine would
+# render different month names than CI and desync --check. Fixed table instead.
+_MONTHS = (
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+)
+
+
 def human_date(value: dt.date | dt.datetime) -> str:
-    return f"{value.strftime('%B')} {value.day}, {value.year}"
+    return f"{_MONTHS[value.month - 1]} {value.day}, {value.year}"
 
 
 def nav(active: str) -> str:

@@ -124,8 +124,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--date", required=True, help="YYYY-MM-DD")
     parser.add_argument("--nav", type=float, help="net asset value at the close, after costs")
-    parser.add_argument("--gross-pnl", type=float, default=0.0, help="P&L before frictions")
-    parser.add_argument("--costs", type=float, default=0.0, help="total frictions for the day")
+    parser.add_argument("--gross-pnl", type=float, default=None, help="P&L before frictions (required)")
+    parser.add_argument("--costs", type=float, default=None, help="total frictions for the day (required)")
     parser.add_argument("--positions", type=int, default=0, help="open positions at the close")
     parser.add_argument("--mode", choices=("paper", "live"), default="paper")
     parser.add_argument(
@@ -144,8 +144,15 @@ def main() -> int:
         print(f"FAIL  --date {args.date!r} is not an ISO YYYY-MM-DD date", file=sys.stderr)
         return 1
 
-    if args.mode_change is None and args.nav is None:
-        print("FAIL  --nav is required when appending an observation", file=sys.stderr)
+    if args.mode_change is None and (
+        args.nav is None or args.gross_pnl is None or args.costs is None
+    ):
+        print(
+            "FAIL  --nav, --gross-pnl and --costs are all required when "
+            "appending an observation; an omitted cost would publish a "
+            "plausible-looking $0-friction day",
+            file=sys.stderr,
+        )
         return 1
 
     try:

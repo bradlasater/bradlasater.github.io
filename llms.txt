@@ -1,7 +1,7 @@
 # Brad Lasater
 
 > Applied scientist and machine-learning engineer with ten years of production
-> ML, optimization, and state-estimation work across consumer marketplaces,
+> ML, optimisation, and state-estimation work across consumer marketplaces,
 > live events, aerospace, and defense — now building an end-to-end systematic
 > volatility trading system from scratch and documenting it in public,
 > including the parts that do not work. Based in the United States, seeking
