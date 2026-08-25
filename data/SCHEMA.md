@@ -95,4 +95,4 @@ Computed in `assets/js/track-record.js` from the returns implied by `nav`:
 
 Sharpe uses the sample standard deviation (`ddof=1`); skewness and kurtosis use
 the standard moment estimators with raw (not excess) kurtosis, so a normal
-distribution gives `4 → 3`. PSR and MinTRL follow Bailey & López de Prado.
+distribution gives a kurtosis of 3, not 0. PSR and MinTRL follow Bailey & López de Prado.

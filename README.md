@@ -35,8 +35,10 @@ pip install pre-commit
 pre-commit install
 ```
 
-After that, `python3 scripts/build_site.py` runs automatically on each commit
-and the CI `check` job will always pass.
+After that, `python3 scripts/build_site.py` runs automatically on each commit,
+reducing the chance of the CI `check` job failing because derived files are out
+of sync. If the hook rewrites files, re-stage them and re-run the commit so the
+generated changes are included.
 
 ## Publishing
 
