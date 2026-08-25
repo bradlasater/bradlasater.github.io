@@ -217,7 +217,7 @@ def human_date(value: dt.date | dt.datetime) -> str:
 def nav(active: str) -> str:
     items = [
         ("/vol/", "Volatility System", "vol"),
-        ("/vol/track-record.html", "Track Record", "track"),
+        ("/vol/track-record.html", "Build Status", "track"),
         ("/log/", "Research Log", "log"),
         ("/cv.html", "CV", "cv"),
         ("/#contact", "Contact", "contact"),

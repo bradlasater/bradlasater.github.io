@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CV — Brad Lasater</title>
-<meta name="description" content="Full curriculum vitae for Brad Lasater: applied scientist and ML engineer across marketplaces, live events, aerospace, and defense, with prior service in the U.S. Marine Corps.">
+<meta name="description" content="Curriculum vitae for Brad Lasater, an applied scientist and machine-learning engineer in New York: ten years of production forecasting, ranking, optimisation, and state-estimation systems across marketplaces, live events, aerospace, and defense.">
 <link rel="canonical" href="https://bradlasater.com/cv.html">
 <meta name="theme-color" content="#14171c">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -15,7 +15,7 @@
 <meta property="og:type" content="profile">
 <meta property="og:url" content="https://bradlasater.com/cv.html">
 <meta property="og:title" content="CV — Brad Lasater">
-<meta property="og:description" content="Applied scientist and ML engineer: marketplaces, live events, aerospace, defense. Patent holder. Prior USMC.">
+<meta property="og:description" content="Ten years of production forecasting, ranking, optimization, and state-estimation systems across marketplaces, live events, aerospace, and defense.">
 <meta property="og:image" content="https://bradlasater.com/assets/og.png">
 <meta property="og:site_name" content="Brad Lasater">
 <meta property="og:locale" content="en_US">
@@ -46,7 +46,7 @@
       "about": { "@id": "https://bradlasater.com/#brad" },
       "mainEntity": { "@id": "https://bradlasater.com/#brad" },
       "inLanguage": "en-US",
-      "dateModified": "2026-08-24T21:09:45+00:00"
+      "dateModified": "2026-08-24T23:17:49+00:00"
     },
     {
       "@type": "Person",
@@ -58,7 +58,7 @@
       "image": "https://bradlasater.com/assets/headshot.jpg",
       "email": "mailto:brad@bradlasater.com",
       "jobTitle": "Applied Scientist",
-      "description": "Applied scientist and machine-learning engineer with ten years of production ML, optimization, and state-estimation work at Nift, Ticketmaster, Lockheed Martin, and Boeing. Now building an end-to-end systematic volatility trading system in public, and seeking quantitative research and quantitative engineering roles in New York.",
+      "description": "Applied scientist and machine-learning engineer with ten years of production ML, forecasting, optimization, and state-estimation work at Nift, Ticketmaster, Lockheed Martin, and Boeing. Owns the full research-to-production lifecycle, and is building an end-to-end systematic volatility research and execution platform for defined-risk SPX and XSP structures. Pursuing quantitative research, research-engineering, and quantitative developer roles in New York.",
       "disambiguatingDescription": "The Brad Lasater who holds U.S. Patent 10,204,323, served as a Sergeant in the United States Marine Corps, and publishes a systematic volatility trading system and its evaluation protocol at bradlasater.com.",
       "sameAs": [
         "https://github.com/bradlasater",
@@ -66,6 +66,8 @@
       ],
       "knowsAbout": [
         "Systematic volatility trading",
+        "Variance risk premium",
+        "Index options",
         "Options pricing and Greeks",
         "Volatility surface construction",
         "Financial machine learning",
@@ -111,7 +113,7 @@
       },
       "seeks": {
         "@type": "Demand",
-        "name": "Quantitative research and quantitative engineering roles in New York"
+        "name": "Quantitative research, research-engineering, and quantitative developer roles in New York"
       }
     },
     {
@@ -146,7 +148,7 @@
     <nav class="site-nav" aria-label="Primary">
       <ul>
         <li><a href="/vol/">Volatility System</a></li>
-        <li><a href="/vol/track-record.html">Track Record</a></li>
+        <li><a href="/vol/track-record.html">Build Status</a></li>
         <li><a href="/log/">Research Log</a></li>
         <li><a href="/cv.html" aria-current="page">CV</a></li>
         <li><a href="/#contact">Contact</a></li>
@@ -174,10 +176,15 @@
       <span class="hero__role">Curriculum Vitae</span>
       <h1 class="hero__name" style="font-size: var(--step-3); margin-top: var(--sp-3);">Brad Lasater</h1>
       <p class="hero__bio">
-        Applied scientist and machine-learning engineer, ten years across consumer marketplaces,
-        live events, aerospace, and defense. Patent holder. Previously held TS/SCI. Prior service,
-        United States Marine Corps. Currently building a systematic volatility trading system and
-        seeking quantitative roles in New York.
+        Applied scientist and machine-learning engineer with ten years of experience building
+        production forecasting, ranking, optimisation, and state-estimation systems. Owns the full
+        lifecycle from research design and point-in-time data pipelines through deployment,
+        calibration, monitoring, and retraining. Selected work includes a roughly 60% reduction in
+        live-event forecast WAPE against a prior-season-average baseline, real-time marketplace
+        allocation serving millions of users, space-surveillance filtering and sensor scheduling,
+        and a patented stochastic production-planning model. Currently building a full-stack
+        systematic-volatility research and execution platform; targeting quantitative research,
+        research-engineering, and quantitative developer roles in New York.
       </p>
       <div class="actions">
         <a class="btn btn--primary" href="mailto:brad@bradlasater.com">brad@bradlasater.com</a>
@@ -201,7 +208,7 @@
           <div class="role__where">
             <h3 class="role__title">Senior Data Scientist</h3>
             <span class="role__org">Nift &middot; Remote</span>
-            <div class="role__meta"><span class="badge">Concurrent role</span></div>
+            <div class="role__meta"><span class="badge">Part-time, concurrent with Ticketmaster</span></div>
           </div>
           <ul class="role__points">
             <li>Own modelling and optimisation for a multi-brand auction and ranking system serving
@@ -222,12 +229,10 @@
           <div class="role__where">
             <h3 class="role__title">Lead Data Scientist</h3>
             <span class="role__org">Ticketmaster</span>
-            <div class="role__meta"><span class="badge">Concurrent role</span></div>
           </div>
           <ul class="role__points">
-            <!-- TODO(brad): specify the error metric (MAPE / WAPE / RMSE) and the baseline. -->
-            <li>Cut live-event sales forecast error by roughly 60% against the incumbent baseline
-                using temporally dynamic gradient-boosted trees.</li>
+            <li>Cut live-event sales forecast WAPE by roughly 60% against a prior-season-average
+                baseline, using temporally dynamic gradient-boosted trees.</li>
             <li>Translated business strategy into feasible technical roadmaps and led the team
                 delivering data-science products.</li>
             <li>Developed feature-selection optimisation enabling faster deployment of new models
@@ -318,9 +323,7 @@
       <div class="deflist__item">
         <dt>Doctoral coursework, Optimisation &amp; Machine Learning — Missouri University of Science &amp; Technology</dt>
         <dd>
-          Begun while working full-time at Boeing and discontinued by choice. A patent and rapid
-          professional progression made the remaining years a poor trade against what the work
-          itself was already teaching me.
+          Taken part-time while working full-time at Boeing.
         </dd>
       </div>
     </dl>
@@ -380,7 +383,7 @@
       </ul>
     </div>
     <p class="muted" style="margin-top: var(--sp-6);">
-      This page was last updated <time class="page-updated__time" datetime="2026-08-24T21:09:45+00:00">August 24, 2026</time>.
+      This page was last updated <time class="page-updated__time" datetime="2026-08-24T23:17:49+00:00">August 24, 2026</time>.
     </p>
   </section>
 
