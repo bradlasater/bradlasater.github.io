@@ -56,14 +56,17 @@ There is no deploy script and no build artefact to commit beyond what
 | `vol/methodology.html` | The evaluation protocol, written before results exist |
 | `vol/track-record.html` | Build status and live out-of-sample record (see below) |
 | `log/index.html` | Research log index |
+| `handbook/` | System handbook, synced from `data_ingest_infra` (see below) |
 | `404.html` | Custom 404 (`noindex`) |
 | `assets/css/site.css` | The entire design system — dark-only, OKLCH tokens |
 | `assets/js/track-record.js` | Computes and renders every track-record statistic |
+| `assets/css/handbook-chrome.css` | The only site-owned styling inside `handbook/` |
 | `assets/js/analytics.js` | GoatCounter loader (see setup below) |
 | `data/track-record.json` | The append-only track record. See `data/SCHEMA.md` |
 | `scripts/append_observation.py` | Appends one day to the record |
 | `scripts/validate_track_record.py` | Structural + append-only validation |
 | `scripts/build_site.py` | Generates log entry pages and derived metadata |
+| `scripts/sync_docs.py` | Copies the handbook in from `data_ingest_infra` |
 | `content/log/*.html` | Hand-authored research-log entry fragments |
 
 Only `vol/track-record.html` loads `track-record.js`; every page loads
@@ -75,6 +78,45 @@ Data flows one way:
 
 Nothing is precomputed. The page derives its statistics client-side so that it
 cannot disagree with the data file behind it.
+
+---
+
+## The handbook (`/handbook/`)
+
+`handbook/` is the system handbook for the ingest and pricing box, published
+here under the **Handbook** nav tab. It is **derived, not authored**: the source
+of truth is `docs/` in the private `data_ingest_infra` repository, where it sits
+next to the code it describes so the two are edited in the same commit. Copying
+it here rather than moving it keeps that property.
+
+Everything in `handbook/` is overwritten on each sync, so **never edit a file in
+it**. Edit the source repository, then:
+
+```bash
+python3 scripts/sync_docs.py           # writes handbook/, deletes what is gone
+python3 scripts/sync_docs.py --check   # exit 1 if handbook/ is stale
+python3 scripts/build_site.py          # picks the pages up in sitemap.xml
+```
+
+The sync expects `data_ingest_infra` as a sibling of this repository; pass
+`--source DIR` if it lives elsewhere. It is **not** wired into the pre-commit
+hook or CI, and deliberately so: neither has the private repository, so neither
+can tell a stale copy from a current one. `--check` exits 0 when the source is
+absent for that reason — it reports drift it can see, and cannot be trusted to
+prove there is none. Publishing a handbook change is a decision, so it stays a
+command you run.
+
+The handbook keeps its own dark theme, sidebar, and layout — `handbook/site.css`
+is synced too, and none of the site's design system reaches it. What the sync
+adds to each page is only what a file needs to become a public URL: a canonical
+link, favicon and robots directives, Open Graph tags, the site's title suffix,
+and one link back to the homepage. That link is the sole site-owned element in
+there, which is why it is styled from `assets/css/handbook-chrome.css` rather
+than from the synced stylesheet that would overwrite it.
+
+`scripts/build_site.py` discovers handbook pages by globbing rather than from a
+list, so a page added upstream reaches `sitemap.xml` on the next sync with no
+second edit here. It never writes into `handbook/`.
 
 ---
 
@@ -192,7 +234,12 @@ GitHub domain-verified (takeover protection); adding the
   the homepage, which use American spelling for search reasons.
 - The nav is hand-maintained in seven HTML files *and* in the `nav()` function
   of `scripts/build_site.py`. Changing it means editing both, or generated log
-  pages will drift from the static ones.
+  pages will drift from the static ones. Handbook pages are the exception: they
+  come from another repository and keep their own sidebar, so they carry a link
+  back to the site rather than the site nav.
+- The header stacks below `48rem`. That breakpoint is a measurement, not a
+  round number — it is where the brand and the six nav labels stop fitting on
+  one row. Adding or renaming a nav item means re-checking it.
 - `aria-current="page"` marks the page you are on; `aria-current="true"` marks
   an ancestor section (used on `vol/methodology.html`, whose nav highlights
   `/vol/` but navigates away).
