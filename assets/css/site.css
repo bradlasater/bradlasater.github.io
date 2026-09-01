@@ -266,10 +266,14 @@ main { flex: 1; }
   margin-top: 2px;
 }
 
-/* Below this width the brand and a four-item nav cannot share a row without
+/* Below this width the brand and a six-item nav cannot share a row without
    forcing the document wider than the viewport. Stack them, and drop the
-   sticky behaviour so the header does not eat scarce vertical space. */
-@media (max-width: 44rem) {
+   sticky behaviour so the header does not eat scarce vertical space.
+
+   Raised from 44rem when "Handbook" was added: at six items the row needs
+   roughly 720px, so the old breakpoint left a band where the nav wrapped
+   against the brand instead of stacking cleanly under it. */
+@media (max-width: 48rem) {
   .site-header { position: static; }
   .site-header__inner {
     flex-direction: column;

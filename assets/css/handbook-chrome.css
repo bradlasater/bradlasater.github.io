@@ -1,0 +1,49 @@
+/* ==========================================================================
+   bradlasater.com — handbook chrome
+
+   The handbook under /handbook/ is synced verbatim from the data_ingest_infra
+   repository, which carries its own dark theme in handbook/site.css. That file
+   is overwritten on every sync, so nothing site-specific may live in it.
+
+   This stylesheet is the site's half of the deal: it owns only the one element
+   scripts/sync_docs.py injects — the link back out of the handbook — and is
+   never touched by the sync. Colours are the handbook palette's literal hex
+   values rather than this site's OKLCH tokens, because handbook pages do not
+   load /assets/css/site.css and so have no tokens to inherit.
+   ========================================================================== */
+
+.hb-back {
+  display: inline-block;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #9a9386;              /* --muted */
+  text-decoration: none;
+}
+.hb-back:hover {
+  color: #d08c44;              /* --copper */
+  text-decoration: none;
+}
+.hb-back:focus-visible {
+  outline: 2px solid #d08c44;
+  outline-offset: 3px;
+}
+
+/* The handbook's sidebar styles every descendant `a` as a chapter link —
+   block display, left border, padding, hover fill. `nav.toc a` outranks a bare
+   class, so the back link has to match that specificity to opt out of it. */
+nav.toc a.hb-back {
+  padding: 0 0 14px 0;
+  border-left: 0;
+  border-radius: 0;
+  font-size: 11px;
+  color: #9a9386;
+}
+nav.toc a.hb-back:hover {
+  background: transparent;
+  color: #d08c44;
+}
+
+/* box-operations.html keeps its own inline styles and has no sidebar, so the
+   link sits at the top of the single content column and needs its own gap. */
+.hb-back--plain { margin-bottom: 20px; }

@@ -55,9 +55,10 @@ AUTHOR_EMAIL = "brad@bradlasater.com"
 # would never reach a fixed point.
 BUILD_COMMIT_SUBJECT = "chore: rebuild derived site metadata"
 
-# Pages that belong in the sitemap, in the order a reader would meet them.
-# 404.html is deliberately absent: it carries noindex and must never be
-# submitted for indexing.
+# Hand-authored pages that belong in the sitemap, in the order a reader would
+# meet them. 404.html is deliberately absent: it carries noindex and must never
+# be submitted for indexing. The handbook under handbook/ is also absent, but
+# for a different reason — see handbook_pages() below.
 STATIC_PAGES = [
     "index.html",
     "vol/index.html",
@@ -218,6 +219,7 @@ def nav(active: str) -> str:
     items = [
         ("/vol/", "Volatility System", "vol"),
         ("/vol/track-record.html", "Build Status", "track"),
+        ("/handbook/", "Handbook", "handbook"),
         ("/log/", "Research Log", "log"),
         ("/cv.html", "CV", "cv"),
         ("/#contact", "Contact", "contact"),
@@ -345,6 +347,7 @@ ENTRY_TEMPLATE = """<!DOCTYPE html>
       <li><a href="/">Home</a></li>
       <li><a href="/log/">Research Log</a></li>
       <li><a href="/vol/">Volatility System</a></li>
+      <li><a href="/handbook/">Handbook</a></li>
       <li><a href="/feed.xml">Feed</a></li>
       <li><a href="mailto:brad@bradlasater.com">Email</a></li>
     </ul>
@@ -491,9 +494,35 @@ def render_feed(entries: list[Entry]) -> str:
 """
 
 
+def handbook_pages() -> list[str]:
+    """Handbook pages for the sitemap, overview first, then the rest by name.
+
+    Discovered rather than declared. The handbook is synced from a separate
+    repository by ``scripts/sync_docs.py`` and is still being written, so a page
+    added upstream reaches the sitemap on the next sync instead of waiting on a
+    second edit here that would be easy to forget.
+
+    These stay out of ``STATIC_PAGES`` on purpose: they are not hand-authored in
+    this repository, they carry none of the stamp markers, and this script must
+    never write to a directory that ``sync_docs.py`` overwrites wholesale.
+    """
+    names = sorted(p.name for p in (ROOT / "handbook").glob("*.html"))
+    if "index.html" in names:
+        names.remove("index.html")
+        names.insert(0, "index.html")
+    return [f"handbook/{name}" for name in names]
+
+
+def sitemap_pages() -> list[str]:
+    """Every indexable page outside the log, in the order the nav presents it."""
+    pages = list(STATIC_PAGES)
+    after_track = pages.index("vol/track-record.html") + 1
+    return pages[:after_track] + handbook_pages() + pages[after_track:]
+
+
 def render_sitemap(entries: list[Entry]) -> str:
     urls = []
-    for rel in STATIC_PAGES:
+    for rel in sitemap_pages():
         # "vol/index.html" is served at "/vol/"; the directory form is the
         # canonical URL declared on the page, so the sitemap must agree.
         loc = SITE + "/" + re.sub(r"(^|/)index\.html$", r"\1", rel)
