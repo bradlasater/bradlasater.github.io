@@ -178,7 +178,7 @@ def reskin(name: str, text: str) -> str:
         "monospace",
     }
     for match in re.finditer(
-        r"font-family\s*[:=]\s*([\"']?)([^;\"'>]+)\\1", text, flags=re.IGNORECASE
+        r"font-family\s*[:=]\s*([\"']?)([^;\"'>]+)\1", text, flags=re.IGNORECASE
     ):
         for raw_family in (f.strip().strip("\"'") for f in match.group(2).split(",")):
             if raw_family and raw_family.lower() not in allowed_fonts:
