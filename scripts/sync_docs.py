@@ -162,11 +162,28 @@ def reskin(name: str, text: str) -> str:
             "COLOR_MAP (with its site token) or ALLOWED_SOURCE_COLORS in "
             "scripts/sync_docs.py."
         )
-    if "Plex" in text:
-        raise SystemExit(
-            f"{name}: an IBM Plex reference survived the font remap; "
-            "extend FONT_MAP in scripts/sync_docs.py."
-        )
+    allowed_fonts = {
+        "inter",
+        "jetbrains mono",
+        "newsreader",
+        "segoe ui",
+        "georgia",
+        "ui-monospace",
+        "sfmono-regular",
+        "menlo",
+        "sans-serif",
+        "serif",
+        "monospace",
+    }
+    for match in re.finditer(
+        r"font-family\s*[:=]\s*([\"']?)([^;\"'>]+)\\1", text, flags=re.IGNORECASE
+    ):
+        for raw_family in (f.strip().strip("\"'") for f in match.group(2).split(",")):
+            if raw_family and raw_family.lower() not in allowed_fonts:
+                raise SystemExit(
+                    f"{name}: unmapped font {raw_family!r}. Add a remap to FONT_MAP "
+                    "or allowlist it in scripts/sync_docs.py."
+                )
     return text
 
 
