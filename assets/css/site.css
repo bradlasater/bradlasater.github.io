@@ -256,6 +256,17 @@ main { flex: 1; }
   transition: color 0.15s var(--ease);
 }
 .site-nav a:hover { color: var(--c-text); }
+
+/* GitHub closes the bar but is not a section of this site, so a rule separates
+   it from the page nav rather than letting it read as one more destination.
+   It is in the header at all because a hiring manager looks for the code
+   first, and the homepage bio is long enough to push a hero button row under
+   the fold — this one is above it on every page. */
+.site-nav__ext {
+  border-left: 1px solid var(--c-border);
+  padding-left: clamp(var(--sp-3), 2vw, var(--sp-5));
+}
+.site-nav__ext a { color: var(--c-text); }
 .site-nav a[aria-current] { color: var(--c-text); }
 .site-nav a[aria-current]::after {
   content: "";
@@ -270,10 +281,12 @@ main { flex: 1; }
    forcing the document wider than the viewport. Stack them, and drop the
    sticky behaviour so the header does not eat scarce vertical space.
 
-   Raised from 44rem when "Handbook" was added: at six items the row needs
-   roughly 720px, so the old breakpoint left a band where the nav wrapped
-   against the brand instead of stacking cleanly under it. */
-@media (max-width: 48rem) {
+   Raised from 44rem when "Handbook" was added and again when the GitHub link
+   was. Measured, not guessed: seven items plus the brand fit at 880px and wrap
+   at 850px, so this sits just above the measured threshold. A wrapped bar puts
+   the GitHub rule on its own line and reads as broken, so re-measure in the
+   browser whenever an item is added or renamed. */
+@media (max-width: 56rem) {
   .site-header { position: static; }
   .site-header__inner {
     flex-direction: column;
@@ -325,6 +338,38 @@ main { flex: 1; }
   letter-spacing: -0.01em;
   text-wrap: pretty;
 }
+/* The sharpest claim on the page — it earns full text colour so it is not
+   mistaken for the body copy that follows it. */
+.hero__stance {
+  color: var(--c-text);
+  max-width: var(--measure);
+  margin-top: var(--sp-4);
+}
+
+/* Identity links sit here, directly under the opening, rather than only in the
+   button row below the bio: two bio paragraphs push that row under the fold on
+   a laptop, and the code is the first thing a hiring manager goes looking for.
+   Set in mono at role size so they read as identity metadata, not as a third
+   call to action competing with the buttons below. */
+.hero__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2);
+  margin-top: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+}
+.hero__links a {
+  color: var(--c-text-secondary);
+  text-decoration: none;
+}
+.hero__links a:hover {
+  color: var(--c-accent);
+  text-decoration: underline;
+}
+.hero__links span { color: var(--c-text-muted); }
+
 .hero__bio {
   color: var(--c-text-secondary);
   max-width: var(--measure);

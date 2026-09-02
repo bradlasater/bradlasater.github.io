@@ -56,7 +56,7 @@
       "about": { "@id": "https://bradlasater.com/#brad" },
       "mainEntity": { "@id": "https://bradlasater.com/#brad" },
       "inLanguage": "en-US",
-      "dateModified": "2026-09-01T17:00:21-06:00"
+      "dateModified": "2026-09-01T20:26:11-06:00"
     },
     {
       "@type": "Person",
@@ -156,6 +156,7 @@
         <li><a href="/log/">Research Log</a></li>
         <li><a href="/cv.html">CV</a></li>
         <li><a href="/#contact">Contact</a></li>
+        <li class="site-nav__ext"><a href="https://github.com/bradlasater?tab=repositories">GitHub</a></li>
       </ul>
     </nav>
   </div>
@@ -167,6 +168,18 @@
     <h1 class="hero__name">Brad Lasater</h1>
     <span class="hero__role">Applied Scientist · Quantitative Research · Systematic Volatility</span>
     <p class="hero__thesis">Estimating what uncertainty is worth, then trading the difference.</p>
+    <p class="hero__stance">
+      I do not predict price. I estimate the probability distribution of volatility, detect when
+      the market is pricing that distribution wrong, and size positions so that I survive being
+      wrong.
+    </p>
+    <p class="hero__links">
+      <a href="https://github.com/bradlasater?tab=repositories">GitHub</a>
+      <span aria-hidden="true">&middot;</span>
+      <a href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a>
+      <span aria-hidden="true">&middot;</span>
+      <a href="mailto:brad@bradlasater.com">brad@bradlasater.com</a>
+    </p>
     <p class="hero__bio">
       I build production decision systems for noisy, constrained environments. Over ten years
       I have built machine-learning, forecasting, state-estimation, and optimisation systems
@@ -187,8 +200,6 @@
     <div class="actions">
       <a class="btn btn--primary" href="/vol/">See the volatility system</a>
       <a class="btn" href="/cv.html">Full CV</a>
-      <a class="btn" href="https://github.com/bradlasater" rel="me">GitHub</a>
-      <a class="btn" href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a>
     </div>
   </section>
 
@@ -216,6 +227,7 @@
           <a class="btn btn--primary" href="/vol/">System overview</a>
           <a class="btn" href="/vol/methodology.html">Evaluation protocol</a>
           <a class="btn" href="/log/">Research log</a>
+          <a class="btn" href="https://github.com/bradlasater?tab=repositories">GitHub</a>
         </div>
       </div>
     </div>
@@ -314,57 +326,6 @@
     </div>
   </section>
 
-  <section class="shell section" id="capabilities" aria-labelledby="capabilities-title">
-    <div class="section__head">
-      <span class="section__eyebrow">Toolkit</span>
-      <h2 class="section__title" id="capabilities-title">Capabilities</h2>
-    </div>
-
-    <div class="taggroup">
-      <span class="taggroup__label">Quantitative methods</span>
-      <ul class="tags">
-        <li>Options pricing &amp; Greeks</li>
-        <li>Volatility surface construction</li>
-        <li>State estimation &amp; filtering</li>
-        <li>Time-series forecasting</li>
-        <li>Probability calibration</li>
-        <li>Causal inference</li>
-        <li>Stochastic optimisation</li>
-        <li>Operations research</li>
-      </ul>
-    </div>
-
-    <div class="taggroup">
-      <span class="taggroup__label">Research hygiene</span>
-      <ul class="tags">
-        <li>Purged &amp; embargoed cross-validation</li>
-        <li>Deflated Sharpe ratio</li>
-        <li>Probability of backtest overfitting</li>
-        <li>Meta-labelling</li>
-        <li>Transaction-cost modelling</li>
-        <li>Walk-forward evaluation</li>
-      </ul>
-    </div>
-
-    <div class="taggroup">
-      <span class="taggroup__label">Engineering</span>
-      <ul class="tags">
-        <li>Python</li>
-        <li>SQL</li>
-        <li>PySpark</li>
-        <li>PyTorch</li>
-        <li>XGBoost</li>
-        <li>scikit-learn</li>
-        <li>Optuna</li>
-        <li>Databricks</li>
-        <li>Delta Lake</li>
-        <li>MLflow</li>
-        <li>SageMaker</li>
-        <li>CI/CD</li>
-      </ul>
-    </div>
-  </section>
-
   <section class="shell section" id="recognition" aria-labelledby="recognition-title">
     <div class="section__head">
       <span class="section__eyebrow">Credentials</span>
@@ -385,7 +346,7 @@
         <dd>B.S., Applied Mathematics — University of Texas at Arlington, 2013.</dd>
       </div>
       <div class="deflist__item">
-        <dt>Doctoral coursework, Optimisation &amp; Machine Learning — Missouri S&amp;T</dt>
+        <dt>Ph.D. coursework completed, Stochastic Multi-Objective Optimization — Missouri S&amp;T</dt>
         <dd>
           Taken part-time while working full-time at Boeing.
         </dd>
@@ -395,31 +356,15 @@
 
   <section class="shell section" id="about" aria-labelledby="about-title">
     <div class="section__head">
-      <span class="section__eyebrow">In brief</span>
-      <h2 class="section__title" id="about-title">Who is Brad Lasater?</h2>
+      <span class="section__eyebrow">Availability</span>
+      <h2 class="section__title" id="about-title">What I am looking for</h2>
     </div>
     <div class="prose">
       <p>
-        Brad Lasater is an applied scientist and machine-learning engineer with ten years of
-        experience building production systems for probabilistic forecasting, state estimation,
-        ranking, and constrained optimization. At Nift he owns modeling and optimization for a
-        multi-brand marketplace serving millions of users. Previously he led live-event demand
-        forecasting at Ticketmaster, developed particle-filter and sensor-scheduling algorithms for
-        space surveillance at Lockheed Martin, and patented a stochastic production-planning model
-        at Boeing, where he was awarded U.S. Patent 10,204,323. He holds an M.Eng. in Systems
-        Engineering from Arizona State University and a B.S. in Applied Mathematics from the
-        University of Texas at Arlington, and served as a Sergeant and instructor in the United
-        States Marine Corps.
-      </p>
-      <p>
-        His current research focuses on systematic volatility and the variance risk premium. He is
-        building an end-to-end research and execution platform for defined-risk SPX and XSP
-        structures at roughly 7–45 days to expiry, covering point-in-time market data,
-        volatility-surface construction, physical and risk-neutral variance estimation, signal
-        validation, portfolio risk, execution, and live monitoring — with an evaluation protocol
-        committed in public before any results existed and an append-only live record whose dates
-        are enforced by continuous integration. He is pursuing quantitative research,
-        research-engineering, and quantitative developer roles in New York.
+        I am relocating to New York in January 2027 and actively interviewing for quantitative
+        research and research engineering roles. My ideal role combines statistical research with
+        ownership of the full data-to-deployment lifecycle. I work best in small teams with high
+        autonomy and clear risk constraints.
       </p>
     </div>
   </section>
@@ -429,20 +374,18 @@
       <span class="section__eyebrow">Contact</span>
       <h2 class="section__title" id="contact-title">Get in touch</h2>
       <p class="section__lede">
-        I am pursuing experienced-hire roles in quantitative research, systematic strategy research,
-        and research engineering in New York, with particular interest in volatility and
-        derivatives. My strongest fit is work that combines statistical research with ownership of
-        the data, validation, implementation, deployment, and live operating lifecycle. Email is
-        fastest; I read everything.
+        If you are hiring or would like to discuss my research,
+        <a href="mailto:brad@bradlasater.com">email me</a> directly or connect on
+        <a href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a>.
       </p>
     </div>
     <div class="actions">
       <a class="btn btn--primary" href="mailto:brad@bradlasater.com">brad@bradlasater.com</a>
       <a class="btn" href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a>
-      <a class="btn" href="https://github.com/bradlasater" rel="me">GitHub</a>
+      <a class="btn" href="https://github.com/bradlasater?tab=repositories">GitHub</a>
     </div>
     <p class="muted" style="margin-top: var(--sp-5);">
-      This page was last updated <time class="page-updated__time" datetime="2026-09-01T17:00:21-06:00">September 1, 2026</time>.
+      This page was last updated <time class="page-updated__time" datetime="2026-09-01T20:26:11-06:00">September 1, 2026</time>.
     </p>
   </section>
 
@@ -456,7 +399,9 @@
       <li><a href="/handbook/">Handbook</a></li>
       <li><a href="/log/">Research Log</a></li>
       <li><a href="/cv.html">CV</a></li>
-      <li><a href="https://github.com/bradlasater" rel="me">GitHub</a></li>
+      <li><a href="https://github.com/bradlasater?tab=repositories">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a></li>
+      <li><a href="mailto:brad@bradlasater.com">Email</a></li>
       <li><a href="/feed.xml">Feed</a></li>
     </ul>
   </div>

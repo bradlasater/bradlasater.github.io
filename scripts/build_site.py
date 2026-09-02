@@ -228,6 +228,14 @@ def nav(active: str) -> str:
     for href, label, key in items:
         current = ' aria-current="page"' if key == active else ""
         lis.append(f'        <li><a href="{href}"{current}>{label}</a></li>')
+    # GitHub closes the bar but is not a section of this site: it never takes
+    # aria-current, and it carries its own separator so it does not read as one
+    # more page to visit. It is in the header at all because a hiring manager
+    # looks for the code first and should not have to scroll to find it.
+    lis.append(
+        '        <li class="site-nav__ext">'
+        '<a href="https://github.com/bradlasater?tab=repositories">GitHub</a></li>'
+    )
     return "\n".join(lis)
 
 

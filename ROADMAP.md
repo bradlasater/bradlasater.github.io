@@ -46,9 +46,9 @@ real-world data." D. E. Shaw's posted NYC quantitative analyst base is $275k
 
 ## A. Now — cheap, and each currently costing something
 
-- [ ] **Set the GoatCounter `CODE`** in `assets/js/analytics.js:18`. It is an
-      empty string, so the script returns before injecting anything: zero
-      pageviews, zero events, no way to know whether any of this works. *(repo)*
+- [x] **Set the GoatCounter `CODE`** in `assets/js/analytics.js:18`. Done —
+      set to `"bradlasater"`, so the loader now injects GoatCounter on
+      non-localhost pageviews and outbound/contact click events. *(repo)*
 - [x] **Resolve the "roughly 60%" claim.** Done. The two `TODO(brad)` comments
       are deleted (they were shipping to view-source), and the number is now
       qualified everywhere it appears: **WAPE, against a prior-season-average
