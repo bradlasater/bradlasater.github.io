@@ -56,7 +56,7 @@
       "about": { "@id": "https://bradlasater.com/#brad" },
       "mainEntity": { "@id": "https://bradlasater.com/#brad" },
       "inLanguage": "en-US",
-      "dateModified": "2026-09-01T20:26:11-06:00"
+      "dateModified": "2026-09-02T11:45:25-06:00"
     },
     {
       "@type": "Person",
@@ -156,7 +156,7 @@
         <li><a href="/log/">Research Log</a></li>
         <li><a href="/cv.html">CV</a></li>
         <li><a href="/#contact">Contact</a></li>
-        <li class="site-nav__ext"><a href="https://github.com/bradlasater?tab=repositories">GitHub</a></li>
+        <li class="site-nav__ext"><a href="https://github.com/bradlasater?tab=repositories" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
     </nav>
   </div>
@@ -174,9 +174,9 @@
       wrong.
     </p>
     <p class="hero__links">
-      <a href="https://github.com/bradlasater?tab=repositories">GitHub</a>
+      <a href="https://github.com/bradlasater?tab=repositories" target="_blank" rel="noopener">GitHub</a>
       <span aria-hidden="true">&middot;</span>
-      <a href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a>
+      <a href="https://www.linkedin.com/in/bradlasater" target="_blank" rel="me noopener">LinkedIn</a>
       <span aria-hidden="true">&middot;</span>
       <a href="mailto:brad@bradlasater.com">brad@bradlasater.com</a>
     </p>
@@ -227,9 +227,49 @@
           <a class="btn btn--primary" href="/vol/">System overview</a>
           <a class="btn" href="/vol/methodology.html">Evaluation protocol</a>
           <a class="btn" href="/log/">Research log</a>
-          <a class="btn" href="https://github.com/bradlasater?tab=repositories">GitHub</a>
+          <a class="btn" href="https://github.com/bradlasater?tab=repositories" target="_blank" rel="noopener">GitHub</a>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section class="shell section" id="why-volatility" aria-labelledby="why-volatility-title">
+    <div class="section__head">
+      <span class="section__eyebrow">Rationale</span>
+      <h2 class="section__title" id="why-volatility-title">Why volatility, why now</h2>
+    </div>
+    <div class="prose">
+      <p>
+        Every system I have built professionally solves the same underlying problem: estimate a
+        hidden state from noisy, incomplete observations, then allocate a scarce resource against
+        that estimate before the world moves on. At Lockheed Martin, the hidden state was the true
+        position of an object in space, recovered from sparse radar returns via particle filters;
+        the scarce resource was sensor time, allocated by a binary linear program under hard
+        latency constraints. At Boeing, the hidden state was future maintenance demand under
+        stochastic failure processes; the scarce resource was production capacity. At Ticketmaster,
+        the hidden state was true event demand months out; the resource was inventory and pricing
+        decisions made against a forecast that was always going to be wrong by some margin.
+      </p>
+      <p>
+        The variance risk premium is the same problem wearing a different coat. Implied volatility
+        is the market&rsquo;s forecast of a hidden state &mdash; the distribution of future returns
+        &mdash; and it is a persistently biased one, because someone is paid to carry the risk of
+        being wrong. That bias is not itself an edge; it is priced, well-documented, and harvestable
+        in ways that blow up the moment you stop asking the two questions that actually matter: how
+        rich is the premium relative to the risk being assumed right now, and what does it actually
+        cost, after spreads and hedging error, to hold that position. Those are not new questions
+        to me. They are estimation and optimisation under uncertainty, the same discipline that
+        recovered satellite ephemeris from noisy tracking data and shortened a production-planning
+        horizon under stochastic demand &mdash; applied here to a market that happens to publish its
+        own forecast errors every single day, in a form clean enough to evaluate rigorously rather
+        than argue about.
+      </p>
+      <p>
+        What is new is the domain, not the method. That is why the build is public, why the
+        evaluation protocol was fixed before a single result existed, and why the honest answer to
+        &ldquo;does it work&rdquo; right now is &ldquo;ask me again once the out-of-sample clock has
+        run long enough to say.&rdquo;
+      </p>
     </div>
   </section>
 
@@ -376,16 +416,16 @@
       <p class="section__lede">
         If you are hiring or would like to discuss my research,
         <a href="mailto:brad@bradlasater.com">email me</a> directly or connect on
-        <a href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a>.
+        <a href="https://www.linkedin.com/in/bradlasater" target="_blank" rel="me noopener">LinkedIn</a>.
       </p>
     </div>
     <div class="actions">
       <a class="btn btn--primary" href="mailto:brad@bradlasater.com">brad@bradlasater.com</a>
-      <a class="btn" href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a>
-      <a class="btn" href="https://github.com/bradlasater?tab=repositories">GitHub</a>
+      <a class="btn" href="https://www.linkedin.com/in/bradlasater" target="_blank" rel="me noopener">LinkedIn</a>
+      <a class="btn" href="https://github.com/bradlasater?tab=repositories" target="_blank" rel="noopener">GitHub</a>
     </div>
     <p class="muted" style="margin-top: var(--sp-5);">
-      This page was last updated <time class="page-updated__time" datetime="2026-09-01T20:26:11-06:00">September 1, 2026</time>.
+      This page was last updated <time class="page-updated__time" datetime="2026-09-02T11:45:25-06:00">September 2, 2026</time>.
     </p>
   </section>
 
@@ -399,8 +439,8 @@
       <li><a href="/handbook/">Handbook</a></li>
       <li><a href="/log/">Research Log</a></li>
       <li><a href="/cv.html">CV</a></li>
-      <li><a href="https://github.com/bradlasater?tab=repositories">GitHub</a></li>
-      <li><a href="https://www.linkedin.com/in/bradlasater" rel="me">LinkedIn</a></li>
+      <li><a href="https://github.com/bradlasater?tab=repositories" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/bradlasater" target="_blank" rel="me noopener">LinkedIn</a></li>
       <li><a href="mailto:brad@bradlasater.com">Email</a></li>
       <li><a href="/feed.xml">Feed</a></li>
     </ul>

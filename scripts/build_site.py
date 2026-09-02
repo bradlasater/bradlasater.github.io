@@ -234,7 +234,7 @@ def nav(active: str) -> str:
     # looks for the code first and should not have to scroll to find it.
     lis.append(
         '        <li class="site-nav__ext">'
-        '<a href="https://github.com/bradlasater?tab=repositories">GitHub</a></li>'
+        '<a href="https://github.com/bradlasater?tab=repositories" target="_blank" rel="noopener">GitHub</a></li>'
     )
     return "\n".join(lis)
 
