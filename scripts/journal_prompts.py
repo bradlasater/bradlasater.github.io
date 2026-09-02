@@ -43,8 +43,11 @@ PROMPTS_END = "<!-- PROMPTS:END -->"
 GENERATED_BEGIN = "<!-- GENERATED:BEGIN -->"
 GENERATED_END = "<!-- GENERATED:END -->"
 
-# Log-entry commits are the output of this process, not input to it.
+# Log-entry commits are the output of this process, not input to it. A log
+# commit also lands the derived feed.xml and sitemap.xml, so those count as
+# log artifacts too — otherwise every published entry still fills the table.
 LOG_DIRS = ("content/log/", "log/")
+LOG_FILES = ("feed.xml", "sitemap.xml")
 
 
 def git(repo: pathlib.Path, *args: str) -> str:
@@ -77,7 +80,9 @@ def prompt_for(subject: str) -> str:
 
 def is_log_only(repo: pathlib.Path, commit: str) -> bool:
     files = git(repo, "show", "--pretty=format:", "--name-only", commit).split()
-    return bool(files) and all(f.startswith(LOG_DIRS) for f in files)
+    return bool(files) and all(
+        f.startswith(LOG_DIRS) or f in LOG_FILES for f in files
+    )
 
 
 def collect() -> list[str]:
@@ -94,9 +99,11 @@ def collect() -> list[str]:
     for label, repo in REPOS:
         if not (repo / ".git").is_dir():
             continue
+        # %cI: strict ISO 8601 (colon in the offset) — datetime.fromisoformat
+        # accepts %ci's space separator and colon-less offset only on 3.11+.
         log = git(
             repo, "log", f"--since={since}",
-            "--pretty=format:%h%x09%ci%x09%s", "--no-merges",
+            "--pretty=format:%h%x09%cI%x09%s", "--no-merges",
         ).strip()
         for line in log.splitlines():
             short, committed, subject = line.split("\t", 2)
