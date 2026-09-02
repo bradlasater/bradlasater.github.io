@@ -60,11 +60,13 @@ DEST = ROOT / "handbook"
 DEFAULT_SOURCE = ROOT.parent / "data_ingest_infra" / "docs"
 
 BANNER = (
-    "<!-- Synced from data_ingest_infra/docs by scripts/sync_docs.py. "
+    "<!-- Synced from the Crack the Sky handbook (data_ingest_infra/docs) "
+    "by scripts/sync_docs.py. "
     "Do not edit by hand; edit the source repository and re-run the sync. -->"
 )
 CSS_BANNER = (
-    "/* Synced from data_ingest_infra/docs by scripts/sync_docs.py.\n"
+    "/* Synced from the Crack the Sky handbook (data_ingest_infra/docs) "
+    "by scripts/sync_docs.py.\n"
     "   Do not edit by hand; edit the source repository and re-run the sync. */\n"
 )
 
