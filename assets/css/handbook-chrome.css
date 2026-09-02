@@ -1,31 +1,102 @@
 /* ==========================================================================
    bradlasater.com — handbook chrome
 
-   The handbook under /handbook/ is synced verbatim from the data_ingest_infra
-   repository, which carries its own dark theme in handbook/site.css. That file
-   is overwritten on every sync, so nothing site-specific may live in it.
+   The published handbook is re-skinned into the site's design system in two
+   layers:
 
-   This stylesheet is the site's half of the deal: it owns only the one element
-   scripts/sync_docs.py injects — the link back out of the handbook — and is
-   never touched by the sync. Colours are the handbook palette's literal hex
-   values rather than this site's OKLCH tokens, because handbook pages do not
-   load /assets/css/site.css and so have no tokens to inherit.
+   1. scripts/sync_docs.py rewrites the palette, font names, and font
+      stylesheet of every synced file at publish time (see FONT_MAP and
+      COLOR_MAP there), so handbook/site.css, the inline SVG diagrams, and
+      box-operations.html's inline styles all render in this site's OKLCH
+      tokens and Inter / JetBrains Mono / Newsreader faces.
+   2. This stylesheet — loaded last on every handbook page and never touched
+      by the sync — owns what string replacement cannot express: interaction
+      paradigms (selection colour, underlined content links, corner radii)
+      and the one element the sync injects, the link back out of the handbook.
+
+   Colours are the site's OKLCH tokens copied as literals, because handbook
+   pages do not load /assets/css/site.css and so have no tokens to inherit.
+   If site.css's :root block changes, change the values here and in
+   scripts/sync_docs.py to match.
    ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Interaction paradigm, matching assets/css/site.css
+   -------------------------------------------------------------------------- */
+
+::selection {
+  background: oklch(0.310 0.055 232);   /* --c-accent-quiet */
+  color: oklch(0.955 0.004 255);        /* --c-text */
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Content links are underlined at rest, as everywhere else on the site; the
+   handbook's own stylesheet only underlines on hover. The sidebar and the
+   section cards keep their nav-like treatment — the site's own nav and cards
+   are not underlined either. `body >` covers box-operations.html, which has
+   no sidebar and no <main>. */
+:is(main, body) :is(p, td, dd) a,
+main li a,
+body > ul li a,
+.callout a,
+.stub a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+/* Specificity 0,1,1 loses to the sidebar's and cards' own hover rules, so
+   this only reaches content links. */
+a:hover { color: oklch(0.820 0.125 232); }  /* --c-accent-hover */
+
+/* Inline code gets the site's .prose code treatment — but not inside tables,
+   where the site leaves table code unchipped. */
+main :is(p, li, dd) code,
+.callout code,
+.stub code {
+  background: oklch(0.215 0.013 255);   /* --c-surface */
+  border: 1px solid oklch(0.300 0.015 255);  /* --c-border */
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+/* The site's radius scale in place of the handbook's sharper corners:
+   10px containers (site --radius) and pill status chips (site .badge). */
+.cards a.card,
+.callout,
+.flow,
+.diagram,
+.stub,
+.timeline-wrap,
+pre {
+  border-radius: 10px;
+}
+.badge,
+.tag {
+  border-radius: 999px;
+}
+
+/* --------------------------------------------------------------------------
+   The one element the sync injects: the link back out of the handbook
+   -------------------------------------------------------------------------- */
 
 .hb-back {
   display: inline-block;
-  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 11px;
   letter-spacing: 0.08em;
-  color: #9a9386;              /* --muted */
+  color: oklch(0.680 0.013 255);        /* --c-text-muted */
   text-decoration: none;
 }
 .hb-back:hover {
-  color: #d08c44;              /* --copper */
+  color: oklch(0.745 0.135 232);        /* --c-accent */
   text-decoration: none;
 }
 .hb-back:focus-visible {
-  outline: 2px solid #d08c44;
+  outline: 2px solid oklch(0.745 0.135 232);
   outline-offset: 3px;
 }
 
@@ -37,11 +108,11 @@ nav.toc a.hb-back {
   border-left: 0;
   border-radius: 0;
   font-size: 11px;
-  color: #9a9386;
+  color: oklch(0.680 0.013 255);
 }
 nav.toc a.hb-back:hover {
   background: transparent;
-  color: #d08c44;
+  color: oklch(0.745 0.135 232);
 }
 
 /* box-operations.html keeps its own inline styles and has no sidebar, so the

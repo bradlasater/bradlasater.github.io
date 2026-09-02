@@ -1,24 +1,24 @@
-/* Synced from data_ingest_infra/docs by scripts/sync_docs.py.
+/* Synced from the Crack the Sky handbook (data_ingest_infra/docs) by scripts/sync_docs.py.
    Do not edit by hand; edit the source repository and re-run the sync. */
-/* data_ingest_infra handbook — shared dark theme for docs/*.html
+/* Crack the Sky handbook — shared dark theme for docs/*.html
    (box-operations.html intentionally keeps its own simpler inline style.) */
 
 :root {
-  --bg: #0e1114;
-  --bg-2: #161b20;
-  --bg-3: #1c2328;
-  --ink: #e8e4d9;
-  --body: #d4cfc3;
-  --muted: #9a9386;
-  --line: #2a3238;
-  --copper: #d08c44;
-  --copper-dim: #8a5c2a;
-  --ok: #8aaa78;
-  --warn: #c9a35a;
-  --bad: #c97a7a;
-  --ws: #d08c44;
+  --bg: oklch(0.165 0.010 255);
+  --bg-2: oklch(0.195 0.012 255);
+  --bg-3: oklch(0.215 0.013 255);
+  --ink: oklch(0.955 0.004 255);
+  --body: oklch(0.790 0.011 255);
+  --muted: oklch(0.680 0.013 255);
+  --line: oklch(0.300 0.015 255);
+  --copper: oklch(0.745 0.135 232);
+  --copper-dim: oklch(0.310 0.055 232);
+  --ok: oklch(0.780 0.140 165);
+  --warn: oklch(0.800 0.130 85);
+  --bad: oklch(0.700 0.160 25);
+  --ws: oklch(0.745 0.135 232);
   --rest: #7aa3b0;
-  --s3: #c47d7d;
+  --s3: oklch(0.700 0.160 25);
   --toc-w: 248px;
   --pad: 28px;
 }
@@ -26,7 +26,7 @@
 html { background: var(--bg); color: var(--ink); height: 100%; }
 html, body { height: 100%; overflow: hidden; }
 body {
-  font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+  font-family: "Inter", "Segoe UI", sans-serif;
   font-size: 16px;
   line-height: 1.55;
   background: var(--bg);
@@ -39,7 +39,7 @@ a:focus-visible {
   outline-offset: 2px;
 }
 code {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.88em;
   color: var(--ink);
 }
@@ -49,7 +49,7 @@ code {
   left: -999px;
   top: 8px;
   background: var(--copper);
-  color: #1a1208;
+  color: oklch(0.165 0.020 255);
   padding: 8px 12px;
   z-index: 20;
 }
@@ -65,12 +65,12 @@ code {
 nav.toc {
   height: 100%;
   overflow-y: auto;
-  background: #0b0e11;
+  background: oklch(0.145 0.010 255);
   border-right: 1px solid var(--line);
   padding: 22px 14px 40px 18px;
 }
 nav.toc .toc-kicker {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -140,7 +140,7 @@ header.doc {
   align-items: end;
 }
 .kicker {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -155,7 +155,7 @@ h1 {
   line-height: 1.12;
 }
 .meta {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   color: var(--muted);
   text-align: right;
@@ -170,7 +170,7 @@ h2 {
   margin: 56px 0 16px;
 }
 h3 {
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 1.02rem;
   font-weight: 600;
   margin: 28px 0 10px;
@@ -200,7 +200,7 @@ li { margin-bottom: 6px; }
 
 .badge {
   display: inline-block;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -210,10 +210,10 @@ li { margin-bottom: 6px; }
   vertical-align: middle;
   margin-right: 4px;
 }
-.badge.shipped { color: var(--ok); border-color: #3d5440; }
-.badge.missing { color: var(--bad); border-color: #5c3a3a; }
-.badge.writeonly { color: var(--warn); border-color: #5c4e2a; }
-.badge.forbidden { color: var(--s3); border-color: #5c3a3a; }
+.badge.shipped { color: var(--ok); border-color: color-mix(in oklch, oklch(0.780 0.140 165) 40%, transparent); }
+.badge.missing { color: var(--bad); border-color: color-mix(in oklch, oklch(0.700 0.160 25) 40%, transparent); }
+.badge.writeonly { color: var(--warn); border-color: color-mix(in oklch, oklch(0.800 0.130 85) 40%, transparent); }
+.badge.forbidden { color: var(--s3); border-color: color-mix(in oklch, oklch(0.700 0.160 25) 40%, transparent); }
 
 .notes {
   display: grid;
@@ -224,7 +224,7 @@ li { margin-bottom: 6px; }
   color: var(--muted);
 }
 .notes dt {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -249,7 +249,7 @@ li { margin-bottom: 6px; }
   min-height: 88px;
 }
 .flow .step .n {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -263,7 +263,7 @@ li { margin-bottom: 6px; }
   color: var(--ink);
 }
 .flow-caption {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--muted);
   margin: 6px 0 24px;
@@ -281,7 +281,7 @@ li { margin-bottom: 6px; }
   display: flex;
   gap: 22px;
   flex-wrap: wrap;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--muted);
   margin: 10px 0 0;
@@ -302,7 +302,7 @@ table {
 }
 th {
   text-align: left;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -318,20 +318,20 @@ td {
   color: var(--body);
 }
 td.job {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 13px;
   color: var(--ink);
   white-space: nowrap;
 }
 td.when {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 12px;
   color: var(--copper);
   white-space: nowrap;
 }
 .tag {
   display: inline-block;
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -341,8 +341,8 @@ td.when {
   margin-right: 4px;
 }
 .tag.ws { color: var(--ws); border-color: var(--copper-dim); }
-.tag.rest { color: var(--rest); border-color: #3d545c; }
-.tag.s3 { color: var(--s3); border-color: #5c3a3a; }
+.tag.rest { color: var(--rest); border-color: color-mix(in oklch, #7aa3b0 40%, transparent); }
+.tag.s3 { color: var(--s3); border-color: color-mix(in oklch, oklch(0.700 0.160 25) 40%, transparent); }
 
 .timeline-wrap {
   background: var(--bg-2);
@@ -352,7 +352,7 @@ td.when {
   overflow-x: auto;
 }
 .day-label {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--muted);
   margin-bottom: 10px;
@@ -360,7 +360,7 @@ td.when {
 .hours {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 10px;
   color: var(--muted);
   margin-bottom: 6px;
@@ -373,7 +373,7 @@ td.when {
   margin-bottom: 8px;
 }
 .row .name {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--ink);
 }
@@ -391,8 +391,8 @@ td.when {
 }
 .bar.ws { background: var(--copper); }
 .bar.rest { background: #4d7380; }
-.bar.s3 { background: #8a4d4d; }
-.bar.ref { background: #5a6b52; }
+.bar.s3 { background: color-mix(in oklch, oklch(0.700 0.160 25) 45%, oklch(0.165 0.010 255)); }
+.bar.ref { background: color-mix(in oklch, oklch(0.780 0.140 165) 40%, oklch(0.165 0.010 255)); }
 
 .stub {
   background: var(--bg-2);
@@ -426,7 +426,7 @@ td.when {
   text-decoration: none;
 }
 .cards .card .card-title {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 13px;
   color: var(--ink);
   margin-bottom: 6px;
@@ -442,7 +442,7 @@ footer {
   margin-top: 64px;
   padding-top: 16px;
   border-top: 1px solid var(--line);
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
   font-size: 11px;
   color: var(--muted);
 }
