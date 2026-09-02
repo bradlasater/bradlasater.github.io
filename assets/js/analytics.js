@@ -15,7 +15,7 @@
 (function () {
   "use strict";
 
-  var CODE = ""; // <-- your GoatCounter site code goes here
+  var CODE = "bradlasater"; // <-- your GoatCounter site code goes here
 
   if (!CODE) return;
 

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<!-- Local working tool. Regenerated daily at 06:00 ET by scripts/journal_prompts.py
+     (launchd: com.bradlasater.journal-prompts). Excluded from the published site in
+     _config.yml. Hand-edit the guide; the table between PROMPTS markers is the
+     script's — edits there are overwritten every morning. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Journal prompts — bradlasater.com working file</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: oklch(0.165 0.010 255);
+    --bg-2: oklch(0.195 0.012 255);
+    --surface: oklch(0.215 0.013 255);
+    --border: oklch(0.300 0.015 255);
+    --border-strong: oklch(0.520 0.018 255);
+    --text: oklch(0.955 0.004 255);
+    --text-2: oklch(0.790 0.011 255);
+    --muted: oklch(0.680 0.013 255);
+    --accent: oklch(0.745 0.135 232);
+    --accent-quiet: oklch(0.310 0.055 232);
+    --warn: oklch(0.800 0.130 85);
+    --sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --serif: "Newsreader", ui-serif, Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--sans); font-size: 16px; line-height: 1.65;
+    max-width: 60rem; margin: 0 auto; padding: 3rem 1.5rem 6rem;
+  }
+  h1 { font-family: var(--serif); font-weight: 500; letter-spacing: -0.02em;
+       font-size: clamp(1.8rem, 4vw, 2.4rem); }
+  h2 { font-family: var(--serif); font-weight: 500; font-size: 1.4rem;
+       margin: 3rem 0 1rem; }
+  h3 { font-size: 1rem; margin: 1.5rem 0 0.5rem; }
+  p, li { color: var(--text-2); }
+  p { margin-bottom: 0.8rem; max-width: 68ch; }
+  ol, ul { padding-left: 1.4rem; margin-bottom: 1rem; }
+  li { margin-bottom: 0.45rem; }
+  li::marker { color: var(--muted); }
+  strong { color: var(--text); }
+  code { font-family: var(--mono); font-size: 0.88em; background: var(--surface);
+         border: 1px solid var(--border); border-radius: 4px; padding: 0.1em 0.35em; }
+  a { color: var(--accent); }
+  .kicker { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--accent); display: block;
+            margin-bottom: 0.6rem; }
+  .meta { font-family: var(--mono); font-size: 0.78rem; color: var(--muted);
+          margin-top: 0.8rem; }
+  .rule { background: var(--bg-2); border: 1px solid var(--border);
+          border-left: 3px solid var(--accent); border-radius: 10px;
+          padding: 0.9rem 1.1rem; margin: 1.2rem 0; font-size: 0.92rem; }
+  .rule p { margin: 0; }
+  .rule.warn { border-left-color: var(--warn); }
+  .rule.warn .t { color: var(--warn); }
+  .rule .t { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em;
+             text-transform: uppercase; color: var(--accent); display: block;
+             margin-bottom: 0.35rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem;
+          margin: 0.8rem 0 1rem; }
+  th { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em;
+       text-transform: uppercase; color: var(--muted); font-weight: 500;
+       text-align: left; padding: 0.5rem 0.8rem 0.5rem 0;
+       border-bottom: 1px solid var(--border); }
+  td { padding: 0.7rem 0.8rem 0.7rem 0; border-bottom: 1px solid var(--border);
+       vertical-align: top; color: var(--text-2); }
+  td.when { font-family: var(--mono); font-size: 0.78rem; color: var(--muted);
+            white-space: nowrap; }
+  td.repo { font-family: var(--mono); font-size: 0.78rem; white-space: nowrap; }
+  td .hash { font-family: var(--mono); font-size: 0.78rem; color: var(--muted); }
+  td.prompt { color: var(--text); }
+  .bank li { font-family: var(--serif); font-size: 1.02rem; color: var(--text-2); }
+  .bank li em { color: var(--muted); font-style: normal; font-family: var(--mono);
+                font-size: 0.75rem; }
+  .strike li.used { text-decoration: line-through; color: var(--muted); }
+  ::selection { background: var(--accent-quiet); color: var(--text); }
+</style>
+</head>
+<body>
+
+<span class="kicker">Working file · not published · regenerated 06:00 ET</span>
+<h1>Morning journal prompts</h1>
+<p class="meta">
+  Last generated: <!-- GENERATED:BEGIN -->
+2026-09-01 19:32 MDT
+<!-- GENERATED:END --><br>
+  Source: git activity in the site repo and the system repo over the last 48&nbsp;h, plus uncommitted work.
+</p>
+
+<h2>How to turn last night into a log entry</h2>
+
+<ol>
+  <li><strong>Scan the table below. Pick at most one row — or none.</strong>
+    The entry exists because something surprised you, not because it is morning.
+    No surprise, no entry; a stale-looking log is only a problem if the dates
+    promised a schedule, and yours don't.</li>
+  <li><strong>Copy the template:</strong>
+    <code>cp content/log/TEMPLATE.html.example content/log/YYYY-MM-DD-a-short-slug.html</code>
+    — the filename becomes the URL, so the slug is the finding, not the topic
+    (<code>2026-09-02-wildcard-ack-delivers-nothing.html</code>, not
+    <code>2026-09-02-websocket-work.html</code>).</li>
+  <li><strong>Fill the meta block.</strong> <code>title</code> states the finding.
+    <code>summary</code> is one sentence a stranger can parse out of context — it
+    becomes the meta description, the feed summary, and the index card, so it is
+    the highest-leverage sentence in the entry. Assume 45 seconds and no clicks.</li>
+  <li><strong>Write the four sections in order:</strong> What I expected → What
+    happened → Diagnosis → What changed as a result. In the build phase,
+    "expected" is an assumption about a vendor, an API, or the infrastructure —
+    state it precisely enough that it could have been wrong. Diagnosis is the
+    section a hiring manager actually reads; it is the one that cannot be faked.</li>
+  <li><strong>If the entry reports any result at all</strong>, add a
+    <code>&lt;h2&gt;What this shows and does not show&lt;/h2&gt;</code> — every
+    bullet beginning "It does not show that…". Highest trust-per-word content
+    available.</li>
+  <li><strong>Build and check:</strong> <code>python3 scripts/build_site.py</code>,
+    open the generated <code>log/&lt;slug&gt;.html</code>, read it once as a
+    stranger, then commit. The entry page, the index, the feed, and the sitemap
+    all update from that one command.</li>
+</ol>
+
+<div class="rule">
+  <span class="t">The island test</span>
+  <p>Every <code>&lt;h2&gt;</code> section must make sense if it is the only thing
+  a reader ever sees — retrieval engines return passages, not pages. And keep the
+  numbers: "429s under burst; shared token bucket at 40 RPS" is citable,
+  "rate limits were tricky" is not.</p>
+</div>
+
+<div class="rule warn">
+  <span class="t">Delete on sight</span>
+  <p>proven · consistently · robust (unqualified) · proprietary · cutting-edge ·
+  passionate about · significant returns · battle-tested · alpha-generating · any
+  Sharpe without a period, a cost assumption, and an interval.</p>
+</div>
+
+<h3>Length</h3>
+<p>Build-phase entries: 600–1,200 words. Research posts (replication, results):
+1,800–4,500 words with named baselines and a robustness section. Don't confuse
+the two — a build entry with a robustness section is padding; a results post
+without one is marketing.</p>
+
+<h3>Phrasing bank</h3>
+<ul class="bank">
+  <li>"It does not show that ___ is useful on real data." <em>— scope</em></li>
+  <li>"Necessary, but not sufficient." <em>— calibrated confidence</em></li>
+  <li>"Should be read as an order of magnitude, not a point estimate." <em>— uncertainty</em></li>
+  <li>"I would not defend it further than 'worth running properly.'" <em>— calibration</em></li>
+  <li>"Is it possible that a weak edge existed but was hidden by imperfections in the data? Absolutely." <em>— steelmanning the null</em></li>
+</ul>
+
+<h2>What moved in the last 48 hours</h2>
+<p>One row per commit or working session. The prompt column is the angle most
+likely to produce a defensible entry from that change — not a summary of it.</p>
+
+<!-- PROMPTS:BEGIN -->
+<table>
+  <thead><tr><th>When</th><th>Repo</th><th>What landed</th><th>Prompt angle</th></tr></thead>
+  <tbody>
+<tr><td class="when">uncommitted</td><td class="repo">site</td><td>6 files changed in the working tree</td><td class="prompt">Last night's session isn't committed. What was it about — and did anything surprise you?</td></tr>
+<tr><td class="when">uncommitted</td><td class="repo">system</td><td>9 files changed in the working tree</td><td class="prompt">Last night's session isn't committed. What was it about — and did anything surprise you?</td></tr>
+<tr><td class="when">Tue Sep 1</td><td class="repo">site</td><td>6 commits: <span class="hash">Remove committed bytecode and add a .gitignore</span>; <span class="hash">Potential fix for pull request finding</span>; <span class="hash">Potential fix for pull request finding</span> …and 3 more</td><td class="prompt">What assumption did this confirm or break?</td></tr>
+<tr><td class="when">Wed Sep 2</td><td class="repo">site</td><td>2 commits: <span class="hash">chore: rebuild derived site metadata</span>; <span class="hash">Name the Crack the Sky handbook in sync banners</span></td><td class="prompt">Probably not an entry. If it is: what risk did this remove?</td></tr>
+<tr><td class="when">Tue Sep 1</td><td class="repo">system</td><td>31 commits: <span class="hash">Potential fix for pull request finding</span>; <span class="hash">docs: rewrite README as a concise high-level overview</span>; <span class="hash">chore: rename repo to Crack the Sky (paths on box become ~/crack-the-sky)</span> …and 28 more</td><td class="prompt">What assumption did this confirm or break?</td></tr>
+<tr><td class="when">Mon Aug 31</td><td class="repo">system</td><td>21 commits: <span class="hash">refactor: one partition-reader stack, one S3 client, one live-probe tool</span>; <span class="hash">ci: run box.yml on every push/PR after all (documented accepted risk)</span>; <span class="hash">ci: run the credentialed box workflow on trusted main code only</span> …and 18 more</td><td class="prompt">Probably not an entry. If it is: what risk did this remove?</td></tr>
+  </tbody>
+</table>
+<!-- PROMPTS:END -->
+
+<h2>Standing seeds</h2>
+<p>Events worth an entry that predate this file. Delete a seed once it ships as
+an entry (or mark it used — strike-through with <code>class="used"</code> on the
+<code>&lt;li&gt;</code>).</p>
+<ul class="strike">
+  <li><strong>The wildcard that ACKs and delivers nothing.</strong> <code>AM.0:SPY*</code>
+    subscribes cleanly and stays silent; explicit tickers in chunks of 3,000 was
+    the fix. Angle: verify the payload, not the handshake.</li>
+  <li><strong>The crontab drift alarm fired in its first week.</strong> PRs #10/#11
+    added <code>rates_sync</code> and <code>ibkr_executions</code> before the crontab
+    was re-installed, and the box workflow caught it. Angle: a monitoring system
+    catching a real miss <em>is</em> a result, and it's verifiable in the repo.</li>
+  <li><strong>What the 403s taught me.</strong> SPXW weeklies listed under
+    <code>underlying_ticker=SPX</code>; same-day SPY aggs forbidden, so
+    <code>underlying_bars</code> is T-1; option NBBO forbidden, so price is
+    last-trade with a documented caveat. Angle: entitlement boundaries as
+    microstructure reasoning.</li>
+  <li><strong>Snapshots are irreplaceable; flat files are not.</strong> The
+    irreplaceable-vs-backfillable classification drives the whole ingest design.
+    Angle: one sentence of classification, one cron schedule.</li>
+  <li><strong>Why I compute my own IV.</strong> Never vendor σ; European BSM
+    invert of last/close; identity-first <code>drift_check</code> canary at
+    17:00 ET. Angle: the "I know how I could fool myself" signal in its purest form.</li>
+  <li><strong>The first partial capture day correctly read red.</strong>
+    coverage_audit failing <em>accurately</em> on 2026-08-31. Angle: a dashboard
+    that only ever shows green is not monitoring.</li>
+</ul>
+
+</body>
+</html>
