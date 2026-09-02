@@ -240,8 +240,8 @@ GitHub domain-verified (takeover protection); adding the
   title, which is spelled as the institution spells it.
 - The homepage no longer carries the third-person "Who is Brad Lasater?" block
   that used to sit above the contact section; it repeated the introduction and
-  the experience list without adding signal. The third-person summary an answer
-  engine needs still exists in the JSON-LD `Person` description and in
+  the experience list without adding signal. The third-person summary that an
+  answer engine needs still exists in the JSON-LD `Person` description and in
   `llms.txt`, which is where a retrieval fetcher looks first anyway.
 - The nav is hand-maintained in seven HTML files *and* in the `nav()` function
   of `scripts/build_site.py`. Changing it means editing both, or generated log

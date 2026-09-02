@@ -282,7 +282,7 @@ main { flex: 1; }
    sticky behaviour so the header does not eat scarce vertical space.
 
    Raised from 44rem when "Handbook" was added and again when the GitHub link
-   was. Measured, not guessed: seven items plus the brand fit at 880px and wrap
+   was added. Measured, not guessed: seven items plus the brand fit at 880px and wrap
    at 850px, so this sits just above the measured threshold. A wrapped bar puts
    the GitHub rule on its own line and reads as broken, so re-measure in the
    browser whenever an item is added or renamed. */
