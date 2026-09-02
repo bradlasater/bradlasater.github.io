@@ -1,0 +1,15 @@
+# Python bytecode. The scripts in scripts/ are run directly, never imported by
+# anything that ships, so nothing here is a build artefact worth keeping — but
+# importing one (a test, an interactive session) leaves a __pycache__ behind,
+# and one of those was committed once already.
+__pycache__/
+*.py[cod]
+
+# macOS writes these into any directory Finder has opened.
+.DS_Store
+
+# Local preview and tooling state. The site is plain HTML with no build step,
+# so anything matching these came from a tool, not from the site.
+.venv/
+venv/
+.pre-commit-cache/
