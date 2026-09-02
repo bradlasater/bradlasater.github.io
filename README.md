@@ -60,7 +60,7 @@ There is no deploy script and no build artefact to commit beyond what
 | `404.html` | Custom 404 (`noindex`) |
 | `assets/css/site.css` | The entire design system — dark-only, OKLCH tokens |
 | `assets/js/track-record.js` | Computes and renders every track-record statistic |
-| `assets/css/handbook-chrome.css` | The only site-owned styling inside `handbook/` |
+| `assets/css/handbook-chrome.css` | Site-owned interaction layer loaded last on every handbook page |
 | `assets/js/analytics.js` | GoatCounter loader (see setup below) |
 | `data/track-record.json` | The append-only track record. See `data/SCHEMA.md` |
 | `scripts/append_observation.py` | Appends one day to the record |
@@ -106,13 +106,18 @@ absent for that reason — it reports drift it can see, and cannot be trusted to
 prove there is none. Publishing a handbook change is a decision, so it stays a
 command you run.
 
-The handbook keeps its own dark theme, sidebar, and layout — `handbook/site.css`
-is synced too, and none of the site's design system reaches it. What the sync
-adds to each page is only what a file needs to become a public URL: a canonical
-link, favicon and robots directives, Open Graph tags, the site's title suffix,
-and one link back to the homepage. That link is the sole site-owned element in
-there, which is why it is styled from `assets/css/handbook-chrome.css` rather
-than from the synced stylesheet that would overwrite it.
+The handbook's layout is its own (a sidebar docs design), but its theme is the
+site's: at publish time the sync rewrites every synced file's palette, font
+names, and font stylesheet into the site's OKLCH tokens and Inter / JetBrains
+Mono / Newsreader faces (`COLOR_MAP` / `FONT_MAP` in `scripts/sync_docs.py`),
+and it fails loudly on any colour or font it does not recognise rather than
+letting a page drift back into the source theme. Interaction behaviour that
+string replacement cannot express — underlined content links, selection
+colour, corner radii — lives in `assets/css/handbook-chrome.css`, which is
+loaded last on every handbook page and is never touched by the sync. What else
+the sync adds to each page is only what a file needs to become a public URL: a
+canonical link, favicon and robots directives, Open Graph tags, the site's
+title suffix, and one link back to the homepage.
 
 `scripts/build_site.py` discovers handbook pages by globbing rather than from a
 list, so a page added upstream reaches `sitemap.xml` on the next sync with no
