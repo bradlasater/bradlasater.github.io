@@ -235,16 +235,28 @@ GitHub domain-verified (takeover protection); adding the
 ## Conventions
 
 - **British spelling** in prose (`optimisation`, `modelling`). The deliberate
-  exceptions are JSON-LD and the third-person "Who is Brad Lasater?" block on
-  the homepage, which use American spelling for search reasons.
+  exceptions are JSON-LD, which uses American spelling for search reasons, and
+  proper nouns such as the "Stochastic Multi-Objective Optimization" coursework
+  title, which is spelled as the institution spells it.
+- The homepage no longer carries the third-person "Who is Brad Lasater?" block
+  that used to sit above the contact section; it repeated the introduction and
+  the experience list without adding signal. The third-person summary an answer
+  engine needs still exists in the JSON-LD `Person` description and in
+  `llms.txt`, which is where a retrieval fetcher looks first anyway.
 - The nav is hand-maintained in seven HTML files *and* in the `nav()` function
   of `scripts/build_site.py`. Changing it means editing both, or generated log
   pages will drift from the static ones. Handbook pages are the exception: they
   come from another repository and keep their own sidebar, so they carry a link
   back to the site rather than the site nav.
-- The header stacks below `48rem`. That breakpoint is a measurement, not a
-  round number — it is where the brand and the six nav labels stop fitting on
-  one row. Adding or renaming a nav item means re-checking it.
+- The header stacks below `56rem`. That breakpoint is a measurement, not a
+  round number: brand plus seven items fit at 880px and wrap at 850px, so it
+  sits just above the measured threshold. A wrapped bar strands the GitHub rule
+  on its own line and reads as broken, so re-measure in a browser whenever a
+  nav item is added or renamed.
+- The GitHub link closes the nav in its own `.site-nav__ext` item. It leaves the
+  site, so it never takes `aria-current` and is separated by a rule rather than
+  reading as one more page. It is in the header because the homepage bio is long
+  enough to push a hero button row under the fold on a laptop.
 - `aria-current="page"` marks the page you are on; `aria-current="true"` marks
   an ancestor section (used on `vol/methodology.html`, whose nav highlights
   `/vol/` but navigates away).
