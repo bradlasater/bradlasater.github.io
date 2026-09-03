@@ -1,0 +1,42 @@
+/* Error pages (404) — layered on top of site.css tokens. */
+
+.error__figure {
+  position: relative;
+  max-width: 680px;
+  margin: var(--sp-7) auto 0;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--c-bg-subtle);
+  box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.65);
+}
+
+.error__figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Fade the frame's edges into the page background so the low-resolution
+   source reads as cinematic rather than pixelated. */
+.error__figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom,
+      rgba(9, 11, 14, 0.35),
+      transparent 30%,
+      transparent 65%,
+      rgba(9, 11, 14, 0.55));
+  pointer-events: none;
+}
+
+.error__caption {
+  max-width: 680px;
+  margin: var(--sp-3) auto 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--c-text-muted);
+  text-align: center;
+}

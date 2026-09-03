@@ -52,6 +52,15 @@ body > ul li a,
    this only reaches content links. */
 a:hover { color: oklch(0.820 0.125 232); }  /* --c-accent-hover */
 
+/* Handbook pages do not load site.css, and neither the synced stylesheet nor
+   the inline styles set any focus indicator — keyboard users got whatever the
+   UA default happened to paint. An outline (not the site's box-shadow ring,
+   which needs --c-bg behind it) in the site accent. */
+:focus-visible {
+  outline: 2px solid oklch(0.745 0.135 232);  /* --c-accent */
+  outline-offset: 2px;
+}
+
 /* Inline code gets the site's .prose code treatment — but not inside tables,
    where the site leaves table code unchipped. */
 main :is(p, li, dd) code,

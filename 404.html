@@ -4,13 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Not found — Brad Lasater</title>
+<meta name="description" content="The page you asked for does not exist — or it moved. Everything actually on bradlasater.com is linked from here.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#14171c">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Not found — Brad Lasater">
+<meta property="og:description" content="That URL doesn't exist — or it moved. Everything actually on the site is linked from here.">
+<meta property="og:image" content="https://bradlasater.com/assets/deja.jpg">
+<meta property="og:image:alt" content="An astronaut in a white suit stands alone in a green field under a dark, star-filled stormy sky.">
+<meta property="og:image:width" content="332">
+<meta property="og:image:height" content="152">
+<meta property="og:site_name" content="Brad Lasater">
+<meta name="twitter:card" content="summary">
+
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
 <link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/error.css">
 <script src="/assets/js/analytics.js" defer></script>
 </head>
 <body>
@@ -37,8 +50,14 @@
 <main id="main" class="shell hero">
   <span class="hero__role">Error 404</span>
   <h1 class="hero__name">Page not found</h1>
+  <figure class="error__figure">
+    <img src="/assets/deja.jpg" alt="An astronaut in a white suit stands alone in a green field under a dark, star-filled stormy sky." width="332" height="152" fetchpriority="high">
+  </figure>
+  <p class="error__caption">Somewhere off the planned trajectory. No signal back.</p>
   <p class="hero__bio">
-    That URL doesn&rsquo;t exist — or it moved. The links below cover everything on the site.
+    That URL doesn&rsquo;t exist — or it moved. The astronaut above is in a similar position:
+    somewhere real, but not where anyone meant to end up. The links below cover everything
+    actually on the site.
   </p>
   <div class="actions">
     <a class="btn btn--primary" href="/">Home</a>

@@ -53,7 +53,7 @@ LOG_FILES = ("feed.xml", "sitemap.xml")
 def git(repo: pathlib.Path, *args: str) -> str:
     return subprocess.run(
         ["git", "-C", str(repo), *args],
-        capture_output=True, text=True, check=True,
+        capture_output=True, text=True, check=True, timeout=60,
     ).stdout
 
 
@@ -79,7 +79,12 @@ def prompt_for(subject: str) -> str:
 
 
 def is_log_only(repo: pathlib.Path, commit: str) -> bool:
-    files = git(repo, "show", "--pretty=format:", "--name-only", commit).split()
+    # splitlines, not split: a filename may contain spaces.
+    files = [
+        f
+        for f in git(repo, "show", "--pretty=format:", "--name-only", commit).splitlines()
+        if f
+    ]
     return bool(files) and all(
         f.startswith(LOG_DIRS) or f in LOG_FILES for f in files
     )
@@ -109,7 +114,9 @@ def collect() -> list[str]:
             short, committed, subject = line.split("\t", 2)
             if is_log_only(repo, short):
                 continue
-            day = dt.datetime.fromisoformat(committed).strftime("%a %b %-d")
+            committed_dt = dt.datetime.fromisoformat(committed)
+            # "%-d" is POSIX-only; f-string keeps this portable.
+            day = f"{committed_dt:%a %b} {committed_dt.day}"
             groups.setdefault((label, day), []).append(subject)
 
         dirty = git(repo, "status", "--porcelain").strip()
@@ -155,7 +162,9 @@ def replace_between(text: str, begin: str, end: str, body: str, name: str) -> st
     pattern = re.compile(re.escape(begin) + ".*?" + re.escape(end), re.DOTALL)
     if not pattern.search(text):
         raise SystemExit(f"{TARGET.name}: {name} markers missing; refusing to write")
-    return pattern.sub(f"{begin}\n{body}\n{end}", text, count=1)
+    # Lambda replacement: body carries commit messages, and re.sub would
+    # interpret backslashes in a plain replacement string as escapes.
+    return pattern.sub(lambda _: f"{begin}\n{body}\n{end}", text, count=1)
 
 
 def main() -> int:
@@ -180,4 +189,10 @@ if __name__ == "__main__":
         raise SystemExit(main())
     except subprocess.CalledProcessError as exc:
         print(f"error: git failed: {exc.stderr.strip()}", file=sys.stderr)
+        raise SystemExit(2)
+    except subprocess.TimeoutExpired:
+        print("error: git timed out (60s); is another process holding the repo?", file=sys.stderr)
+        raise SystemExit(2)
+    except FileNotFoundError:
+        print("error: git not found on PATH", file=sys.stderr)
         raise SystemExit(2)

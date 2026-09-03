@@ -36,7 +36,9 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
+import math
 import pathlib
+import re
 import subprocess
 import sys
 from typing import Any
@@ -59,8 +61,6 @@ IMMUTABLE_TOP_LEVEL = (
     "periods_per_year",
 )
 
-NULL_SHA = "0" * 40
-
 
 class Failure(Exception):
     """A validation error to report to the user. Not a bug in this script."""
@@ -77,10 +77,18 @@ class CannotRun(Exception):
 # ---------------------------------------------------------------- loading --
 
 
+_DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
+
+
 def _parse_date(value: Any, label: str) -> dt.date:
+    # fromisoformat is lenient since Python 3.11 — it accepts "20260902" and
+    # week dates like "2026-W36-3" — but the schema promises exactly
+    # YYYY-MM-DD, the only form the page's JavaScript accepts.
+    if not isinstance(value, str) or not _DATE_RE.fullmatch(value):
+        raise Failure(f"{label}: {value!r} is not an ISO YYYY-MM-DD date")
     try:
         return dt.date.fromisoformat(value)
-    except (TypeError, ValueError):
+    except ValueError:
         raise Failure(f"{label}: {value!r} is not an ISO YYYY-MM-DD date") from None
 
 
@@ -122,17 +130,36 @@ def _validate_observation(obs: Any, where: str, today: dt.date) -> dt.date:
     if date > today:
         raise Failure(f"{where}: {date} is in the future")
 
+    # json.loads accepts NaN and Infinity by default, and comparisons against
+    # them are always False, so without an explicit finiteness check both
+    # would pass every numeric test below and poison the derived statistics.
     nav = obs["nav"]
-    if not isinstance(nav, (int, float)) or isinstance(nav, bool) or nav <= 0:
-        raise Failure(f"{where}: nav must be a positive number, got {nav!r}")
+    if (
+        not isinstance(nav, (int, float))
+        or isinstance(nav, bool)
+        or not math.isfinite(nav)
+        or nav <= 0
+    ):
+        raise Failure(f"{where}: nav must be a positive finite number, got {nav!r}")
 
     costs = obs["costs"]
-    if not isinstance(costs, (int, float)) or isinstance(costs, bool) or costs < 0:
-        raise Failure(f"{where}: costs must be a non-negative number, got {costs!r}")
+    if (
+        not isinstance(costs, (int, float))
+        or isinstance(costs, bool)
+        or not math.isfinite(costs)
+        or costs < 0
+    ):
+        raise Failure(
+            f"{where}: costs must be a non-negative finite number, got {costs!r}"
+        )
 
     gross = obs["gross_pnl"]
-    if not isinstance(gross, (int, float)) or isinstance(gross, bool):
-        raise Failure(f"{where}: gross_pnl must be a number, got {gross!r}")
+    if (
+        not isinstance(gross, (int, float))
+        or isinstance(gross, bool)
+        or not math.isfinite(gross)
+    ):
+        raise Failure(f"{where}: gross_pnl must be a finite number, got {gross!r}")
 
     positions = obs["positions"]
     if not isinstance(positions, int) or isinstance(positions, bool) or positions < 0:
@@ -248,8 +275,15 @@ def _validate_mode_changes(
 
 def validate_structure(doc: dict[str, Any]) -> list[str]:
     """Validate the document in isolation. Raises Failure on any hard error."""
-    if doc.get("schema_version") != 1:
-        raise Failure(f"schema_version must be 1, got {doc.get('schema_version')!r}")
+    # `True == 1` and `1.0 == 1` in Python, so a bare `!= 1` would let a
+    # boolean or float through; the schema says integer.
+    version = doc.get("schema_version")
+    if not isinstance(version, int) or isinstance(version, bool) or version != 1:
+        raise Failure(f"schema_version must be the integer 1, got {version!r}")
+
+    for field in ("strategy", "base_currency"):
+        if not isinstance(doc.get(field), str):
+            raise Failure(f"{field} must be a string, got {doc.get(field)!r}")
 
     periods = doc.get("periods_per_year")
     if not isinstance(periods, int) or isinstance(periods, bool) or periods <= 0:
@@ -383,7 +417,8 @@ def validate_append_only(
         raise CannotRun(f"could not enumerate commits: {revs.stderr.strip()}")
     commits = [line for line in revs.stdout.split() if line]
 
-    previous = _document_at(baseline, rel)
+    baseline_doc = _document_at(baseline, rel)
+    previous = baseline_doc
     steps = 0
     for commit in commits:
         current = _document_at(commit, rel)
@@ -399,7 +434,7 @@ def validate_append_only(
     _compare(previous, doc, "working tree")
 
     added = len(doc.get("observations", [])) - len(
-        (_document_at(baseline, rel) or {}).get("observations", [])
+        (baseline_doc or {}).get("observations", [])
     )
     return [
         f"append-only ok across {len(commits)} commit(s) since {ref} "
