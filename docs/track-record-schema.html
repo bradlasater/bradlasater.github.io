@@ -66,7 +66,7 @@
       </ol>
     </nav>
 
-    <main id="main">
+    <main id="main" tabindex="-1">
       <header class="doc">
         <div>
           <div class="kicker">bradlasater.github.io</div>
@@ -95,9 +95,12 @@
         <li><strong>Every observation is a separate commit.</strong> The git history is the timestamp
           trail. A reader can check when any given number first appeared.</li>
         <li><strong>CI rejects edits to existing observations.</strong> <code>.github/workflows/validate-track-record.yml</code>
-          runs <code>scripts/validate_track_record.py --check-append-only</code>, which diffs the
-          file against the previous commit and fails the build if any already-published
-          observation changed or disappeared. Appending is the only legal edit.</li>
+          runs <code>scripts/validate_track_record.py --check-append-only</code> on every push and
+          pull request that touches the data file, walking <strong>every commit</strong> from the
+          merge-base with the base branch through HEAD — not just the previous commit —
+          so tampering in an intermediate commit is caught too. The build fails if any
+          already-published observation changed or disappeared, and the workflow
+          rejects force-pushes outright. Appending is the only legal edit.</li>
       </ol>
       <p>
         Neither mechanism is worth anything if history gets rewritten, so <strong>never

@@ -66,7 +66,7 @@
       </ol>
     </nav>
 
-    <main id="main">
+    <main id="main" tabindex="-1">
       <header class="doc">
         <div>
           <div class="kicker">bradlasater.github.io</div>
@@ -92,19 +92,18 @@
           <code>handbook/404.html</code>, <code>handbook/ingest.html</code>, <code>handbook/knobs.html</code>, and
           <code>handbook/site.css</code> stale vs. the upstream repo (pre-existing drift — new
           rate-limit/cronjob prose). Run <code>python3 scripts/sync_docs.py</code> and commit.</li>
-        <li><strong>README Analytics section is now false</strong> (<code>README.md:184-190</code>): still says
-          analytics "is currently inert, CODE is an empty string", but
-          <code>assets/js/analytics.js:18</code> sets <code>CODE = "bradlasater"</code>. Rewrite the section —
-          a recruiter reading view-source should not see docs contradicting the code.</li>
+        <li><del><strong>README Analytics section is now false</strong></del> <strong>Done 2026-09-03</strong>:
+          the README section now describes live GoatCounter analytics (CODE set, DNT/GPC),
+          and the <code>docs/readme.html</code> mirror was re-synced.</li>
         <li><strong>README.md:72-73 — "every page loads analytics.js" is false</strong>: no
           <code>handbook/*.html</code> loads it (sync adds canonical/favicon/OG but not analytics)
           and <code>journal-prompts.html</code> doesn't either. Decide whether handbook pageviews
           should count (the most technical content on the site is currently invisible to
           the funnel), then reword. Handbook fix belongs in the <em>source</em> repo's template;
           journal-prompts needs one <code>&lt;script&gt;</code> line.</li>
-        <li><strong>SCHEMA.md:15-18 understates the append-only guarantee</strong>: says CI "diffs the
-          file against the previous commit", but the validator walks every commit from a
-          baseline ref and the workflow rejects force-pushes. State the stronger truth.</li>
+        <li><del><strong>SCHEMA.md:15-18 understates the append-only guarantee</strong></del> <strong>Done
+          2026-09-03</strong>: SCHEMA.md now states the baseline-ref walk over every commit
+          and the force-push rejection; mirror re-synced.</li>
         <li><strong>Validate workflow doesn't trigger on schema edits</strong>
           (<code>.github/workflows/validate-track-record.yml:18-28</code>): add <code>data/SCHEMA.md</code> to
           the <code>push</code> and <code>pull_request</code> path filters so a contract change re-runs the
@@ -255,12 +254,13 @@
 
       <h2 id="addendum-docs-mirror-pass">Addendum — found while mirroring the docs to /docs/ (2026-09-03)</h2>
       <ol start="51">
-        <li><strong><code>notes/README.md</code> now contradicts the site</strong>: it states notes/ is
-          "excluded from the published site", yet the whole directory is mirrored
-          under <code>/docs/</code>. Either revise the note (the candid tone is a feature, per
-          the research itself) or drop the research mirrors. Decide deliberately.</li>
-        <li><code>notes/README.md</code> "Start here" table omits <code>audit-2026-09-02.md</code>; its last
-          bullet cites <code>research/05</code>, a shorthand that is not a real path.</li>
+        <li><del><strong><code>notes/README.md</code> now contradicts the site</strong></del> <strong>Resolved 2026-09-03</strong>:
+          the note now states the notes are mirrored under <code>/docs/</code> as a deliberate
+          decision, and the mirror was re-synced. The research mirrors stay published.</li>
+        <li><del><code>notes/README.md</code> "Start here" table omits <code>audit-2026-09-02.md</code>; its last
+          bullet cites <code>research/05</code>, a shorthand that is not a real path.</del> <strong>Done
+          2026-09-03</strong>: table row added, shorthand expanded to
+          <code>research/05-discovery-and-build.md</code>; mirror re-synced.</li>
         <li><code>research/03</code>: "Verified by direct fetch (20)" but the ledger table has 22
           rows; a Carver quote contains a literal <code>[here](link)</code> placeholder; the
           "loaded with WebFetch" verification line is first-person tooling prose that
