@@ -209,7 +209,7 @@ def head_block(name: str, title: str) -> str:
             '  <meta property="og:site_name" content="Brad Lasater">',
             '  <meta property="og:locale" content="en_US">',
             f'  <meta property="og:url" content="{url}">',
-            f'  <meta property="og:title" content="{html.escape(title, quote=True)}">',
+            f'  <meta property="og:title" content="{html.escape(html.unescape(title), quote=True)}">',
             f'  <meta property="og:image" content="{SITE}/assets/og.png">',
             '  <meta property="og:image:width" content="1200">',
             '  <meta property="og:image:height" content="630">',

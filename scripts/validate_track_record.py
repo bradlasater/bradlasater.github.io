@@ -133,11 +133,17 @@ def _validate_observation(obs: Any, where: str, today: dt.date) -> dt.date:
     # json.loads accepts NaN and Infinity by default, and comparisons against
     # them are always False, so without an explicit finiteness check both
     # would pass every numeric test below and poison the derived statistics.
+    # math.isfinite converts ints to float first and raises OverflowError on a
+    # sufficiently large JSON integer; ints are always finite, so only floats
+    # need the check.
+    def finite(value) -> bool:
+        return not isinstance(value, float) or math.isfinite(value)
+
     nav = obs["nav"]
     if (
         not isinstance(nav, (int, float))
         or isinstance(nav, bool)
-        or not math.isfinite(nav)
+        or not finite(nav)
         or nav <= 0
     ):
         raise Failure(f"{where}: nav must be a positive finite number, got {nav!r}")
@@ -146,7 +152,7 @@ def _validate_observation(obs: Any, where: str, today: dt.date) -> dt.date:
     if (
         not isinstance(costs, (int, float))
         or isinstance(costs, bool)
-        or not math.isfinite(costs)
+        or not finite(costs)
         or costs < 0
     ):
         raise Failure(
@@ -157,7 +163,7 @@ def _validate_observation(obs: Any, where: str, today: dt.date) -> dt.date:
     if (
         not isinstance(gross, (int, float))
         or isinstance(gross, bool)
-        or not math.isfinite(gross)
+        or not finite(gross)
     ):
         raise Failure(f"{where}: gross_pnl must be a finite number, got {gross!r}")
 
