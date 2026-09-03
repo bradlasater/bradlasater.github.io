@@ -1,7 +1,6 @@
 /* Error pages (404) — layered on top of site.css tokens. */
 
 .error__figure {
-  position: relative;
   max-width: 680px;
   margin: var(--sp-7) auto 0;
   border: 1px solid var(--c-border);
@@ -11,7 +10,11 @@
   box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.65);
 }
 
-.error__figure img {
+.error__frame {
+  position: relative;
+}
+
+.error__frame img {
   display: block;
   width: 100%;
   height: auto;
@@ -19,7 +22,7 @@
 
 /* Fade the frame's edges into the page background so the low-resolution
    source reads as cinematic rather than pixelated. */
-.error__figure::after {
+.error__frame::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -33,8 +36,9 @@
 }
 
 .error__caption {
-  max-width: 680px;
-  margin: var(--sp-3) auto 0;
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4);
+  border-top: 1px solid var(--c-border);
   font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--c-text-muted);

@@ -18,10 +18,12 @@ enforce that here:
    merge-base with the base branch through HEAD — not just the previous commit —
    so tampering in an intermediate commit is caught too. The build fails if any
    already-published observation changed or disappeared, and the workflow
-   rejects force-pushes outright. Appending is the only legal edit.
+   rejects force-pushes it can see. Appending is the only legal edit.
 
-Neither mechanism is worth anything if history gets rewritten, so **never
-force-push this repository.**
+Neither mechanism is worth anything if history gets rewritten. The workflow is
+path-filtered, so the durable guard is branch protection: **force-pushes and
+deletion are disabled on `main`, enforced for admins.** Never force-push this
+repository.
 
 ## Top-level fields
 

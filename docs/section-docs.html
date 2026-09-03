@@ -196,8 +196,9 @@
           drift warning naming the Markdown source.</li>
         <li>Move <code>class="active"</code> onto your new sidebar item.</li>
         <li>Add the sidebar item to <strong>every page in the
-          section</strong>. This is the painful part: today that is thirteen
-          files, by hand, byte-identically. Do not hand-edit each one — write
+          section</strong>. This is the painful part: every
+          <code>docs/*.html</code> file (nineteen today, and growing),
+          byte-identically. Do not hand-edit each one — write
           the block once and splice it in with a script (the block is
           delimited by <code>&lt;nav class="toc"&gt;</code> …
           <code>&lt;/nav&gt;</code>, and the active class is the only

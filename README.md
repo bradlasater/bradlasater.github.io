@@ -136,7 +136,11 @@ publicly on `/vol/track-record.html`. Three mechanisms back that claim:
 2. CI (`.github/workflows/validate-track-record.yml`) walks every commit in a
    push and fails the build if any published observation, `mode_changes` entry,
    or immutable metadata field was modified, removed or reordered.
-3. Force-pushes are rejected by that workflow.
+3. `main` carries branch protection: force-pushes and deletion are disabled,
+   enforced for admins. The workflow's `github.event.forced` check is a second
+   layer for the paths it watches — it is path-filtered, so a force-push that
+   left the watched files untouched would fire no run, and no file-level check
+   can detect a rewrite after the fact. The branch rule is the durable guard.
 
 ### Rules
 

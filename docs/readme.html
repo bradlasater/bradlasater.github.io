@@ -243,7 +243,12 @@ python3 scripts/build_site.py          # picks the pages up in sitemap.xml</code
           field was modified, removed or reordered.
         </li>
         <li>
-          Force-pushes are rejected by that workflow.
+          <code>main</code> carries branch protection: force-pushes and deletion
+          are disabled, enforced for admins. The workflow's
+          <code>github.event.forced</code> check is a second layer for the paths
+          it watches — it is path-filtered, so a force-push that left the
+          watched files untouched would fire no run, and no file-level check can
+          detect a rewrite after the fact. The branch rule is the durable guard.
         </li>
       </ol>
 

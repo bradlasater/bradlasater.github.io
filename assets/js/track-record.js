@@ -554,9 +554,16 @@
       if (typeof o.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(o.date)) {
         throw new Error("observation " + i + " has an invalid date");
       }
-      // The shape check above passes strings like "2026-13-45", which parse to
-      // an Invalid Date and would render as "Invalid Date" / NaN on the page.
-      if (!isFinite(parseDate(o.date).getTime())) {
+      // The shape check above passes strings like "2026-13-45", and Date.parse
+      // normalises some out-of-range days (Chromium treats "2026-02-30" as a
+      // March date) instead of rejecting them, so compare the parsed UTC
+      // components against the source string.
+      var parts = o.date.split("-");
+      var parsed = parseDate(o.date);
+      if (!isFinite(parsed.getTime()) ||
+          parsed.getUTCFullYear() !== +parts[0] ||
+          parsed.getUTCMonth() !== +parts[1] - 1 ||
+          parsed.getUTCDate() !== +parts[2]) {
         throw new Error("observation " + i + " has a non-existent date " + o.date);
       }
       if (!isNum(o.nav) || o.nav <= 0) {

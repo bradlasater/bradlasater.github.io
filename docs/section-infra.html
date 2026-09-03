@@ -166,10 +166,14 @@
       </p>
       <ul>
         <li>
-          <strong>Reject force-pushes outright.</strong> The first step checks
-          <code>github.event.forced</code> and exits 1. Rewriting history destroys
-          the timestamp trail the record rests on, and no file-level check can
-          detect it after the fact.
+          <strong>Reject force-pushes — in two layers, because one is not enough.</strong>
+          The workflow's first step checks <code>github.event.forced</code> and
+          exits 1. But the workflow is path-filtered, so a force-push that leaves
+          the watched files' final content untouched fires no run and no
+          rejection. The durable guard is branch protection on <code>main</code>
+          (force-pushes and deletion disabled, enforced for admins — enabled
+          2026-09-03). Rewriting history destroys the timestamp trail the record
+          rests on, and no file-level check can detect it after the fact.
         </li>
         <li>
           <strong>Walk the whole range, not one hop.</strong> A push of N commits
