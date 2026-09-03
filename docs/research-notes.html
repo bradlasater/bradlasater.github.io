@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research notes — overview — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/research-notes.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="What the research notes behind bradlasater.com are and how to read them.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/research-notes.html">
+  <meta property="og:title" content="Research notes — overview — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html" class="active">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Research notes — overview</h1>
+        </div>
+        <div class="meta">
+          mirrors notes/README.md
+        </div>
+      </header>
+
+      <p>This page mirrors <code>notes/README.md</code>; edit the Markdown, then re-sync this page.</p>
+
+      <p class="lead">
+        Working notes. <strong>Excluded from the published site</strong> in
+        <code>_config.yml</code> — nothing in here is served at a URL, and it
+        should stay that way: these files contain candid assessments of the
+        site's weaknesses, and a public "here is what is wrong with me" page is
+        not the goal.
+      </p>
+
+      <h2 id="start-here">Start here</h2>
+      <p>
+        <strong>The actionable list is
+        <a href="roadmap.html"><code>../ROADMAP.md</code></a></strong> — the
+        survey worklist that used to live here has been merged into it,
+        alongside the items derived from the codebase itself, so there is one
+        prioritised list rather than two competing ones. The files below are
+        the evidence behind it.
+      </p>
+      <table>
+        <thead>
+          <tr><th>File</th><th>What it is</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/bradlasater/bradlasater.github.io/blob/main/notes/quant-site-playbook.html" target="_blank" rel="noopener"><code>quant-site-playbook.html</code></a></td>
+            <td>The readable compiled version. Open in a browser. The survey findings in full, plus the post template, phrasing conventions, and the reference-site tables.</td>
+          </tr>
+          <tr>
+            <td><a href="baseline-audit.html"><code>baseline-audit.md</code></a></td>
+            <td>State of the site as of 2026-08-23, before any of this landed. What was already strong, and what the gaps were.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="raw-research">Raw research</h2>
+      <p>
+        Five parallel web crawls run 2026-08-23. Every URL cited in these
+        reports was loaded and inspected directly; sites that 404'd, 403'd, or
+        turned out to be link-in-bio pages are reported as such rather than
+        quietly dropped.
+      </p>
+      <table>
+        <thead>
+          <tr><th>File</th><th>Lane</th><th>Sites</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="research-01-prop-hft.html"><code>research/01-prop-hft.md</code></a></td>
+            <td>Prop / market-making / HFT — Jane Street, HRT, Citadel Securities, Jump, SIG, Optiver, IMC, DRW, Tower, Headlands, Radix, Arrowstreet, Akuna</td>
+            <td>20</td>
+          </tr>
+          <tr>
+            <td><a href="research-02-hedge-funds.html"><code>research/02-hedge-funds.md</code></a></td>
+            <td>Multi-strategy and systematic funds — Two Sigma, D. E. Shaw, Millennium, Cubist, Balyasny, Squarepoint, WorldQuant, AQR, PDT, Voleon</td>
+            <td>21</td>
+          </tr>
+          <tr>
+            <td><a href="research-03-vol-practitioners.html"><code>research/03-vol-practitioners.md</code></a></td>
+            <td>Volatility and derivatives practitioners who publish — Sinclair, Carver, Kinlay, Moontower, Robot Wealth, Allocate Smartly, Quantocracy</td>
+            <td>22</td>
+          </tr>
+          <tr>
+            <td><a href="research-04-switchers-hiring.html"><code>research/04-switchers-and-hiring.md</code></a></td>
+            <td>Career switchers into quant, <strong>plus the hiring-side evidence</strong> — firm career pages, named practitioners, recruiters</td>
+            <td>16 + 20 sources</td>
+          </tr>
+          <tr>
+            <td><a href="research-05-discovery-build.html"><code>research/05-discovery-and-build.md</code></a></td>
+            <td>Breadth discovery via GitHub API / curated lists / arXiv, plus a raw-HTML technical teardown of the strongest sites</td>
+            <td>20</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Roughly 80 distinct personal sites after de-duplication across lanes.</p>
+
+      <h3 id="known-gaps-in-the-research">Known gaps in the research</h3>
+      <ul>
+        <li>
+          <code>reddit.com</code> and <code>quantnet.com</code> were
+          inaccessible to the crawlers, so <strong>no forum opinion is cited
+          anywhere.</strong> The hiring-side lane is weighted toward
+          firm-official statements and named practitioners instead, which is
+          the stronger evidence base but a narrower one.
+        </li>
+        <li>
+          Gordon Ritter's page (<code>cims.nyu.edu/~ritter/</code>) returned
+          403 on every attempt and was excluded rather than reported
+          second-hand.
+        </li>
+        <li>
+          A few reference sites are dormant (2–3.5 years stale) or dead. Those
+          are reported as cautionary findings, not as models — see the
+          dead-domain note in
+          <a href="research-05-discovery-build.html"><code>research/05</code></a>.
+        </li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

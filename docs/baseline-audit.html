@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Baseline audit (2026-08-23) — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/baseline-audit.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="The pre-launch gap list for bradlasater.com — what was missing before the site went public.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/baseline-audit.html">
+  <meta property="og:title" content="Baseline audit (2026-08-23) — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html" class="active">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Baseline audit (2026-08-23)</h1>
+        </div>
+        <div class="meta">
+          mirrors notes/baseline-audit.md
+        </div>
+      </header>
+
+      <p class="flow-caption">This page mirrors <code>notes/baseline-audit.md</code>; edit the Markdown, then re-sync this page.</p>
+
+      <h2 id="inventory">Inventory</h2>
+      <ul>
+        <li><code>index.html</code> — hero + positioning, "in development" vol system feature, 4 roles, capability tags, patents/education, contact</li>
+        <li><code>vol/index.html</code> — premise, 8 architecture cards, results pointer, post-mortems pointer, influences (Sinclair, MLdP)</li>
+        <li><code>vol/methodology.html</code> — pre-committed evaluation protocol (universe, PIT, purged CV, baselines, cost model, stats table, kill criteria)</li>
+        <li><code>vol/track-record.html</code> — live OOS record, browser-computed stats, append-only integrity argument</li>
+        <li><code>log/index.html</code> — research log, <strong>zero entries</strong>, template in HTML comment</li>
+        <li><code>cv.html</code> — full CV</li>
+        <li><code>data/track-record.json</code> — <strong>zero observations</strong>, inception null</li>
+        <li><code>scripts/validate_track_record.py</code> + GH Action — append-only CI enforcement</li>
+        <li><code>assets/css/site.css</code> — 25KB hand-rolled design system, OKLCH tokens, dark-only</li>
+        <li><code>assets/js/track-record.js</code> — 20KB browser-side stats/charts</li>
+        <li><code>assets/js/analytics.js</code> — GoatCounter, <strong>CODE is empty → analytics not running</strong></li>
+      </ul>
+
+      <h2 id="already-strong-do-not-regress">Already strong (do not regress)</h2>
+      <ol>
+        <li>Pre-committed evaluation protocol published before results exist — rare, high-signal.</li>
+        <li>Append-only track record enforced by CI, with git history as timestamp trail.</li>
+        <li>MinTRL / deflated Sharpe / PSR presented next to raw Sharpe; withholding stats under 20 obs.</li>
+        <li>Honest empty states ("Tracking has not started") instead of fake sample data.</li>
+        <li>Kill criteria committed in advance, including "P&amp;L from unintended exposure retires the strategy."</li>
+        <li>Positioning line is specific and non-generic: "Estimating what uncertainty is worth, then trading the difference."</li>
+        <li>Career-bridge framing is explicit (particle filters ≈ filtering latent vol from discrete quotes).</li>
+        <li>Design system is restrained, technical, accessible (skip links, aria, colorblind-safe semantic colors).</li>
+        <li>JSON-LD Person schema, OG tags, canonical URLs, custom domain.</li>
+      </ol>
+
+      <h2 id="gaps-found-in-this-audit-pre-research">Gaps found in this audit (pre-research)</h2>
+      <ul>
+        <li><strong>Empty of evidence.</strong> Log: 0 entries. Track record: 0 observations. The site promises process artifacts and currently delivers zero. Every claim is prospective.</li>
+        <li><strong>No charts, no math, no code anywhere on the site.</strong> Nothing to read that demonstrates ability.</li>
+        <li><strong>GitHub is a liability right now.</strong> 4 public repos, no profile README, no bio, no linked website, no repo descriptions on 3 of 4, and two near-duplicate repos (<code>data_ingest_infra</code> AND <code>data_ingestion_infra</code>). Site says "documented in the open" and links "Source" to a bare profile.</li>
+        <li><strong>Shipped TODO in <code>index.html</code></strong> (visible in view-source): <code>TODO(brad): name the exact error metric here — MAPE, WAPE, RMSE?</code> next to the "roughly 60%" Ticketmaster claim. The TODO is correct about the risk; the fix hasn't landed.</li>
+        <li><strong>"roughly 60%"</strong> unqualified against unnamed baseline/metric — exactly the claim this audience probes.</li>
+        <li>Analytics configured but inert (empty CODE) — no idea who is visiting.</li>
+        <li>No RSS/feed, no sitemap.xml, no robots.txt.</li>
+        <li>No resume PDF (HTML CV only) — recruiters forward PDFs.</li>
+        <li>No photo, no location statement beyond "New York" in contact copy (he is remote/not-NYC — relocation intent is not stated).</li>
+        <li>Dark-only; prints exist in CSS but no light mode.</li>
+        <li>Log entry template lives in an HTML comment — no build step, so each entry is hand-authored HTML.</li>
+      </ul>
+    </main>
+  </div>
+</body>
+</html>

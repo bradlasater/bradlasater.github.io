@@ -1,8 +1,13 @@
 /* ==========================================================================
-   bradlasater.com — handbook chrome
+   bradlasater.com — handbook & docs chrome
 
-   The published handbook is re-skinned into the site's design system in two
-   layers:
+   Loaded last on every handbook page (handbook/*.html, synced) and every
+   project-documentation page (docs/*.html, hand-maintained mirrors of the
+   repo's Markdown docs). Both sections use the same dark doc theme
+   (handbook/site.css and its owned snapshot docs/site.css) plus this file.
+
+   For the handbook specifically, the published pages are re-skinned into the
+   site's design system in two layers:
 
    1. scripts/sync_docs.py rewrites the palette, font names, and font
       stylesheet of every synced file at publish time (see FONT_MAP and

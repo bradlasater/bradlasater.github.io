@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audit follow-ups (2026-09-02) — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/audit-2026-09-02.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="Fifty deferred improvements from the 2026-09-02 full-repo audit, grouped and prioritised.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/audit-2026-09-02.html">
+  <meta property="og:title" content="Audit follow-ups (2026-09-02) — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html" class="active">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Audit follow-ups (2026-09-02)</h1>
+        </div>
+        <div class="meta">
+          mirrors notes/audit-2026-09-02.md
+        </div>
+      </header>
+
+      <p class="flow-caption">This page mirrors <code>notes/audit-2026-09-02.md</code>; edit the Markdown, then re-sync this page.</p>
+
+      <p class="lead">
+        Findings from the full-repo audit (branch <code>audit-2026-09-02</code>). Everything that was
+        a clear, safe bug was fixed in that branch; this file is the list of things
+        deliberately left for later — larger refactors, design decisions, doc drift, and
+        out-of-scope fixes. Grouped by area, roughly most-worth-doing first.
+      </p>
+
+      <h2 id="do-first-correctness-credibility">Do first (correctness / credibility)</h2>
+      <ol start="1">
+        <li><strong>Run the handbook sync.</strong> <code>python3 scripts/sync_docs.py --check</code> reports
+          <code>handbook/404.html</code>, <code>handbook/ingest.html</code>, <code>handbook/knobs.html</code>, and
+          <code>handbook/site.css</code> stale vs. the upstream repo (pre-existing drift — new
+          rate-limit/cronjob prose). Run <code>python3 scripts/sync_docs.py</code> and commit.</li>
+        <li><strong>README Analytics section is now false</strong> (<code>README.md:184-190</code>): still says
+          analytics "is currently inert, CODE is an empty string", but
+          <code>assets/js/analytics.js:18</code> sets <code>CODE = "bradlasater"</code>. Rewrite the section —
+          a recruiter reading view-source should not see docs contradicting the code.</li>
+        <li><strong>README.md:72-73 — "every page loads analytics.js" is false</strong>: no
+          <code>handbook/*.html</code> loads it (sync adds canonical/favicon/OG but not analytics)
+          and <code>journal-prompts.html</code> doesn't either. Decide whether handbook pageviews
+          should count (the most technical content on the site is currently invisible to
+          the funnel), then reword. Handbook fix belongs in the <em>source</em> repo's template;
+          journal-prompts needs one <code>&lt;script&gt;</code> line.</li>
+        <li><strong>SCHEMA.md:15-18 understates the append-only guarantee</strong>: says CI "diffs the
+          file against the previous commit", but the validator walks every commit from a
+          baseline ref and the workflow rejects force-pushes. State the stronger truth.</li>
+        <li><strong>Validate workflow doesn't trigger on schema edits</strong>
+          (<code>.github/workflows/validate-track-record.yml:18-28</code>): add <code>data/SCHEMA.md</code> to
+          the <code>push</code> and <code>pull_request</code> path filters so a contract change re-runs the
+          validator.</li>
+        <li><strong>Stale ROADMAP items</strong>: <code>.gitignore</code> exists (<code>ROADMAP.md:287-288</code>); <code>cv.pdf</code>
+          is shipped (<code>ROADMAP.md:260-261</code>); the footer-drift item cites
+          <code>build_site.py:210</code> for <code>nav()</code> — now at line ~218. Check boxes / fix refs.</li>
+        <li><strong>Confirm the Person JSON-LD employment claim</strong> (<code>index.html</code>): declares
+          <code>worksFor: Nift</code> while the CV shows Ticketmaster ended Mar 2025 and the badge
+          says "Part-time, concurrent". Accuracy matters on a recruiting site.</li>
+      </ol>
+
+      <h2 id="build-script">Build script (<code>scripts/build_site.py</code>)</h2>
+      <ol start="8">
+        <li><code>stamp()</code> (<code>:557</code>) silently no-ops if a page loses its stamp markers and
+          <code>--check</code> still passes — assert ≥1 substitution per static page and/or make
+          the STAMPS regexes attribute-order tolerant.</li>
+        <li><code>render_llms_log_section</code> (<code>:456</code>) interpolates entry titles raw into
+          Markdown — a <code>[</code>/<code>]</code> in a title breaks the llms.txt link. Add bracket escaping.</li>
+        <li><code>MARKER</code> regex (<code>:73</code>) excludes digits — a future <code>BUILD:NAV2:START</code> marker
+          never matches. Widen <code>[A-Z-]+</code> to <code>[A-Z0-9-]+</code> (one character).</li>
+        <li>Orphan cleanup (<code>:634</code>) deletes any <code>log/*.html</code> not in the planned set —
+          a hand-authored page dropped into <code>log/</code> is destroyed silently. Restrict
+          deletion to files bearing a generated-by marker.</li>
+        <li>Decide committer-date (<code>%cI</code>) vs author-date (<code>%aI</code>) semantics for
+          <code>last_modified</code> before entries accumulate; also consider
+          <code>max(fragment_date, template_date)</code> so template-only changes don't rewrite
+          entry pages without bumping feed/sitemap dates.</li>
+        <li>Single-pass lastmod: even cached, the build forks ~20+ <code>git log</code> calls.
+          One <code>git log --format=%cI --name-only</code> pass would be O(1) subprocesses —
+          worth it once entry count grows.</li>
+        <li>Minor: <code>render_entry</code> passes an unused <code>modified_human</code> kwarg; duplicate
+          meta keys silently overwrite (last wins) unlike the rest of meta validation.</li>
+      </ol>
+
+      <h2 id="data-contract-validator">Data contract / validator</h2>
+      <ol start="15">
+        <li><strong>Timezone semantics of "future"</strong>: <code>date.today()</code> is local; CI is UTC. A
+          contributor east of UTC appending early morning gets a legit observation
+          rejected. Pick a policy (explicit UTC, or 1-day tolerance) and document it
+          in SCHEMA.md.</li>
+        <li>Pass <code>parse_constant=</code> to <code>json.loads</code> in the validator so <code>NaN</code>/<code>Infinity</code>
+          are invalid JSON outright (belt-and-braces over the new field checks).</li>
+        <li><code>append_observation.py --mode</code> default: after transitioning to <code>live</code>, the
+          <code>paper</code> default makes every append fail until <code>--mode live</code> is passed.
+          Default to the mode implied by <code>mode_changes</code>.</li>
+        <li>Exit-code collision: the append script's docstring says 2 = "could not run",
+          but argparse also exits 2 on usage errors. Map argparse errors to 1 or amend
+          the doc.</li>
+        <li><code>--note</code> is silently ignored on plain appends (only meaningful with
+          <code>--mode-change</code>) — error on the combination.</li>
+        <li>Workflow: empty <code>git merge-base</code> (orphan branch) yields a confusing
+          "cannot resolve ''" — handle explicitly
+          (<code>.github/workflows/validate-track-record.yml:69-72</code>).</li>
+      </ol>
+
+      <h2 id="frontend-js">Frontend JS</h2>
+      <ol start="21">
+        <li><strong>Commit a JS test harness for <code>track-record.js</code></strong> — the audit verified the
+          math with a dependency-free <code>jsc</code> + DOM-stub harness; today this 840-line
+          correctness-critical file has zero automated tests. The harness approach
+          runs on any macOS CI runner.</li>
+        <li>Add a <code>schema_version</code> check in <code>normalise()</code> — one line
+          (<code>if (doc.schema_version !== 1) throw</code>) so a future v2 contract fails loudly
+          instead of rendering subtly wrong numbers.</li>
+        <li><code>normalise()</code> silently sorts out-of-order observations, masking a validator
+          bypass — consider throwing instead (design decision).</li>
+        <li><code>tr-days</code> ("days live") depends on the viewer's clock/timezone — compute
+          inception→latest-observation from the data file for a deterministic number.</li>
+        <li>Fetch failure is terminal until manual reload — add a retry button or one
+          automatic retry (needs an HTML change in <code>vol/track-record.html</code>).</li>
+        <li>Factor the duplicated running-peak drawdown logic in <code>computeStats()</code> and
+          <code>buildSeries()</code> into one helper; dedup overlapping <code>mode_changes</code> boundary
+          markers (cosmetic).</li>
+        <li><code>costShare</code> shows "—" when cumulative gross P&amp;L ≤ 0 even though costs are
+          known — consider share of |gross| with a hint; "costs ate the edge" matters
+          most exactly then.</li>
+        <li>Analytics: verify whether the mailto <code>contact-email</code> event undercounts
+          (same-tab navigation may cancel the request); if so use GoatCounter's
+          callback pattern. Also add one line to the privacy comment noting anonymised
+          click events are recorded.</li>
+      </ol>
+
+      <h2 id="markup-accessibility-meta">Markup / accessibility / meta</h2>
+      <ol start="29">
+        <li>Add <code>og:image:alt</code> to the three <code>vol/*.html</code> pages (only pages missing it).</li>
+        <li><code>vol/index.html:151</code> — <code>&lt;cite&gt;</code> wraps a person's name ("after Euan
+          Sinclair"); the spec restricts <code>&lt;cite&gt;</code> to titles of works. Use <code>&lt;footer&gt;</code>
+          or a span.</li>
+        <li>Methodology stats table: promote first-column <code>&lt;td&gt;</code>s to <code>&lt;th scope="row"&gt;</code>
+          so screen readers announce the statistic name per row.</li>
+        <li>Wrap role date ranges in <code>&lt;time datetime="YYYY-MM"&gt;</code> on <code>index.html</code> /
+          <code>cv.html</code> — machine-readable semantics for parsers and assistive tech.</li>
+        <li>Decide en-GB vs en-US: prose is British but <code>og:description</code>, JSON-LD
+          (<code>inLanguage: en-US</code>, <code>og:locale en_US</code>) use American spelling. Deliberate
+          for US recruiters, or unify?</li>
+        <li>MinTRL hint "Returns needed at 95%" (<code>vol/track-record.html:231</code>) reads as
+          performance to non-specialists; the JS renders an observation count.
+          Consider "Observations needed at 95%".</li>
+        <li><code>journal-prompts.html</code> body content has no <code>&lt;main&gt;</code> landmark (only HTML file
+          without one; minor — local-only, noindexed).</li>
+        <li><code>content/log/TEMPLATE.html.example</code> is unreferenced and has drifted from the
+          real inline template in <code>build_site.py</code> (lacks the analytics tag and more) —
+          delete it or regenerate from the real template.</li>
+      </ol>
+
+      <h2 id="css-design">CSS / design</h2>
+      <ol start="37">
+        <li><strong>Handbook print output is unreadable</strong>: no <code>@media print</code> in the synced
+          <code>handbook/site.css</code> (52 hard-coded light-on-dark rules), so printed pages
+          render grey-on-white with the sidebar. Fix belongs in
+          <code>assets/css/handbook-chrome.css</code>: hide <code>nav.toc</code>/<code>.hb-back</code>, force dark text.</li>
+        <li>Generate a 1200×630 og-image variant of <code>assets/deja.jpg</code> for the 404 page —
+          332×152 is below every platform's recommended size, some scrapers ignore it.</li>
+        <li>404 polish: <code>hero__bio</code> max-width and the 680px <code>.error__figure</code> don't align
+          left edges exactly; a shared wrapper width in <code>error.css</code> would tighten it.</li>
+        <li>Move one-off inline styles (<code>style="margin-top: var(--sp-4);"</code>, hero h1 size
+          on <code>cv.html</code>) into <code>site.css</code> utility/modifier classes.</li>
+        <li>Verify the JS clamps <code>.chart__tip</code> at chart left/right edges on narrow
+          viewports (potential mobile overflow; CSS alone can't confirm).</li>
+        <li>README vs CSS off-by-one: <code>@media (max-width: 56rem)</code> stacks the header <em>at</em>
+          896px; README says "below 56rem". Reword README or use <code>55.99rem</code>.</li>
+      </ol>
+
+      <h2 id="ci-repo-hygiene">CI / repo hygiene</h2>
+      <ol start="43">
+        <li>Add <code>concurrency: { group: build-site }</code> to <code>build-site.yml</code> — two quick
+          pushes race the rebuild job; the loser fails non-fast-forward (spurious red).</li>
+        <li>Add <code>paths-ignore</code> for <code>feed.xml</code>/<code>sitemap.xml</code>/<code>llms.txt</code> in build-site.yml —
+          the bot's own rebuild commit currently re-triggers a guaranteed no-op run.</li>
+        <li>Mention the Atom feed in <code>llms.txt</code> (one line under "## Data").</li>
+        <li>Document the pre-commit re-stage dance in README (hook regenerates files but
+          doesn't stage them; commit fails with "files were modified" until re-added).</li>
+        <li><code>notes/baseline-audit.md</code>: many listed gaps are now fixed — add a "status as
+          of 2026-09-02" header so readers don't treat resolved gaps as open.</li>
+        <li>When the first log entry ships: harmonise the log-index footer (3 links)
+          with generated entry-page footers (6 links), and decide the canonical footer
+          convention (homepage has 8, subpages 4–5) — codify in README.</li>
+        <li><code>article:modified_time</code> offsets are <code>-06:00</code> sitewide (stamped from git).
+          For a New-York-based candidate this reads oddly — consider normalising the
+          zone in the build script.</li>
+        <li><code>sync_docs.py</code> hardening (from audit): 8-digit hex hole in the reskin
+          colour map (<code>#RRGGBBAA</code> partially rewritten); og:title double-escape if an
+          upstream title ever contains a raw entity; <code>FONTS_URL_RE</code> over-matches
+          single-quoted hrefs; upstream subdirectories silently dropped by <code>plan()</code>;
+          <code>--check</code> passes when the source path is typo'd (<code>--require-source</code> flag?).</li>
+      </ol>
+
+      <h2 id="addendum-docs-mirror-pass">Addendum — found while mirroring the docs to /docs/ (2026-09-03)</h2>
+      <ol start="51">
+        <li><strong><code>notes/README.md</code> now contradicts the site</strong>: it states notes/ is
+          "excluded from the published site", yet the whole directory is mirrored
+          under <code>/docs/</code>. Either revise the note (the candid tone is a feature, per
+          the research itself) or drop the research mirrors. Decide deliberately.</li>
+        <li><code>notes/README.md</code> "Start here" table omits <code>audit-2026-09-02.md</code>; its last
+          bullet cites <code>research/05</code>, a shorthand that is not a real path.</li>
+        <li><code>research/03</code>: "Verified by direct fetch (20)" but the ledger table has 22
+          rows; a Carver quote contains a literal <code>[here](link)</code> placeholder; the
+          "loaded with WebFetch" verification line is first-person tooling prose that
+          reads oddly on a public page.</li>
+        <li><code>research/05</code>: says <strong>three</strong> dead/hijacked domains but lists <strong>four</strong>;
+          sample denominators inconsistent (19 fetched / "8 of 20" / "~20 sites");
+          calls sitemap.xml, robots.txt, RSS, and cv.pdf missing — all four exist now.</li>
+        <li><code>research/04</code>: appendix filing contradicts body tiers (Street of Walls,
+          QuantStart under "Recruiters" vs "[C] Commercial"); <code>volquant.medium.com</code>
+          and <code>bayesshammai.substack.com</code> cited in body but absent from the appendix.</li>
+        <li><code>ROADMAP.md</code> §G: the <code>ensure_ascii</code> item reads backwards — <code>json.dumps</code>
+          escapes the em-dash <strong>to</strong> <code>—</code>, which is what produces the confusing diff.</li>
+        <li><strong>docs/ is invisible to the sitemap</strong>: <code>build_site.py</code>'s page list does not
+          include <code>docs/*.html</code>, so the new section is absent from sitemap.xml.
+          Decide: add docs pages to the build's static-page list (gets stamping and
+          sitemap for free) or leave them to organic discovery via <code>/docs/</code>.</li>
+        <li><code>docs/site.css</code> gaps the mirrors worked around: no <code>pre</code> rule, no
+          <code>blockquote</code> style, no muted body-note class (four pages approximated the
+          drift warning three different ways). Standardise a <code>.meta-note</code> class and
+          apply it everywhere.</li>
+      </ol>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research notes 02 · Hedge funds — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/research-02-hedge-funds.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="Quant roles on the buy side — funds, teams, and how they evaluate researchers.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/research-02-hedge-funds.html">
+  <meta property="og:title" content="Research notes 02 · Hedge funds — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html" class="active">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Research notes 02 · Hedge funds</h1>
+        </div>
+        <div class="meta">
+          mirrors notes/research/02-hedge-funds.md
+        </div>
+      </header>
+
+      <p class="flow-caption">This page mirrors <code>notes/research/02-hedge-funds.md</code>; edit the Markdown, then re-sync this page.</p>
+
+      <p><strong>Lane:</strong> personal websites of people who currently or recently work as quantitative researchers,
+      portfolio managers, or quant developers at multi-strategy / systematic hedge funds and quant asset
+      managers (Two Sigma, D. E. Shaw, Millennium, Point72/Cubist, Balyasny, Squarepoint, Schonfeld,
+      WorldQuant, AQR, PDT, Voleon, Man, Qube, Marshall Wace, CFM, Acadian, BlackRock Systematic, GS/MS/JPM
+      quant strats).</p>
+
+      <p><strong>Method:</strong> WebSearch to generate candidates → WebFetch / curl to actually load every reported URL →
+      HTML source inspection for generator tags, CSS/JS assets, viewport meta, math rendering.
+      Every site below was successfully loaded by me. Role/employer text is quoted <strong>exactly as the site
+      states it</strong>; where a site states no employer, that is recorded explicitly.</p>
+
+      <p><strong>Client context:</strong> Brad Lasater, targeting NYC quant roles ~$250k base; background in applied ML,
+      optimization, state estimation (Nift, Ticketmaster, Lockheed Martin, Boeing); building an end-to-end
+      volatility trading system modeled on Euan Sinclair and Marcos López de Prado, with heavy docs,
+      logging, and written post-mortems.</p>
+
+      <h2 id="part-1-verified-sites-deep-analysis">PART 1 — VERIFIED SITES (deep analysis)</h2>
+
+      <h3 id="qiwen-cui">1. Qiwen Cui — <a href="https://qwcui.github.io/" target="_blank" rel="noopener">https://qwcui.github.io/</a></h3>
+
+      <p><strong>Exact self-description:</strong> "I am a quantitative researcher at Two Sigma. I did my Ph.D. in the Paul
+      G. Allen School of Computer Science &amp; Engineering at the University of Washington, where I was very
+      fortunate to be advised by Professor Simon Shaolei Du."
+      Page label: "Quantitative Researcher at Two Sigma."</p>
+
+      <p><strong>Site type:</strong> Pure academic homepage. Three pages, no blog, no projects.</p>
+
+      <p><strong>Information architecture:</strong> Nav = Home | Publications | CV. Above the fold: name, one-line role
+      label, photo, "About me" paragraph, email, Google Scholar link. Section order on home: About me →
+      Selected Publications (grouped by research theme).</p>
+
+      <p><strong>Positioning line:</strong> Employer first, PhD second, advisor third. The claim is "I am a credentialed
+      ML theory researcher who now works at Two Sigma" — not "here is what I can do for you."</p>
+
+      <p><strong>Content types:</strong> Peer-reviewed papers + arXiv preprints, CV PDF, Google Scholar. No blog, no code,
+      no talks, no teaching, no projects.</p>
+
+      <p><strong>Evidence presentation:</strong> Publications grouped under <em>topic</em> headings rather than by year —
+      "Offline Multi-agent Reinforcement Learning", "Online Multi-agent Reinforcement Learning", "Learning
+      in Congestion Games", "Reinforcement Learning for AI System". Each entry: linked title → author list
+      with asterisks for equal contribution → venue (NeurIPS/ICML-class) or arXiv ID. That is it. No
+      abstracts, no figures, no metrics, no narrative.</p>
+
+      <p><strong>Rigor signals:</strong> Entirely delegated to peer review. Venue names are the proof. No data sources, no
+      out-of-sample discussion, no caveats — because nothing on the site is a performance claim.</p>
+
+      <p><strong>Voice / length:</strong> Three sentences of prose total on the whole homepage. Zero adjectives.</p>
+
+      <p><strong>Technical implementation:</strong> <code>&lt;meta name="generator" content="jemdoc"&gt;</code> — jemdoc, a ~2007-era
+      academic static site generator. Single <code>jemdoc.css</code>, table-based layout (<code>table#tlayout</code>), Georgia
+      serif body, white background. <strong>No <code>&lt;meta name="viewport"&gt;</code> tag at all — the site is not mobile
+      responsive.</strong> No dark mode. No math rendering.</p>
+
+      <p><strong>Contact/recruiting:</strong> Obfuscated email (<code>qwcui1107 [at] gmail (dot) com</code>), Google Scholar, CV PDF.
+      No "hire me," no LinkedIn CTA.</p>
+
+      <p><strong>Notable absences:</strong> No finance content whatsoever. Nothing about markets, Two Sigma work, alpha,
+      or trading. The industry job is a one-line credential; the intellectual identity is RL theory.</p>
+
+      <p><strong>Anti-patterns:</strong> None that would hurt him — but note this site works <em>only because</em> the
+      publication list is at top venues. Copy this format without top-tier papers and the page is empty.</p>
+
+      <h3 id="jonathan-lacotte">2. Jonathan Lacotte — <a href="https://jonathanlctt.github.io/" target="_blank" rel="noopener">https://jonathanlctt.github.io/</a></h3>
+
+      <p><strong>Exact self-description:</strong> "I am a Quantitative Researcher at Tower Research Capital (Latour team)
+      in New York, where I design and apply machine learning methods to build predictive signals (alphas)
+      for global financial markets."</p>
+
+      <p><strong>Site type:</strong> Minimal three-page portfolio (Home / Research / Code).</p>
+
+      <p><strong>Information architecture:</strong> Nav = Home | Research | Code. Above the fold: the positioning
+      sentence, then an "Education" section (Stanford PhD, advisor link to Mert Pilanci).</p>
+
+      <p><strong>Positioning line:</strong> The single strongest sentence in this whole survey for Brad's purposes,
+      because it names <em>the firm, the desk, the method, and the output</em>: "design and apply machine
+      learning methods to build predictive signals (alphas) for global financial markets." It converts a
+      generic ML background into a market-facing job description in one line.</p>
+
+      <p><strong>Content types:</strong> Research page (papers), Code (GitHub link). No blog, no CV PDF surfaced on home,
+      no talks, no teaching.</p>
+
+      <p><strong>Evidence presentation:</strong> Publication list on a separate page; GitHub for code. Very thin.</p>
+
+      <p><strong>Rigor signals:</strong> None on the homepage — no numbers, no charts, no methodology. The Stanford PhD +
+      named advisor + firm name is the entire credibility stack.</p>
+
+      <p><strong>Voice / length:</strong> Two paragraphs. Telegraphic.</p>
+
+      <p><strong>Technical implementation:</strong> Hand-rolled Bootstrap 3 with jQuery 1.11 from Google CDN. Loads
+      <code>css/bootstrap.min.css</code>, then <strong><code>css/non-responsive.css</code></strong> — i.e., he deliberately disabled
+      Bootstrap's responsive grid. Desktop-only by design. No math rendering, no dark mode.</p>
+
+      <p><strong>Contact/recruiting:</strong> GitHub link, advisor link. No email visible on home.</p>
+
+      <p><strong>Notable absences:</strong> No trading results, no writing, no explanation of what "alphas" means to a
+      non-quant, no CV on the landing page.</p>
+
+      <p><strong>Anti-patterns:</strong> Nearly zero content — this is a business card. It works because "Tower Research /
+      Latour" + "Stanford PhD under Pilanci" is already the whole message. Brad cannot borrow this form
+      because he does not yet have the firm name to do the work.</p>
+
+      <h3 id="william-chen">3. William Chen — <a href="https://www.wzchen.com/" target="_blank" rel="noopener">https://www.wzchen.com/</a></h3>
+
+      <p><strong>Exact self-description:</strong> "I was previously a Quantitative Researcher at Two Sigma. Prior to that,
+      I was a Data Science Manager at Quora. Back in college, I studied statistics."
+      <strong>No current employer is stated anywhere on the site.</strong></p>
+
+      <p><strong>Site type:</strong> Hybrid personal-brand / educational-artifacts site. Not a research site.</p>
+
+      <p><strong>Information architecture:</strong> Nav = Free Data Science Books | Probability Cheatsheet | Escape Room
+      Tips | Media | Contact Me | Home. Home sections: name → "Some Things I've Worked On" → talks →
+      Escape Room Tips → "How to Build a Compelling Data Science Portfolio and Resume" → Probability
+      Cheatsheet → Free Data Science Books.</p>
+
+      <p><strong>Positioning line:</strong> Past tense, deliberately. He is positioned as an <em>educator and
+      artifact-producer</em>, not as an employee.</p>
+
+      <p><strong>Content types:</strong> YouTube talks, downloadable PDFs (the Probability Cheatsheet, which has been
+      downloaded enormously), curated book lists, blog posts, media appearances.</p>
+
+      <p><strong>Evidence presentation:</strong> Distribution and reuse, not publications. The proof is "hundreds of
+      thousands of people use my cheatsheet" — artifacts that traveled. This is a <em>reputational</em> proof
+      format rather than a <em>technical</em> one.</p>
+
+      <p><strong>Rigor signals:</strong> Essentially none — and it does not matter for his purpose, but it would matter a
+      lot for Brad's.</p>
+
+      <p><strong>Voice / length:</strong> Friendly, second-person, short.</p>
+
+      <p><strong>Technical implementation:</strong> Squarespace (<code>assets.squarespace.com</code>, <code>site-bundle.js</code>), Typekit
+      fonts, Google Analytics. Responsive, modern, visually polished — by far the most <em>designed</em> site in
+      this survey, and the least technically credible one.</p>
+
+      <p><strong>Contact/recruiting:</strong> LinkedIn + a Contact page.</p>
+
+      <p><strong>Notable absences:</strong> No papers, no code, no math, no market content, no CV.</p>
+
+      <p><strong>Anti-patterns for a quant hiring manager:</strong> Escape-room content sits in the primary nav directly
+      adjacent to the Two Sigma credential. The site says "content creator," not "researcher." Instructive
+      as an inverse example: <strong>polish and personality without technical substance reads as a career
+      change, not a quant.</strong></p>
+
+      <h3 id="bryan-t-kelly">4. Bryan T. Kelly — <a href="https://www.bryankellyacademic.org/" target="_blank" rel="noopener">https://www.bryankellyacademic.org/</a></h3>
+
+      <p><strong>Exact self-description:</strong> "Bryan Kelly is Frederick Frank '54 and Mary C. Tanner Professor of
+      Finance at the Yale School of Management and Head of Machine Learning at AQR Capital Management. He
+      is also a Research Fellow at the National Bureau of Economic Research and Co-director of Yale's
+      Swenson Asset Management Institute."</p>
+
+      <p><strong>Site type:</strong> Academic homepage with a practitioner-facing data-distribution layer bolted on.</p>
+
+      <p><strong>Information architecture:</strong> Nav = Home | CV | Publications | Working Papers | My Google Scholar |
+      Data | Contact | More. Sections on home: About Me → <strong>Data</strong> → Publications → Published Articles →
+      Working Papers → Contact. Note that <strong>Data comes before Publications</strong> — the most reused artifact is
+      promoted above the credential list.</p>
+
+      <p><strong>Positioning line:</strong> Dual identity stated in one sentence: chaired professor <em>and</em> Head of ML at
+      AQR. This is the canonical "academic legitimacy + fund legitimacy" construction.</p>
+
+      <p><strong>Content types:</strong> ~47 numbered published articles, working papers, CV PDF, GitHub code repos,
+      downloadable factor/characteristics datasets with PDF documentation, Google Scholar.</p>
+
+      <p><strong>Evidence presentation:</strong> Publications numbered 47 → 1 (descending), title in caps, journal + year,
+      co-authors in parentheses, SSRN or DOI link. Plus a <strong>Data</strong> section that ships actual usable
+      research inputs (factor data, firm characteristics) with documentation. That data section is the
+      single most practitioner-relevant thing on the site: it lets a stranger <em>use</em> his research rather
+      than merely read it.</p>
+
+      <p><strong>Rigor signals:</strong> Top-5 finance journals do the heavy lifting. Reproducibility signaled via public
+      data + code repos. No performance claims to caveat.</p>
+
+      <p><strong>Voice / length:</strong> Third person, institutional, formal.</p>
+
+      <p><strong>Technical implementation:</strong> <code>&lt;meta name="generator" content="Wix.com Website Builder"/&gt;</code> — Wix,
+      with React/Thunderbolt bundles and Sentry. <strong>A Wix site.</strong> No math rendering. Responsive.</p>
+
+      <p><strong>Contact/recruiting:</strong> Full institutional address, office phone, university email — the academic
+      convention of maximal contactability.</p>
+
+      <p><strong>Notable absences:</strong> No blog, no essays, no opinion, no trading discussion, no AQR-specific
+      content. The AQR affiliation is asserted but never elaborated.</p>
+
+      <p><strong>Anti-patterns:</strong> Wix is aesthetically undistinguished, and nobody cares. This is the clearest
+      evidence in the survey that <strong>for this audience, site technology carries approximately zero signal.</strong></p>
+
+      <h3 id="lasse-heje-pedersen">5. Lasse Heje Pedersen — <a href="https://www.lhpedersen.com/" target="_blank" rel="noopener">https://www.lhpedersen.com/</a></h3>
+
+      <p><strong>Exact self-description:</strong> "I am a financial economist who loves to solve real-world problems using
+      models and data. A Stanford PhD, I am a professor at Copenhagen Business School, director of the
+      BIGFI center, and a principal at AQR."</p>
+
+      <p><strong>Site type:</strong> Academic homepage + book platform.</p>
+
+      <p><strong>Information architecture:</strong> Nav = Home | Research | Data | Vita | Books | Teaching | More.
+      Home sections: Bio → News → Research Summary → Translations → Disclosure Statement → Archive →
+      Contact.</p>
+
+      <p><strong>Positioning line:</strong> Leads with <em>disposition</em> rather than title — "loves to solve real-world
+      problems using models and data" — then stacks credentials. This is the only site in the survey whose
+      first clause is about how the person works rather than where they work. Worth noting for Brad: it is
+      the one opening that a non-PhD could plausibly imitate without sounding thin.</p>
+
+      <p><strong>Content types:</strong> Papers (SSRN links), books (<em>Efficiently Inefficient</em>, <em>Market Liquidity</em>), data
+      downloads, Vita PDF, teaching materials, media/podcasts, translations.</p>
+
+      <p><strong>Evidence presentation:</strong> SSRN abstract-ID links, italicized titles, dates. Plus a <strong>Data</strong> section
+      and a <strong>Disclosure Statement</strong> — the latter is a compliance-flavored artifact almost never seen on
+      engineer portfolios, and it reads as extremely industry-native.</p>
+
+      <p><strong>Rigor signals:</strong> Journal venue + public data. The explicit Disclosure Statement (declaring the AQR
+      relationship) is itself a rigor signal: it says "I know my affiliations could bias what I publish and
+      I am telling you up front."</p>
+
+      <p><strong>Voice / length:</strong> First person, warm, economical.</p>
+
+      <p><strong>Technical implementation:</strong> <strong>Google Sites.</strong> Lato throughout, responsive viewport. Zero custom
+      engineering.</p>
+
+      <p><strong>Contact/recruiting:</strong> Full postal address, two institutional emails.</p>
+
+      <p><strong>Notable absences:</strong> No code repos, no blog, no negative results.</p>
+
+      <p><strong>Anti-patterns:</strong> None material.</p>
+
+      <h3 id="artur-sepp">6. Artur Sepp — <a href="https://artursepp.com/" target="_blank" rel="noopener">https://artursepp.com/</a> (and /research/)</h3>
+
+      <p><strong>Exact self-description:</strong> "I am Global Head of Quantitative Analytics at LGT Private Banking,
+      Zurich, leading a quant team of 10+ across portfolio construction, factor analytics, systematic
+      macro, and applied GenAI." Later in the same block: "20+ years across the sell-side and buy-side —
+      equity, credit and rates derivatives, a systematic CTA, crypto/DeFi, now private banking";
+      "Risk Magazine Quant of the Year 2024"; "Co-author of the log-normal beta stochastic volatility
+      model; ~1,200 citations"; "PhD in Mathematical Statistics, University of Tartu"; "Associate Editor,
+      Journal of Computational Finance."</p>
+
+      <p><strong>Site type:</strong> Research blog + publication archive. <strong>This is the single closest model for Brad's
+      site in the whole survey</strong> — a practitioner who is not a professor, whose entire credibility rests on
+      volatility research he published himself.</p>
+
+      <p><strong>Information architecture:</strong> Nav = Blog | Research | About. Home page <em>is</em> the About page:
+      positioning paragraph → external profile links (LinkedIn, SSRN, Google Scholar, GitHub, Twitter) →
+      email → reverse-chronological list of ~20 post titles with dates.</p>
+
+      <p><strong>Positioning line — worth studying closely.</strong> It does four things in one paragraph:</p>
+      <ol>
+        <li>Names the role and the team size (scope of responsibility).</li>
+        <li>Names the <em>specific framework he built</em> — "ROSAA (Robust Optimization of Strategic and Active
+        Asset Allocation) … published in the Journal of Portfolio Management (2026)" — a named artifact
+        with a citation.</li>
+        <li>States a <strong>thesis about markets</strong>, not about himself: <em>"volatility regimes migrate across asset
+        classes, and models that feel robust fail at the worst moment. I build frameworks designed to
+        survive regime change."</em> This is the most important sentence in the survey. It is a market view,
+        it is falsifiable, and it explains what all his work is <em>for</em>.</li>
+        <li>Quantifies open-source reach: "open-source Python libraries for quantitative finance — portfolio
+        optimization, stochastic volatility, factor models — downloaded 300,000+ times."</li>
+      </ol>
+
+      <p>He also includes one human detail (Brazilian Jiu-Jitsu purple belt) tied back to the work
+      ("patience, adaptability, and problem-solving under pressure").</p>
+
+      <p><strong>Content types:</strong> ~30 research papers, blog posts announcing each paper, presentation slide decks
+      (QuantMinds etc.), podcast appearances, YouTube seminar recordings, open-source Python packages.</p>
+
+      <p><strong>Evidence presentation — the standout mechanic:</strong> the Research page lists every paper with the
+      journal reference <strong>and a dropdown that reveals a copy-pasteable BibTeX entry</strong>. Example format:</p>
+
+      <pre><code>Robust Optimization of Strategic and Tactical Asset Allocation for Multi-Asset Portfolios
+(with Ivan Ossa and Mika Kastenholz), Journal of Portfolio Management, 2026, 52 (4), 86-120
+  @article{seppossakastenholz2026, ... doi={10.3905/jpm.2025.1.806} }</code></pre>
+
+      <p>Working papers are labeled "Working Paper" or "Under revision at the Journal of Portfolio
+      Management" — he does not inflate submission status. Papers carry DOIs, SSRN preprint links, and
+      publisher links.</p>
+
+      <p><strong>Rigor signals:</strong> peer-reviewed venues (Quantitative Finance, Review of Derivatives Research,
+      IJTAF, Risk Magazine, JPM); named co-authors including Alex Lipton and Natalie Packham; explicit
+      "Preprint:" annotations distinguishing preprint from published version; open-source implementations
+      that let anyone reproduce the models; download counts as adoption evidence.</p>
+
+      <p><strong>Voice / length:</strong> Blog posts are short announcements (a few hundred words) that hand off to the
+      paper. The heavy content lives in PDFs. <strong>The blog is a distribution layer, not the product.</strong></p>
+
+      <p><strong>Technical implementation:</strong> WordPress.com (<code>wp-content/themes/personal</code>, Jetpack, wpcomsh), PT
+      Sans via Google Fonts API, <strong>MathJax loaded</strong> for equations. Email-subscribe widget ("Join 348 other
+      subscribers"). Standard WP responsive theme. No dark mode.</p>
+
+      <p><strong>Contact/recruiting:</strong> <code>artursepp@gmail.com</code> in plain text on the front page, plus LinkedIn, SSRN,
+      Scholar, GitHub, Twitter.</p>
+
+      <p><strong>Notable absences:</strong> No CV PDF. No live track record. No negative results published as such.</p>
+
+      <p><strong>Anti-patterns:</strong> A generic WordPress theme and a slightly cluttered sidebar with duplicated
+      "Recent Posts" widgets. Immaterial next to the content.</p>
+
+      <h3 id="jonathan-kinlay">7. Jonathan Kinlay — <a href="https://jonathankinlay.com/" target="_blank" rel="noopener">https://jonathankinlay.com/</a> (About: /about/)</h3>
+
+      <p><strong>Exact self-description:</strong> "Dr Jonathan Kinlay is the Head of Quantitative Trading at Systematic
+      Strategies, LLC, a systematic hedge fund that deploys high frequency trading strategies using
+      news-based algorithms."</p>
+
+      <p><strong>Site type:</strong> Long-running practitioner research blog. Site title: "QUANTITATIVE RESEARCH AND
+      TRADING". Tagline: "The latest theories, models and investment strategies in quantitative research
+      and trading."</p>
+
+      <p><strong>Information architecture:</strong> Nav = Home (with a "Systematic Strategies" sub-item) | About. The fund
+      is one click from every page. Homepage is a reverse-chronological feed with featured image +
+      100–150-word excerpt per post.</p>
+
+      <p><strong>Recent posts (verified on the live homepage):</strong></p>
+      <ul>
+        <li>2026-08-16 "Your Research Agent Is an Undisclosed Factor Exposure — And So Is Everyone Else's"</li>
+        <li>2026-05-17 "Agentic Workflows for Alpha Research"</li>
+        <li>2026-05-10 "Reinforcement Learning for Optimal Execution"</li>
+        <li>2026-05-04 "Deep Learning for Volatility Surface Repair"</li>
+        <li>2026-03 "State Space Models for Market Microstructure: Can Mamba Replace Transformers in
+        High-Frequency Finance?", "Transformer Models for Alpha Generation: A Practical Guide",
+        "Reinforcement Learning for Portfolio Optimization: From Theory to Implementation",
+        "From Hype to Reality: Building a Hybrid Transformer-MVO Pipeline"</li>
+        <li>2026-02 "GARCH Volatility Clustering Across Asset Classes", "Time Series Foundation Models for
+        Financial Markets: Kronos and the Rise of Pre-Trained Market Models"</li>
+      </ul>
+
+      <p><strong>Deep read of one post — "Deep Learning for Volatility Surface Repair" (2026-05-04).</strong> This is the
+      most directly transferable artifact I found for Brad, so I read it in full:</p>
+
+      <ul>
+        <li><strong>~8,500 words</strong>, single-page, self-contained.</li>
+        <li><strong>Full Python/PyTorch implementation inlined (~700 lines)</strong> — a complete runnable script, not
+        fragments.</li>
+        <li><strong>Equations in LaTeX</strong>: SSVI parameterization, loss functions, the Gatheral–Roper <code>g(k)</code>
+        no-arbitrage diagnostic.</li>
+        <li><strong>One 2×3 diagnostic figure</strong>: clean vol / observed quotes / CNN repair / interpolation baseline /
+        uncertainty estimates / absolute error.</li>
+        <li><strong>Data provenance stated honestly</strong>: <em>synthetic only</em>. 1,600 training SSVI surfaces, test sets from
+        "Shifted SSVI" and "SABR-event" families, ~18bp quote noise, structured missingness. No real
+        market data, and he says so.</li>
+        <li><strong>Negative results published prominently.</strong> The CNN <strong>loses</strong> to a plain interpolation baseline by
+        40% on in-distribution smooth data and is 1.4–2.7× worse on out-of-distribution SABR smiles.
+        Butterfly-arbitrage violations remain in 5–11% of points after projection. The uncertainty head is
+        badly miscalibrated (28–69% empirical coverage against an 80% nominal target). Stale-quote
+        detection AUC is only 0.55–0.66.</li>
+        <li><strong>Explicit limitation paragraph, verbatim:</strong> <em>"It does not show that this kind of CNN-based repair
+        is useful on real data. The synthetic surfaces have no calibration drift, no quote-time-of-day
+        noise, no microstructure asymmetries, no realistic smile dynamics, no hard-to-fit weeklies or
+        single-name idiosyncrasies."</em></li>
+        <li><strong>Closing verdict, verbatim:</strong> <em>"It does not, on its own, justify a production system."</em></li>
+        <li>Methodological choices are justified rather than hidden: <em>"Sixty epochs is therefore a deliberate
+        choice rather than a generous one."</em></li>
+        <li><strong>Opening two sentences, verbatim:</strong> <em>"A volatility surface marker is rarely a clean rectangle of
+        quotes. Strikes go unobserved during illiquid hours, wings get crossed and then erased, broker
+        stripes drop out across an entire maturity, and weeklies arrive at the desk with random missingness
+        on top of base quote noise."</em></li>
+      </ul>
+
+      <p><strong>Evidence presentation:</strong> the <em>experiment write-up</em> is the unit of proof. Each post is a complete
+      research note: motivation → model → code → baseline comparison → diagnostics → what failed → what it
+      does not license you to conclude.</p>
+
+      <p><strong>Rigor signals:</strong> the strongest in the entire survey. Named baseline comparisons, admitted losses to
+      the baseline, arbitrage-violation counts, calibration coverage numbers, synthetic-data disclosure,
+      scope-limiting conclusions.</p>
+
+      <p><strong>Voice / length:</strong> first person, desk-native vocabulary ("broker stripes," "weeklies," "the wing"),
+      technical but readable, self-critical without false modesty. 3,000–8,500 words per post.</p>
+
+      <p><strong>Technical implementation:</strong> WordPress. MathJax for equations, syntax-highlighted Python blocks.
+      Featured images per post. Responsive.</p>
+
+      <p><strong>Contact/recruiting:</strong> the "Systematic Strategies" nav item is the fund; the About page carries no
+      email. Weak on contactability — the one clear gap.</p>
+
+      <p><strong>Notable absences:</strong> no CV, no email address, no live track record, no category/tag taxonomy for
+      navigating 15+ years of archive.</p>
+
+      <p><strong>Anti-patterns:</strong> thin About page (single paragraph, no photo, no contact); reliance on stock
+      featured images.</p>
+
+      <h3 id="charles-albert-lehalle">8. Charles-Albert Lehalle — <a href="https://lehalle.net/" target="_blank" rel="noopener">https://lehalle.net/</a> → <a href="https://www.cmap.polytechnique.fr/~charles-albert.lehalle/" target="_blank" rel="noopener">https://www.cmap.polytechnique.fr/~charles-albert.lehalle/</a></h3>
+
+      <p><strong>Exact self-description:</strong> "Professor, CMAP, Ecole Polytechnique, Institut Polytechnique de Paris
+      (IPP)." Opening line: "Welcome to my web page(s). I started as a Professor at the Center for Applied
+      Maths at Ecole Polytechnique the 1st of Sept 2024." (Previously Global Head of Quantitative Research
+      &amp; Development at ADIA, and before that CFM.)</p>
+
+      <p><strong>Site type:</strong> Academic homepage with a projects layer and a blog. Custom vanity domain (lehalle.net)
+      301-redirecting to the institutional URL — a nice pattern: stable personal brand, institutional
+      hosting.</p>
+
+      <p><strong>Information architecture:</strong> Nav = Teaching | Publications | Projects | Blog | CV. Home sections:
+      Welcome → "If you look for recent news" → Blog → Projects → Publications and Talks.</p>
+
+      <p><strong>Positioning line:</strong> Purely institutional and current-state. Notably, the buy-side history (ADIA,
+      CFM) is <em>not</em> the headline — it sits in the CV. The academic title leads.</p>
+
+      <p><strong>Content types:</strong> 80+ papers and book chapters, books, blog posts, teaching materials, named
+      projects, CV PDF, talks.</p>
+
+      <p><strong>Evidence presentation:</strong> publications are presented <strong>with images/figures pulled from the papers</strong>,
+      each linking to an individual publication page. That is unusual and effective — a reader scrolling
+      the list sees the <em>shape of the results</em> (order book plots, impact curves) before reading a word.
+      Projects get their own cards.</p>
+
+      <p><strong>Rigor signals:</strong> venue quality, long citation record, teaching materials that expose the derivations.</p>
+
+      <p><strong>Voice / length:</strong> warm-professorial, first person.</p>
+
+      <p><strong>Technical implementation:</strong> <strong>"Made with Quarto ∙ based on Silvia Canelon's style"</strong> — Quarto, the
+      most technically credible generator in the survey (it is the tool quants actually use for reproducible
+      reports: executable code + LaTeX + HTML/PDF from one source). Responsive, clean typography.</p>
+
+      <p><strong>Contact/recruiting:</strong> full office address, room number, obfuscated institutional email.</p>
+
+      <p><strong>Notable absences:</strong> relatively little on the ADIA/CFM years; no code repositories foregrounded.</p>
+
+      <p><strong>Anti-patterns:</strong> none material.</p>
+
+      <h3 id="peter-cotton">9. Peter Cotton — <a href="https://home.microprediction.org/" target="_blank" rel="noopener">https://home.microprediction.org/</a></h3>
+
+      <p><strong>Exact self-description:</strong> <strong>The site states no role or employer on the homepage.</strong> (Externally
+      verifiable as Chief Data Scientist at Intech; formerly JPMorgan, founder of Benchmark Solutions.
+      The site itself does not say so.)</p>
+
+      <p><strong>Site type:</strong> Topic-indexed research archive. Effectively a personal "collected works" index.</p>
+
+      <p><strong>Information architecture — the most unusual in the survey.</strong> The nav is not About/Blog/Contact; it
+      is <strong>a taxonomy of research domains</strong>: GitHub · Google Scholar · Software · Bio · Virtual Peter (GPT)
+      · Book Length · Numerical statistics (Probit, logit, …) · Time series · Portfolio construction &amp;
+      covariance · Market making &amp; trading · Contests, Rankings · Global optimization · Market mechanisms &amp;
+      scoring rules · Economics · Conformal prediction · Fixed income &amp; stochastic volatility ·
+      Epidemiology · Sports analytics · Mathematical analysis · Selected Essays · Software · Selected
+      Talks · Videos · Interviews · Patents.</p>
+
+      <p><strong>Positioning line:</strong> There is none. The page opens on his <em>most recent result</em>: "A &gt;100x performance
+      upgrade when n&gt;1000 for factor additive random-utility discrete-choice models (including multinomial
+      factor probit), in this paper." He leads with a quantified technical result rather than an identity
+      statement.</p>
+
+      <p><strong>Content types:</strong> SSRN/arXiv/journal papers, Python and JavaScript packages, an MIT Press book,
+      PhD thesis, Medium essays, talk slides, YouTube videos, interviews, <strong>patents</strong>.</p>
+
+      <p><strong>Evidence presentation:</strong> <em>breadth-as-depth by category</em>. Each topic heading is followed by papers
+      and shipped software in that topic. The proof is that in a dozen distinct technical domains he has
+      both a paper and a package.</p>
+
+      <p><strong>Rigor signals:</strong> open-source packages backing the papers; a live "probability exchange" that scores
+      predictions publicly (the strongest possible out-of-sample discipline — public, timestamped,
+      adversarial).</p>
+
+      <p><strong>Voice / length:</strong> terse, result-forward.</p>
+
+      <p><strong>Contact/recruiting:</strong> GitHub, Google Scholar, Medium, repos subdomain. No email.</p>
+
+      <p><strong>Notable absences:</strong> no employer, no CV, no narrative, no design.</p>
+
+      <p><strong>Anti-patterns:</strong> the topic list is enormous and undifferentiated — a hiring manager cannot tell
+      what he is <em>best</em> at. This is the survey's clearest illustration of the breadth-vs-depth failure
+      mode: 18 topic headings dilute rather than compound. Also, the missing employer statement means a
+      recruiter must go to LinkedIn to learn anything about his employability.</p>
+
+      <h3 id="sangmin-simon-oh">10. Sangmin Simon Oh — <a href="https://sangmino.github.io/" target="_blank" rel="noopener">https://sangmino.github.io/</a></h3>
+
+      <p><strong>Exact self-description:</strong> "Assistant Professor of Finance, Columbia Business School." Bio names
+      prior stints at <strong>AQR Capital Management</strong> and <strong>Forefront Capital Management</strong>, plus the Wharton
+      M&amp;T program and the Chicago Booth Joint Program in Financial Economics.
+      Research statement: "My research is broadly within economics and finance, focusing on asset pricing,
+      investments, and insurance. My work focuses on how market structures and societal shifts shape the
+      pricing and allocation of risk across financial markets, with a focus on investor behavior and often
+      leveraging ML/AI tools."</p>
+
+      <p><strong>Site type:</strong> Academic homepage extended with public-goods infrastructure. The most <em>generous</em>
+      site in the survey.</p>
+
+      <p><strong>Information architecture:</strong> Nav = Home | CV | Research | Teaching | Discussions | Notebook |
+      Public Goods | Resources | AI. Note four non-standard sections:</p>
+      <ul>
+        <li><strong>Discussions</strong> — his conference discussant slides (a genuinely differentiated artifact type)</li>
+        <li><strong>Notebook</strong> — informal research notes</li>
+        <li><strong>Public Goods</strong> — resources built for the field, not for himself</li>
+        <li><strong>AI</strong> — a dedicated page on AI tooling</li>
+      </ul>
+      <p>He also links two live web apps he built (<code>practice-dry-run.vercel.app</code>, <code>turtl.finance</code>), a Notion
+      page, a Substack, and three podcast shows.</p>
+
+      <p><strong>Positioning line:</strong> research-question-first. The first sentence is about <em>what he studies</em>, not
+      about his title — the title sits underneath.</p>
+
+      <p><strong>Content types:</strong> papers, CV, teaching, discussant slides, blog/notebook, Substack, podcasts,
+      deployed web apps, curated resource lists, a job-market-candidate list page (<code>/jmc</code>) built as a
+      service to the field.</p>
+
+      <p><strong>Evidence presentation:</strong> conventional academic paper list, but the <em>differentiator</em> is the public
+      goods — the JMC list, the resource pages, the apps. He proves competence partly by <strong>building things
+      other researchers use</strong>.</p>
+
+      <p><strong>Rigor signals:</strong> journal placements; discussions demonstrate he can critique others' identification
+      strategies, which is a distinct and hard-to-fake competence signal.</p>
+
+      <p><strong>Voice / length:</strong> professional, service-oriented, minimal self-promotion.</p>
+
+      <p><strong>Technical implementation:</strong> Jekyll on GitHub Pages. <strong>No <code>&lt;meta name="viewport"&gt;</code> detected — not
+      mobile-optimized.</strong> No math rendering on the landing page.</p>
+
+      <p><strong>Contact/recruiting:</strong> institutional email, Twitter, Google Scholar, LinkedIn.</p>
+
+      <p><strong>Notable absences:</strong> no code repos foregrounded; no data downloads.</p>
+
+      <p><strong>Anti-patterns:</strong> the nav is 9 items wide and several are idiosyncratic ("AI", "Public Goods") —
+      a visitor cannot tell which two matter most.</p>
+
+      <h3 id="alexander-chinco">11. Alexander Chinco — <a href="https://www.alexchinco.com/" target="_blank" rel="noopener">https://www.alexchinco.com/</a> (Notebook: /notebook/)</h3>
+
+      <p><strong>Exact self-description:</strong> <strong>The homepage states no employer or title.</strong> The name and a CV link are
+      the only identity markers. (Externally he is a finance professor at Baruch/CUNY; the site does not
+      say so.)</p>
+
+      <p><strong>Site type:</strong> Research blog + publication list hybrid. Site is literally titled "Research Notebook."</p>
+
+      <p><strong>Information architecture:</strong> Nav = Publications | Working Papers | Curriculum Vitae | Notebook |
+      Courses. The <strong>Notebook is a first-class nav item, not a footnote</strong>.</p>
+
+      <p><strong>Positioning line:</strong> none — the site opens straight into Publications. Identity is entirely
+      implicit.</p>
+
+      <p><strong>Content types:</strong> peer-reviewed papers, working papers, CV PDF, long-form research notes, course
+      materials, online appendices / visualizations.</p>
+
+      <p><strong>Evidence presentation — the most instructive detail in the survey:</strong> each publication entry is
+      title (linked to PDF) → journal + year + volume/issue → co-authors (linked to <em>their</em> sites) →
+      <strong>and a short plain-language paragraph explaining what the paper found</strong>. That summary paragraph is
+      what converts a publication list from a credential dump into something a reader can actually use.</p>
+
+      <p><strong>The Notebook</strong> is the model for what Brad's research-log section should look like. Verified recent
+      entries:</p>
+      <ul>
+        <li>"Excessively Volatile? Or Inexplicably Precise?" (Aug 11, 2026)</li>
+        <li>"Deriving the Gordon Model" (Jul 26, 2026)</li>
+        <li>"Trailing PEs Imply Low Elasticities" (Jul 22, 2026)</li>
+        <li>"Inelastic Markets ~ Flat SML" (Jul 21, 2026)</li>
+        <li>"Gordon Prime" (Jun 23, 2026)</li>
+      </ul>
+
+      <p>Posts run <strong>1,000–3,000+ words</strong>, are dense with LaTeX-rendered derivations and numerical examples,
+      and have <strong>titles that state a finding or pose a sharp question</strong> rather than naming a topic. Note
+      the cadence: five posts across two months, several building on each other — a visible <em>research
+      program</em> rather than scattered one-offs.</p>
+
+      <p><strong>Rigor signals:</strong> derivations shown in full; numerical worked examples; posts that revise or extend
+      earlier posts.</p>
+
+      <p><strong>Voice / length:</strong> first person, thinking-out-loud, unpolished-on-purpose, mathematically explicit.</p>
+
+      <p><strong>Technical implementation:</strong> WordPress with the <strong>eleven40 Pro</strong> child theme on the <strong>Genesis
+      Framework</strong>. Responsive viewport present. System font stack.</p>
+
+      <p><strong>Contact/recruiting:</strong> none on the homepage. A real gap.</p>
+
+      <p><strong>Notable absences:</strong> no employer, no contact, no photo, no bio.</p>
+
+      <p><strong>Anti-patterns:</strong> a visitor cannot tell who he is or how to reach him. For an established academic
+      with a Google-able name this is survivable; for a job seeker it would be fatal.</p>
+
+      <h3 id="dean-markwick">12. Dean Markwick — <a href="https://dm13450.github.io/" target="_blank" rel="noopener">https://dm13450.github.io/</a> (About: /about/)</h3>
+
+      <p><strong>Exact self-description:</strong> "I am a quant researcher focused on execution at both the high (parent)
+      and low (order routing) level. I also dabble in market-making and alpha signals when there is a spare
+      5 minutes at work." <strong>No current employer is named</strong> (previously at BestX; PhD in Statistical Science
+      from UCL, thesis "Bayesian Nonparametric Hawkes Processes with Applications").</p>
+
+      <p>Site tagline: "Personal website for Dean Markwick. If you like stats, sports and rambling, you've
+      come to the right place."</p>
+
+      <p><strong>Site type:</strong> Long-running technical research blog (100+ posts, 2014–2026) with an academic layer.</p>
+
+      <p><strong>Information architecture:</strong> Nav = About Me | Blog | Research | Teaching | Physics. About page
+      sections: About Me → Talks → Articles → Outside the Day Job → Recent Post.</p>
+
+      <p><strong>Positioning line:</strong> narrow and specific — <em>execution</em>, parent-order and order-routing level. He
+      names a sub-specialty rather than claiming "quantitative finance." Then he immediately shows range
+      ("market-making and alpha signals") without over-claiming it ("dabble … spare 5 minutes").</p>
+
+      <p><strong>Content types:</strong> blog posts, open-source packages (<code>HawkesProcesses.jl</code>, <code>dirichletprocess</code>,
+      <code>AlphaVantage.jl</code>, <code>CoinbasePro.jl</code>, <code>AlpacaMarkets.jl</code>), PhD thesis, published articles, YouTube
+      talks, a live dashboard (<code>cryptoliquiditymetrics.com</code>), teaching.</p>
+
+      <p><strong>Evidence presentation:</strong> <strong>one deep technical thread, executed publicly for a decade.</strong> Hawkes
+      processes are his signature: the thesis, the Julia package, and a long series of posts applying them
+      to microstructure noise, FX, terror attacks, and football goals. A reader instantly knows what he
+      <em>owns</em>.</p>
+
+      <p><strong>Deep read of one post — "Big Ticks and Small Ticks in Equity Microstructure" (Aug 23, 2026):</strong></p>
+      <ul>
+        <li><strong>~2,200 words</strong> — notably shorter than Kinlay's; a good target length for a regular cadence.</li>
+        <li><strong>Python code inline</strong> (Polars), with function definitions and processing examples.</li>
+        <li><strong>Two charts</strong> (normalized depth-of-book size; trading-cost curves) and LaTeX for the
+        basis-point spread formula.</li>
+        <li><strong>Data source named precisely</strong>: LOBSTER (NASDAQ order-book reconstruction), five tech stocks
+        (GOOG, AMZN, MSFT, AAPL, INTC), a single day: <strong>June 21, 2012</strong>. He also says <em>how he got it</em> — it
+        came bundled with the book <em>Trades, Quotes and Prices</em>.</li>
+        <li><strong>Caveats stated plainly</strong>: it is a "whistle-stop tour" of basics, not comprehensive; the 2012 data
+        predates the 2024 SEC Reg NMS tick-size amendments; <strong>AAPL is called out as an exception to the
+        pattern he describes</strong>; and he flags that his day job is FX, not equities.</li>
+        <li><strong>Opening two sentences, verbatim:</strong> <em>"I bought Trades, Quotes and Prices a few years ago and it
+        came with access to some free data to help you understand the concepts. That data was from LOBSTER
+        and it has the limit order book (LOB) of five tech stocks for a single day in 2012."</em></li>
+        <li><strong>Closing, verbatim:</strong> <em>"Finally, I managed to write all that without a single big tick energy
+        joke."</em> Followed by a "Related Reading" section linking his own prior posts.</li>
+        <li><strong>Mid-post CTA:</strong> "Enjoy these types of posts? Then sign up for my newsletter."</li>
+      </ul>
+
+      <p><strong>Rigor signals:</strong> named data vendor and exact date range; explicit acknowledgment of regime change
+      (tick-size rules); named counterexamples in his own data; cross-links that let a reader trace the
+      research lineage.</p>
+
+      <p><strong>Voice / length:</strong> conversational, humorous, unpretentious, but the math is never hand-waved.
+      ~2,000–2,500 words, roughly monthly.</p>
+
+      <p><strong>Technical implementation:</strong> <code>&lt;meta name="generator" content="Jekyll v3.10.0" /&gt;</code> — Jekyll on GitHub
+      Pages, responsive viewport present. Clean, plain, fast.</p>
+
+      <p><strong>Contact/recruiting:</strong> obfuscated email (<code>dean[dot]markwick[at]talk21[dot]com</code>), GitHub, LinkedIn,
+      Twitter, RSS, newsletter signup.</p>
+
+      <p><strong>Notable absences:</strong> no current employer named; no CV PDF; no dark mode.</p>
+
+      <p><strong>Anti-patterns:</strong> sports-analytics and "Physics" content mixed into the same feed as microstructure
+      research dilutes the professional signal somewhat — though the sheer volume of quant content
+      overwhelms it. Brad should note the trade-off rather than copy it.</p>
+
+      <h3 id="chad-gray">13. Chad Gray — <a href="https://alphascientist.com/" target="_blank" rel="noopener">https://alphascientist.com/</a> (About: /pages/about.html)</h3>
+
+      <p><strong>Exact self-description:</strong> "I'm Chad, aka The Alpha Scientist. I've created this blog to explore the
+      intersection of my two professional passions: locating 'alpha' in market inefficiencies and applying
+      data science methods." Describes himself as a <strong>"full-time quantitative trader"</strong>; MS in EE/CS from
+      MIT; CFA (2009); prior career building analytics products in Silicon Valley. <strong>No firm named.</strong></p>
+
+      <p><strong>Site type:</strong> Practitioner research blog with a consulting page.</p>
+
+      <p><strong>Information architecture:</strong> Nav = Atom | RSS | About | Consulting. Sidebar: Recent Posts, Tags,
+      Social, Latest Tweets, <strong>Blogroll</strong>.</p>
+
+      <p><strong>Positioning line:</strong> the <em>career-transition</em> framing — Silicon Valley analytics → quant trading —
+      which is structurally the closest to Brad's story of anyone in the survey. He handles it by naming
+      both halves as "professional passions" and letting the blog content prove the second half.</p>
+
+      <p><strong>Content types:</strong> long-form Python/Jupyter tutorial posts, tag taxonomy, email list, consulting
+      offer.</p>
+
+      <p><strong>Evidence presentation:</strong> teaching-by-doing. Posts walk through feature engineering, model
+      validation, and evaluation on real market data with runnable code. He proves competence by showing
+      the <em>workflow</em>, which is exactly the thing a hiring manager wants to inspect.</p>
+
+      <p><strong>Rigor signals:</strong> heavy emphasis on avoiding lookahead bias and on proper validation splits in his
+      tutorial series.</p>
+
+      <p><strong>Technical implementation:</strong> <strong>Pelican</strong> (Python static site generator) — an apt choice for a
+      Python-centric blog. Responsive viewport present.</p>
+
+      <p><strong>Contact/recruiting:</strong> LinkedIn (<code>chadgraycfa</code>), Twitter (<code>@data2alpha</code>), email subscription,
+      explicit <strong>Consulting</strong> page. Best commercial-intent affordances in the survey.</p>
+
+      <p><strong>Notable absences:</strong> no employer, no CV, no papers, no live track record.</p>
+
+      <p><strong>Anti-patterns:</strong> "full-time quantitative trader" with no firm and no verifiable results is a claim
+      a fund hiring manager will discount. A Twitter-feed widget in the sidebar dates the design.</p>
+
+      <h3 id="the-refutation">14. "The Refutation" (pseudonymous) — <a href="https://therefutation.com/" target="_blank" rel="noopener">https://therefutation.com/</a> (+ /about/, /graveyard/)</h3>
+
+      <p><strong>Exact self-description:</strong> no name given. Bio verbatim: "mathematics head teacher with bachelor's
+      degrees in mathematics and chemistry (BSc Mathematics, BSc Chemistry), who has spent over a decade
+      trading and investing his own money, including more than two years living and teaching overseas,
+      among them a stint in Beijing."</p>
+
+      <p><strong>Site type:</strong> Thesis-driven research blog with a paid tier. <strong>Include this one not as a
+      credibility model but as the single best example of falsification-as-positioning.</strong></p>
+
+      <p><strong>Headline verbatim:</strong> "Honest Crypto Quant Research That Tries to Kill Every Edge"</p>
+
+      <p><strong>First paragraph verbatim:</strong> <em>"Most edges are statistical mirages. Ours are statistical outliers. We
+      take your favourite trading strategy, try everything we can to kill it: fee-realistic,
+      look-ahead-free, intra-candle honest, tested across multiple market regimes, and we publish the
+      results."</em></p>
+
+      <p><strong>Information architecture:</strong> Nav = The method | <strong>Graveyard</strong> | <strong>Survivors</strong> | About | Premium |
+      Sign in. The IA <em>is</em> the epistemology: a page for things that died and a page for things that lived.</p>
+
+      <p><strong>Evidence presentation — the Graveyard.</strong> Failed strategies get "autopsies" with headline numbers:</p>
+      <ul>
+        <li>Supertrend: 1,239 trades, "lost 92.9% while buy and hold gained 940%"</li>
+        <li>50/100 MA Ribbon: "Every configuration lost money" across 55 variants over five years</li>
+        <li>MACD: "Every signal failed; the filter was driving" across 320 tuned variants</li>
+        <li>RSI overbought/oversold: tested "across four assets and six timeframes. There's no edge"</li>
+        <li>Golden Cross: "It doesn't survive"</li>
+      </ul>
+
+      <p>Framing verbatim: <em>"plain-English autopsies of the strategies everyone repeats — and the failure
+      modes that fool everyone else."</em> And: <em>"The graveyard of everything that failed is the work it took
+      to find each survivor."</em></p>
+
+      <p><strong>Rigor signals:</strong> a named validation protocol — parameter sweep → proprietary backtest chamber →
+      <strong>leave-one-regime-out</strong> cross-validation, described verbatim as <em>"Hold out a whole market era…then
+      test it on the part it was never shown. Survive the unseen regime, or it was just memorising the
+      past."</em> Variant counts are disclosed (55, 320) — an implicit multiple-testing accounting.</p>
+
+      <p><strong>Negative-claim discipline:</strong> an explicit list of what the site is <em>not</em>: <em>"This is not a signals
+      service, a Discord 'pump' room, a course promising financial freedom, or personal advice."</em> Plus a
+      disclaimer: "Educational and data-journalism content only. Not financial product advice."</p>
+
+      <p><strong>Technical implementation:</strong> <strong>Ghost</strong> CMS, CSS custom properties for typography
+      (<code>--serif/--display/--mono/--sans</code>), responsive.</p>
+
+      <p><strong>Contact/recruiting:</strong> paid newsletter ($29.90/mo, $299/yr), sign-in. Commercial, not
+      career-oriented.</p>
+
+      <p><strong>Anti-patterns for a fund audience:</strong> anonymity, crypto-only scope, a paywall, "head teacher" as the
+      professional credential, and the marketing cadence of the copy. <strong>The structure is worth stealing;
+      the register is not.</strong></p>
+
+      <h3 id="emanuel-derman">15. Emanuel Derman — <a href="https://emanuelderman.com/" target="_blank" rel="noopener">https://emanuelderman.com/</a> (About: /about/)</h3>
+
+      <p><strong>Exact self-description:</strong> "EMANUEL DERMAN is Professor of Practice Emeritus at Columbia University,
+      where he directed their program in financial engineering from 2003 – 2023."</p>
+
+      <p><strong>Site type:</strong> Author/thinker site. The quant career (Goldman Sachs MD, Black-Derman-Toy,
+      Derman-Kani local volatility) is <em>history</em>, and the site is organized around books and writing.</p>
+
+      <p><strong>Information architecture:</strong> Nav = About Me | blog | Books | photos | press | quotes | writing |
+      Finance | Publications | Paintings | contact. Eleven items, including paintings and photos.</p>
+
+      <p><strong>Positioning line:</strong> titles → then <strong>three books with their accolades</strong>. Books are the proof unit.</p>
+
+      <p><strong>Content types:</strong> books, blog, essays, technical publications, press, quotes, photographs,
+      paintings.</p>
+
+      <p><strong>Evidence presentation:</strong> authored books and named models. Also relevant to Brad: Derman is the
+      co-author of the <em>Financial Modelers' Manifesto</em>, the canonical statement of model humility — a
+      useful citation if Brad writes a "how I think about models" page.</p>
+
+      <p><strong>Technical implementation:</strong> WordPress 6.7, <code>wp-content/themes/founder</code>, Bootstrap, responsive.</p>
+
+      <p><strong>Contact/recruiting:</strong> contact page, no email inline.</p>
+
+      <p><strong>Anti-patterns:</strong> the nav mixes paintings and photos with Publications and Finance. Acceptable for a
+      70-something eminence; disastrous for a job seeker.</p>
+
+      <h3 id="campbell-r-harvey">16. Campbell R. Harvey — <a href="https://people.duke.edu/~charvey/" target="_blank" rel="noopener">https://people.duke.edu/~charvey/</a> (research list: /research.htm)</h3>
+
+      <p><strong>Role:</strong> Duke Fuqua finance professor; leads strategic research for Research Affiliates. <strong>The
+      frameset homepage itself contains no role statement in its HTML</strong> — the identity lives in frame files.</p>
+
+      <p><strong>Site type:</strong> Archival academic homepage. Frameset-based (Netscape 2.0-era <code>&lt;frameset&gt;</code> layout,
+      40px header / 280px sidebar / content).</p>
+
+      <p><strong>Evidence presentation — worth studying for scale discipline.</strong> The research page is organized:
+      Dissertation → <strong>Peer-Reviewed Publications (P1–P179+, ~176 entries, reverse chronological
+      1988→2026)</strong> → Books and Monographs (B1–B3) → <strong>New Work (W174–W180)</strong>. Every entry carries a stable
+      ID (P118, W180), journal/volume/pages, DOI, a Duke-hosted PDF, a Google Scholar citation link, SSRN
+      link, NBER designation where applicable, and <strong>awards printed inline</strong> (e.g. "Graham and Dodd Award,
+      2007"). Lead-article designations are marked.</p>
+
+      <p>Supplementary data is offered on specific papers ("Supplementary tables available", "Updated
+      not-seasonally adjusted consumption data available") but there is <strong>no systematic
+      code/data-availability statement</strong> — reproducibility is ad hoc.</p>
+
+      <p><strong>Why he matters for Brad specifically:</strong> Harvey is the author of the multiple-testing critique of
+      factor research ("…and the Cross-Section of Expected Returns", "Backtesting", "A Backtesting Protocol
+      in the Era of Machine Learning"). If Brad's site claims backtest-overfitting hygiene, Harvey and
+      López de Prado are the two names that make the claim legible to a fund.</p>
+
+      <p><strong>Anti-patterns:</strong> framesets in 2026; no responsive layout; visually indistinguishable from 1998.
+      <strong>And it is one of the most-visited quant research pages on the internet.</strong> Strongest possible
+      evidence that design is not the binding constraint for this audience.</p>
+
+      <h3 id="marcos-m-lopez-de-prado">17. Marcos M. López de Prado — <a href="https://www.quantresearch.org/" target="_blank" rel="noopener">https://www.quantresearch.org/</a> (content at /Intro.htm)</h3>
+
+      <p><strong>Exact self-description:</strong> <strong>the intro frame states no current role or employer.</strong> A separate "Vita"
+      page is linked.</p>
+
+      <p><strong>Site type:</strong> Book-companion / method-evangelism site. Frameset-based (<code>LeftFrame.htm</code> + <code>Intro.htm</code>)
+      with a <code>&lt;noframes&gt;</code> fallback reading "This page uses frames, but your browser doesn't support them."</p>
+
+      <p><strong>First paragraph verbatim:</strong> <em>"Machine learning (ML) is changing virtually every aspect of our
+      lives. Today ML algorithms accomplish tasks that until recently only expert humans could perform. As
+      it relates to finance, this is the most exciting time to adopt a disruptive technology that will
+      transform how everyone invests for generations. This website explains scientifically sound ML tools
+      that have worked for me over the course of three decades, helping me to manage large pools of funds
+      for some of the most demanding institutional investors."</em></p>
+
+      <p><strong>Section headings:</strong> WELCOME! → ON THE SOCIAL IMPACT OF QUANTS → CONTACT → DISCLAIMER.</p>
+
+      <p><strong>Evidence presentation:</strong> the <em>methods themselves</em> are the proof — purged/embargoed cross-validation,
+      the deflated Sharpe ratio, probability of backtest overfitting, meta-labeling — plus the book
+      (<em>Advances in Financial Machine Learning</em>) and JPM editorials.</p>
+
+      <p><strong>Positioning note relevant to Brad:</strong> he asserts industry experience in prose ("three decades …
+      large pools of funds for some of the most demanding institutional investors") <strong>without naming a
+      single employer or a single number.</strong> The credibility is carried entirely by the named, adopted
+      methods.</p>
+
+      <p><strong>Contact:</strong> <code>mldp(at)QuantResearch(dot)org</code>, Twitter <code>@lopezdeprado</code>. A prominent DISCLAIMER section.</p>
+
+      <p><strong>Anti-patterns:</strong> frames; no employer; marketing-toned opening paragraph. Again: does not matter,
+      because the methods are the brand.</p>
+
+      <h3 id="weichen-wang">18. Weichen Wang — <a href="https://weichwang.github.io/weichenw/" target="_blank" rel="noopener">https://weichwang.github.io/weichenw/</a></h3>
+
+      <p><strong>Exact self-description:</strong> "I joined HKU in 2021 as an Assistant Professor in the area of Innovation
+      and Information Management of HKU Business School. I am also one of the members of the Business
+      Analytics Group." Bio names a post-PhD stint as <strong>quantitative researcher at Two Sigma Investments</strong>
+      and a Princeton visiting lectureship.</p>
+
+      <p><strong>Site type:</strong> Academic homepage. Nav = Home | Research | Teaching | Group.
+      Sections: Biography → Research Interests → Publications and Preprints → Working Papers → Teaching →
+      BLAST Lab.</p>
+
+      <p><strong>Evidence presentation:</strong> standard citation format (authors, year, bracketed linked title, italic
+      journal, volume/pages). Statistics venues (Annals of Statistics-class) plus finance applications.</p>
+
+      <p><strong>Technical:</strong> hand-rolled HTML, responsive viewport present, <code>font-family: 'Brush Script'</code> used
+      decoratively — the one genuinely bad typographic choice in the survey.</p>
+
+      <p><strong>Relevance:</strong> an example of the <strong>industry-stint-as-line-item</strong> pattern — the Two Sigma role is one
+      clause in a biography whose center of gravity is academic.</p>
+
+      <h3 id="jialei-wang">19. Jialei Wang — <a href="https://jialeiw.github.io/" target="_blank" rel="noopener">https://jialeiw.github.io/</a></h3>
+
+      <p><strong>Exact self-description:</strong> "I received my PhD at Department of Computer Science, University of
+      Chicago, my advisors are Nathan Srebro and Mladen Kolar." <strong>No current role or employer stated
+      anywhere.</strong> Email still an expired university address (<code>jialei [@] cs.uchicago [DOT] edu</code>).</p>
+
+      <p><strong>Site type:</strong> stale academic homepage. Nav = Home | Publication | Activities. Footer: "Page
+      generated 2019-10-21, by jemdoc."</p>
+
+      <p><strong>Why included:</strong> it is the <strong>failure case</strong>. A Two Sigma quantitative researcher whose site has not
+      been touched since 2019, states no employer, and routes contact to a dead academic address. For a
+      person not looking for work, harmless. For anyone signaling availability, it actively subtracts —
+      it reads as abandoned. <strong>Staleness is the most common and most costly defect in this genre.</strong></p>
+
+      <h3 id="kris-abdelmessih">20. Kris Abdelmessih — <a href="https://blog.moontower.ai/" target="_blank" rel="noopener">https://blog.moontower.ai/</a> (author page: /author/kris/)</h3>
+
+      <p><strong>Role:</strong> the author page carries <strong>no bio text</strong>. (Externally: co-founder of moontower.ai; 12 years
+      as an options market maker at SIG and then Parallax, running relative-value commodity vol.)</p>
+
+      <p><strong>Site type:</strong> Ghost-powered options/volatility blog attached to a product.</p>
+
+      <p><strong>Information architecture — the most useful thing here:</strong> the nav is <strong>conceptual, not
+      chronological</strong>: Home | <strong>How Markets Work</strong> | <strong>Options &amp; Volatility</strong> | <strong>Risk &amp; Edge</strong> |
+      <strong>Options Theory</strong>. Posts are organized by <em>idea</em>, so a reader can enter at their level.</p>
+
+      <p><strong>Verified post titles:</strong> "Futures premium cell", "Stock-bond correlation", "Collar shopping",
+      "The sound of inevitability", "Workflows", "Introducing Collar Workflows", "Introducing Defensive
+      Workflows", "Introducing Income Workflows", "Hedging is for gardeners", "Become an option
+      mixologist", "How I Teach Middle Schoolers To Build Stock Portfolios", "Investing orbits",
+      "Delta-hedged risk reversals", "AI Traders", "Hurst", "Stacking carry: an inflation hedge you get
+      paid to own".</p>
+
+      <p><strong>Relevance to Brad:</strong> the closest content match to a volatility-trading focus, and proof that
+      <strong>topic-clustered navigation beats a reverse-chronological feed</strong> once you have more than ~15 posts.</p>
+
+      <p><strong>Anti-patterns:</strong> no bio on the author page; sign-in walls; product-marketing posts interleaved with
+      research.</p>
+
+      <h3 id="vertox">21. "Vertox" — <a href="https://www.vertoxquant.com/" target="_blank" rel="noopener">https://www.vertoxquant.com/</a> (About: /about)</h3>
+
+      <p><strong>Role:</strong> pseudonymous ("Vertox", with a collaborator "malik"). <strong>No name, role, or employer stated.</strong></p>
+
+      <p><strong>Positioning verbatim:</strong> "Applied quantitative research on trading, risk, and systematic strategy
+      design"; writes about "quantitative trading the way it's actually practiced: Robust models and
+      portfolios, combining signals and strategies, understanding the assumptions behind your models."</p>
+
+      <p><strong>Site type:</strong> Substack. Topics: portfolio construction, market making, risk management, research
+      methodology.</p>
+
+      <p><strong>Relevance:</strong> demonstrates that <em>"understanding the assumptions behind your models"</em> is a
+      positioning line that resonates in this community. But it is anonymous and platform-hosted —
+      structurally unable to serve a job search.</p>
+
+      <h2 id="part-2-sites-checked-and-rejected">PART 2 — SITES CHECKED AND REJECTED</h2>
+
+      <table>
+        <thead>
+          <tr><th>Candidate</th><th>Reason rejected</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>cims.nyu.edu/~ritter/</code> (Gordon Ritter, CIO Ritter Alpha, ex-GSA Capital NY, Risk Buy-Side Quant of the Year 2019)</td>
+            <td><strong>Dead.</strong> Returns HTTP 403 on every variant tried (<code>https</code>, <code>http</code>, <code>www</code>, <code>math.nyu.edu</code>, <code>/index.html</code>). Indexed by Google but not currently servable. Not reported as a verified site.</td>
+          </tr>
+          <tr>
+            <td>Various LinkedIn profiles (Jialei Wang, Chengye Yang, Nan Meng, Krutarth Satoskar, Peizhe Shi, etc.)</td>
+            <td>LinkedIn-only, per instructions.</td>
+          </tr>
+          <tr>
+            <td>Nick Baltas (GS Managing Director, Head of R&amp;D STS)</td>
+            <td>No personal website exists — only LinkedIn, Google Scholar, ResearchGate.</td>
+          </tr>
+          <tr>
+            <td>Giuseppe "Gappy" Paleologo (Global Head of Quant Research, Balyasny)</td>
+            <td><strong>No personal website.</strong> Notable finding in itself: one of the most publicly visible quants in NYC multi-strat operates entirely through books, X/Twitter, and podcasts.</td>
+          </tr>
+          <tr>
+            <td>Andrew Ang (Head of BlackRock Systematic factor group)</td>
+            <td>No personal website found.</td>
+          </tr>
+          <tr>
+            <td>Igor Halperin (Fidelity, ex-JPM ED Quant Research)</td>
+            <td>No personal website found.</td>
+          </tr>
+          <tr>
+            <td>Ben Wellington (Two Sigma quantitative analyst, "I Quant NY")</td>
+            <td>Tumblr blog; civic-data content, no quant-finance research. Not analyzed in depth.</td>
+          </tr>
+          <tr>
+            <td>Zura Kakushadze (Quantigic)</td>
+            <td>Corporate site, not a personal homepage.</td>
+          </tr>
+          <tr>
+            <td>Euan Sinclair</td>
+            <td>No personal website; presence is books + QuantInsti faculty page. Relevant because Brad models on him — there is <strong>no site to imitate</strong>, which means Brad's site can occupy that space.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="part-3-synthesis">PART 3 — SYNTHESIS</h2>
+
+      <h3 id="3a-recurring-characteristics">3A. The 14 recurring characteristics of the strongest sites, ranked by likely impact on a quant hiring manager</h3>
+
+      <p><strong>1. A named, falsifiable thesis about markets — not a description of the person.</strong>
+      The strongest opening in the survey is Artur Sepp's: <em>"volatility regimes migrate across asset
+      classes, and models that feel robust fail at the worst moment. I build frameworks designed to survive
+      regime change."</em> That is a claim about the world that could be wrong, and everything else on the site
+      is evidence for it. Compare the weak openings: "I am a quantitative researcher at X" tells a reader
+      only who employs you. Brad has no fund name to lead with, so <strong>a thesis is the only available
+      substitute — and it is the better asset anyway.</strong></p>
+
+      <p><strong>2. Published negative results, stated in numbers, with the conclusion refused.</strong>
+      Kinlay's vol-surface post is the exemplar: the CNN loses to interpolation by 40%, arbitrage
+      violations persist in 5–11% of points, the uncertainty head is miscalibrated at 28–69% coverage
+      against 80% nominal — and the post ends <em>"It does not, on its own, justify a production system."</em>
+      The Refutation builds an entire site section (the Graveyard) out of this. Nothing else on a personal
+      site buys as much trust with this audience per word. A hiring manager reading a page of wins asks
+      "what did he hide"; a page that opens with a loss is answering that question before it is asked.</p>
+
+      <p><strong>3. Exact data provenance: vendor, instruments, date range, and how it was obtained.</strong>
+      Markwick: "LOBSTER … five tech stocks (GOOG, AMZN, MSFT, AAPL, INTC) … a single day in 2012 … it came
+      with the book <em>Trades, Quotes and Prices</em>." Kinlay: "synthetic only — 1,600 SSVI surfaces, ~18bp
+      quote noise," said up front. Vague data is the fastest way to be dismissed; a named vendor and a date
+      range is the cheapest way not to be.</p>
+
+      <p><strong>4. Depth in one named sub-specialty, visible at a glance.</strong>
+      Markwick = Hawkes processes and execution (thesis → Julia package → decade of posts). Sepp =
+      log-normal stochastic volatility (papers → the model bears his name → open-source implementation).
+      Chinco = a multi-post series compounding on the Gordon model. Contrast Peter Cotton's 18 topic
+      headings — enormously accomplished, but a reader cannot say what he is <em>best</em> at. <strong>The unit of
+      credibility is a thread, not a portfolio.</strong> For Brad this is decisive: one volatility system,
+      documented obsessively, beats a grid of unrelated ML projects.</p>
+
+      <p><strong>5. A defensible baseline you compare against, and sometimes lose to.</strong>
+      Kinlay benchmarks his CNN against plain interpolation and reports losing. This is the single clearest
+      tell that separates someone who has done real research from someone who has run a backtest. Any
+      result presented without a named baseline is unreadable to a quant.</p>
+
+      <p><strong>6. Explicit accounting of how many things you tried.</strong>
+      The Refutation reports 55 MA-ribbon configurations and 320 tuned MACD variants. This is
+      multiple-testing hygiene expressed in plain English. Given Brad's López de Prado framing, stating
+      trial counts and applying a deflated Sharpe is the natural way to make the hygiene claim <em>operational</em>
+      rather than decorative — Campbell Harvey and López de Prado are the two names that make it legible.</p>
+
+      <p><strong>7. Named artifacts with citations or adoption counts.</strong>
+      Sepp: "ROSAA … published in the Journal of Portfolio Management (2026)"; "downloaded 300,000+ times";
+      "~1,200 citations." Kelly ships factor datasets. Cotton ships packages in a dozen domains. <strong>A thing
+      with a name that other people use</strong> is worth more than any adjective. Brad's system needs a name, a
+      repo, and a number attached to it.</p>
+
+      <p><strong>8. Scope-limiting sentences that pre-empt the obvious objection.</strong>
+      Kinlay: <em>"The synthetic surfaces have no calibration drift, no quote-time-of-day noise, no
+      microstructure asymmetries…"</em> Markwick flags that his 2012 data predates the 2024 Reg NMS tick-size
+      amendments, and that AAPL contradicts his own pattern. Naming your own strongest counterargument
+      first is the highest-leverage rhetorical move available on a quant site — it converts an interview
+      ambush into a demonstration of judgment.</p>
+
+      <p><strong>9. Runnable code that reproduces the figures.</strong>
+      Kinlay inlines ~700 lines of PyTorch. Markwick inlines Polars. Markwick, Cotton, and Sepp ship
+      installable packages. Code is the only proof that survives skepticism without a trusted employer
+      name behind it.</p>
+
+      <p><strong>10. Real math, rendered properly.</strong>
+      MathJax on Sepp and Kinlay; LaTeX derivations throughout Chinco's Notebook. Equations are not
+      decoration here — they establish that the author can specify a model precisely. A quant site with no
+      equations reads as a data-science site.</p>
+
+      <p><strong>11. Publication/artifact entries that include a one-line plain-language finding.</strong>
+      Chinco's format — title, venue, co-authors, <strong>then a short paragraph on what the paper found</strong> — is
+      the best evidence-presentation mechanic in the survey. Sepp's copy-pasteable BibTeX is the same
+      instinct applied to reuse. A bare list makes the reader work; a list with findings makes the reader
+      keep reading.</p>
+
+      <p><strong>12. Topic-clustered navigation once the archive exceeds ~15 items.</strong>
+      Moontower's <em>How Markets Work / Options &amp; Volatility / Risk &amp; Edge / Options Theory</em> lets a reader
+      enter at their level. Cui groups publications by research theme rather than by year. Kinlay's flat
+      reverse-chronological feed — with 15 years of posts and no tag taxonomy — is his site's biggest
+      navigational weakness.</p>
+
+      <p><strong>13. A visible research cadence.</strong>
+      Chinco: five substantial posts across two months, several building on each other. Markwick: 100+
+      posts over 12 years. Sepp: dated papers spanning 2018–2026. Dates on posts are a liveness signal;
+      Jialei Wang's 2019 timestamp is the counterexample that shows what staleness costs.</p>
+
+      <p><strong>14. Frictionless contact and an unambiguous current status.</strong>
+      Sepp puts a plain-text email on the front page next to LinkedIn/SSRN/Scholar/GitHub. Kelly and
+      Pedersen give full addresses. Against this: <strong>Chinco has no contact and no employer, Kinlay has no
+      email, Cotton has no employer, Markwick names no employer, Kris Abdelmessih's author page has no
+      bio.</strong> These are all people who do not need to be found. Brad is the opposite case, and should treat
+      contactability as a first-class requirement rather than a footer afterthought.</p>
+
+      <p><strong>Ranked "not actually important" list, on the evidence:</strong> site technology, visual design, dark mode,
+      and mobile responsiveness. See 3C.</p>
+
+      <h3 id="3b-academic-vs-engineer-convention">3B. Academic homepage convention vs. engineer portfolio convention — which reads as more credible to a fund</h3>
+
+      <p><strong>The academic convention</strong> (Cui, Kelly, Pedersen, Wang, Oh, Chinco, Harvey, Lehalle):</p>
+      <ul>
+        <li>IA: About → Research/Publications → Teaching → CV → Contact</li>
+        <li>Positioning: institutional title + PhD lineage (advisor, department)</li>
+        <li>Evidence: a dated, citable list; venue names do the work</li>
+        <li>Voice: third person or restrained first person; no adjectives</li>
+        <li>Contact: institutional email, sometimes a postal address and phone</li>
+        <li>Design: deliberately plain, often ancient (Wix, Google Sites, jemdoc, framesets)</li>
+      </ul>
+
+      <p><strong>The engineer portfolio convention</strong> (largely <em>absent</em> from this lane, but visible in Chen's site):</p>
+      <ul>
+        <li>IA: Hero statement → Projects grid → Skills → Experience → Contact</li>
+        <li>Positioning: a value proposition aimed at an employer</li>
+        <li>Evidence: project cards, tech-stack badges, screenshots, GitHub stars</li>
+        <li>Voice: marketing register, second person</li>
+        <li>Design: heavily invested, responsive, animated</li>
+      </ul>
+
+      <p><strong>Verdict: the academic convention wins decisively with this audience, and the gap is not close.</strong>
+      Three reasons, all supported by what I actually found:</p>
+
+      <ol>
+        <li><strong>The unit of evidence differs.</strong> Academic sites present <em>dated, attributable, checkable claims</em>.
+        Portfolio sites present <em>assertions with screenshots</em>. A quant hiring manager's job is checking
+        numbers; a format that invites checking reads as confident, and a format that resists it reads as
+        evasive.</li>
+        <li><strong>The register differs.</strong> Every strong site in this lane understates. Sepp, whose accomplishments
+        would justify considerable noise, writes "20+ years" and "~1,200 citations" — bounded, verifiable
+        quantities. Nothing in this lane says "passionate," "cutting-edge," or "innovative." A
+        marketing register in a quant context is read as compensation for absent substance.</li>
+        <li><strong>Ostentatious design actively costs credibility here.</strong> Harvey's frameset and Cui's
+        non-responsive jemdoc page belong to people at the top of the field. The one visually polished
+        site in the survey (Chen's Squarespace) is also the one with the least technical substance and the
+        most career-ambiguous positioning. <strong>Design effort visibly exceeding research effort is itself a
+        negative signal.</strong></li>
+      </ol>
+
+      <p><strong>But the pure academic convention has a specific failure mode Brad must avoid.</strong> It works because
+      peer review has already certified the claims. Brad has no journal placements. If he copies Cui's
+      form — a nav bar, a photo, and a list — he gets an empty page. So:</p>
+
+      <p><strong>The correct target is the Sepp/Kinlay/Markwick hybrid: academic <em>rigor conventions</em> wrapped around
+      practitioner <em>artifacts</em>.</strong> Concretely:</p>
+      <ul>
+        <li>Academic from the academic side: dated entries, precise data provenance, equations, citations to
+        the literature (Sinclair, López de Prado, Harvey, Gatheral), an understated voice, a CV,
+        contactability, and a disclosure statement.</li>
+        <li>Practitioner from the practitioner side: the artifacts are <strong>research notes, post-mortems, code,
+        and a live out-of-sample track record</strong> rather than journal articles — with each note structured
+        the way a paper is (motivation → method → data → baseline → result → limitations → what this does
+        not license).</li>
+      </ul>
+
+      <p>This is also exactly where Brad's existing material fits: his documentation, logging, and written
+      post-mortems <em>are</em> the artifact class this genre rewards, and almost nobody in the survey has a live
+      out-of-sample record — which is a real differentiator, provided it is presented with the caveats
+      these sites model.</p>
+
+      <h3 id="3c-depth-not-breadth">3C. How these people signal depth rather than breadth</h3>
+
+      <p>Six observed mechanisms, in rough order of usefulness to Brad:</p>
+
+      <ol>
+        <li><strong>One technique carried across many applications.</strong> Markwick's Hawkes processes appear in his
+        thesis, his Julia package, and posts on microstructure noise, FX, terror attacks, and football.
+        The <em>method</em> is the identity; the applications demonstrate range without diluting it.</li>
+        <li><strong>A named model or framework you own.</strong> Sepp's log-normal beta stochastic volatility model and
+        ROSAA. López de Prado's purged CV / deflated Sharpe / meta-labeling. Once a method has your name
+        attached, breadth elsewhere becomes free.</li>
+        <li><strong>Deliberate narrowing in the positioning line.</strong> Markwick: <em>"focused on execution at both the
+        high (parent) and low (order routing) level"</em> — a sub-sub-specialty. Lacotte: <em>"predictive signals
+        (alphas) for global financial markets."</em> Neither says "quantitative finance."</li>
+        <li><strong>Explicitly demoting side interests.</strong> Markwick's "I also dabble in market-making and alpha
+        signals when there is a spare 5 minutes at work" claims range while marking it as secondary —
+        honest and structurally protective of the core claim.</li>
+        <li><strong>Grouping by theme, never by year.</strong> Cui's publications are grouped under four research themes;
+        a reader sees four coherent programs instead of eleven scattered papers.</li>
+        <li><strong>Compounding post sequences.</strong> Chinco's Gordon-model series, where each post builds on the last,
+        makes a research <em>program</em> visible. Isolated posts read as hobbies; sequences read as work.</li>
+      </ol>
+
+      <p><strong>The counterexample makes the point:</strong> Peter Cotton's site indexes eighteen research domains,
+      each with papers and shipped software, and is genuinely more accomplished than most sites here — but
+      a hiring manager scanning it cannot state what he does. Breadth presented flat destroys the signal
+      that depth creates.</p>
+
+      <h3 id="3d-technical-implementation">3D. Technical implementation summary (all inspected in HTML source)</h3>
+
+      <table>
+        <thead>
+          <tr><th>Site</th><th>Generator / platform</th><th>Math</th><th>Responsive</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>qwcui.github.io</td><td><strong>jemdoc</strong> (2007-era)</td><td>none</td><td><strong>No viewport tag</strong></td><td>Table layout, Georgia serif</td></tr>
+          <tr><td>jonathanlctt.github.io</td><td>Bootstrap 3 + jQuery 1.11</td><td>none</td><td><strong><code>non-responsive.css</code></strong></td><td>Deliberately desktop-only</td></tr>
+          <tr><td>wzchen.com</td><td><strong>Squarespace</strong> + Typekit</td><td>none</td><td>Yes</td><td>Most designed, least technical</td></tr>
+          <tr><td>bryankellyacademic.org</td><td><strong>Wix</strong> (React/Thunderbolt)</td><td>none</td><td>Yes</td><td>Chaired professor on Wix</td></tr>
+          <tr><td>lhpedersen.com</td><td><strong>Google Sites</strong></td><td>none</td><td>Yes</td><td>Lato</td></tr>
+          <tr><td>artursepp.com</td><td><strong>WordPress.com</strong>, theme <code>personal</code>, Jetpack</td><td><strong>MathJax</strong></td><td>Yes</td><td>PT Sans</td></tr>
+          <tr><td>jonathankinlay.com</td><td><strong>WordPress</strong></td><td><strong>MathJax</strong></td><td>Yes</td><td>Syntax-highlighted Python</td></tr>
+          <tr><td>lehalle (polytechnique)</td><td><strong>Quarto</strong></td><td>yes</td><td>Yes</td><td>Best-in-class technically</td></tr>
+          <tr><td>sangmino.github.io</td><td><strong>Jekyll</strong> / GitHub Pages</td><td>none on home</td><td><strong>No viewport tag</strong></td><td>9-item nav</td></tr>
+          <tr><td>alexchinco.com</td><td><strong>WordPress</strong> + Genesis / eleven40 Pro</td><td><strong>LaTeX</strong></td><td>Yes</td><td>System font stack</td></tr>
+          <tr><td>dm13450.github.io</td><td><strong>Jekyll v3.10.0</strong> / GitHub Pages</td><td>yes</td><td>Yes</td><td>Clean, fast</td></tr>
+          <tr><td>alphascientist.com</td><td><strong>Pelican</strong> (Python SSG)</td><td>yes</td><td>Yes</td><td>Fits the Python audience</td></tr>
+          <tr><td>therefutation.com</td><td><strong>Ghost</strong></td><td>n/a</td><td>Yes</td><td>CSS custom properties</td></tr>
+          <tr><td>emanuelderman.com</td><td><strong>WordPress 6.7</strong>, theme <code>founder</code></td><td>n/a</td><td>Yes</td><td>Bootstrap</td></tr>
+          <tr><td>people.duke.edu/~charvey</td><td><strong>HTML framesets</strong></td><td>none</td><td><strong>No</strong></td><td>Netscape-2.0-era</td></tr>
+          <tr><td>quantresearch.org</td><td><strong>HTML framesets</strong></td><td>none</td><td><strong>No</strong></td><td><code>&lt;noframes&gt;</code> fallback</td></tr>
+          <tr><td>weichwang.github.io</td><td>hand-rolled HTML</td><td>none</td><td>Yes</td><td><code>font-family: 'Brush Script'</code></td></tr>
+          <tr><td>blog.moontower.ai</td><td><strong>Ghost</strong></td><td>n/a</td><td>Yes</td><td>Topic-clustered nav</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Not one site in the survey implements dark mode.</strong> Not one uses a JS framework for the site itself.
+      The two most technically sophisticated builds — Lehalle's Quarto and Gray's Pelican — belong to
+      people whose <em>work</em> is in those ecosystems, which makes the tool choice itself a small competence
+      signal. That is the only place where technology carries any information at all.</p>
+
+      <h3 id="3e-anti-patterns-catalogue">3E. Anti-patterns catalogue (things observed that would cost Brad)</h3>
+
+      <ol>
+        <li><strong>Staleness.</strong> Jialei Wang's site: last generated 2019, no employer, dead university email. Reads
+        as abandoned.</li>
+        <li><strong>No stated current role.</strong> Chinco, Cotton, Markwick, Abdelmessih, Vertox, López de Prado's intro
+        page. Fine for the already-famous; disqualifying for a candidate.</li>
+        <li><strong>No contact method.</strong> Chinco has none; Kinlay has none on his About page.</li>
+        <li><strong>Unearned first-person claims.</strong> "Full-time quantitative trader" with no firm and no verifiable
+        record (Gray) is the exact claim a fund will probe hardest.</li>
+        <li><strong>Non-work content in the primary nav.</strong> Chen's escape rooms; Derman's paintings; Markwick's
+        sports posts in the main feed.</li>
+        <li><strong>Anonymity + paywall.</strong> The Refutation — structurally incompatible with a job search.</li>
+        <li><strong>Design investment visibly exceeding research investment.</strong> Chen's Squarespace site.</li>
+        <li><strong>Flat reverse-chronological archives with no taxonomy.</strong> Kinlay, 15 years deep, no tags.</li>
+        <li><strong>Undifferentiated breadth.</strong> Cotton's 18 topic headings.</li>
+        <li><strong>Wide idiosyncratic navs.</strong> Oh (9 items), Derman (11 items) — the reader cannot tell what matters.</li>
+        <li><strong>Marketing-register prose.</strong> Even López de Prado's "most exciting time to adopt a disruptive
+        technology" opening reads as promotional; he survives it on the strength of the methods.</li>
+        <li><strong>Publication lists with no findings attached</strong> — a wall of titles the reader must decode.</li>
+      </ol>
+
+      <h3 id="3f-implications-for-site">3F. Direct implications for bradlasater.github.io</h3>
+
+      <p>The specific moves this survey supports, in priority order:</p>
+
+      <ol>
+        <li><strong>Replace any "I am an ML engineer who..." opening with a market thesis</strong> in the Sepp mold — one
+        or two sentences about how volatility behaves and what kind of system survives it, followed by the
+        claim that his system is built to that spec.</li>
+        <li><strong>Give the volatility system a proper name</strong>, a repo, and a version — turn it into a citable
+        artifact rather than a project description.</li>
+        <li><strong>Publish at least one post-mortem where the result was negative</strong>, with numbers, a named
+        baseline, and an explicit "this does not license the conclusion that…" paragraph. This is the
+        highest-trust-per-word content available to him, and his existing written post-mortems are already
+        the raw material.</li>
+        <li><strong>State data provenance everywhere</strong>: vendor, instruments, exact date ranges, and how the data was
+        obtained and cleaned.</li>
+        <li><strong>Report trial counts and apply a deflated Sharpe / PBO</strong> to any headline number, citing Harvey
+        and López de Prado. Make the hygiene operational, not decorative.</li>
+        <li><strong>Keep the live out-of-sample track record but wrap it in this genre's caveat conventions</strong> —
+        sample length, regime coverage, capacity, costs, what would falsify it. Almost nobody in the
+        survey has a live record; presented with these caveats it is a genuine differentiator, and
+        presented without them it looks like every other backtest.</li>
+        <li><strong>Structure the site the academic way</strong> — dated research notes, a CV, precise citations,
+        understated voice, plain-text email above the fold — while keeping the <em>artifacts</em> practitioner:
+        code, notes, post-mortems, track record.</li>
+        <li><strong>Group notes by theme once there are more than ~10</strong> (Moontower/Cui pattern), not by date alone.</li>
+        <li><strong>Do not over-invest in visual design, dark mode, or animation.</strong> On the evidence of Harvey's
+        framesets and Kelly's Wix, the marginal return is near zero and the downside — looking like a
+        marketer — is real. Spend the effort on math rendering (MathJax/KaTeX), readable code blocks, and
+        figure quality instead.</li>
+        <li><strong>Do not let non-quant content into the primary nav.</strong></li>
+      </ol>
+    </main>
+  </div>
+</body>
+</html>

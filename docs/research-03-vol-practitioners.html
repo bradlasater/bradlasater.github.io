@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research notes 03 · Vol practitioners — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/research-03-vol-practitioners.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="The people who trade volatility for a living and what their public work teaches.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/research-03-vol-practitioners.html">
+  <meta property="og:title" content="Research notes 03 · Vol practitioners — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html" class="active">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Research notes 03 · Vol practitioners</h1>
+        </div>
+        <div class="meta">
+          mirrors notes/research/03-vol-practitioners.md
+        </div>
+      </header>
+
+      <p>This page mirrors <code>notes/research/03-vol-practitioners.md</code>; edit the Markdown, then re-sync this page.</p>
+
+      <p>
+        <strong>Date of research:</strong> 2026-08-23<br>
+        <strong>Scope:</strong> Personal sites, blogs, and research-publishing setups of volatility/options/derivatives practitioners and serious quant researchers who publish work publicly. Focus: <em>how research is presented</em>, not org charts.<br>
+        <strong>Verification rule applied:</strong> every URL below was loaded with WebFetch unless explicitly flagged as <code>[NOT FETCHED]</code>. Sites that blocked the fetcher are flagged with the reason.
+      </p>
+
+      <h2 id="verification-ledger">0. Verification ledger (read this first)</h2>
+
+      <h3 id="verified-by-direct-fetch">Verified by direct fetch (20)</h3>
+
+      <table>
+        <thead>
+          <tr><th>#</th><th>URL</th><th>Person / org</th><th>Last-dated content seen</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td><a href="https://qoppac.blogspot.com/" target="_blank" rel="noopener">https://qoppac.blogspot.com/</a></td><td>Rob Carver</td><td>2026-07-03</td><td><strong>Active</strong>, high cadence</td></tr>
+          <tr><td>2</td><td><a href="https://www.systematicmoney.org/" target="_blank" rel="noopener">https://www.systematicmoney.org/</a></td><td>Rob Carver (books/pro site)</td><td>undated</td><td>Active brochure site</td></tr>
+          <tr><td>3</td><td><a href="https://jonathankinlay.com/" target="_blank" rel="noopener">https://jonathankinlay.com/</a></td><td>Jonathan Kinlay</td><td>2026-08-16</td><td><strong>Active</strong></td></tr>
+          <tr><td>4</td><td><a href="https://www.quantresearch.org/" target="_blank" rel="noopener">https://www.quantresearch.org/</a> (+ <code>/Intro.htm</code>, <code>/LeftFrame.htm</code>, <code>/Software.htm</code>)</td><td>Marcos López de Prado</td><td>code items to 2015; site content current-ish</td><td>Active but technically archaic</td></tr>
+          <tr><td>5</td><td><a href="https://quantocracy.com/" target="_blank" rel="noopener">https://quantocracy.com/</a></td><td>Aggregator (Mike @ Quantocracy)</td><td>2026-08-23</td><td><strong>Active daily</strong></td></tr>
+          <tr><td>6</td><td><a href="https://robotwealth.com/blog/" target="_blank" rel="noopener">https://robotwealth.com/blog/</a> (+ <code>/about/</code>, <code>/author/es/</code>, 4 posts)</td><td>Kris Longmore, Euan Sinclair</td><td>2026 series ongoing; Sinclair last 2025-10-10</td><td><strong>Active</strong></td></tr>
+          <tr><td>7</td><td><a href="https://robotwealth.com/author/es/" target="_blank" rel="noopener">https://robotwealth.com/author/es/</a></td><td><strong>Euan Sinclair</strong></td><td>2025-10-10</td><td>Active-ish</td></tr>
+          <tr><td>8</td><td><a href="https://www.hulltactical.com/blog/" target="_blank" rel="noopener">https://www.hulltactical.com/blog/</a> (+ 2 posts)</td><td>Hull Tactical (Sinclair is PM there)</td><td>2026-08-05</td><td><strong>Active</strong>, but <strong>no bylines</strong></td></tr>
+          <tr><td>9</td><td><a href="https://blog.moontower.ai/" target="_blank" rel="noopener">https://blog.moontower.ai/</a> (+ tag pages, 2 posts)</td><td>Kris Abdelmessih</td><td>2026-08-16</td><td><strong>Active</strong></td></tr>
+          <tr><td>10</td><td><a href="https://moontower.substack.com/" target="_blank" rel="noopener">https://moontower.substack.com/</a> (+ <code>/about</code>)</td><td>Kris Abdelmessih</td><td>2025+</td><td>Active</td></tr>
+          <tr><td>11</td><td><a href="https://dm13450.github.io/" target="_blank" rel="noopener">https://dm13450.github.io/</a> (+ <code>/about/</code>, <code>/blog/</code>, post)</td><td>Dean Markwick</td><td>2026-08-23</td><td><strong>Active</strong> — best <code>github.io</code> model</td></tr>
+          <tr><td>12</td><td><a href="https://epchan.blogspot.com/" target="_blank" rel="noopener">https://epchan.blogspot.com/</a></td><td>Ernie Chan</td><td>2025-11-27</td><td>Slowing (~4 posts/yr)</td></tr>
+          <tr><td>13</td><td><a href="https://falkenblog.blogspot.com/" target="_blank" rel="noopener">https://falkenblog.blogspot.com/</a></td><td>Eric Falkenstein</td><td>2024-06-13</td><td><strong>Dormant ~2 yrs</strong></td></tr>
+          <tr><td>14</td><td><a href="https://www.thinknewfound.com/" target="_blank" rel="noopener">https://www.thinknewfound.com/</a> + <a href="https://blog.thinknewfound.com/" target="_blank" rel="noopener">https://blog.thinknewfound.com/</a> (+ post)</td><td>Newfound Research (Corey Hoffstein)</td><td>2023-08-28</td><td><strong>Dormant ~3 yrs</strong></td></tr>
+          <tr><td>15</td><td><a href="https://volvibes.substack.com/" target="_blank" rel="noopener">https://volvibes.substack.com/</a> (+ <code>/archive</code>, post)</td><td>Harel Jacobson</td><td>2026-08-23</td><td><strong>Active daily/weekly</strong>, mostly paywalled</td></tr>
+          <tr><td>16</td><td><a href="https://reasonabledeviations.com/" target="_blank" rel="noopener">https://reasonabledeviations.com/</a></td><td>Robert Andrew Martin</td><td>2023-02-05</td><td><strong>Dormant ~3.5 yrs</strong></td></tr>
+          <tr><td>17</td><td><a href="https://malchevskiy.pro/" target="_blank" rel="noopener">https://malchevskiy.pro/</a></td><td>Sergey Malchevskiy</td><td>undated</td><td>Active page, <strong>no research</strong></td></tr>
+          <tr><td>18</td><td><a href="https://www.allocatesmartly.com/" target="_blank" rel="noopener">https://www.allocatesmartly.com/</a> (+ <code>/faqs/</code>, post)</td><td>Allocate Smartly</td><td>ongoing</td><td><strong>Active</strong> — best live-tracking model</td></tr>
+          <tr><td>19</td><td><a href="https://www.qvradvisors.com/" target="_blank" rel="noopener">https://www.qvradvisors.com/</a> (+ <code>/media</code> → 404)</td><td>Benn Eifert / QVR</td><td>undated</td><td>Active firm, <strong>zero public research</strong></td></tr>
+          <tr><td>20</td><td><a href="https://www.quantbeckman.com/p/with-code-backtesting" target="_blank" rel="noopener">https://www.quantbeckman.com/p/with-code-backtesting</a></td><td>"Quant Beckman" (pseudonymous)</td><td>2026-05-24</td><td>Active</td></tr>
+          <tr><td>21</td><td><a href="https://www.risk.net/author/euan-sinclair" target="_blank" rel="noopener">https://www.risk.net/author/euan-sinclair</a></td><td>Euan Sinclair (publications)</td><td>2022-05-12</td><td>Archive</td></tr>
+          <tr><td>22</td><td><a href="https://concretumgroup.substack.com/" target="_blank" rel="noopener">https://concretumgroup.substack.com/</a></td><td>Concretum Research</td><td>ongoing</td><td>Active, thin front page</td></tr>
+        </tbody>
+      </table>
+
+      <h3 id="attempted-and-blocked">Attempted and blocked / dead — reported honestly</h3>
+
+      <table>
+        <thead>
+          <tr><th>URL</th><th>Result</th><th>Note</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><a href="https://moontowermeta.com/" target="_blank" rel="noopener">https://moontowermeta.com/</a></td><td><strong>HTTP 403</strong> (bot protection)</td><td>This is Kris Abdelmessih's <em>original</em> blog. Its content has largely migrated to <code>blog.moontower.ai</code> (Ghost). Confirmed alive via search index but not fetchable by me.</td></tr>
+          <tr><td><a href="https://cssanalytics.wordpress.com/" target="_blank" rel="noopener">https://cssanalytics.wordpress.com/</a></td><td><strong>HTTP 403</strong></td><td>David Varadi's CSSA. Search index shows last post <strong>2026-07-27, "The Inflation Compass Model"</strong> — so it <em>is</em> active, but I could not load it. <code>[NOT FETCHED]</code></td></tr>
+          <tr><td><a href="https://alphaarchitect.com/blog/" target="_blank" rel="noopener">https://alphaarchitect.com/blog/</a> and post URLs</td><td><strong>HTTP 403</strong></td><td>Structure confirmed only via search snippets. <code>[NOT FETCHED]</code></td></tr>
+          <tr><td><a href="https://euansinclair.com/" target="_blank" rel="noopener">https://euansinclair.com/</a></td><td><strong>DNS does not resolve</strong></td><td><strong>Euan Sinclair has no personal website.</strong> See §1.</td></tr>
+          <tr><td><a href="https://deanmarkwick.com/" target="_blank" rel="noopener">https://deanmarkwick.com/</a></td><td><strong>DNS failed from my fetcher</strong></td><td>Canonical domain in his feed; <code>dm13450.github.io</code> serves the same content and works.</td></tr>
+          <tr><td><a href="https://mfe.baruch.cuny.edu/jgatheral/" target="_blank" rel="noopener">https://mfe.baruch.cuny.edu/jgatheral/</a></td><td><strong>TLS cert error</strong></td><td>Jim Gatheral's Baruch page. <code>[NOT FETCHED]</code></td></tr>
+          <tr><td><a href="https://physikinvest.com/" target="_blank" rel="noopener">https://physikinvest.com/</a></td><td><strong>HTTP 403</strong></td><td>Retail-leaning vol/GEX blog. <code>[NOT FETCHED]</code></td></tr>
+          <tr><td><a href="https://notion.moontower.com/" target="_blank" rel="noopener">https://notion.moontower.com/</a></td><td><strong>DNS does not resolve</strong></td><td>Referenced in third-party writeups; not live.</td></tr>
+          <tr><td><a href="https://moontowerquant.com/about-me" target="_blank" rel="noopener">https://moontowerquant.com/about-me</a></td><td><strong>Connection refused</strong></td><td>Referenced from the Substack About page; not reachable.</td></tr>
+          <tr><td><a href="https://www.qvradvisors.com/media" target="_blank" rel="noopener">https://www.qvradvisors.com/media</a></td><td><strong>HTTP 404</strong></td><td>Media page referenced by search but gone.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="euan-sinclair">1. Euan Sinclair — the specific finding Brad needs</h2>
+
+      <p><strong>There is no <code>euansinclair.com</code>.</strong> DNS does not resolve. He has never run a personal site.</p>
+
+      <p>His actual public surface, in order of how a hiring manager would encounter it:</p>
+
+      <p><strong>a) Robot Wealth author page — <a href="https://robotwealth.com/author/es/" target="_blank" rel="noopener">https://robotwealth.com/author/es/</a> [VERIFIED]</strong><br>
+      He is a listed contributor on Kris Longmore's Robot Wealth. Posts on that page:</p>
+      <ul>
+        <li>"Why You Can't Tell if Your Strategy 'Stopped Working' (Statistically Speaking)" — 2025-10-10</li>
+        <li>"Finding Edges" — 2025-08-31</li>
+        <li>"To Trend or Not To Trend? (Wrong question)"</li>
+        <li>plus AMA and "Volatility Book Club" series entries.</li>
+      </ul>
+
+      <p>Robot Wealth's <code>/about/</code> page describes him under the heading <strong>"Options &amp; Volatility"</strong> as <em>"one of the most respected options traders and authors in the world."</em> Note the structure: the site owner vouches for the specialist; the specialist does not self-praise.</p>
+
+      <p><strong>b) Hull Tactical blog — <a href="https://www.hulltactical.com/blog/" target="_blank" rel="noopener">https://www.hulltactical.com/blog/</a> [VERIFIED]</strong><br>
+      He announced (June 2024, via X) he'd be blogging regularly at hulltactical.com/blog. The blog is active — most recent post 2026-08-05. Post titles seen:</p>
+      <ul>
+        <li>"The Market Is Efficient (Eventually)" — 2026-08-05</li>
+        <li>"Buying The Dip" — 2026-07-28</li>
+        <li>"Attention Is Not Efficiency" — 2026-07-15</li>
+        <li><strong>"0DTE Options: Tiny Edge, Huge Distribution"</strong> — 2026-07-08</li>
+        <li>"When Good Advice Goes Bad" — 2026-06-24</li>
+      </ul>
+
+      <p><strong>Critical anti-pattern observed:</strong> <em>the Hull Tactical blog has no author bylines.</em> I fetched two posts directly and neither attributes an author. This is a real loss of credibility signal — the writing is clearly expert, but nothing connects it to a named person with a track record. <strong>Brad must not replicate this.</strong> Every research post should carry a name and a date.</p>
+
+      <p><strong>c) Risk.net author page — <a href="https://www.risk.net/author/euan-sinclair" target="_blank" rel="noopener">https://www.risk.net/author/euan-sinclair</a> [VERIFIED]</strong><br>
+      Two peer-reviewed <em>Journal of Investment Strategies</em> pieces:</p>
+      <ul>
+        <li>"The risk-reversal premium" — 2022-05-12</li>
+        <li>"Reflections on recent volatility" — 2018-04-10</li>
+      </ul>
+
+      <p><strong>His verbatim authority statement (this is the model for Brad's bio — copy the shape, not the content):</strong></p>
+
+      <div class="callout">
+        "Euan Sinclair is an option trader with over 25 years of professional trading experience. He has traded options on indexes, stocks, commodities and interest rate products. He currently trades equity options at Bluefin Capital Management. He holds a PhD in theoretical physics from the University of Bristol and has written three books: <em>Volatility Trading</em>, <em>Option Trading</em> and <em>Positional Option Trading</em>, all published by Wiley."
+      </div>
+
+      <p>Four sentences. Years of experience → <em>what instruments</em> → current seat → credential + artifacts. No adjectives. No "passionate about." No "proven track record."</p>
+
+      <h3 id="deep-read-stopped-working">1.1 Deep read: Sinclair's "Why You Can't Tell if Your Strategy 'Stopped Working'" [VERIFIED]</h3>
+
+      <p>URL: <a href="https://robotwealth.com/why-you-cant-tell-if-your-strategy-stopped-working-statistically-speaking/" target="_blank" rel="noopener">https://robotwealth.com/why-you-cant-tell-if-your-strategy-stopped-working-statistically-speaking/</a> (2025-10-10, ~1,850 words)</p>
+
+      <p>This is the single most transferable post I found for Brad's purposes, because it is <strong>a rigor demonstration disguised as a practical question.</strong></p>
+
+      <p>Structure:</p>
+      <ol>
+        <li>Hook — "Traders love the illusion of precision"</li>
+        <li>Simulation setup — hypothetical strategy at 10%/yr, 20% vol ("roughly the S&amp;P's long-term profile")</li>
+        <li>The core problem — statistical inability to detect regime change</li>
+        <li>Results table — p-values from two tests</li>
+        <li>The noise paradox — why <em>dead</em> strategies still show strong recent months</li>
+        <li>3,000-run Monte Carlo — quantifies false-positive rate</li>
+        <li>Critique of the non-parametric alternative (Kolmogorov–Smirnov)</li>
+        <li>Philosophical reframe — from binary "is it dead?" to Bayesian updating</li>
+        <li>"Practical Interpretation" — Type I / Type II errors</li>
+        <li>Close — probabilistic over binary</li>
+      </ol>
+
+      <p>Numbers he actually shows (note how everything is derived in the open):</p>
+      <ul>
+        <li>Sample sizes: <code>n₁ ≈ 1260 vs. n₂ ≈ 21</code></li>
+        <li>Daily noise: <code>20% / √252 ≈ 1.26% daily</code></li>
+        <li>Daily drift: <code>0.10 / 252 ≈ 0.04% per day</code></li>
+        <li>Daily Sharpe: <code>0.04 / 1.26 ≈ 0.03, an astronomically low signal-to-noise ratio</code></li>
+        <li>Welch t-test p = 0.12; K–S test p = 0.37; t-stat ≈ −1.6</li>
+        <li>"In 16% of runs, it beat more than 80% of the prior months. In 7.5% of runs, it beat more than 90%. So, one in every thirteen 'dead' months looks like a top-decile success."</li>
+      </ul>
+
+      <p>Verbatim hedges worth stealing:</p>
+      <ul>
+        <li><em>"That's the problem: volatility dominates everything"</em></li>
+        <li><em>"The test confidently says 'nothing to see here.' It's technically correct"</em></li>
+        <li><em>"The conclusion isn't that tests are bad—it's that the problem is mis-specified"</em></li>
+        <li><em>"The answer is always probabilistic, never definitive"</em></li>
+      </ul>
+
+      <p><strong>No code, no charts, no LaTeX.</strong> Math is inline arithmetic with <code>≈</code>. The rigor comes from <em>making the reader do the signal-to-noise calculation with him</em>, not from typography.</p>
+
+      <h3 id="finding-edges">1.2 "Finding Edges" (2025-08-31) [VERIFIED]</h3>
+
+      <p>His stated epistemology, useful as a quotable standard:</p>
+      <ul>
+        <li>Edge = profitability <strong>+</strong> tolerable risk <strong>+</strong> <em>tradeability</em>. He dismisses many academic anomalies because they ignore access/regulatory reality.</li>
+        <li><em>"There is too much stuff to test until you have an idea from somewhere else."</em> — i.e. theory-first, not data-mining-first.</li>
+        <li><em>"If it doesn't clearly point to money, no amount of tweaking is likely to produce a robust trading idea."</em> — premature abandonment beats over-fitting.</li>
+      </ul>
+
+      <h2 id="site-by-site">2. Site-by-site analysis</h2>
+
+      <h3 id="rob-carver">2.1 Rob Carver — <a href="https://qoppac.blogspot.com/" target="_blank" rel="noopener">https://qoppac.blogspot.com/</a> ("Investment Idiocy" / "This Blog is Systematic") [VERIFIED]</h3>
+
+      <p><strong>Person &amp; authority.</strong> From <code>/p/about-me.html</code>, verbatim self-description: <em>"an ex Hedge fund manager and derivatives trader, economist and statistics/finance geek."</em> Career: Barclays Capital (trader) → CEPR (research manager) → <strong>AHL, seven years</strong>, building global macro systems and running fixed income → now independent systematic futures trader and author. BA Economics (Manchester), MSc Economics (Birkbeck). Visiting lecturer, Queen Mary UoL. Research advisor, Stylus Capital. Five books.</p>
+
+      <p>A nice touch: the About page <em>disambiguates him from other Rob Carvers</em> (a 15th-century Scottish composer, a travel writer, several academics). Small, human, and it signals "I expect people to google me."</p>
+
+      <p><strong>Companion pro site:</strong> <a href="https://www.systematicmoney.org/" target="_blank" rel="noopener">https://www.systematicmoney.org/</a> — nav is <code>Home / Which book to buy / About Rob / Talks, Media, Consultancy / Contact / Blog</code>, plus a book-title secondary menu. Includes an explicit, blunt disclaimer that he is <strong>"not regulated or authorised to provide investment advice"</strong> by FCA/SEC, and an all-caps <strong>"ROBERT DOES NOT OFFER TRADING COURSES"</strong> — a deliberate anti-grift signal.</p>
+
+      <p><strong>Site type &amp; IA.</strong> Blogger (Blogspot), default-ish template. Sidebar: Home, Systematic Investment, Systematic Trading, code repository links, books, media, resources, archive back to 2013, popular posts, ~54-label tag cloud. Deliberately ugly. It works <em>because</em> the content is dense.</p>
+
+      <p><strong>Research post structure.</strong> Not a rigid template but a stable habit:</p>
+      <div class="callout">
+        Recap of prior findings in the series → "Prior Art" (enumerate the methodological options) → Methods → Testing (multiple scenarios) → Discussion &amp; Conclusion → what's next.
+      </div>
+
+      <p>Example post analyzed: "Jumping back in the pool(ing)..." (2026-07-03, ~3,500 words). Sections: Introduction &amp; Recap → Prior Art (6 approaches, 2 pooling strategies) → Methods → Testing (five in-sample/out-of-sample period combinations: 5/10/20/40-yr IS against 1-yr and 5-yr OOS) → Discussion &amp; Conclusion.</p>
+
+      <p><strong>Charts.</strong> Frequently <strong>none</strong>. Results are plain monospaced text tables:</p>
+      <pre><code>unpooled                 0.046     0.0
+all pooled               0.425     0.0
+asset class pooled       0.557     NaN</code></pre>
+      <p>When charts appear (e.g. "R squared and Sharpe Ratio", 2025-11), they are <strong>raw matplotlib defaults</strong> — log-x, linear-y, title indicating forecast horizon, frequently no axis labels or legend. He does not style. The signal is "I ran this and I'm showing you the output," not "I made you a deck."</p>
+
+      <p><strong>Code.</strong> Almost never inline. Linked instead: <em>"There is code [here](link); you'll need psystemtrade to run it though."</em> His entire production system (<code>pysystemtrade</code>) is open-source on GitHub. That is the strongest possible code signal — the reader can go read the actual system, not a toy snippet.</p>
+
+      <p><strong>Math.</strong> Plain text, no LaTeX. E.g. <code>SR for N days holding period = 16 × √(R² / N)</code>.</p>
+
+      <p><strong>Uncertainty.</strong> This is his core differentiator:</p>
+      <ul>
+        <li>p-values on every method comparison (with <code>NaN</code> marking the reference/winner)</li>
+        <li><strong>Multiple IS/OOS period combinations</strong> rather than a single split</li>
+        <li>Reports <strong>median and 25th-percentile Sharpe</strong>, not just mean — distributional thinking</li>
+        <li>Monte Carlo / random resampling ("many, many runs of random resampling")</li>
+        <li>Explicit shrinkage parameters stated in-line ("SR shrinkage 0.5, correlation 0.75")</li>
+        <li>In "The crossword puzzle of fitting" (2026-06) he ran thousands of random 5×5 instrument/rule combinations and reported the full breakdown: meets neither criteria 3.8%, meets both 0.81%, rule-grouping only 0.11%, <strong>instrument-grouping only 95.3%</strong> — i.e. he <em>built a null</em> and reported the whole distribution.</li>
+        <li>Also states the design choice that protects against implicit fitting: <strong>testing opposite trading rules</strong> so a "good" result can't be an artifact of sign selection.</li>
+      </ul>
+
+      <p><strong>Negative results / self-criticism.</strong> Constant and casual:</p>
+      <ul>
+        <li><em>"Strictly speaking we should remove overlapping periods as that will inflate our R squared, but as long as we consistently don't remove overlapping periods then our results will be fine"</em></li>
+        <li><em>"With real data we can lose money. So we remove all the negative SR before plotting"</em></li>
+        <li><em>"There is some weird deep correlation pattern that the simple analysis by asset class and trading rule doesn't pick up. I don't buy that."</em></li>
+        <li><em>"(yes, bad move in retrospect, and another failure of discretionary trading on my part)"</em></li>
+        <li><em>"Personally I'm taking the absence of any contradictory evidence as evidence that I should continue to do what I've done before"</em> — i.e. he explicitly labels a null result as a null result.</li>
+      </ul>
+
+      <p><strong>Live track record — the gold standard.</strong> Annual series, one post per year, twelve years running:</p>
+      <ul>
+        <li>"Annual performance update — year 12" (2026-04): mark-to-market <strong>+21.9%</strong>, net after fees/commissions/slippage <strong>+23.7%</strong>, Sharpe <strong>0.80</strong> vs SG CTA 0.52–0.54, correlations <strong>0.68 to SG CTA, 0.56 to AHL</strong>. Reports slippage explicitly: <em>"Without my execution algo, if I had just traded at the market, I would have paid 1.34% in slippage; my simple algo earned 78bp and cut my slippage bill by around 40%."</em> He also notes <em>his Sharpe would be lower if a risk-free rate were deducted.</em></li>
+        <li>"Annual performance update returneth — year 11" (2025-04): leads the TLDR with <strong>"it's my worst ever"</strong> / <strong>"my worst ever in futures."</strong> Futures <strong>−16.3%</strong>, decomposed into <strong>−14.5%</strong> pure futures, <strong>−0.64%</strong> cash-like ETFs, <strong>−2.7%</strong> FX. Contextualized against benchmarks that also fell: SG CTA ~−18%, AHL −18.2%.</li>
+      </ul>
+
+      <p>What he shows: non-compounded equity curve (monthly and annual), a year-by-year table across all 11–12 years marking best/worst, Sharpe comparisons, per-market P&amp;L breakdown, per-trading-rule attribution.</p>
+
+      <p>What he does <strong>not</strong> do (worth noting as a gap Brad can improve on): he does not overlay live-vs-backtest, and he does not put confidence intervals on his own realized Sharpe. He benchmarks and decomposes rather than significance-tests himself.</p>
+
+      <p><strong>Voice.</strong> Conversational, self-deprecating, British. Metaphors ("like the dad whose kid at sports day is winning everything"). ~2,500–4,000 words. Numbered/ALL-CAPS section headings. Leads bad-news posts with a TLDR.</p>
+
+      <p><strong>Distribution.</strong> Blogger RSS, syndicated to Quantocracy (appeared in the 2026-06-06 daily roundup), X presence, GitHub, books via Harriman House. No newsletter capture, no paywall, no ads.</p>
+
+      <h3 id="jonathan-kinlay">2.2 Jonathan Kinlay — <a href="https://jonathankinlay.com/" target="_blank" rel="noopener">https://jonathankinlay.com/</a> ("Quantitative Research and Trading") [VERIFIED] — the strongest single template</h3>
+
+      <p><strong>Person &amp; authority.</strong> From <code>/about/</code>: <em>"Head of Quantitative Trading at Systematic Strategies, LLC, a systematic hedge fund that deploys high frequency trading strategies using news-based algorithms."</em> Founder/GP of Caissa Capital; founded Proteom Capital (stat arb); <em>"Global Head of Model Review at the US investment bank Bear Stearns."</em> PhD in economics; faculty at NYU Stern, Carnegie Mellon, Reading.</p>
+
+      <p><strong>Track-record claim, stated the right way:</strong> <em>"Caissa, which managed $400M in assets, was ranked by FIMAT as the top performing fund in its class in 2004."</em> — Note: AUM stated, ranking attributed to a <strong>named third party</strong>, and <strong>dated</strong>. Not "consistently outperformed."</p>
+
+      <p>(Minor anti-pattern: the bio also mentions a 1978 World Student Olympiad chess gold and family relations to a Fleet Street editor and a British actress. Charming, but it dilutes. Brad should keep the credential block tighter.)</p>
+
+      <p><strong>Nav.</strong> Minimal: <code>Home / Systematic Strategies (submenu) / About</code>. Reverse-chronological posts. Recent:</p>
+      <ul>
+        <li>2026-08-16 "Your Research Agent Is an Undisclosed Factor Exposure — And So Is Everyone Else's"</li>
+        <li>2026-05-17 "Agentic Workflows for Alpha Research"</li>
+        <li>2026-05-10 "Reinforcement Learning for Optimal Execution"</li>
+        <li><strong>2026-05-04 "Deep Learning for Volatility Surface Repair"</strong></li>
+      </ul>
+
+      <p><strong>The post template (this is the thing to copy).</strong> "Deep Learning for Volatility Surface Repair" section order:</p>
+      <ol>
+        <li>Opening context / problem motivation (unlabeled)</li>
+        <li><strong>Setup</strong> — grid definition, training surfaces, test surfaces, baselines</li>
+        <li><strong>Model</strong> — architecture, with code</li>
+        <li><strong>Loss</strong> — loss function, with code</li>
+        <li><strong>Training</strong> — procedure, with code</li>
+        <li><strong>The 2 × 2 result</strong> — headline table + interpretation</li>
+        <li><strong>Diagnostics</strong> — secondary metric table</li>
+        <li><strong>Downstream SVI projection</strong> — does the improvement survive to a <em>downstream</em> task?</li>
+        <li><strong>"What this experiment shows and does not show"</strong> ← the crown jewel</li>
+        <li><strong>"Where to take this next"</strong></li>
+        <li><strong>Code and references</strong> — full reproducible script</li>
+      </ol>
+
+      <p>The "Agentic Workflows" post uses the same skeleton with different labels: <em>"What alpha research actually consists of" / "The naive loop and why it fails" / "The architecture: separated roles, instrumented handoffs" / "The objective function, written down" / "The tooling, concretely" / "Validating the Critic" / "What it changed: 12 weeks on FX carry" / "Failure modes I actually saw" / "What this means in practice"</em>.</p>
+
+      <p>Note the two recurring slots: <strong>a named-failure-modes section</strong> and <strong>a scoped-claims section</strong>. Both appear in every post.</p>
+
+      <p><strong>Charts.</strong> A single well-chosen diagnostic figure per post. In the vol-surface post: a 2×3 grid of heatmaps — clean vol / sparse observations / CNN repair / interpolation baseline / model uncertainty / error — across maturity × log-moneyness. Static. No caption, no figure numbering (a weakness Brad can improve on).</p>
+
+      <p><strong>Code.</strong> Extensive and inline. PyTorch <code>RepairCNN</code> class (~15 lines), <code>repair_loss</code> function (~12 lines with weighted MSE + calendar penalty + smoothness penalty), parameter ranges in <code>U()</code> pseudo-code notation, then a <strong>~800-line self-contained reproducible script at the end</strong>, headed:</p>
+      <div class="callout">
+        <code>"""Deep Learning for Volatility Surface Repair. Self-contained, CPU-friendly PyTorch script...</code>
+      </div>
+
+      <p>"CPU-friendly" is a deliberate reproducibility signal.</p>
+
+      <p><strong>Math.</strong> Domain-conventional notation inline, not heavy LaTeX display blocks: total variance <code>w(k, T) = σ²(k, T)·T</code>; calendar constraint as cumulative max along T; butterfly diagnostic <code>g(k) ≥ 0</code> citing <strong>Gatheral–Roper</strong>; SSVI parameterization (θ₀, θ_slope, θ_curve, ρ, η, γ). He names the arbitrage conditions by their canonical authors — that's a domain-fluency tell a vol desk reads instantly.</p>
+
+      <p><strong>Uncertainty — this is best-in-class.</strong></p>
+      <ul>
+        <li>Train/val/test discipline stated numerically: <strong>1,600 training surfaces (SSVI, tight parameter range) / 200 validation (held out for checkpoint selection) / 200 test per cell in a 2×2 design (800 total) / independent random seeds across all sets.</strong></li>
+        <li>Every headline metric as <strong>mean ± standard error</strong> (e.g. <code>0.0184 ± 0.0010</code>), with the formula stated: <code>std(ddof=1) / √N</code>.</li>
+        <li><strong>Two out-of-distribution test families</strong>, one structurally unseen: shifted SSVI (widened params) and <strong>SABR-style events (never seen in training)</strong>.</li>
+        <li>Diagnostics beyond RMSE: calendar violation rate (raw and post-projection), butterfly arbitrage violation rate, <strong>uncertainty coverage at nominal 80% and 95% vs empirical</strong>, error–uncertainty correlation, stale-quote detection AUC, and downstream SVI fit quality.</li>
+        <li>On the multiple-testing side, the 2026-08 post cites <strong>Bailey &amp; López de Prado's deflated Sharpe ratio</strong>, <strong>Harvey, Liu &amp; Zhu</strong> on multiple-testing corrections, <strong>White's Reality Check</strong>, and <strong>McLean &amp; Pontiff (2016)</strong> on post-publication decay ("32%... attributable to publication-informed trading").</li>
+        <li>Reports confidence intervals on correlations: random expressions <strong>+0.15 [−0.02, +0.37]</strong>, LLM runs <strong>+0.62 [+0.54, +0.69]</strong>, published canon <strong>+0.82 [+0.67, +0.91]</strong>.</li>
+      </ul>
+
+      <p><strong>Negative results / discarded findings.</strong> He <em>reports a metric he threw away</em>:</p>
+      <div class="callout">
+        "I mention it because this is precisely the failure mode that agentic research pipelines are good at manufacturing at scale — a plausible number, in the expected direction, that dissolves against a null nobody bothered to run."
+      </div>
+
+      <p><strong>Hedging phrasing — the highest-value quotes in this whole document.</strong> From the vol-surface post's "What this experiment shows and does not show":</p>
+      <ul>
+        <li><em>"It does not show that this kind of CNN-based repair is useful on real data."</em></li>
+        <li><em>"The synthetic surfaces have no calibration drift, no quote-time-of-day noise, no microstructure asymmetries…"</em></li>
+        <li><em>"Whether the small relative gap between CNN and interpolation on the adversarial cell survives a real-data test is an open question."</em></li>
+        <li><em>"It does not show that a CNN is the right architecture for this task."</em></li>
+        <li><em>"It does not, on its own, justify a production system."</em></li>
+        <li><em>"The heteroscedastic head undercovers"</em> (naming his own model's failure mode)</li>
+        <li><em>"This says the model's residual is not, on its own, a strong stale-quote detector"</em></li>
+        <li><em>"The convergence is slow and the validation curve is still improving slightly at epoch 60"</em></li>
+      </ul>
+
+      <p>From the 2026-08 post:</p>
+      <ul>
+        <li><em>"This is a small one, and it does not come out where I expected."</em></li>
+        <li><em>"I would not defend it further than 'worth running properly.'"</em></li>
+        <li><em>"The ordering of the three baselines as the result and the levels as approximate."</em></li>
+        <li><em>"I would not swear to it"</em></li>
+        <li><em>"should be read as an order of magnitude, not a point estimate"</em></li>
+      </ul>
+
+      <p><strong>Voice.</strong> Academic-technical but first-person-plural and readable. ~4,500–5,000 words excluding code.</p>
+
+      <p><strong>Distribution.</strong> Listed on Quantocracy's blogroll. Personal domain, WordPress. No newsletter capture visible.</p>
+
+      <h3 id="dean-markwick">2.3 Dean Markwick — <a href="https://dm13450.github.io/" target="_blank" rel="noopener">https://dm13450.github.io/</a> [VERIFIED] — the best <code>github.io</code> model, and closest structural analogue to Brad's site</h3>
+
+      <p><strong>Person &amp; authority.</strong> <code>/about/</code>: <em>"I am a quant researcher focused on execution at both the high (parent) and low (order routing) level."</em> Previously quant at BestX (TCA across FX, rates, equities). <strong>PhD Statistical Science, UCL</strong> — thesis <em>"Bayesian Nonparametric Hawkes Processes with Applications"</em>; MRes CS Manchester; MPhys Theoretical Physics Manchester. Maintains open-source: <code>dirichletprocess</code>, <code>HawkesProcesses.jl</code>, market-data libraries. Runs a crypto liquidity dashboard. Guest posts for QuestDB. Conference speaker.</p>
+
+      <p><strong>Nav.</strong> <code>About Me / Blog / Research / Teaching / Physics</code>. Social: GitHub, LinkedIn, Twitter, <strong>RSS</strong>. Jekyll on GitHub Pages (canonical domain <code>deanmarkwick.com</code>, though that DNS failed from my fetcher; the <code>.github.io</code> host serves identically).</p>
+
+      <p><strong>Cadence and range.</strong> 100+ posts, Sept 2014 → 2026-08-23. Recent:</p>
+      <ul>
+        <li>2026-08-23 Big Ticks and Small Ticks in Equity Microstructure</li>
+        <li>2026-07-15 A Statistical FX Factor Model</li>
+        <li>2026-04-19 A Fundamental FX Factor Model</li>
+        <li>2026-03-10 Making Sense of the DXY</li>
+        <li>2025-07-23 Easy Neural Nets and Finance – Part 1</li>
+        <li>2025-03-14 Fitting Price Impact Models</li>
+        <li>2024-06-06 Solving the Almgren-Chriss Model</li>
+        <li><strong>2024-02-08 Cross Asset Skew – A Trading Strategy</strong></li>
+        <li>2023-07-15 Stat Arb – An Easy Walkthrough</li>
+      </ul>
+
+      <p>(He also posts football/soccer stats and physics. Mixed-topic is fine for him because the quant posts are technically unambiguous; <strong>Brad, with a single hiring goal, should not mix.</strong>)</p>
+
+      <p><strong>Deep read: "Cross Asset Skew – A Trading Strategy" (~3,500 words ex-code).</strong></p>
+
+      <p>Section order:</p>
+      <ol>
+        <li><strong>What is Skew?</strong> — definition + formula + visual intuition</li>
+        <li><strong>Skew as a Trading Strategy</strong> — rationale, cross-sectional construction</li>
+        <li><strong>The ETF Trading Universe</strong> — exact asset list and data source</li>
+        <li><strong>Building the Backtest</strong> — methodology, weighting, forward-fill logic</li>
+        <li><strong>Alpha, Beta or Something Else?</strong> — regression vs market</li>
+        <li><strong>A Deeper Dive With More Equity Factors</strong> — multi-factor regression</li>
+        <li><strong>Conclusion</strong></li>
+        <li><strong>Related Reading</strong></li>
+      </ol>
+
+      <ul>
+        <li><strong>Replicates a named academic paper</strong> and says so: Nick Baltas, <em>Cross-Asset Skew</em> (ResearchGate link). <em>"After reading the original paper… I decided to try and replicate the results."</em> Also credits the podcast where he heard it (Flirting with Models S7E3).</li>
+        <li><strong>Data sources named exactly:</strong> AlpacaMarkets free API (daily bars, 10-yr history limit), full ETF universe enumerated (25 equity, 15 fixed income, 7 commodity, 7 FX, 5 other), factor proxies MTUM/VTV/VUG/VIG, plus a BlackRock reference doc.</li>
+        <li><strong>Code inline throughout</strong>, Julia 1.9, complete and runnable: package imports listed, custom <code>parse_date()</code>, <code>clean()</code>, <code>load()</code>, <code>ffill()</code> defined in the post. Packages named: AlpacaMarkets, Dates, CSV, DataFrames, DataFramesMeta, RollingFunctions, Plots, StatsBase, Distributions, GLM.</li>
+        <li><strong>Charts:</strong> Plots.jl, static PNG, 900 DPI, consistent sizing (800×200 for time series), minimal titles ("Skew demo", "Returns", "Global Portfolio"). Not beautiful — but consistent and clearly generated by the code shown.</li>
+        <li><strong>Math:</strong> real LaTeX via MathJax, <code>\[ ... \]</code> display delimiters. Skewness formula and the regression model <code>Skew Return = α + β · Market Return</code> rendered as display math.</li>
+        <li><strong>Statistics reported:</strong> p-values in regression tables (<code>0.0544</code>, <code>&lt;1e-27</code>), R² per asset class (<code>0.0003</code> to <code>0.08</code>), 10% vol targeting applied at portfolio combination.</li>
+        <li><strong>Honest gaps flagged, not hidden:</strong> no out-of-sample split (full-period backtest); transaction costs deferred with <em>"assuming we can trade at the previous closing price but that is a problem to solve for another day."</em></li>
+      </ul>
+
+      <p><strong>Hedging phrases, verbatim:</strong></p>
+      <ul>
+        <li><em>"Although the results are not as conclusive as the original paper, they are on a shorter timescale"</em></li>
+        <li><em>"We have neglected the trading costs and potential capacity"</em></li>
+        <li><em>"this is probably safe to ignore until you hit the super asset manager size"</em></li>
+        <li><em>"this is a promising sign that there is perhaps something more to be done"</em></li>
+      </ul>
+
+      <p><strong>Distribution.</strong> <em>"Enjoy these types of posts? Then sign up for my newsletter."</em> Byline with GitHub/LinkedIn/Twitter/RSS. Internal cross-links to related posts. <strong>No affiliate links, no sponsorships.</strong></p>
+
+      <h3 id="kris-abdelmessih">2.4 Kris Abdelmessih — <a href="https://blog.moontower.ai/" target="_blank" rel="noopener">https://blog.moontower.ai/</a> and <a href="https://moontower.substack.com/" target="_blank" rel="noopener">https://moontower.substack.com/</a> [VERIFIED]</h3>
+
+      <p><strong>Person &amp; authority.</strong> 21 years in options: <strong>traded in the pits at SIG</strong>, ran his own market-making team, ran the commodities book for a volatility manager. (The original blog <strong>moontowermeta.com returned 403</strong> to my fetcher — content now lives on <code>blog.moontower.ai</code>, a Ghost install; <code>moontowerquant.com/about-me</code> refused connection.) The Substack <code>/about</code> is deliberately non-credentialed; authority is established through <strong>third-party testimonials</strong> ("one of the best thinkers I've encountered") and, more importantly, through <em>demonstrated fluency</em> in the posts.</p>
+
+      <p><strong>Two-property architecture — worth noting as a pattern:</strong></p>
+      <ul>
+        <li><code>blog.moontower.ai</code> (Ghost) — the <strong>research/product</strong> property. Nav: <code>Home (moontower.ai) / How Markets Work / Options &amp; Volatility / Risk &amp; Edge / Options Theory</code>. Tag-based IA, not chronological.</li>
+        <li><code>moontower.substack.com</code> — the <strong>personality/newsletter</strong> property. Subtitle: <em>"math, education, parenting, games, business, and occasionally hair bands🎸"</em>.</li>
+      </ul>
+
+      <p>This split is smart: the wandering-personal-essay audience and the vol-desk audience get different front doors. <strong>Brad's equivalent: keep the trading-system research on the main site; if he wants a personal voice, put it somewhere else.</strong></p>
+
+      <p><strong>Options &amp; Volatility tag — post titles (this is a menu of what a vol audience actually reads):</strong></p>
+      <ul>
+        <li>A Devilish Question for Option Sellers: Which VRP is Higher?</li>
+        <li>A Cleaner Way to Compute Seasonal Vol</li>
+        <li>Does Revenue Seasonality Translate to Vol Seasonality?</li>
+        <li>How High Implied Vol Works for and Against You</li>
+        <li>How a High Implied Vol Can be Cheap</li>
+        <li>Delta-Hedged Risk Reversals</li>
+        <li>The Bias of Hedging on Implied Delta</li>
+        <li>Approximating Gamma in Your Head</li>
+        <li>Options Policework</li>
+        <li>Hedging is for Gardeners</li>
+        <li>Collar Shopping</li>
+      </ul>
+
+      <p><strong>Deep read: "A Devilish Question for Option Sellers: Which VRP is Higher?" (2026-06-22, ~2,800 words, byline + date present).</strong></p>
+
+      <p>Sections: opening premise on VRP → definitional distinction (<strong>volatility vs variance</strong>) → "The Gamma-Theta Tug of War" → "Theta-weighting position size" → "How Rich Does The Low-Vol Name Need To Be?" → concrete worked example in HYG → <strong>mathematical appendix</strong>.</p>
+
+      <ul>
+        <li><strong>Charts:</strong> four static embedded images. (1) 30-day IV vs trailing RV in HYG, line chart; (2) VRP ratio scatter with RV percentiling; (3) variance-edge comparison table across the vol spectrum; (4) spread-equivalence table. Light background, standard financial palette, <strong>no source attribution in the chart metadata</strong> — a weakness.</li>
+        <li><strong>Math:</strong> rendered as <strong>screenshots of hand-worked algebra</strong>, not LaTeX. Appendix shows the derivation steps visually. E.g. <code>IV_low = 10 × √(1 + 1100 / (10 × 50))</code>. Informal but it reads as <em>someone actually working the problem</em>.</li>
+        <li><strong>Structural device worth stealing:</strong> an italicized <strong>"Aside"</strong> block where he discloses his own trading history in the instrument being analyzed — explicitly flagging potential bias while keeping analytical authority.</li>
+      </ul>
+
+      <p><strong>Hedging, verbatim:</strong></p>
+      <ul>
+        <li><em>"It is entirely possible that my trading profits made up for…"</em></li>
+        <li><em>"This is hard to translate into risk-adjusted, opportunity-cost-aware amounts"</em></li>
+        <li><em>"There's enough evidence to not disagree"</em></li>
+        <li><em>"It's hard to bang on the VRP desk with fervor"</em></li>
+        <li><em>"Spreads are a more solid footing, but…"</em></li>
+      </ul>
+
+      <p>Note how <em>"There's enough evidence to not disagree"</em> is a double-negative hedge — it concedes the claim is weak while still being usable. That's a distinctly practitioner register.</p>
+
+      <p><strong>Second post read: "stock-bond correlation" (2026-08-16, ~1,200 words, "3 min read").</strong> Sections: "Confidence Intervals on Correlation" / "The Problem" / "The Recipe" / "Broadly Educational Bits". One static figure (Fisher transformation). Math in plain-text: <code>z = arctanh(r) = ½ · ln[(1 + r) / (1 − r)]</code>. Reports <strong>30-day correlation +0.43, 1-year +0.28, CI [+0.02, +0.72]</strong> — i.e. he leads with the point estimate and immediately shows how wide the interval is. That's the whole point of the post.</p>
+
+      <p><strong>This is a template Brad should note: "here is a number everyone quotes; here is its confidence interval; the interval is embarrassingly wide."</strong> It's cheap to produce, it's undeniably correct, and it demonstrates exactly the not-fooling-yourself instinct a vol desk wants.</p>
+
+      <h3 id="robot-wealth">2.5 Robot Wealth — <a href="https://robotwealth.com/" target="_blank" rel="noopener">https://robotwealth.com/</a> [VERIFIED]</h3>
+
+      <p><strong>Positioning.</strong> <em>"Research lab and shared infrastructure for independent quants"</em> — "technical people who treat their trading as a serious business and run it themselves, in a few hours a week."</p>
+
+      <p><strong>Nav.</strong> <code>Home / About / Blog / Free Case Study / Bootcamp / RW Pro / Login</code>. Blog categories: Quant trading, Think like a trader, Trading strategies. There is an <strong>"Index of Strategies"</strong> page — a curated map into the archive, which is a strong IA idea for a site with years of posts.</p>
+
+      <p><strong>Founder credentials, verbatim from <code>/about/</code>:</strong> <em>"I started as an engineer, the kind that builds things in the physical world."</em> Then an equity partnership at a prop firm; now runs a portfolio of systematic strategies from home. <strong>No performance claims at all.</strong> The closest: <em>"Today I trade a portfolio of strategies that needs only part-time attention."</em> Instead: <em>"Any single trade is close to a coin flip. The process is what matters over hundreds of trades."</em></p>
+
+      <p><strong>This is a notable and copyable choice: a commercial site that sells education and deliberately makes zero return claims.</strong></p>
+
+      <p><strong>Post style evolution.</strong></p>
+      <ul>
+        <li>Older posts (e.g. "Exploring Mean Reversion and Cointegration Part 2") are <strong>code-forward in R</strong>, with inline snippets (<code>m &lt;- lm(AUDUSD.Close ~ NZDUSD.Close, data = closes)</code>), text-rendered equations (<code>Δy(t) = λy(t−1) + βt + μ + α₁Δy(t−1) + … + αₖΔy(t−k) + εₜ</code>), and <code>plot.zoo()</code> charts with basic titles ("AUDUSD and NZDUSD Closing Prices", "AU-NU OLS residuals"). Self-deprecating chart note: <em>"Go easy on my design abilities…"</em>
+          <ul>
+            <li>Hedging: <em>"we unfortunately can't reject the null hypothesis"</em>; <em>"unlikely that we can form a stationary portfolio"</em>; <em>"admittedly does not look overly stationary."</em></li>
+          </ul>
+        </li>
+        <li>2026 posts (the "Triangulated Stat Arb" 6-part series) are <strong>narrative-first, code-free</strong>, ~2,200 words, with charts <em>promised in text but not rendered</em> on the pages I fetched. Math is inline text (<code>z_AB = α_A – α_B</code>).
+          <ul>
+            <li>Hedging: <em>"none of these factors is necessarily 'better'"</em>; <em>"the juice may not be worth the squeeze"</em>; <em>"you'll be wrong plenty, but you should be right more than you're wrong"</em>; <em>"I reckon"</em>; <em>"mileage may vary"</em>; <em>"not foolproof"</em>; <em>"we can't really tell from what I've shown you here."</em></li>
+          </ul>
+        </li>
+      </ul>
+
+      <p><strong>Confessional post-mortem: "Much Ado About Variance" (Kris Longmore, 2026-01-11, ~2,200 words).</strong> He admits abandoning a turn-of-month bond strategy during a drawdown and then watching it recover. Four charts: strategy performance over time; rolling 12-month Sharpe from the mid-90s; 2023–24 deterioration; 2025 recovery. The lesson is the statistical one — <strong>at Sharpe ≈ 1, two-year drawdowns are expected</strong>, so the "it stopped working" inference was unjustified. He also notes his vol-selling book <em>"realised some of that famous negative skew during the April tariff tantrum, but was still profitable."</em></p>
+
+      <p><strong>This pairs directly with Sinclair's post on the same site.</strong> Together they form a house position: <em>you cannot statistically detect strategy death on realistic sample sizes, and acting as if you can is itself the error.</em> That's a very sellable intellectual stance.</p>
+
+      <p><strong>Note on failure narratives:</strong> "The Metamorphosis" (2026, Part 4 of the stat-arb series) is <em>not</em> a post-mortem despite the framing — it's a problem→solution piece about pairs-trading's structural limits (<em>"there are inherent limitations"</em>; betas are <em>"not stable, and they're prone to measurement error"</em>; <em>"It's difficult to model this stuff well in a way that's of practical benefit"</em>; <em>"you lose some simplicity"</em>). Worth distinguishing: <strong>criticizing a method is not the same as publishing your own failure.</strong> Real post-mortems are rarer than the genre implies.</p>
+
+      <h3 id="lopez-de-prado">2.6 Marcos López de Prado — <a href="https://www.quantresearch.org/" target="_blank" rel="noopener">https://www.quantresearch.org/</a> [VERIFIED]</h3>
+
+      <p><strong>Technically the worst-built site in this document, and it does not matter at all</strong> — which is itself the finding.</p>
+
+      <p><strong>Implementation.</strong> Deprecated HTML <strong><code>&lt;frameset&gt;</code></strong> (LeftFrame.htm + Intro.htm), with a <code>&lt;noframes&gt;</code> fallback reading <em>"This page uses frames, but your browser doesn't support them."</em> No responsive design, no dark mode, no RSS, no newsletter.</p>
+
+      <p><strong>Nav (verbatim, in order):</strong> <code>INTRO / BIO / INNOVATIONS / PUBLICATIONS / SEMINARS / VIDEOS / PATENTS / MACHINE LEARNING / PRESS / EVENTS / SOFTWARE / CO-AUTHORS / WHY GEOMETRY?</code> Plus an "Other Sites" block: ADIA Lab, State Honors, True Positive Tech, Cornell. Header: <em>"Professor Marcos López de Prado (RAI, OMC)."</em></p>
+
+      <p><strong>Authority is 100% external validation, stacked:</strong> three decades managing <em>"large pools of funds for some of the most demanding institutional investors"</em>; international member of Spain's Royal Academy of Engineering; Buy-Side Quant of the Year; Quant of 2019; Spain's Order of Merit; Frank Fabozzi editorials; <em>Advances in Financial Machine Learning</em>.</p>
+
+      <p><strong>Disclaimer, verbatim:</strong> <em>"statements made in this communication are strictly those of the author"</em> and do not represent affiliated entities.</p>
+
+      <p><strong>The <code>/Software.htm</code> page is the transferable idea.</strong> A dated, itemized code archive, each entry tied to a specific paper, under GNU-GPL for non-commercial academic use:</p>
+      <ul>
+        <li>Backtest Overfitting Simulator (LBL, 2014) — <em>"This online tool overfits a seasonal investment strategy within the parameter ranges specified by the user."</em></li>
+        <li><code>HRP.py</code> / <code>HRP_MC.py</code> (2015) — hierarchical risk parity + Monte Carlo vs CLA</li>
+        <li><strong><code>DSR.py</code> (2014) — Deflated Sharpe Ratio, closed-form</strong></li>
+        <li>KCA files 1–4 (2014) — Kinetic Component Analysis</li>
+        <li><code>OTR.py</code> (2014) — optimal trading rules for OU processes</li>
+        <li>SFD 1–2 (2014) — Stochastic Flow Diagrams</li>
+        <li><strong>CSCV 1–3 (2013) — Probability of Backtest Overfitting via Monte Carlo and EVT</strong></li>
+        <li>DD 1–4 with data (2013) — drawdown quantile functions</li>
+        <li><code>CLA.py</code> / <code>CLA_Main.py</code> / <code>CLA_Data.csv</code> (2013) — <em>"A Python class containing the Critical-Line Algorithm for quadratic optimization subject to inequality constraints"</em></li>
+        <li>ERC / MMSC / Clustering (2012); PSR (2012); OEH (2012); EF3M (2012)</li>
+      </ul>
+
+      <p><strong>Lesson for Brad.</strong> Design investment does not buy credibility with this audience; <em>artifacts</em> do. A "Code" page listing named, dated implementations tied to specific write-ups is worth more than any amount of CSS. And <strong><code>DSR.py</code> + the CSCV/PBO files are literally the reference implementations of the hygiene Brad says he's practicing — he should cite them by name and show he's applied them.</strong></p>
+
+      <h3 id="harel-jacobson">2.7 Harel Jacobson — <a href="https://volvibes.substack.com/" target="_blank" rel="noopener">https://volvibes.substack.com/</a> and <a href="https://volquant.medium.com/" target="_blank" rel="noopener">https://volquant.medium.com/</a> [VERIFIED / partially]</h3>
+
+      <p>The only person in this list whose <em>entire</em> public output is options/vol.</p>
+
+      <p><strong>Person.</strong> Global/FX volatility trader. Medium bio (via search index; <code>/about</code> returned 403): writes about options and volatility, <em>"Python addict, Bloomberg junkie, and amateur boxer."</em> Guest on Corey Hoffstein's <em>Flirting with Models</em> (S5E10, "Trading FX Volatility"). Best-known long-form: <em>"(Almost) Everything You Wanted To Know About FX Volatility Smile"</em> series and <em>"Think Like a Market Maker — Understanding Implied Volatility."</em></p>
+
+      <p><strong>Publication.</strong> <em>"Options, Volatility &amp; Trading"</em> — <em>"0-DTE option structures, historical option strategy performance dashboards for US Indices, market performance around events / data releases &amp; general market commentary through the lens of volatility."</em> 4,000+ subscribers.</p>
+
+      <p><strong>Cadence (from <code>/archive</code>, verified) — extremely high, event-driven:</strong></p>
+      <ul>
+        <li>SPX ATM Option Structure Dashboards — 2026-08-23</li>
+        <li>August 2026 Update | Option Strategy Returns &amp; Sharpe + Intraweek Breakdown — 2026-08-23</li>
+        <li>Monthly OpEx: August 2026 — SPX &amp; SPX Index Options Historical Performance — 2026-08-20</li>
+        <li>VIX Futures Monthly Expiration: SPX Index &amp; Index Options Performance — 2026-08-18</li>
+        <li>Market Overview — 2026-08-16</li>
+        <li>CPI — SPX Index &amp; Options — 2026-08-11</li>
+        <li>NFP Overview — 2026-08-07</li>
+        <li>End-of-month SPX Straddle Trade: July 2026 Update — 2026-07-31</li>
+      </ul>
+
+      <p><strong>Anti-patterns observed (important, because this is the closest topical neighbor to Brad).</strong> I fetched the SPX ATM dashboard post. Free preview:</p>
+      <ul>
+        <li><strong>No methodology disclosure</strong>: no backtest period, no data source, no construction rules, no cost assumptions</li>
+        <li><strong>No source labels on charts</strong></li>
+        <li>Performance and Sharpe figures referenced in adjacent posts with <strong>no caveats attached in the visible portion</strong></li>
+        <li>The visible content functions as a <strong>promotional teaser</strong>; the substance is paywalled</li>
+      </ul>
+
+      <p><strong>Conclusion for Brad:</strong> high-frequency dashboard content builds a <em>subscriber</em> audience, not a <em>hiring-manager</em> audience. A vol PM skimming this cannot tell whether the numbers are trustworthy. Cadence is not credibility. Jacobson's <em>long-form educational</em> pieces (the FX smile series) are the credible half of his output; the dashboards are the commercial half.</p>
+
+      <h3 id="allocate-smartly">2.8 Allocate Smartly — <a href="https://www.allocatesmartly.com/" target="_blank" rel="noopener">https://www.allocatesmartly.com/</a> [VERIFIED] — the model for live/out-of-sample presentation</h3>
+
+      <p>Not a personal site, but it solves exactly Brad's hardest problem: <em>how do you present tracked performance so a skeptic believes you?</em></p>
+
+      <p><strong>Premise.</strong> Independently re-implements published tactical asset allocation strategies, backtests them under <strong>one uniform assumption set</strong>, then tracks them forward in near-real-time. Members combine them into model portfolios.</p>
+
+      <p><strong>Verbatim backtest assumption disclosure (from <code>/faqs/</code>) — copy this pattern exactly:</strong></p>
+      <ul>
+        <li><em>"All strategies trade at the market close (4 pm ET)"</em></li>
+        <li><em>"Transaction fees plus slippage total 0.10% per trade (0.20% round-trip)"</em></li>
+        <li><em>"Both dividends and gains are reinvested"</em></li>
+        <li><em>"Return on cash… is assumed to equal the 3-month US Treasury rate"</em></li>
+        <li><em>"We do not account for taxes… but we do model the historical tax efficiency"</em></li>
+        <li>On extending history with simulated pre-ETF data: <em>"This is inappropriate for hyperactive strategies that rely on small price changes to generate return, because this simulated data is not sufficiently accurate."</em></li>
+        <li>Deliberate conservatism, stated: <em>"we assume that we did not know about a dividend until 2-days after the ex-dividend date"</em></li>
+        <li>On execution-timing sensitivity: <em>"The strategies… are designed to capture broad market trends, and have been robust to reasonable delays in execution. Trades could have been delayed by up to a full day with a negligible impact."</em></li>
+      </ul>
+
+      <p>Notice the shape: <strong>every assumption is a specific number or a specific rule, and each limitation is stated as a condition under which the method fails</strong>, not as a generic "past performance" boilerplate.</p>
+
+      <p><strong>Their flagship methodological post — "Beware Strategies That Fall Down on Good Data" [VERIFIED].</strong> They replicate a Dow Award-winning utilities-sector strategy and show it earns <strong>13.4% annualized on Fama-French academic data</strong> but <strong>essentially matches the market when tested with real tradeable ETFs over 30 years</strong>. Four charts of the <em>same</em> strategy under progressively more realistic data:</p>
+      <ol>
+        <li>French data only (green) — 13.4%, looks great</li>
+        <li>French signals + tradeable ETFs (blue) — disappointing</li>
+        <li>ETF-based signals <em>and</em> trades (orange) — flat vs market</li>
+        <li>Extended with SPTRUTIL index — confirms no edge over 30 years</li>
+      </ol>
+
+      <p>Caveats, verbatim:</p>
+      <ul>
+        <li><em>"Unlike other tests on this site, transaction costs have been excluded, because we don't want to confuse the point"</em> (explaining a deviation from house standard)</li>
+        <li><em>"Is it possible that a weak edge existed in our 30-year test, but it was hidden by imperfections in SPTRUTIL, et al.? Absolutely."</em> (steelmanning the opposite conclusion)</li>
+        <li>Closing exhortation: be <em>"more cynical about backtested results"</em>; insist on <em>"quality data and realistic backtest assumptions"</em></li>
+      </ul>
+
+      <p><strong>This is the highest-leverage post format in the whole document for Brad: take a published/celebrated result, re-run it under honest assumptions, and show the gap.</strong> It demonstrates skill, skepticism, data handling, and independence in one artifact — and it cannot be accused of self-promotion because the headline result is negative.</p>
+
+      <h3 id="dormant-and-thin">2.9 The dormant and the thin (reported because dormancy is a finding)</h3>
+
+      <p><strong>Newfound Research — <a href="https://www.thinknewfound.com/" target="_blank" rel="noopener">https://www.thinknewfound.com/</a> + <a href="https://blog.thinknewfound.com/" target="_blank" rel="noopener">https://blog.thinknewfound.com/</a> [VERIFIED, DORMANT].</strong><br>
+      Last post <strong>2023-08-28</strong> ("15 Ideas, Frameworks, and Lessons from 15 Years"). Prior: "Is Managed Futures Value-able?" (2023-06-19), "Index Funds Reimagined?" (2023-05-19), "Portfolio Tilts versus Overlays" (2023-04-12), "What Is Managed Futures?" (2023-02-02).</p>
+
+      <p>Despite dormancy, <strong>their figure conventions are the best institutional model I found</strong>:</p>
+      <ul>
+        <li>Sequential <strong>Figure 1–11</strong> numbering</li>
+        <li>Bolded descriptive caption <strong>above</strong> each chart</li>
+        <li>A standardized <strong>source line under every figure</strong>: <em>"Source: Kenneth French Data Library, BarclayHedge. Calculations by Newfound Research."</em></li>
+        <li>Regression tables with significance stars (<code>*</code>, <code>**</code>, <code>***</code>)</li>
+        <li><strong>Block bootstrap: 100,000 ten-year samples</strong> for Information Ratios and MAR ratios</li>
+        <li>Conditional/regime analysis (performance during value drawdowns ≥10%)</li>
+        <li>Tracking-error sensitivity across allocation ranges</li>
+        <li>Appendix A: Index Definitions</li>
+      </ul>
+
+      <p><strong>Their standard performance disclaimer, verbatim — the single most reusable sentence block in this file:</strong></p>
+      <div class="callout">
+        <em>"Performance is backtested and hypothetical. Performance is gross of all costs (including, but not limited to, advisor fees, manager fees, taxes, and transaction costs) unless explicitly stated otherwise. Performance assumes the reinvestment of all dividends. Past performance is not indicative of future results."</em>
+      </div>
+
+      <p>Note: <strong>no</strong> Summary/TLDR bullet box at the top of their posts — headings do the work (<code>Diversifying Value</code> → <code>But How Much?</code> → <code>What About Other Factors?</code> → <code>Conclusion</code> → <code>Appendix A</code>).</p>
+
+      <p>Firm-level nav: <code>About Us / ETFs / Model Portfolios / Podcast / Research (subsections) / Contact Us</code>, with named research <em>themes</em> as landing pages (Liquidity Cascades, Return Stacking, Rebalance Timing Luck) rather than only a chronological feed. <strong>That "named research themes" IA is worth copying</strong> — it turns a blog archive into a body of work.</p>
+
+      <p><strong>Ernie Chan — <a href="https://epchan.blogspot.com/" target="_blank" rel="noopener">https://epchan.blogspot.com/</a> [VERIFIED].</strong> Chairman, QTS Capital Management. Sidebar: books (<em>Generative AI in Trading and Asset Management</em>, <em>Machine Trading</em>), workshops, @echanQT, subscribe, archives back to <strong>2006</strong>. Recent: "Deep Latent Variable Models" (2025-11-27), "Features Selection in the Age of Generative AI" (2025-10-27), "Deep Reinforcement Learning for Portfolio Optimization" (2025-06-18). Slowed to ~4 posts/year. Posts blend concept + application, link out to Substack for depth and to code examples. <strong>Note the pattern: blog → book → workshop → fund.</strong> That's the standard practitioner monetization ladder; Brad wants the credibility half without the commercial half.</p>
+
+      <p><strong>Eric Falkenstein — <a href="https://falkenblog.blogspot.com/" target="_blank" rel="noopener">https://falkenblog.blogspot.com/</a> [VERIFIED, DORMANT].</strong> Author of <em>The Missing Risk Premium</em> and <em>Finding Alpha</em>; prior risk/derivatives work. Last post <strong>2024-06-13</strong> ("A Better Stablecoin on a Perp DEX"). Posts use explicit mechanism specification: leverage/margin/funding-rate formulas, account-balance tables across scenarios, liquidation flow diagrams, historical DeFi exploit case studies. <strong>Strength worth stealing: he explains a market mechanism precisely enough that you could implement it.</strong> That's a different credibility axis from backtesting — it says "I understand how the plumbing actually works."</p>
+
+      <p><strong>Reasonable Deviations — <a href="https://reasonabledeviations.com/" target="_blank" rel="noopener">https://reasonabledeviations.com/</a> [VERIFIED, DORMANT].</strong> Robert Andrew Martin (author of PyPortfolioOpt). Nav: <code>Home / Post Archive / Projects / Revision Notes / Book Reviews / About</code>. Last post <strong>2023-02-05</strong>. Quant content (DCF convexity, option-implied probability distributions, Kelly criterion, Monte Carlo) is genuinely good, but it's interleaved with note-taking/productivity/book-review posts. <strong>This is the clearest illustration of the dilution risk: a strong quant archive buried under lifestyle content, on a site that's been dead for 3.5 years.</strong></p>
+
+      <p><strong>Sergey Malchevskiy — <a href="https://malchevskiy.pro/" target="_blank" rel="noopener">https://malchevskiy.pro/</a> [VERIFIED] — pure anti-pattern.</strong> Self-description: <em>"Entrepreneurial Background &amp; AI/ML Product Leader | Algorithmic Trading | MIPT Alumnus."</em> MIPT applied math/physics master's, President's Scholarship, founded AI Works Lab. Single-page: intro, "random facts" achievement bullets, contact + LinkedIn + CV. <strong>No dated content, no research posts, no code, no charts.</strong> His actual technical work (HMM market-regime modeling, Renko noise reduction, pairs trading with crypto, event-based rebalancing) lives on <strong>Medium</strong>, disconnected from the site. Result: the site is a résumé restatement with a pile of unfalsifiable adjectives, and the evidence is somewhere else. <strong>This is precisely the failure mode Brad's site must avoid.</strong></p>
+
+      <p><strong>Benn Eifert / QVR Advisors — <a href="https://www.qvradvisors.com/" target="_blank" rel="noopener">https://www.qvradvisors.com/</a> [VERIFIED] — instructive negative case.</strong> Eifert has a PhD (Economics, UC Berkeley), ran quant research and derivatives trading for Wells Fargo's prop desk, co-founded Mariner Coria, and was named to EQDerivatives' <em>"Top 25 Leaders In Systematic And Volatility Investing"</em> — selected partly for <em>"quality of practitioner research published."</em> And yet <strong>the firm site publishes nothing.</strong> No research, no letters, no dated content, no nav to speak of. Credibility mechanisms are: SEC registration status, <em>"average 25 years working together,"</em> and a leadership-experience paragraph. The <code>/media</code> page is a <strong>404</strong>. His actual distribution is X/Twitter and podcasts.<br>
+      <strong>Takeaway:</strong> at his level, the network already knows him; publishing is optional. <strong>Brad is not at that level, so publishing is mandatory</strong> — the site has to do the work that Eifert's reputation does for him.</p>
+
+      <p><strong>Quant Beckman — <a href="https://www.quantbeckman.com/" target="_blank" rel="noopener">https://www.quantbeckman.com/</a> [VERIFIED].</strong> Pseudonymous Substack. Post title format is literally <strong><code>[WITH CODE] Backtesting</code></strong> — the tag is a promise. Fixed template: cautionary narrative intro → numbered concept sections → technical deep-dive with math → <strong>executable Python blocks</strong> → matplotlib/seaborn outputs → progressively harder validation → paywall cut. Ships a complete <code>Backtester</code> class plus <code>run_monkey_test()</code> and <strong><code>deflated_sharpe_ratio()</code></strong>. Demonstrates a strategy at <strong>0.39 daily Sharpe deflating to negative after accounting for 100 trials</strong>.<br>
+      Verbatim hedges: <em>"This is not peripheral concern but central flaw"</em>; <em>"A strategy that survives this gauntlet is one in which we can have a <strong>moderate degree</strong> of evidence-based confidence"</em>; <em>"Passing this test is a <strong>necessary, but not sufficient</strong> condition."</em><br>
+      <strong>"Necessary but not sufficient" is the single most useful phrase in this document.</strong></p>
+
+      <p><strong>Quantocracy — <a href="https://quantocracy.com/" target="_blank" rel="noopener">https://quantocracy.com/</a> [VERIFIED, ACTIVE DAILY].</strong> <em>"A curated mashup of quantitative trading links."</em> Most recent item at fetch time: <strong>2026-08-23, ~1 hour old.</strong> ~120+ source blogs in the blogroll, with per-source click stats (a reported 117 sites cleared 500 clickthroughs in a year). Distribution surfaces: RSS, Twitter/X, Facebook, Threads, Bluesky, StockTwits, plus periodic "Recent Quant Links from Quantocracy as of MM/DD/YYYY" roundup posts.</p>
+
+      <p>Blogroll names confirmed on the pages I loaded: Alpha Architect, Quantpedia, <strong>Robot Wealth</strong>, Allocate Smartly, <strong>Flirting with Models</strong> (Newfound), <strong>Jonathan Kinlay</strong>, Morgue Labs, <strong>Investment Idiocy (qoppac)</strong>, Concretum Group, Capital Spectator, Macrosynergy, Beyond Passive, Aligrithm, Quanter Lab, TradeQuantiX, Jan Heger/yizon.</p>
+
+      <p><strong>Actionable:</strong> getting listed on Quantocracy is the cheapest real distribution in this niche, and being adjacent to Carver/Kinlay/Robot Wealth in a daily roundup is itself a credibility signal. Requires a working <strong>RSS feed</strong> — which means Brad's site needs one.</p>
+
+      <p><strong>CSSA (David Varadi) — <code>[NOT FETCHED, 403]</code>.</strong> Search index confirms last post <strong>2026-07-27 "The Inflation Compass Model"</strong>, bylined <em>David Varadi, MBA, CFA</em>. Prior: "The Growth and Inflation Sector Timing Model" (2025-03-20), "Iterative PSD Shrinkage (IPS)" (2025-01-21). Active, but I could not load it and am not characterizing its internals.</p>
+
+      <p><strong>Alpha Architect — <code>[NOT FETCHED, 403]</code>.</strong> Their "Academic Research Insight" series is known for a rigid fixed template (paper title / authors / publication / research questions / academic insights / why it matters / most important chart from the paper), but <strong>I could not load any post to verify the exact headings</strong>, so I am not quoting them.</p>
+
+      <h2 id="synthesis-a-template">3. Synthesis (a): The anatomy of a credible research post — reusable template</h2>
+
+      <p>Distilled primarily from <strong>Kinlay</strong> (structure + scoped claims), <strong>Carver</strong> (uncertainty + nulls), <strong>Markwick</strong> (reproducibility + data disclosure), <strong>Sinclair</strong> (signal-to-noise realism), and <strong>Newfound</strong> (figure conventions).</p>
+
+      <pre><code># &lt;Specific, falsifiable title — a question or a claim, not a topic&gt;
+&lt;Author byline&gt; · &lt;Date&gt; · &lt;Estimated read time&gt; · &lt;Tags&gt;
+
+## The question
+One paragraph. State the *decision* this affects, not just the curiosity.
+"If X is true, I would do Y differently." Name the prior you held going in.
+
+## Data
+- Source, named exactly, with vendor/API and access tier
+  (e.g. "OptionMetrics IvyDB, 2012-01-03 to 2026-06-30"; "Alpaca free tier, daily bars")
+- Universe: enumerated, with inclusion rules
+- Sample period, N observations, and what is *excluded* and why
+- Known defects: survivorship, stale quotes, corporate actions, vendor revisions
+- Point-in-time discipline: what was knowable when
+
+## Method
+- The construction, stated tightly enough to reimplement
+- Every free parameter listed with its chosen value AND how it was chosen
+- **"Number of variants tested before this one: N"**  ← say this out loud
+- Baselines: at least one naive and one strong. Name them.
+- Costs: bid/ask, commission, slippage, borrow, financing — as explicit numbers
+  ("0.10% per trade / 0.20% round-trip") or an explicit statement that they are excluded and why
+
+## Results
+- Headline number with an uncertainty attached: `mean ± standard error`, or a CI
+  ("Sharpe 0.61, 95% CI [0.12, 1.09]" beats "Sharpe 0.61" every time)
+- Table over prose for anything with more than 3 numbers
+- One or two figures maximum. Each with:
+  title · axis labels with units · a caption above stating the takeaway ·
+  a source line below ("Source: … Calculations by &lt;name&gt;.")
+- Distributional view, not just central tendency: median + 25th pct, or the histogram
+
+## Robustness
+- Out-of-sample: state the split date and that it was chosen *before* fitting
+- Walk-forward / multiple IS-OOS windows (Carver runs five combinations)
+- Out-of-distribution: a test family structurally unlike the training data
+- Bootstrap or block bootstrap for path-dependent statistics
+- Multiple-testing adjustment: **Deflated Sharpe Ratio** (Bailey &amp; López de Prado)
+  and/or **PBO via CSCV**; cite Harvey-Liu-Zhu; state the trial count used
+- Parameter sensitivity: does it survive a ±30% perturbation of every knob?
+- The sign test: does the *opposite* rule lose money? If both make money, you fit noise.
+
+## What this shows and does not show      ← NON-NEGOTIABLE SECTION
+Bullet list. Every bullet begins "It does not show that…".
+Name the specific real-world frictions your setup omitted.
+Name the alternative explanation you could not rule out.
+State the one experiment that would falsify your conclusion.
+
+## What I'd do next
+Ranked. Cheapest decisive test first.
+
+## Code &amp; references
+- Link to the exact commit / notebook / script that produced every figure
+- Note the runtime and hardware ("self-contained, CPU-friendly, ~8 min")
+- Numbered academic references, real citations</code></pre>
+
+      <p><strong>Length target:</strong> 1,800–4,500 words. Below ~1,500 it reads as a take; above ~5,000 nobody finishes.</p>
+
+      <p><strong>Two structural slots that appear in essentially every credible post and almost never in a retail one:</strong></p>
+      <ol>
+        <li><strong>"What this does not show"</strong> — a named, explicit scope-limitation section.</li>
+        <li><strong>"Failure modes I actually saw"</strong> — the things that broke while you were doing it.</li>
+      </ol>
+
+      <h2 id="synthesis-b-characteristics">4. Synthesis (b): the 15 strongest recurring characteristics</h2>
+
+      <p>Ranked by how much signal each sends to a vol/derivatives hiring manager, relative to how cheap it is to implement.</p>
+
+      <ol>
+        <li><strong>An explicit "what this does not show" section.</strong> Kinlay does it in every post; Allocate Smartly steelmans against itself. Nothing else so cheaply proves you are not selling something. <strong>Highest ROI item in this document.</strong></li>
+        <li><strong>Uncertainty attached to every headline number.</strong> <code>mean ± standard error</code>, CIs on correlations and Sharpes, medians and quartiles alongside means. Kinlay reports <code>0.0184 ± 0.0010</code> and states the SE formula. Abdelmessih's entire stock-bond post exists to show a correlation's CI is <code>[+0.02, +0.72]</code>.</li>
+        <li><strong>The trial count, disclosed.</strong> "I tested N variants" plus a Deflated Sharpe or PBO adjustment. Almost nobody does this — which is exactly why doing it stands out. The reference implementations (<code>DSR.py</code>, CSCV) are sitting on López de Prado's Software page.</li>
+        <li><strong>Realistic-costs discipline, stated as numbers.</strong> Allocate Smartly's <code>0.10% per trade / 0.20% round-trip</code> and 4pm-close execution. Carver reports his <em>actual</em> slippage bill and what his execution algo saved (78bp, ~40%). For an options system this means bid/ask, exchange fees, and delta-hedge slippage — quantified, not waved at.</li>
+        <li><strong>Named data sources with defects acknowledged.</strong> Markwick names the exact API and its 10-year limit; Allocate Smartly explains precisely when simulated pre-ETF data is invalid. Vague provenance reads as either sloppiness or concealment.</li>
+        <li><strong>Reproducible code tied to the specific result.</strong> Kinlay's ~800-line self-contained "CPU-friendly" script; Markwick's complete inline Julia; Carver's whole open-source <code>pysystemtrade</code>. <strong>Linked repos beat inline snippets; inline snippets beat none; screenshots of code are worse than none.</strong></li>
+        <li><strong>Published negative results and nulls.</strong> Carver: <em>"I'm taking the absence of any contradictory evidence as evidence…"</em> Kinlay discards a metric that gave him the answer he wanted because it had no null. Allocate Smartly's entire "Beware Strategies That Fall Down on Good Data" is a demolition.</li>
+        <li><strong>A strong, named baseline that the fancy method has to beat.</strong> Kinlay's CNN is benchmarked against plain interpolation — and he reports that the gap is <em>small</em> and may not survive real data.</li>
+        <li><strong>Downstream evaluation.</strong> Does the improvement survive to the task you actually care about? Kinlay checks whether repaired surfaces produce better SVI fits, not just lower RMSE. For Brad: does a better vol forecast produce better <em>P&amp;L after hedging costs</em>, not just lower MSE.</li>
+        <li><strong>Sample-size and power realism.</strong> Sinclair's post is entirely this: <code>n₁ ≈ 1260 vs n₂ ≈ 21</code>, daily Sharpe ≈ 0.03, therefore you cannot detect what you think you're detecting. Longmore's independent version: at Sharpe ≈ 1, multi-year drawdowns are expected. <strong>Demonstrating you understand this is a stronger hire signal than any backtest.</strong></li>
+        <li><strong>Credentials stated as facts, in four sentences or fewer.</strong> Sinclair's Risk.net bio is the template: years → instruments → seat → credential + artifacts. Kinlay attributes his ranking to a named third party (FIMAT) and dates it (2004). No adjectives.</li>
+        <li><strong>Consistent figure conventions.</strong> Newfound: sequential Figure N, bold caption above, standardized source line below, "Calculations by &lt;name&gt;." Cheap, and it makes an amateur site read as a research shop.</li>
+        <li><strong>A named body of work, not just a feed.</strong> Newfound's themed research landing pages (Liquidity Cascades, Rebalance Timing Luck); Robot Wealth's "Index of Strategies"; Moontower's topic tags. A chronological blog decays; a themed index compounds.</li>
+        <li><strong>Replication of a named paper, with the delta reported.</strong> Markwick replicates Baltas's <em>Cross-Asset Skew</em>, cites it, and says plainly <em>"the results are not as conclusive as the original paper."</em> Replication is the safest possible first post: it proves competence with zero risk of an unfalsifiable claim.</li>
+        <li><strong>Working RSS + Quantocracy listing.</strong> The one distribution move that puts you in the same daily roundup as Carver and Kinlay. Requires only a feed.</li>
+      </ol>
+
+      <p><strong>Runners-up worth noting:</strong> a bias-disclosure aside when you have a position in the thing you're analyzing (Abdelmessih's italic "Aside"); explicit disclaimers that you are not regulated and do not sell advice (Carver's all-caps <em>"ROBERT DOES NOT OFFER TRADING COURSES"</em>); and stating conservatism you deliberately built in (Allocate Smartly's 2-day dividend-knowledge lag).</p>
+
+      <h2 id="synthesis-c-phrasing">5. Synthesis (c): phrasing and caveating conventions worth copying</h2>
+
+      <h3 id="scope-limitation">Scope limitation (Kinlay — use this exact construction)</h3>
+      <ul>
+        <li>"It does not show that ___ is useful on real data."</li>
+        <li>"It does not show that ___ is the right architecture for this task."</li>
+        <li>"It does not, on its own, justify a production system."</li>
+        <li>"Whether ___ survives a real-data test is an open question."</li>
+        <li>"The synthetic surfaces have no calibration drift, no quote-time-of-day noise, no microstructure asymmetries."</li>
+      </ul>
+
+      <h3 id="calibrated-confidence">Calibrated confidence in a result</h3>
+      <ul>
+        <li>"I would not defend it further than 'worth running properly.'"</li>
+        <li>"should be read as an order of magnitude, not a point estimate"</li>
+        <li>"Treat the <em>ordering</em> as the result and the <em>levels</em> as approximate."</li>
+        <li>"I would not swear to it."</li>
+        <li>"This is a small one, and it does not come out where I expected."</li>
+        <li>"necessary, but not sufficient" (Quant Beckman)</li>
+        <li>"a moderate degree of evidence-based confidence" (Quant Beckman)</li>
+      </ul>
+
+      <h3 id="conceding-weak-evidence">Conceding weak evidence while still using it (Abdelmessih)</h3>
+      <ul>
+        <li>"There's enough evidence to not disagree."</li>
+        <li>"It's hard to bang on the ___ desk with fervor."</li>
+        <li>"It is entirely possible that ___."</li>
+        <li>"This is hard to translate into risk-adjusted, opportunity-cost-aware terms."</li>
+      </ul>
+
+      <h3 id="naming-failure-modes">Naming your own model's failure mode (Kinlay)</h3>
+      <ul>
+        <li>"The heteroscedastic head undercovers."</li>
+        <li>"The convergence is slow and the validation curve is still improving slightly at epoch 60."</li>
+        <li>"This says the model's residual is not, on its own, a strong ___ detector."</li>
+      </ul>
+
+      <h3 id="reporting-a-null">Reporting a null honestly (Carver)</h3>
+      <ul>
+        <li>"I'm taking the absence of any contradictory evidence as evidence that I should continue to do what I've done before."</li>
+        <li>"we unfortunately can't reject the null hypothesis" (Robot Wealth)</li>
+        <li>"admittedly does not look overly stationary" (Robot Wealth)</li>
+      </ul>
+
+      <h3 id="flagging-deferred-problem">Flagging a deliberately deferred problem (Markwick)</h3>
+      <ul>
+        <li>"We have neglected the trading costs and potential capacity."</li>
+        <li>"…but that is a problem to solve for another day."</li>
+        <li>"this is a promising sign that there is perhaps something more to be done"</li>
+      </ul>
+
+      <h3 id="steelmanning">Steelmanning against yourself (Allocate Smartly)</h3>
+      <ul>
+        <li>"Is it possible that a weak edge existed in our 30-year test, but it was hidden by imperfections in the data? Absolutely."</li>
+      </ul>
+
+      <h3 id="explaining-deviation">Explaining a deviation from your own standard</h3>
+      <ul>
+        <li>"Unlike other tests on this site, transaction costs have been excluded, because we don't want to confuse the point."</li>
+      </ul>
+
+      <h3 id="impossibility-of-inferences">On the impossibility of certain inferences (Sinclair)</h3>
+      <ul>
+        <li>"The test confidently says 'nothing to see here.' It's technically correct."</li>
+        <li>"The conclusion isn't that tests are bad — it's that the problem is mis-specified."</li>
+        <li>"The answer is always probabilistic, never definitive."</li>
+      </ul>
+
+      <h3 id="boilerplate-disclaimer">Boilerplate disclaimer (Newfound — copy verbatim, adapted)</h3>
+      <div class="callout">
+        "Performance is backtested and hypothetical. Performance is gross of all costs (including, but not limited to, advisor fees, manager fees, taxes, and transaction costs) unless explicitly stated otherwise. Performance assumes the reinvestment of all dividends. Past performance is not indicative of future results."
+      </div>
+
+      <h3 id="non-solicitation">Non-solicitation / not-regulated (Carver)</h3>
+      <div class="callout">
+        "Not regulated or authorised to provide investment advice." + an explicit statement that you do not sell courses or signals.
+      </div>
+
+      <h3 id="words-to-delete">Words to delete on sight</h3>
+      <p>"proven," "consistently," "robust" (unqualified), "proprietary," "cutting-edge," "passionate about," "significant returns," "battle-tested," "alpha-generating," any Sharpe stated without a period, a cost assumption, and an interval.</p>
+
+      <h2 id="synthesis-d-track-record">6. Synthesis (d): how a live track record is credibly presented — and how it is presented badly</h2>
+
+      <h3 id="credible-version">The credible version (Carver's twelve-year series is the reference implementation)</h3>
+
+      <p><strong>1. Lead with the worst number, not the best.</strong><br>
+      Year 11 TLDR opens with <strong>"it's my worst ever"</strong> / <strong>"my worst ever in futures."</strong> A track record that only surfaces in good years is not a track record.</p>
+
+      <p><strong>2. State the exact accounting basis.</strong><br>
+      Mark-to-market <strong>vs</strong> net-of-everything, side by side: <em>+21.9% mark-to-market, +23.7% net of fees, commissions and slippage.</em> Say which one the headline is. Say the currency. Say the period boundaries (his run on the UK tax year, April 6 – April 5, and he says so).</p>
+
+      <p><strong>3. Decompose the P&amp;L.</strong><br>
+      Year 11: <strong>−16.3% total</strong> = <strong>−14.5%</strong> futures + <strong>−0.64%</strong> cash-like ETFs + <strong>−2.7%</strong> FX. Then by market (Equities −6.0%, Agriculture +3.2%, …) and by trading rule. Decomposition is the strongest anti-cherry-picking signal available, because it exposes every component including the losers.</p>
+
+      <p><strong>4. Benchmark against named third-party indices, vol-adjusted.</strong><br>
+      SG CTA Index and AHL, with <strong>correlations</strong> (0.68 and 0.56) — which simultaneously proves he isn't just levered beta and situates his result in the peer distribution. In the bad year: his −16.3% against SG CTA ~−18% and AHL −18.2%. In the good year he says plainly <em>"I was actually the worse of the three for this year at least."</em></p>
+
+      <p><strong>5. Report costs as a first-class result.</strong><br>
+      <em>"Without my execution algo, if I had just traded at the market, I would have paid 1.34% in slippage; my simple algo earned 78bp and cut my slippage bill by around 40%."</em> Nothing else so quickly establishes that live results are real.</p>
+
+      <p><strong>6. Deduct the risk-free rate, or say you didn't.</strong><br>
+      Carver explicitly notes his Sharpes <em>"would be lower if a risk-free rate were deducted."</em></p>
+
+      <p><strong>7. Show the full path, not a summary stat.</strong><br>
+      Non-compounded equity curve (monthly and annual), plus a year-by-year table across all twelve years marking best and worst.</p>
+
+      <p><strong>8. Admit discretionary errors by name.</strong><br>
+      <em>"(yes, bad move in retrospect, and another failure of discretionary trading on my part)."</em></p>
+
+      <h3 id="what-brad-should-add">What Brad should add that even Carver doesn't do</h3>
+
+      <p>These are genuine gaps in the best example available, and closing them is differentiation:</p>
+
+      <ul>
+        <li><strong>An explicit live-vs-backtest overlay.</strong> Carver never charts realized against the backtest that motivated the system. For someone building from scratch with an explicitly documented research process, this is <em>the</em> chart: backtest equity curve, a hard vertical line at the go-live date, realized path after it, and the honest gap quantified.</li>
+        <li><strong>A confidence interval on his own realized Sharpe.</strong> With N months of live data, <code>SE(SR) ≈ √((1 + SR²/2)/N)</code> — publish the interval. On 18 months of data it will be humiliatingly wide, and publishing it anyway is the single most credible thing on the page.</li>
+        <li><strong>A pre-registered, frozen definition.</strong> "This strategy's parameters were frozen on &lt;date&gt;; the config hash is &lt;hash&gt;; nothing below has been re-fit." Verifiable via git history. This is the strongest available answer to "how do I know you didn't tweak it?"</li>
+        <li><strong>A no-changes log.</strong> Every intervention, override, or parameter change, dated, with the reason. Silence about changes reads as changes concealed.</li>
+      </ul>
+
+      <h3 id="presented-badly">How it is presented badly (observed in this research)</h3>
+
+      <ul>
+        <li><strong>Dashboards without methodology.</strong> Vol Vibes publishes "Option Strategy Returns &amp; Sharpe" monthly with no visible backtest period, data source, construction rules, or cost assumptions — and the substance behind a paywall. A vol PM cannot evaluate it, so they discount it entirely.</li>
+        <li><strong>No byline.</strong> The Hull Tactical blog is well-written and has no author attribution on any post I loaded. Unattributed research accrues to nobody.</li>
+        <li><strong>Cumulative-return-only presentation.</strong> A big up-and-to-the-right number with no vol, no drawdown, no Sharpe, no benchmark, no costs.</li>
+        <li><strong>Headline Sharpe with no interval and no trial count.</strong> The instant tell for backtest overfitting — Quant Beckman's demo shows a 0.39 daily Sharpe deflating <em>below zero</em> once 100 trials are accounted for.</li>
+        <li><strong>Gross-of-costs framed as live.</strong> Any results section that doesn't state its cost assumption is assumed to have none.</li>
+        <li><strong>Restarted or re-based track records.</strong> Presenting a fresh start date without disclosing what came before.</li>
+        <li><strong>Credential inflation in place of evidence</strong> (malchevskiy.pro): a résumé restatement with adjectives and no dated, falsifiable artifact anywhere on the site.</li>
+        <li><strong>Mixed-topic dilution</strong> (reasonabledeviations.com): real quant work interleaved with productivity and book-review posts, so nothing reads as a body of work.</li>
+        <li><strong>Dormancy.</strong> Newfound (last post Aug 2023), Falkenblog (Jun 2024), Reasonable Deviations (Feb 2023). A visibly stale research section is worse than no research section — it reads as an abandoned project. <strong>If Brad ships a research feed, he must sustain it; if he can't sustain cadence, he should present a fixed set of finished pieces with no dates implying a schedule.</strong></li>
+      </ul>
+
+      <h2 id="recommendations">7. Concrete recommendations for bradlasater.github.io</h2>
+
+      <ol>
+        <li><strong>Every research post gets a byline and a date.</strong> Non-negotiable. (Anti-Hull-Tactical.)</li>
+        <li><strong>Adopt the Kinlay skeleton verbatim</strong> — including a literal <code>## What this shows and does not show</code> section in every post. It's the single highest-signal, lowest-cost move available.</li>
+        <li><strong>Add a <code>/code</code> page in the López de Prado style</strong>: named, dated implementations, each linked to the write-up it produced. Include his <code>DSR.py</code>-equivalent and a PBO/CSCV run applied to Brad's <em>own</em> strategy, and say the trial count.</li>
+        <li><strong>Publish RSS and submit to Quantocracy.</strong> Cheapest real distribution in this niche.</li>
+        <li><strong>Write one Allocate-Smartly-style demolition post</strong>: take a widely cited vol result (short-vol VRP harvesting, 0DTE premium selling, VIX term-structure roll) and re-run it under honest costs and OOS discipline. Negative or heavily-qualified result. Impossible to read as self-promotion, and it demonstrates every skill at once.</li>
+        <li><strong>Write one Sinclair-style power post</strong> using Brad's own live sample: "here is how long I would need to run before I could statistically distinguish my system from zero." Publish the number even if it's five years.</li>
+        <li><strong>Adopt Newfound's figure conventions</strong> — Figure N, bold caption above, source line below with "Calculations by Brad Lasater."</li>
+        <li><strong>Restructure the live track record section</strong> around: worst number first → accounting basis → decomposition → third-party benchmark with correlation → costs as a result → live-vs-backtest overlay with the go-live line → CI on realized Sharpe → frozen-config hash → change log.</li>
+        <li><strong>Ship the Newfound disclaimer block</strong> under any backtested chart, and Carver's not-regulated/not-selling-anything statement in the footer.</li>
+        <li><strong>Do not mix topics.</strong> One audience, one body of work.</li>
+        <li><strong>Name the research themes</strong> (à la Newfound's Liquidity Cascades / Rebalance Timing Luck) so the archive reads as a program rather than a feed.</li>
+        <li><strong>Model the bio on Sinclair's four sentences.</strong> Years → what you actually worked on → current seat → credentials + artifacts. Zero adjectives.</li>
+      </ol>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research notes 04 · Switchers &amp; hiring — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/research-04-switchers-hiring.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="Career-switcher case evidence and how quant hiring actually works.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/research-04-switchers-hiring.html">
+  <meta property="og:title" content="Research notes 04 · Switchers &amp; hiring — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html" class="active">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Research notes 04 · Switchers &amp; hiring</h1>
+        </div>
+        <div class="meta">
+          mirrors notes/research/04-switchers-and-hiring.md
+        </div>
+      </header>
+      <p class="flow-caption">This page mirrors <code>notes/research/04-switchers-and-hiring.md</code>; edit the Markdown, then re-sync this page.</p>
+
+      <h2 id="research-04-career-switcher-exemplars-hiring-side-signals">Research 04 — Career-Switcher Exemplars &amp; Hiring-Side Signals</h2>
+
+      <p class="lead">
+        Research date: 2026-08-23. Every URL below was fetched and read before citing. Sources are
+        labeled by evidence tier:
+      </p>
+      <ul>
+        <li><strong>[A] Firm-official</strong> — published by the hiring firm itself.</li>
+        <li><strong>[B] Named practitioner</strong> — an identifiable person with a verifiable industry role.</li>
+        <li><strong>[C] Commercial / anonymous</strong> — content-marketing sites, anonymous newsletters, recruiter
+          marketing pages. Directionally useful, weakest evidence.</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Access failures (stated honestly):</strong> <code>reddit.com</code> is blocked to this crawler entirely
+        (r/quant, r/quantfinance, r/algotrading could not be read). <code>quantnet.com</code> returns HTTP 403
+        to automated fetches — the QuantNet threads that appeared in search results (including
+        "Top 3 Resume Mistakes I See MFEs Make" and the buy-side QR AMA) could <strong>not</strong> be verified
+        and are therefore <strong>not cited anywhere below</strong>. Wilmott and NuclearPhynance yielded nothing
+        loadable. So this report is deliberately light on anonymous forum opinion and heavy on
+        firm-official and named-practitioner sources — which is the right weighting anyway.
+      </div>
+
+      <hr>
+
+      <h2 id="half-1-career-switcher-exemplars">HALF 1 — CAREER-SWITCHER EXEMPLARS</h2>
+
+      <h2 id="tier-1-strong-analogues">Tier 1: Strong analogues for Brad (technical field → quant, public site)</h2>
+
+      <h3 id="1-ray">1. Ray — <a href="https://oneraynyday.github.io/about/" target="_blank" rel="noopener">oneraynyday.github.io/about/</a></h3>
+      <ul>
+        <li><strong>Prior field → current role:</strong> UCLA computer science → <strong>"Algorithm Engineer" at Hudson
+          River Trading, New York.</strong> Prior internships: Airbnb, Citadel Securities, Bloomberg; one
+          year on Airbnb's ML infrastructure team.</li>
+        <li><strong>Site structure:</strong> Minimal Jekyll blog. Nav = Home / About / GitHub / Categories. No
+          project gallery, no resume page, no "hire me" framing.</li>
+        <li><strong>First-screenful positioning (exact):</strong> <em>"Hi, my name is Ray and this is my blog for math
+          and CS related topics. I believe that you don't really know what you're talking about
+          unless you can present the information in a digestible and intuitive way."</em></li>
+        <li><strong>What's showcased:</strong> Expository math/CS posts, not projects. He notes the blog gained
+          traction on Reddit and Hacker News and has been translated into multiple languages.</li>
+        <li><strong>Self-description of intent (exact):</strong> he blogs <em>"because I'm too lazy to take on some
+          huge project and just want to chill and learn some fun stuff."</em></li>
+        <li><strong>Why the transition reads as credible:</strong> He does <strong>not</strong> try to prove he can trade. He
+          proves he can <em>explain hard technical material clearly</em>, and lets HRT on the resume carry
+          the finance credibility. <strong>The site is a thinking-quality artifact, not a track record.</strong>
+          This is the single most important structural lesson in this whole report.</li>
+      </ul>
+
+      <h3 id="2-kris-longmore">2. Kris Longmore — <a href="https://robotwealth.com/about-robot-wealth/" target="_blank" rel="noopener">robotwealth.com/about-robot-wealth/</a></h3>
+      <ul>
+        <li><strong>Prior field → current role (his words):</strong> <em>"I started as an engineer, the kind that
+          builds things in the physical world."</em> Now: <em>"I trade a portfolio of systematic strategies
+          for my own account, and I share the strategies, the research, the tools and the thinking
+          with the hundreds of independent quants in RW Pro."</em> In between: proprietary trader, hedge
+          fund quant, freelance researcher, <strong>equity partner at a proprietary trading firm.</strong></li>
+        <li><strong>First-screenful positioning (exact):</strong> <em>"Robot Wealth is the research lab and shared
+          infrastructure for independent quants: technically minded traders who research and run
+          systematic strategies on their own terms."</em></li>
+        <li><strong>The credibility bridge — he leads with his own failures (exact):</strong> <em>"Trading began as a
+          side interest. What followed was years of every beginner mistake in the book: chart
+          patterns, then increasingly elaborate backtests. Eventually I was throwing machine learning
+          at market data and calling it research."</em></li>
+        <li><strong>The pivot (exact):</strong> a professional trader asked him <em>"What's your edge?"</em> — <em>"I had no
+          answer. That question rebuilt my approach from the ground up."</em></li>
+        <li><strong>Why it works:</strong> The confession <em>is</em> the credential. By narrating precisely how he
+          over-fit and over-engineered, he demonstrates he now knows the difference — which is the
+          exact thing a quant hiring manager is trying to determine. He does not present headline
+          return numbers on the about page at all.</li>
+        <li><strong>Caveat for Brad:</strong> Longmore's business is education/community, so his framing is tuned
+          to sell subscriptions, not to get hired. Borrow the failure-narrative structure, not the
+          commercial tone.</li>
+      </ul>
+
+      <h3 id="3-ernie-chan">3. Ernie Chan — <a href="https://epchan.com/" target="_blank" rel="noopener">epchan.com/</a></h3>
+      <ul>
+        <li><strong>Prior field → current role:</strong> BSc Physics (Toronto), <strong>PhD theoretical physics (Cornell)</strong>
+          → ML researcher at IBM T.J. Watson Research Center (Human Language Technologies) →
+          Morgan Stanley AI group in Manhattan → Credit Suisse → founded QTS Capital Management
+          (2011) → Founder/Chief Scientist, PredictNow.ai.</li>
+        <li><strong>Site structure:</strong> Corporate-consultancy layout, not a blog-first personal site. Nav =
+          Home / Financial Machine Learning / Workshops / Books / About / Contact. Hero: "E.P. Chan
+          &amp; Associates" + portrait + tagline about AI and quantitative analytics. Self-description:
+          <em>"an expert in machine learning and the application of quantitative models for asset
+          management."</em></li>
+        <li><strong>Notable:</strong> the physics-to-quant story is <strong>absent from the homepage.</strong> The site sells
+          present-day authority (books, workshops, media), not the transition narrative.</li>
+        <li><strong>Third-party verification &amp; the key career quote</strong> —
+          <a href="https://databento.com/blog/quants-worth-following-ernie-chan" target="_blank" rel="noopener">databento.com/blog/quants-worth-following-ernie-chan</a>: <em>"With a PhD in theoretical
+          physics from Cornell University, Ernie's early work as a machine learning researcher at
+          IBM's T.J. Watson Research Center's Human Language Technologies division facilitated his
+          transition into the quant industry."</em> And, critically, Chan on where his work comes from:
+          <strong><em>"Everybody that I have worked with since I became an independent trader is inbound...
+          These traders reached out to me because of the books I published."</em></strong></li>
+        <li><strong>Lesson:</strong> public artifacts <em>do</em> generate inbound — but the artifact that did it was
+          three published Wiley books, not a website. This is a high bar, and honest evidence about
+          the effort level required.</li>
+      </ul>
+
+      <h3 id="4-harel-jacobson">4. Harel Jacobson — <a href="https://volquant.medium.com/" target="_blank" rel="noopener">volquant.medium.com/</a> (+ verified interview below)</h3>
+      <ul>
+        <li><strong>Prior field → current role:</strong> BA in economics → support representative at
+          SuperDerivatives → self-taught quant → quant trader → <strong>quantitative portfolio manager
+          running a global volatility and systematic strategies book at Oporto Delta.</strong> FX and rates
+          vol specialist.</li>
+        <li><strong>His own account of the transition (exact, from
+          <a href="https://tradingtechnologies.com/blog/2021/02/08/5-questions-with-harel-jacobson-of-oporto-delta/" target="_blank" rel="noopener">tradingtechnologies.com/blog/2021/02/08/5-questions-with-harel-jacobson-of-oporto-delta/</a>):</strong>
+          <ul>
+            <li><em>"My first interaction with the derivatives market was during the second year of my BA in
+              economics. I started working as a support representative at SuperDerivatives"</em></li>
+            <li><em>"I decided to teach myself quantitative disciplines, mainly math and statistics/
+              probability theory, and coding."</em></li>
+            <li><em>"After gaining confidence in my abilities, and after I built and backtested my first
+              trading strategy"</em> …</li>
+            <li><em>"I joined my former boss as a quant trader under his mentorship. After my mentor left
+              that firm, I stayed and moved up to portfolio manager."</em></li>
+          </ul>
+        </li>
+        <li><strong>What he publishes:</strong> vol-specific research under the handle <strong>VolQuant</strong> — including
+          post-mortems: <em>"Epic Failures — Lessons from Volatility Funds blow-ups"</em> and <em>"Beware of
+          the traps — Quantitative Trading Mistakes."</em></li>
+        <li><strong>Two lessons, one supportive and one deflating:</strong>
+          <ol>
+            <li><strong>Supportive:</strong> his <em>published corpus is topically identical to Brad's target</em> — vol
+              surfaces, vol modeling, blow-up post-mortems. Writing vol post-mortems is a recognized
+              way to establish a vol-trading identity.</li>
+            <li><strong>Deflating and important:</strong> the writing came <em>after</em> the job. <strong>The job came from a
+              mentor/referral relationship</strong>, not from public writing.</li>
+          </ol>
+        </li>
+      </ul>
+
+      <h3 id="5-vivek-palaniappan">5. Vivek Palaniappan — <a href="https://engineerquant.substack.com/about" target="_blank" rel="noopener">engineerquant.substack.com/about</a></h3>
+      <ul>
+        <li><strong>Prior field → current role (exact):</strong> <em>"studied Engineering but now work as a trader at
+          a hedge fund"</em>.</li>
+        <li><strong>Positioning (exact):</strong> <em>"I use this substack to explore interesting topics in Machine
+          Learning, Mathematics, Physics and occasionally Neuroscience."</em></li>
+        <li><strong>Structure:</strong> newsletter, essay-first. The engineer→trader fact is a single clause in a
+          one-paragraph bio; the <em>content</em> is technical exposition.</li>
+        <li><strong>Lesson:</strong> same pattern as Ray. The switch is stated flatly and briefly, then never argued
+          for again — the writing is the argument.</li>
+      </ul>
+
+      <h3 id="6-jakub">6. Jakub — <a href="https://quantjourney.substack.com/about" target="_blank" rel="noopener">quantjourney.substack.com/about</a></h3>
+      <ul>
+        <li><strong>Prior field → current role:</strong> <strong>"a physicist-turned-quantitative trader"</strong> with 20+ years
+          across hedge funds, prop firms, and technology companies.</li>
+        <li><strong>Positioning (exact):</strong> <em>"With over 20 years of experience across hedge funds, proprietary
+          trading firms, and leading technology companies, I've dedicated my career to mastering
+          systematic trading and building the robust infrastructure it demands."</em></li>
+        <li><strong>Bridge language (exact):</strong> bridging <em>"scientific rigor with practical trading expertise."</em></li>
+        <li><strong>The concrete proof artifact:</strong> a <em>"hedge-fund-caliber system"</em> comprising <strong>"over 80,000
+          lines of meticulously tested code."</strong></li>
+        <li><strong>Lesson for Brad:</strong> <em>"meticulously tested"</em> is doing real work in that sentence. The claim
+          is about <strong>engineering discipline</strong>, which is verifiable and unfalsifiable-in-a-bad-way,
+          rather than about returns, which invite scrutiny. Note also that "physicist-turned-
+          quantitative trader" is a four-word bridge that does the entire positioning job.</li>
+      </ul>
+
+      <h2 id="tier-2-structural-exemplars">Tier 2: Structural exemplars (useful shape, weaker bridge)</h2>
+
+      <h3 id="7-letian-wang">7. Letian Wang — <a href="https://letianzj.github.io/" target="_blank" rel="noopener">letianzj.github.io/</a></h3>
+      <ul>
+        <li>Headline: <em>"Letian Wang Blog on Quant Trading and Portfolio Management."</em> Tagline:
+          <em>"a place dedicated to quantitative trading and systematic investing."</em></li>
+        <li>Structure: Home / Archives / Sitemap, with content hierarchically categorized into
+          Systematic Investment, Quantitative Trading, Machine Learning, Time Series, Order Flow.</li>
+        <li>Showcases two named open-source assets: <strong><code>quanttrader</code></strong> (positioned as <em>"a pure
+          python-based event-driven backtest and live trading package for quant traders"</em>, on
+          GitHub + PyPI) and the <strong>QuantResearch</strong> repo.</li>
+        <li>Results/code: narrative-first on the blog, with Jupyter notebooks and video demos, linking
+          out to Medium and GitHub for full implementations.</li>
+        <li><strong>Lesson:</strong> a <em>named, installable library</em> is a much harder credential than a folder of
+          notebooks. The taxonomy (order flow / time series / systematic investment) also signals
+          market-domain literacy before you read a single post.</li>
+      </ul>
+
+      <h3 id="8-mark-best">8. Mark Best — <a href="https://markrbest.github.io/" target="_blank" rel="noopener">markrbest.github.io/</a></h3>
+      <ul>
+        <li>~20 years programming (Java, R, Matlab, Python, C++, Rust); previously <strong>Deutsche Bank
+          algorithmic trading</strong>; fixed-income + HFT background; now an independent quant trader in
+          crypto.</li>
+        <li>Tagline: <em>"Quantitative Trading – Trading ideas and discussions."</em> Nav = Links / About /
+          Archive, reverse-chronological.</li>
+        <li>Content is operational and unglamorous — OMS hazards, Rust logging optimization, message
+          arrival rates and latency, data handling — mixed with theory (fractional differencing,
+          MCMC), Bitcoin microstructure, vol analysis, mean reversion. Presents code snippets and
+          statistical tables.</li>
+        <li><strong>Lesson:</strong> posts about <em>the boring failure modes of running a system</em> (order management
+          dangers, logging, latency under message-rate spikes) read as operator experience. Almost
+          nobody fakes these, so they are high-signal.</li>
+      </ul>
+
+      <h3 id="9-jonathan-shore">9. Jonathan Shore — <a href="https://tr8dr.github.io/about/" target="_blank" rel="noopener">tr8dr.github.io/about/</a></h3>
+      <ul>
+        <li><strong>About text (exact, complete):</strong> <em>"These are my musings about strategies, statistics,
+          computer science, numerical techniques, etc. I am a quant / developer, living in the New
+          York area."</em></li>
+        <li>Background: parallel algorithms / applied math → Lehman Brothers research group in the
+          1990s (neural nets, VR, parallel processing, NLP for trading and risk) → complex
+          derivatives → algo trading from the mid-2000s. NYC-based.</li>
+        <li>Nav = Data / Links / About.</li>
+        <li><strong>Lesson:</strong> the entire self-description is two sentences and one of them is a location. A
+          reader who wants credentials goes to LinkedIn; the site is for the work. This is the
+          opposite of the "portfolio site" instinct and it is what senior practitioners actually do.</li>
+      </ul>
+
+      <h3 id="10-jonathan-kinlay">10. Jonathan Kinlay — <a href="https://jonathankinlay.com/" target="_blank" rel="noopener">jonathankinlay.com/</a></h3>
+      <ul>
+        <li>Tagline: <em>"The latest theories, models and investment strategies in quantitative research
+          and trading."</em> Nav = Home / Systematic Strategies / About.</li>
+        <li>Research depth is genuinely high: full Python implementations, detailed experimental
+          protocols with validation suites, quantified results <strong>with confidence intervals</strong>, and
+          <strong>explicit limitation sections acknowledging confounds.</strong> Recent topics: LLM agents in
+          alpha research and crowding risk, agentic research workflows, RL for trade execution,
+          deep learning for vol-surface interpolation.</li>
+        <li>Reports negative results and failure modes; quantifies catch rates; caveats claims like a
+          "2× lift" with the confounds attached rather than selling it.</li>
+        <li><strong>Lesson — this is the closest model for how Brad should present results.</strong> Confidence
+          intervals + a limitations section + published negative results is the single most
+          quant-legible way to say "I am not fooling myself."</li>
+      </ul>
+
+      <h3 id="11-anthony-makarewicz">11. Anthony Makarewicz — <a href="https://anthonymakarewicz.github.io/volatility-trading/" target="_blank" rel="noopener">anthonymakarewicz.github.io/volatility-trading/</a>
+        and <a href="https://github.com/anthonymakarewicz/volatility-trading" target="_blank" rel="noopener">github.com/anthonymakarewicz/volatility-trading</a></h3>
+      <ul>
+        <li><strong>The closest topical analogue to Brad's system that exists in public.</strong> README opening
+          (exact): <em>"This project develops and evaluates daily options-volatility strategies on index
+          and single-stock underlyings."</em></li>
+        <li>Scope: ORATS ETL data pipeline (API/FTP download, extraction, chain building, QC);
+          <code>src/volatility_trading/</code> with backtesting, options modeling, signal generation, strategies;
+          <code>notebooks/</code> research; <code>examples/</code> executable scripts; YAML config templates; <code>docs/</code> with
+          API scope and data contracts.</li>
+        <li><strong>Backtest realism:</strong> bid/ask spreads, slippage, configurable per-leg commissions, position
+          sizing tied to risk budgets, Reg-T margin constraints, delta hedging with dynamic rebalance
+          policies, and transaction-cost attribution split across option and hedge legs.</li>
+        <li><strong>Two strategies:</strong> VRP harvesting (realized vs. implied) and skew mispricing.</li>
+        <li><strong>Out-of-sample:</strong> RV forecasting reported at <em>"about 30% OOS R²"</em> versus naive baselines.</li>
+        <li>Published as reproducible HTML notebook reports on GitHub Pages.</li>
+        <li><strong>What's excellent:</strong> the cost model, the Reg-T margin constraint, and the per-leg cost
+          attribution are exactly the details that separate a real vol backtest from a toy one.
+          Reporting <strong>OOS R² against a naive baseline</strong> rather than a headline Sharpe is exactly
+          right.</li>
+        <li><strong>What's broken — and this is the lesson:</strong> the GitHub Pages site's entire first screenful
+          is the heading <strong>"Notebook Reports"</strong> followed by six bare links (<code>greeks.html</code>,
+          <code>iv_surface_modelling.html</code>, <code>rv_forecasting.html</code>, <code>vrp_harvesting.html</code>, <code>qc_eda.html</code>,
+          <code>skew_trading.html</code>). No author name, no bio, no framing, no summary of findings, no
+          navigation. <strong>The research is strong and the site converts none of it.</strong> A recruiter
+          landing there learns nothing and leaves. Brad should read this as: <em>the research artifact
+          and the persuasion artifact are two different deliverables, and doing only the first is
+          the default failure mode for technically strong people.</em></li>
+      </ul>
+
+      <h3 id="12-ricki-heicklen">12. Ricki Heicklen — <a href="https://rickiheicklen.com/" target="_blank" rel="noopener">rickiheicklen.com/</a></h3>
+      <ul>
+        <li>Former Jane Street quantitative trader; now runs the Arbor trading bootcamp; writes at
+          bayesshammai.substack.com.</li>
+        <li>Minimal centered layout, photo, a few paragraphs. Positioning (exact): <em>"My background is
+          in quantitative trading, and I spend a lot of time thinking about markets, incentives, and
+          human dynamics."</em> She describes being in an "explore" stage, <em>"splitting my time between
+          NYC and the Bay Area as I rotate through different jobs and projects."</em></li>
+        <li><strong>Notably, Jane Street is not named on the page.</strong> The credibility is carried by the
+          <em>quality of the trading-education work</em> she links to.</li>
+        <li><strong>Lesson:</strong> once the work is good enough, the employer logo becomes optional. Brad is not
+          there yet and should name Nift / Ticketmaster / Lockheed / Boeing — but the direction of
+          travel is toward letting artifacts carry the weight.</li>
+      </ul>
+
+      <h2 id="tier-3-instructive-negative-examples">Tier 3: Instructive negative examples</h2>
+
+      <h3 id="13-dev-kewlani">13. Dev Kewlani — <a href="https://dev-kewlani.github.io/" target="_blank" rel="noopener">dev-kewlani.github.io/</a></h3>
+      <ul>
+        <li>Positions as "Quantitative Researcher &amp; Trader." Quant Summer Associate at JPMorgan; prior
+          NX Block Trades, BlackRock, Futures First. Single-page portfolio: About / Experience /
+          Projects / Skills / Contact, with LinkedIn / GitHub / resume links.</li>
+        <li>Four featured projects with headline metrics:
+          <ul>
+            <li>AlphaPortfolio — deep RL with transformers, <strong>"1.7 Sharpe Ratio"</strong></li>
+            <li>Pure Momentum — crypto arbitrage, <strong>"250%+ annual returns (pre-costs)"</strong>, hourly rebalance</li>
+            <li>Options backtesting framework — <strong>"10x speed improvement over existing solutions"</strong></li>
+            <li>Loss Given Default model — XGBoost on mortgage data, <strong>"65% accuracy"</strong></li>
+          </ul>
+        </li>
+        <li><strong>Why this is the anti-pattern:</strong> metrics are asserted without validation methodology, code
+          samples, walk-forward or cross-validation procedure, live verification, or trial counts.
+          "250%+ annual returns (pre-costs)" on an hourly-rebalanced crypto strategy is a number that
+          <em>invites</em> a hostile question, and "pre-costs" on an hourly strategy is close to an
+          admission that the strategy does not survive costs. To the audience Brad is targeting,
+          this reads as <em>not knowing what would make the claim credible</em> — which is worse than
+          claiming nothing.</li>
+        <li><strong>Direct instruction for Brad:</strong> every performance number on his site must arrive with
+          (a) sample period, (b) in-sample vs. out-of-sample split, (c) cost and slippage
+          assumptions, (d) the number of variants tried before this one, and (e) capacity/risk
+          limits. A number without those five is a liability, not an asset.</li>
+      </ul>
+
+      <h3 id="14-chakradhar-rangi">14. Chakradhar Rangi — <a href="https://crangi.github.io/" target="_blank" rel="noopener">crangi.github.io/</a></h3>
+      <ul>
+        <li>Physics PhD candidate (LSU, computational physics / condensed matter), BS-MS from IISER
+          Bhopal, internships at Los Alamos and JNCASR, peer reviewer for Physical Review B/A/Research
+          and Chaos. Hugo site on GitHub Pages: Home / Posts / Projects / Publications / Contact / Notes.</li>
+        <li>Among six projects: an <strong>MBS convexity</strong> quant-finance framework and a <strong>"Quant Finance
+          Bootcamp"</strong> set of mini-projects in portfolio theory and risk management, alongside DMFT
+          and domain-adaptation work.</li>
+        <li><strong>Where it fails for a quant audience:</strong> the finance projects are presented in <strong>academic-CV
+          format</strong> — title, thumbnail, one-line description, GitHub link. No backtesting results, no
+          out-of-sample validation, no risk discussion, no performance comparison. The physics work
+          has real citations (<code>Phys. Rev. B 112, 245137</code>); the finance work has nothing equivalent.</li>
+        <li><strong>Lesson:</strong> an academic portfolio template actively hurts a quant pitch. It signals
+          "I did some finance coursework," not "I can do research a desk would trust." Brad, coming
+          from industry rather than academia, should avoid the publications-and-projects-grid layout
+          entirely.</li>
+      </ul>
+
+      <h3 id="15-shashank-hegde">15. Shashank Hegde — <a href="https://hegde95.github.io/" target="_blank" rel="noopener">hegde95.github.io/</a></h3>
+      <ul>
+        <li>Self-description: <em>"Researcher, Roboticist, PhD Candidate, Musician."</em> AI PhD researcher at
+          USC's Robotics Embedded Systems Lab (deep RL, ML, robotics). Employment history includes
+          <strong>Fidelity Investments</strong>, developing ML for trade order selection and execution, and work
+          with fixed-income research teams.</li>
+        <li>Site is a full academic portfolio: About / Experiences / Publications (topic-filtered) /
+          Projects / Skills / Education / Accomplishments &amp; Service. Projects span autonomous vehicle
+          navigation, quadruped hurdling, prosthetic voice control, multi-agent RL, MFCC/spectrogram
+          work. Metrics reported are ML-native (compression ratios, "1/45th of inference-time FLOPS").</li>
+        <li><strong>Marginal as an analogue, but one useful data point:</strong> he has genuine execution-side
+          finance experience (ML for trade order selection) and it is <strong>buried in a reverse-chron
+          experience list</strong> among robotics work. The finance-relevant item is the one a quant reader
+          wants and it is not surfaced. Brad's Nift/Ticketmaster/Lockheed work has the same risk:
+          the market-relevant parts (state estimation under noise, real-time optimization, latency,
+          sensor fusion) must be pulled to the top and translated, or they will be read as
+          "unrelated ML resume."</li>
+      </ul>
+
+      <hr>
+
+      <h2 id="half-2-hiring-side-signals">HALF 2 — HIRING-SIDE SIGNALS</h2>
+
+      <h2 id="a-firm-official-statements">[A] Firm-official statements</h2>
+
+      <h3 id="jane-street-interviewing">Jane Street — <a href="https://www.janestreet.com/join-jane-street/interviewing/" target="_blank" rel="noopener">janestreet.com/join-jane-street/interviewing/</a></h3>
+      <p>The single most explicit firm-official statement on career switchers found anywhere:</p>
+      <ul>
+        <li>Quantitative Trading section, verbatim: <strong>"Problem-solving mindset: required. Finance
+          background: optional."</strong> and <em>"We're looking for strong quantitative minds and collaborative
+          team players to work in Quantitative Trading. <strong>We won't test you on knowledge of finance or
+          economics.</strong> Instead, we'll try to get a sense of what it's like to work with you to solve
+          a problem."</em></li>
+        <li>Quantitative Research section: <em>"Part trader, part engineer, all encompassing — The work our
+          researchers do overlaps both trading and software engineering, so the interview process is
+          a mix of the two."</em></li>
+        <li>FAQ, verbatim: <strong>"Do I need a background in finance? Nope! But those with previous finance
+          experience are of course welcome to apply."</strong></li>
+        <li>FAQ, verbatim: <strong>"Do I need a cover letter? Nope!"</strong> — <em>"If there's something you think we
+          should know about that doesn't fit nicely onto your resume/CV, feel free to include it in
+          the text box at the bottom of our application."</em></li>
+        <li>Recruiter Kristen (NY office), verbatim: <em>"There are no real requirements to apply to any of
+          our campus positions. We're always just looking for interesting resumes from intellectually
+          curious students. You don't need to know OCaml. <strong>You don't need experience within finance.
+          We'll teach you everything you need to know.</strong>"</em></li>
+        <li>On reapplying: <em>"Plenty of people who currently work at Jane Street didn't make it through
+          our interview process their first time around."</em></li>
+        <li>Also: <em>"We consider applicants for every open role, not just the one you apply for"</em> and
+          <em>"We believe that asking great questions is more important than knowing all the answers."</em></li>
+        <li><strong>Critical negative finding:</strong> across the entire interviewing page and a ~25-question FAQ,
+          Jane Street mentions <strong>personal websites, blogs, GitHub, and side projects exactly zero
+          times.</strong> The artifacts they name are: the resume, the free-text box, and the interview.</li>
+      </ul>
+
+      <h3 id="two-sigma-qr-intern">Two Sigma — job posting, Quantitative Researcher Intern (NYC)</h3>
+      <p><a href="https://careers.twosigma.com/careers/JobDetail/New-York-New-York-United-States-Quantitative-Researcher-Intern-2027-Summer/13945" target="_blank" rel="noopener">careers.twosigma.com/careers/JobDetail/New-York-New-York-United-States-Quantitative-Researcher-Intern-2027-Summer/13945</a></p>
+      <p>Verbatim: <strong>"You don't need a background in finance. It's nice to have, but more than half of
+        Two Sigma's employees come from outside the finance industry. If you've got the quantitative
+        skills, we can teach you the financial aspects of the job."</strong></p>
+      <p>Listed qualifications, verbatim, include:</p>
+      <ul>
+        <li><em>"Are pursuing a degree in a technical or quantitative disciplines, like statistics,
+          mathematics, physics, electrical engineering, or computer science"</em></li>
+        <li><em>"Demonstrate intermediate skills in at least one programming language (like C, C++, Java,
+          or Python)"</em></li>
+        <li><strong>"Performed an in-depth research project, examining real-world data"</strong></li>
+        <li><em>"Are an independent thinker who can creatively approach data analysis and communicate
+          complex ideas clearly"</em></li>
+      </ul>
+      <p><strong>This is the most directly exploitable line in the entire report.</strong> A firm-official
+        qualification bullet asks for <em>an in-depth research project on real-world data.</em> Brad's vol
+        system is literally that. The site's job is to make that mapping instant and undeniable.</p>
+
+      <h3 id="two-sigma-stem-to-finance">Two Sigma — "From STEM to Finance: Employees Share Their Stories"</h3>
+      <p><a href="https://www.twosigma.com/articles/from-stem-to-finance-employees-share-their-stories/" target="_blank" rel="noopener">twosigma.com/articles/from-stem-to-finance-employees-share-their-stories/</a></p>
+      <p>Two Sigma's own switcher-framing examples:</p>
+      <ul>
+        <li><strong>Mike</strong>, Head of AI Core, from a long career at Google (speech recognition / AI):
+          <em>"When I came here, we said, hey, let's do a similar thing in finance, because I think
+          finance is ripe for this kind of change."</em></li>
+        <li><strong>Rob</strong>, Security Architect, from the intelligence community: <em>"When I came here, I quickly
+          realized that the basic problem set is very similar, in that it's about protecting very
+          sensitive and valuable information."</em></li>
+        <li><strong>Katie</strong>, Product Manager, from mechanical engineering.</li>
+        <li><strong>Jiasen</strong>, Quantitative Researcher (Macro Techniques): <em>"Financial sciences is simply
+          applying the scientific approach to everything we do that's related to finance."</em></li>
+        <li><strong>Ris</strong>, MD Engineering (CS background): <em>"The tools that we're building are similar to what
+          you'd see at other large-scale tech companies."</em></li>
+      </ul>
+      <p><strong>The rhetorical pattern the firm itself endorses is isomorphism: "the underlying problem is
+        the same, only the domain changed."</strong> Rob's intelligence-community line is almost exactly the
+        sentence Brad should be able to write about Lockheed/Boeing state estimation vs. filtering a
+        noisy price/vol signal.</p>
+
+      <h3 id="de-shaw-quantitative-analyst">D. E. Shaw — Quantitative Analyst, NYC</h3>
+      <p><a href="https://www.deshaw.com/careers/quantitative-analyst-2636" target="_blank" rel="noopener">deshaw.com/careers/quantitative-analyst-2636</a></p>
+      <ul>
+        <li>Verbatim: <em>"Successful candidates will have impressive records of academic achievement and
+          be the top students in their respective math, statistics, physics, engineering, computer
+          science, and other technical and quantitative programs."</em></li>
+        <li>Finance experience is not listed as a requirement.</li>
+        <li><strong>Stated base salary: "$275,000" for undergraduate/master's and "$300,000" for PhDs (or
+          comparable professional experience).</strong></li>
+        <li><strong>Calibration for Brad:</strong> his ~$250k base target is <em>below</em> the published entry-level QA
+          base at D. E. Shaw in NYC. That target is realistic — arguably conservative — for a QR/QD
+          role. It also means he is competing in a pool where the firm's default assumption is
+          "top student in a technical program," so his differentiator has to be <em>demonstrated applied
+          research</em>, not credentials.</li>
+      </ul>
+
+      <h3 id="susquehanna-sig">Susquehanna (SIG) — <a href="https://sig.com/careers/quant/" target="_blank" rel="noopener">sig.com/careers/quant/</a></h3>
+      <p>Verbatim: <strong>"The ability to develop a new idea or approach to a problem is far more valued
+        than having a preexisting knowledge of finance."</strong></p>
+      <p>Also: <em>"Susquehanna provides ample resources to aide with learning about finance, including a
+        3-month long class in finance, a mentorship program, and a starter project designed to help
+        cut one's teeth in finance."</em></p>
+      <p><strong>Note the implication:</strong> if a firm budgets three months to teach finance, then <em>finance
+        knowledge is not the scarce input they are screening for.</em> Original problem-framing is. This
+        argues against Brad's site being primarily a demonstration that he has learned options theory,
+        and for it being a demonstration that he asks good questions and designs good experiments.</p>
+
+      <h3 id="optiver-research-internship">Optiver — <a href="https://www.optiver.com/join-us/students/internships/research/" target="_blank" rel="noopener">optiver.com/join-us/students/internships/research/</a></h3>
+      <p>What they evaluate, per the firm: <em>"Comfort with uncertainty and risk"</em>, <em>"Production
+        mindset"</em>, <em>"Ability to iterate quickly"</em>, <em>"Clear communication across disciplines"</em>,
+        <em>"Curiosity and ownership."</em> They seek people <em>"comfortable reasoning about noisy data,
+        imperfect signals, and risk"</em> and who <em>"don't wait to be told what to do next"</em> but
+        <em>"explore, ask questions, and take initiative."</em> The program <em>"begins with comprehensive
+        training, where you'll learn trading fundamentals"</em> — again, finance taught in-house.</p>
+      <p><strong>"Comfortable reasoning about noisy data, imperfect signals, and risk" is a literal
+        description of state estimation work.</strong> This is the phrase Brad's Lockheed/Boeing experience
+        should be translated into.</p>
+
+      <h3 id="hrt-engineering-and-interviewing">Hudson River Trading — "Answers to Questions I Often Get: Engineering and Interviewing at HRT"</h3>
+      <p><a href="https://www.hudsonrivertrading.com/hrtbeat/engineering-and-interviewing-at-hrt/" target="_blank" rel="noopener">hudsonrivertrading.com/hrtbeat/engineering-and-interviewing-at-hrt/</a> (Joe Smith)</p>
+      <ul>
+        <li><strong>"We rate our engineers as much on communication as we do on technical ability."</strong></li>
+        <li><strong>"We want engineers with strong fundamentals but stay away from obscura and 'tricks'."</strong></li>
+        <li><strong>"Most people do not fail the interview because they lack some specialized piece of
+          knowledge."</strong> The stated most common failure is <em>shallow</em> understanding of fundamentals —
+          candidates should grasp <em>why</em> a tool was invented, not just how to use it.</li>
+        <li><em>"We expect engineers and engineering managers to make individual contributions on a
+          quarterly basis."</em> Same technical tests are administered regardless of seniority.</li>
+        <li><strong>No mention of portfolios, side projects, GitHub, or personal sites.</strong></li>
+      </ul>
+
+      <h3 id="hrt-ml-benchmarks">Hudson River Trading — "In Trading, Machine Learning Benchmarks Don't Track What You Care About"</h3>
+      <p><a href="https://www.hudsonrivertrading.com/hrtbeat/trading-machine-learning/" target="_blank" rel="noopener">hudsonrivertrading.com/hrtbeat/trading-machine-learning/</a> (Iain Dunning)</p>
+      <p>This is the most useful firm-official statement of <em>research taste</em> found, and it maps
+        directly onto how Brad should present results:</p>
+      <ul>
+        <li><em>"an incremental 0.1% improvement in the accuracy of a neural network's ability to
+          distinguish dog breeds might not translate to predicting the price of a stock."</em></li>
+        <li>HRT evaluates papers on <strong>"simplicity, reproducibility, and generality."</strong></li>
+        <li><strong>"we still have the issue of statistical power... it is easy to lie to ourselves while
+          resolving small differences in our low signal-to-noise domain."</strong></li>
+        <li><em>"weak improvements will not generalize 'out of sample' to other instances in the space of
+          deep learning problems."</em></li>
+        <li><em>"subtle differences in the exact evaluation protocol can completely invert results"</em>
+          (citing Agarwal et al. on deep RL evaluation standards).</li>
+        <li>They run <em>"standardized ways we run 'backtests' internally for our changes."</em></li>
+      </ul>
+      <p><strong>Takeaway:</strong> "simplicity, reproducibility, and generality" is a hiring firm handing Brad the
+        three axes to organize his research write-ups on. And "it is easy to lie to ourselves" is HRT
+        independently articulating the Feynman/López de Prado thesis that Brad's site is already
+        oriented around.</p>
+
+      <h2 id="b-named-practitioners">[B] Named practitioners</h2>
+
+      <h3 id="paleologo-buy-side-quant-job-advice">Giuseppe "Gappy" Paleologo — "2025 Buy-Side Quant Job Advice"</h3>
+      <p><a href="https://byfire.substack.com/p/2025-buy-side-quant-job-advice" target="_blank" rel="noopener">byfire.substack.com/p/2025-buy-side-quant-job-advice</a> (Dec 29, 2025)</p>
+      <p><strong>Authority: this is the single highest-authority source in the report.</strong> Paleologo is Global
+        Head of Quantitative Research at Balyasny Asset Management and a member of its Investment
+        Committee; previously Head of Risk Management at Hudson River Trading, Head of Enterprise Risk
+        at Millennium, and Director of Equities Quantitative Research at Citadel. PhD Stanford
+        (Management Science &amp; OR); adjunct professor at NYU; author of <em>Advanced Portfolio Management</em>
+        and <em>The Elements of Quantitative Investing</em>. (Confirmed via
+        <a href="https://icme.stanford.edu/events/tech-talk-featuring-stanford-alum-gappy-paleologo-global-head-quantitative-research-balyasny" target="_blank" rel="noopener">icme.stanford.edu/events/tech-talk-featuring-stanford-alum-gappy-paleologo-global-head-quantitative-research-balyasny</a>
+        and <a href="https://www.rebellionresearch.com/2024-quant-of-the-year-dr-giuseppe-paleologo-balyasnys-incoming-head-of-quant-research-future-of-generative-ai-in-hedge-funds" target="_blank" rel="noopener">rebellionresearch.com/2024-quant-of-the-year-dr-giuseppe-paleologo-balyasnys-incoming-head-of-quant-research-future-of-generative-ai-in-hedge-funds</a>.)</p>
+      <p><strong>Market size — the outside view (verbatim):</strong></p>
+      <ul>
+        <li><em>"I would guess that the total number of investment professionals in this space is around
+          15,000. So maybe 7,000 quants, and a demand of roughly 700 quants per year. That includes
+          everyone—from alpha research, to portfolio construction, to data analysis, to execution, to
+          risk management."</em></li>
+        <li><em>"job openings depend on firm growth and employee turnover; a reasonable ballpark is 5–10%
+          per year."</em></li>
+        <li><em>"I have personally screened maybe a couple thousand résumés, some of which were
+          masterpieces of surrealist literature."</em></li>
+        <li>On the 0.2% offer rate: <em>"True, but also false, because they count every single submitted
+          résumé... If you are a piano player in a brothel, know that your chances are unfairly
+          slim—but rest assured that your résumé was still counted in the denominator."</em></li>
+        <li>He explicitly names career switchers as a major supply source: <em>"Sell-side employees on the
+          verge of a nervous breakdown and trying to switch sides. I have no idea of the exact number,
+          but it's clearly large, since about half (~20,000) of my current LinkedIn contacts fall into
+          this category."</em></li>
+      </ul>
+      <p><strong>His actual "before the interview" checklist (verbatim, complete):</strong></p>
+      <ol>
+        <li><em>"Follow target firms on social media: LinkedIn and X, and perhaps a few Reddit channels
+          (r/quant, r/algotrading), Discord servers, or similar forums. Follow their job postings and
+          apply in a timely manner..."</em></li>
+        <li><strong>"Research your prospective employer the way you would research a company you invest in.
+          Be prepared, and know specifically what they do and what they are good at."</strong></li>
+        <li><em>"Show up at on-campus recruiting events... Attendance gives you brownie points. Bring a
+          résumé... ask informed questions about the company."</em></li>
+        <li><em>"Participate in a few extracurricular activities, such as a local investment club."</em></li>
+        <li><em>"Subscribe to Matt Levine's 'Money Stuff' newsletter."</em></li>
+        <li><em>"Read a few entertaining books for fun and profit"</em> (Derman, Bernstein, Brown,
+          Niederhoffer, Zuckerman, Thorp, Taleb, Soros).</li>
+      </ol>
+      <p><strong>On what to study (verbatim):</strong> <em>"Applied probabilistic modeling and statistics are very
+        important skills to have. Physics is still a good major to hire from, because it is a
+        model-based discipline rather than a technique-based one, and you will be exposed to many
+        models."</em> Reading list: Wasserman <em>All of Statistics</em>, Ross <em>Applied Probability Models</em>,
+        Boyd &amp; Vandenberghe <em>Convex Optimization</em>, Trefethen &amp; Bau <em>Numerical Linear Algebra</em>, Strang
+        <em>Linear Algebra and Learning from Data</em>, Pólya <em>How to Solve It</em>. And: <strong>"Note that I do not
+        recommend any finance books. You will learn that on the job."</strong></p>
+      <p><strong>On what makes a great analyst (verbatim), from 50–100 successful traders/PMs he polled:</strong></p>
+      <ul>
+        <li><em>"<strong>Curiosity.</strong> People who read articles and scientific papers on their own, maybe during
+          weekends, for the sheer pleasure of finding things out."</em></li>
+        <li><em>"<strong>Creativity.</strong> ... looking at the same thing everyone else looks at, noticing something
+          different, and proposing an original course of action. Most ideas do not survive scrutiny,
+          but a few are brilliant."</em></li>
+        <li><em>"<strong>Humility.</strong> When something does not work, admit it early and openly, examine why, and
+          move on. In practice, humility (as described to me) is both a willingness to take
+          responsibility and an openness to experience."</em></li>
+        <li><em>"<strong>Integrity.</strong> Following both the letter and the spirit of the rules."</em></li>
+        <li>And, tellingly: <em>"not a single person mentioned 'capability,' 'mental throughput,' or
+          'puzzle-solving' as a defining quality—yet we select in part on the ability to solve
+          puzzles. Go figure."</em></li>
+      </ul>
+      <p><strong>He recommends Feynman's "Cargo Cult Science" as required reading, quoting it (verbatim):</strong>
+        <em>"In summary, the idea is to try to give all of the information to help others to judge the
+        value of your contribution; not just the information that leads to judgment in one particular
+        direction or another […] The first principle is that you must not fool yourself--and you are
+        the easiest person to fool."</em></p>
+      <p><strong>On compensation (verbatim):</strong> <em>"At the top end, an alpha researcher will receive a
+        $450–500K package, inclusive of sign-on, salary, and guaranteed bonus. Software engineers,
+        execution research, risk, and data roles typically fall somewhere between $250K and $400K."</em></p>
+      <p><strong>THE CRITICAL NEGATIVE FINDING.</strong> This is roughly 15 pages of career advice from someone who
+        has screened thousands of quant résumés and now runs quant research at a major multi-manager.
+        It contains <strong>zero mentions of personal websites, personal blogs, GitHub profiles, portfolio
+        sites, or side projects</strong> as a hiring channel or evaluation input. Not dismissed — <em>absent
+        from the model entirely.</em> The channels he names are: job postings applied to promptly,
+        recruiting events, referrals/mentors, and the résumé.</p>
+
+      <h3 id="lopez-de-prado-10-reasons">Marcos López de Prado — "The 10 Reasons Most Machine Learning Funds Fail"</h3>
+      <p><a href="https://www.garp.org/hubfs/Whitepapers/a1Z1W0000054x6lUAA.pdf" target="_blank" rel="noopener">garp.org/hubfs/Whitepapers/a1Z1W0000054x6lUAA.pdf</a> (Jan 2018; GARP whitepaper)</p>
+      <p>Directly relevant because Brad's system is explicitly MLdP-influenced — which means a hiring
+        manager who knows this literature will hold him to it.</p>
+      <p><strong>Pitfall #2, "Research Through Backtesting" (verbatim):</strong></p>
+      <blockquote>
+        <p><em>"One of the most pervasive mistakes in financial research is to take some data, run it
+          through an ML algorithm, backtest the predictions, and repeat the sequence until a
+          nice-looking backtest shows up. Academic journals are filled with such pseudo-discoveries,
+          and even large hedge funds constantly fall into this trap. <strong>It does not matter if the
+          backtest is a walk-forward out-of-sample. The fact that we are repeating a test over and
+          over on the same data will likely lead to a false discovery.</strong> This methodological error is
+          so notorious among statisticians that they consider it scientific fraud, and the American
+          Statistical Association warns against it in its ethical guidelines... <strong>It typically takes
+          about 20 such iterations to discover a (false) investment strategy subject to the standard
+          significance level (false positive rate) of 5%.</strong>"</em></p>
+      </blockquote>
+      <p>And: <strong>"Remember, feature importance is a research tool, and backtesting is not."</strong></p>
+      <p><strong>Pitfall #10, "Backtest Overfitting" (verbatim):</strong> <em>"WF's high variance leads to false
+        discoveries, because researchers will select the backtest with the maximum estimated Sharpe
+        ratio, even if the true Sharpe ratio is zero. <strong>That is the reason why it is imperative to
+        control for the number of trials (I) in the context of WF backtesting. Without this
+        information, it is not possible to determine the Family-Wise Error Rate (FWER), False
+        Discovery Rate (FDR), Probability of Backtest Overfitting (PBO) or similar.</strong>"</em></p>
+      <p>The full Exhibit 1 taxonomy (pitfall → solution), verbatim:</p>
+      <table>
+        <thead>
+          <tr><th>#</th><th>Category</th><th>Pitfall</th><th>Solution</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Epistemological</td><td>The Sisyphus paradigm</td><td>The meta-strategy paradigm</td></tr>
+          <tr><td>2</td><td>Epistemological</td><td>Research through backtesting</td><td>Feature importance analysis</td></tr>
+          <tr><td>3</td><td>Data processing</td><td>Chronological sampling</td><td>The volume clock</td></tr>
+          <tr><td>4</td><td>Data processing</td><td>Integer differentiation</td><td>Fractional differentiation</td></tr>
+          <tr><td>5</td><td>Classification</td><td>Fixed-time horizon labeling</td><td>The triple-barrier method</td></tr>
+          <tr><td>6</td><td>Classification</td><td>Learning side and size simultaneously</td><td>Meta-labeling</td></tr>
+          <tr><td>7</td><td>Classification</td><td>Weighting of non-IID samples</td><td>Uniqueness weighting; sequential bootstrapping</td></tr>
+          <tr><td>8</td><td>Evaluation</td><td>Cross-validation leakage</td><td>Purging and embargoing</td></tr>
+          <tr><td>9</td><td>Evaluation</td><td>Walk-forward (historical) backtesting</td><td>Combinatorial purged cross-validation</td></tr>
+          <tr><td>10</td><td>Evaluation</td><td>Backtest overfitting</td><td>Backtesting on synthetic data; the deflated Sharpe ratio</td></tr>
+        </tbody>
+      </table>
+      <p>Also (verbatim): <em>"When misused, ML algorithms will confuse statistical flukes with patterns.
+        This fact, combined with the low signal-to-noise ratio that characterizes finance, all but
+        ensures that careless users will produce false discoveries at an ever-greater speed."</em></p>
+      <p><strong>Operational implication for Brad's site:</strong> since he cites López de Prado, a knowledgeable
+        reader will check whether he actually applies the evaluation half of the taxonomy (#8, #9,
+        #10). Publishing an out-of-sample track record <strong>without disclosing the number of trials</strong> is,
+        by this source's own standard, insufficient. Disclosing trial count, purging/embargoing, and
+        a deflated Sharpe ratio would put him in a very small minority of public sites and is
+        strongly differentiating with this exact audience.</p>
+
+      <h3 id="ernie-chan-inbound">Ernie Chan — on where opportunities come from</h3>
+      <p><a href="https://databento.com/blog/quants-worth-following-ernie-chan" target="_blank" rel="noopener">databento.com/blog/quants-worth-following-ernie-chan</a></p>
+      <blockquote>
+        <p><strong>"Everybody that I have worked with since I became an independent trader is inbound...
+          These traders reached out to me because of the books I published."</strong></p>
+      </blockquote>
+      <p>Verified-practitioner evidence that public artifacts generate inbound — with the honest
+        caveat that the artifact was three Wiley books over a decade, not a website.</p>
+
+      <h3 id="dirk-bester">Dirk Bester — via eFinancialCareers</h3>
+      <p><a href="https://www.efinancialcareers.com/news/2018/05/quant-hedge-fund-interviews" target="_blank" rel="noopener">efinancialcareers.com/news/2018/05/quant-hedge-fund-interviews</a></p>
+      <p>Bester (PhD, Bayesian algorithmic design; author of the open-source <em>Quantitative Primer</em>,
+        <a href="https://github.com/dwcoder/QuantitativePrimer" target="_blank" rel="noopener">github.com/dwcoder/QuantitativePrimer</a>; interviewed at ~7 quant hedge funds):</p>
+      <ul>
+        <li><strong>"Hedge funds (and banks who interview well) will ask you specific questions about stuff on
+          your CV. If you mention spatial statistics, they will ask you questions about model
+          comparison and Gaussian processes."</strong></li>
+        <li><em>"When I was interviewing four years ago, some hedge funds made me sit an exam before
+          they'd interview me."</em> Funds now <em>"ask applicants to do a pair-programming exercise before
+          they'll even speak to you,"</em> with questions <em>"mostly focus on algorithms from graph theory."</em></li>
+        <li><em>"Hedge funds are moving away from vanilla brainteasers"</em> toward <em>"questions that allow you
+          to establish the breath and depth of a candidate's knowledge."</em></li>
+      </ul>
+      <p><strong>Implication:</strong> everything on Brad's site is interview surface area. If the site says
+        "Kalman filter," "combinatorial purged cross-validation," or "variance risk premium," he will
+        be examined on it. Anything he cannot defend in depth should come off the site.</p>
+
+      <h3 id="recruiters-named">Recruiters (named)</h3>
+      <p><a href="https://www.efinancialcareers.com/news/2016/02/quant-hedge-funds-are-ramping-up-their-hiring-heres-what-they-look-for-in-candidates" target="_blank" rel="noopener">efinancialcareers.com/news/2016/02/quant-hedge-funds-are-ramping-up-their-hiring-heres-what-they-look-for-in-candidates</a></p>
+      <ul>
+        <li><strong>Ben Hodzic</strong>, Managing Consultant, Quantitative Analytics/Research/Trading Americas,
+          <strong>Selby Jennings</strong>: <em>"At a more junior level, the ability to code in Python and Java has
+          increasingly been an attractive credential [for quant hedge funds]."</em></li>
+        <li><strong>Crosby Baker</strong>, Managing Consultant, <strong>Korn Ferry Futurestep</strong>: <em>"Quant funds in particular
+          are looking for the smart, analytical people right out of undergrad – such as math or econ
+          majors from MIT or Wharton."</em> … <em>"There's a lot of data analytics in tech-oriented roles at
+          hedge funds, and if you have an interest in investing, that will give you a leg up.
+          However, that's not as important as the programming skills that they're looking for."</em></li>
+      </ul>
+
+      <h3 id="hw-anderson">H.W. Anderson (quant executive search since 2014)</h3>
+      <p><a href="https://www.hw-anderson.com/quant-headhunter" target="_blank" rel="noopener">hw-anderson.com/quant-headhunter</a></p>
+      <p>They look for candidates who can <em>"combine fundamental analytics with quantitative expertise
+        and coding skills to enhance trading insights"</em> or who have <strong>"created and are able to create
+        their own systematic trading strategies."</strong> They <em>"track top tier Quantitative talent from
+        their first year in 'industry' and maintain good relations with many leading PhD programmes."</em>
+        No mention of personal projects or websites.</p>
+      <p><strong>Mixed signal:</strong> "created and are able to create their own systematic trading strategies" is
+        the most directly Brad-favourable recruiter language found. But the sourcing model described
+        is tracking people already <em>in</em> industry and PhD-program relationships — i.e., a channel Brad
+        is not in.</p>
+
+      <h3 id="durlston-partners">Durlston Partners (quant recruiter) — "Engineer to Quant? Challenge Accepted"</h3>
+      <p><a href="https://durlstonpartners.com/engineer-to-quant-challenge-accepted/" target="_blank" rel="noopener">durlstonpartners.com/engineer-to-quant-challenge-accepted/</a></p>
+      <ul>
+        <li><em>"The primary obstacle facing SWEs when applying for QR roles at top hedge funds lies in the
+          stiff competition they will face."</em></li>
+        <li>Interviews cover <em>"Probability (very important), Mathematics (linear algebra calculus
+          etc..), Computer Science (leet code medium to hardcore style problems is required for the
+          top tier systematic hedge funds and prop trading firms)"</em>.</li>
+        <li>Notes SWEs are disadvantaged because <em>"the depth and breadth of theoretical knowledge
+          required for quantitative research are different and more advanced"</em> than a CS education.</li>
+        <li>Recommends demonstrating skills through <em>"open-source quant projects or participating in
+          competitions like Kaggle"</em>, plus a master's, starting as a quant developer, or internal
+          transfer.</li>
+      </ul>
+
+      <h3 id="quantstart-engineering-to-quant">QuantStart — "Engineering To Quant Finance: How To Make The Transition"</h3>
+      <p><a href="https://www.quantstart.com/articles/engineering-to-quant-finance-how-to-make-the-transition/" target="_blank" rel="noopener">quantstart.com/articles/engineering-to-quant-finance-how-to-make-the-transition/</a></p>
+      <ul>
+        <li><em>"80-90% of a quant's day is spent coding, whether they are developer or researcher"</em></li>
+        <li><em>"a strong knowledge of statistics is an absolutely essential skill for a quantitative
+          researcher"</em></li>
+        <li><strong>"It will be a challenge to target a mid-level quantitative trading research role without
+          either prior quant finance research experience or examples of other rigourous research"</strong></li>
+        <li><em>"practice as much software development as possible by writing your own large-scale projects
+          or by contributing to open source software"</em></li>
+        <li>Names <em>"your current network"</em> and <em>"dedicated quantitative finance recruiters"</em> as the job
+          search routes — <strong>not</strong> blogs or portfolios.</li>
+      </ul>
+      <p><strong>That bolded line is the strategic core of Brad's whole situation.</strong> It concedes that a
+        career switcher <em>can</em> substitute <em>"examples of other rigourous research"</em> for prior quant
+        finance experience — which is precisely the gap his vol system + post-mortems are meant to
+        fill. The word doing the work is <strong>"rigourous."</strong></p>
+
+      <h2 id="c-commercial-anonymous-sources">[C] Commercial / anonymous sources</h2>
+
+      <h3 id="quantymacro-personal-projects">"QM" / quantymacro — "A Non-Guide on Building Personal Projects For HF Quant Roles (Part I)"</h3>
+      <p><a href="https://quantymacro.substack.com/p/personal-projects-guide" target="_blank" rel="noopener">quantymacro.substack.com/p/personal-projects-guide</a> (Mar 25, 2024)</p>
+      <p>Anonymous, but with a specific verifiable-ish claim: <em>"I completed my undergraduate last year,
+        &amp; received multiple offers from PMs in Citadel/MLP/Bluecrest/Rokos/Brevan to join their pod
+        w/o going through the typical grad rotations."</em></p>
+      <p><strong>The single most calibrating quote in this report (verbatim):</strong></p>
+      <blockquote>
+        <p><em>"most of the interview articles/guides out there talk about brainteasers, leetcode, options
+          questions etc, but almost none of them talk about how to build/present personal projects in
+          hedge fund interviews. And <strong>most people (including interviewers, practitioners that are way
+          more experienced than me), view personal projects as nothing more than a "show of interest".
+          Which is something I disagree with</strong> (surprise surprise). I think if done right personal
+          projects can push you much further."</em></p>
+      </blockquote>
+      <p>He is candid about noise: <em>"luck and randomness play a huge role. Recruitment is an incredibly
+        noisy environment, so trying to create good generalizations is almost impossible."</em> And he
+        scopes it: <em>"I only have experience with junior/grad role, I suspect for senior roles it's
+        obviously different."</em></p>
+      <p>He also defers to Paleologo: <em>"@__paleologo (a real quant) did write a real quant job advice.
+        So you have to be crazy to read an article by an anon with a dinosaur profile pic but not read
+        the one by a legit quant... there are glaring differences between what practitioners with
+        years of experience emphasize on, vs what me a naive junior emphasizes on."</em></p>
+      <p><strong>Read this carefully.</strong> Even the most pro-personal-project source available concedes that the
+        industry default view — including among interviewers — is that personal projects are merely a
+        "show of interest." His contrary claim is explicitly a minority opinion. Part II with the
+        actual project examples was promised but is not published at the URL.</p>
+
+      <h3 id="quantt-resume-guide">Quantt — "Quant Resume: How to Write One That Gets Interviews in 2026"</h3>
+      <p><a href="https://www.quantt.co.uk/resources/quant-resume-guide" target="_blank" rel="noopener">quantt.co.uk/resources/quant-resume-guide</a> (commercial guide, no named author)</p>
+      <ul>
+        <li><strong>"A GitHub link with substantial projects is one of the strongest signals you can send."</strong></li>
+        <li><strong>"Projects are proof of genuine interest and initiative — two things that are hard to fake."</strong></li>
+        <li><em>"'Developed quantitative models' tells a recruiter nothing. Which models? What data? What
+          was the result? Specificity is what separates a strong CV from a weak one."</em></li>
+        <li><em>"Numbers are the currency of quant finance. A resume without quantified results reads as
+          though you either didn't achieve anything measurable."</em></li>
+        <li>On listing skills: <em>"If you write 'C++, Java, Scala, Rust, Julia, MATLAB, R, Python' but can
+          only competently code in two of those languages, you've created a trap for yourself...
+          Interviewers will pick the most obscure item on your list."</em></li>
+        <li>Named red-flag examples of <em>unbelievable</em> numbers: a <strong>Sharpe ratio of 12</strong> <em>"without saying
+          it came from a short and carefully chosen backtest"</em>; <strong>95%+ accuracy predicting stock
+          prices</strong> <em>"with no time horizon or out-of-sample proof"</em>; a <strong>$5M P&amp;L gain</strong> <em>"from a paper
+          trading sim with no transaction costs or slippage"</em>.</li>
+        <li>Strong-bullet example given: <em>"Implemented Monte Carlo pricer for European and Asian options
+          in C++, using variance reduction techniques (antithetic variates, control variates) to
+          reduce pricing error by 60% vs naive simulation"</em>.</li>
+        <li><em>"One excellent project beats five unfinished ones - aim for depth, reproducibility, and
+          clean communication."</em></li>
+      </ul>
+
+      <h3 id="quantt-break-into-quant">Quantt — "How to Break Into Quant Finance"</h3>
+      <p><a href="https://www.quantt.co.uk/resources/landing-your-first-role-breaking-into-quant-finance" target="_blank" rel="noopener">quantt.co.uk/resources/landing-your-first-role-breaking-into-quant-finance</a></p>
+      <p>On whether GitHub/projects matter, verbatim: <strong>"Recruiters and hiring managers do check this,
+        especially when deciding between similar candidates."</strong></p>
+      <p><strong>This is the most honest single-sentence calibration found.</strong> Projects are a <strong>tiebreaker
+        between comparable candidates</strong>, not a mechanism that creates candidacy.</p>
+      <p>Also: <em>"If you have a strong quantitative background, targeted preparation takes 3-6 months
+        (interview prep, building projects, applications). Career changers from non-quantitative
+        fields should allow 1-2 years."</em></p>
+
+      <h3 id="street-of-walls">Street of Walls — Quantitative Recruiting</h3>
+      <p><a href="https://www.streetofwalls.com/finance-training-courses/quantitative-hedge-fund-training/quant-recruiting/" target="_blank" rel="noopener">streetofwalls.com/finance-training-courses/quantitative-hedge-fund-training/quant-recruiting/</a></p>
+      <ul>
+        <li><em>"many firms may not actively recruit for such candidates by visiting college campuses"</em> —
+          candidates must <em>"scout out your own role, rather than relying on a job board or on-campus
+          recruiting."</em></li>
+        <li><em>"once a job is posted, a firm can receive hundreds of resumes for a single position"</em> —
+          direct outreach to hiring managers is critical to standing out.</li>
+        <li>Advises a cover letter that details <em>"your quantitative skills and past history by
+          referencing prior work projects or college assignments"</em> and shows <em>"that quantitative
+          finance interests you, and give solid reasons why."</em> (Note this directly contradicts Jane
+          Street's official "Do I need a cover letter? Nope!")</li>
+      </ul>
+
+      <h3 id="openquant-portfolio-projects">OpenQuant — Quantitative Finance Portfolio Projects</h3>
+      <p><a href="https://openquant.co/blog/quantitative-finance-portfolio-projects" target="_blank" rel="noopener">openquant.co/blog/quantitative-finance-portfolio-projects</a></p>
+      <p>No named author or stated authority. Claim: <em>"side projects are one of the best ways to
+        highlight these attributes. Not only do candidates who have completed side projects tend to
+        pass more resume screens"</em> — asserted without data. Treat as marketing.</p>
+
+      <h3 id="youngandcalculated-hiring-funnel">"The Hiring Funnel at Top Quant Firms" — youngandcalculated (anonymous newsletter)</h3>
+      <p><a href="https://youngandcalculated.substack.com/p/the-hiring-funnel-at-top-quant-firms" target="_blank" rel="noopener">youngandcalculated.substack.com/p/the-hiring-funnel-at-top-quant-firms</a></p>
+      <ul>
+        <li><em>"Getting a quant role at a firm like Jane Street, SIG, Optiver, Two Sigma, or D.E. Shaw is
+          a multi-stage elimination process."</em></li>
+        <li>Names as a mistake: <strong>"Missing a GitHub. Firms are actively reviewing GitHub profiles now,
+          particularly for any role touching implementation."</strong></li>
+        <li>Also flags <em>"Listing every programming language you have touched"</em> and <em>"Generic bullet
+          points with no numbers."</em></li>
+        <li>Anonymous and partly paywalled; lowest weight.</li>
+      </ul>
+
+      <hr>
+
+      <h2 id="synthesis">SYNTHESIS</h2>
+
+      <h2 id="a-credibility-bridge-playbook">(a) The credibility-bridge playbook</h2>
+      <p>Ordered. Each step is justified by a source above.</p>
+      <p><strong>Step 0 — Accept what the site is for.</strong> No source in this report describes a personal
+        website as a hiring channel. Paleologo — who screens résumés for a living at a firm on Brad's
+        target list — does not mention personal sites once in 15 pages. Jane Street's full FAQ does not
+        mention them. HRT's interviewing post does not mention them. The honest model is:
+        <strong>the résumé and the referral get the interview; the site is what converts a warm reader —
+        a recruiter mid-screen, a hiring manager after a referral, a PM before a call — from "plausible"
+        to "worth an hour."</strong> Design for the warm reader, not for discovery.</p>
+      <p><strong>Step 1 — Put the isomorphism in the first sentence, not the third paragraph.</strong> Two Sigma's
+        own switcher stories are all structurally <em>"the basic problem set is very similar"</em> (Rob,
+        intelligence community) and <em>"let's do a similar thing in finance"</em> (Mike, Google). Jakub's
+        entire positioning is four words: <em>"a physicist-turned-quantitative trader."</em> Brad needs one
+        sentence that names the old domain, the new domain, and the shared problem — e.g. state
+        estimation from noisy, non-stationary sensor data → signal extraction from noisy,
+        non-stationary market data. Optiver's own criterion is literally <em>"comfortable reasoning about
+        noisy data, imperfect signals, and risk."</em> Use their vocabulary.</p>
+      <p><strong>Step 2 — Lead with the research artifact framed as research, not as a product.</strong> Two Sigma's
+        posted qualification is <em>"Performed an in-depth research project, examining real-world data."</em>
+        QuantStart concedes the switcher path requires <em>"examples of other rigourous research."</em> So the
+        vol system should be presented as <strong>a research program with findings</strong>, not as "my trading bot"
+        or "my platform." Title it as a question answered, not a system built.</p>
+      <p><strong>Step 3 — Organize every write-up on HRT's three stated axes: simplicity, reproducibility,
+        generality.</strong> These are the words a hiring firm published as its own evaluation criteria for
+        research. Reproducibility means runnable notebooks and pinned data provenance (Makarewicz's
+        <code>docs/</code> with data contracts is the model). Generality means: does it hold on other underlyings,
+        other regimes, other years. Simplicity means: prefer the two-parameter model that works to the
+        neural net that works slightly better.</p>
+      <p><strong>Step 4 — Make the evaluation protocol the headline, and the returns a footnote.</strong> This is
+        the strongest available differentiator, because almost no public site does it. Publish, for
+        every result: sample period; in-sample/out-of-sample split; <strong>number of variants tried
+        (López de Prado: "it is imperative to control for the number of trials")</strong>; purging and
+        embargoing; cost, slippage, and margin assumptions; capacity limits. Report <strong>OOS R² against a
+        naive baseline</strong> the way Makarewicz does ("about 30% OOS R²"), and a <strong>deflated Sharpe ratio</strong>
+        rather than a raw one. Kinlay's site is the presentational model: confidence intervals, explicit
+        limitation sections, published negative results.</p>
+      <p><strong>Step 5 — Publish the failures, prominently and first-person.</strong> Longmore's about page leads
+        with <em>"years of every beginner mistake in the book... throwing machine learning at market data
+        and calling it research."</em> Jacobson publishes vol blow-up post-mortems. Paleologo's polled
+        managers named <strong>humility</strong> — <em>"when something does not work, admit it early and openly,
+        examine why, and move on"</em> — as a top-four trait, and he prescribes Feynman: <em>"you must not
+        fool yourself--and you are the easiest person to fool."</em> HRT independently says <em>"it is easy to
+        lie to ourselves."</em> A documented killed strategy, with the reason it died, is worth more to
+        this audience than a working one, because it is the only cheap way to prove Brad won't sell his
+        future employer a false discovery.</p>
+      <p><strong>Step 6 — Ship one hard, named, installable artifact.</strong> Letian Wang has <code>quanttrader</code> on PyPI;
+        Bester has the <em>Quantitative Primer</em>; Chan has books. A named library or a genuinely reusable
+        dataset/tool is a harder credential than a notebook collection, and it is checkable. Quantt:
+        <em>"One excellent project beats five unfinished ones."</em></p>
+      <p><strong>Step 7 — Demonstrate market-domain literacy, not options-textbook literacy.</strong> SIG budgets a
+        three-month in-house finance class and says <em>"the ability to develop a new idea or approach to
+        a problem is far more valued than having a preexisting knowledge of finance."</em> Paleologo:
+        <em>"I do not recommend any finance books. You will learn that on the job."</em> So do <strong>not</strong> build a
+        site that proves Brad has learned Black-Scholes. Build one that proves he can frame a good
+        question about the vol surface and design an experiment that could falsify his own answer.
+        Microstructure/frictions realism (Makarewicz's per-leg costs, Reg-T margin, delta-hedge
+        rebalance policy) is the credible form of "I know how markets actually work."</p>
+      <p><strong>Step 8 — Keep the site's surface area exactly equal to what he can defend.</strong> Bester:
+        <em>"Hedge funds... will ask you specific questions about stuff on your CV. If you mention spatial
+        statistics, they will ask you questions about model comparison and Gaussian processes."</em> HRT:
+        the common failure is <em>shallow</em> fundamentals, and candidates should know <em>why</em> a tool exists.
+        Every technique named on the site is a scheduled interview question. Prune accordingly.</p>
+      <p><strong>Step 9 — Write to be understood.</strong> HRT: <em>"We rate our engineers as much on communication as
+        we do on technical ability."</em> Two Sigma's qualification: <em>"communicate complex ideas clearly."</em>
+        Ray's entire premise: <em>"you don't really know what you're talking about unless you can present
+        the information in a digestible and intuitive way"</em> — and that blog belongs to someone who
+        went from UCLA CS to HRT in New York. Expository clarity is itself a screened-for trait.</p>
+      <p><strong>Step 10 — Spend most of the effort off-site.</strong> Chan's opportunities are <em>"inbound... because
+        of the books I published"</em> — a decade of artifacts. Jacobson got his seat through a mentor.
+        Paleologo's list is postings, events, mentors, and preparation. H.W. Anderson tracks people
+        already in industry. The site should be the thing Brad points at; the pointing is a separate,
+        larger job.</p>
+
+      <h2 id="b-ranked-what-matters">(b) Ranked: what hiring-side evidence says actually matters</h2>
+      <ol>
+        <li><strong>Demonstrable coding ability.</strong> QuantStart: <em>"80-90% of a quant's day is spent coding."</em>
+          Two Sigma requires an actual language proficiency. Hodzic (Selby Jennings): Python/Java are
+          the junior-level credential. Baker (Korn Ferry): programming skills matter more than
+          investing interest. Durlston: LeetCode-medium-to-hard is required at top firms.</li>
+        <li><strong>Applied probability and statistics depth.</strong> Paleologo: <em>"Applied probabilistic modeling
+          and statistics are very important skills to have."</em> QuantStart: <em>"absolutely essential."</em>
+          Durlston: <em>"Probability (very important)."</em></li>
+        <li><strong>An in-depth research project on real-world data.</strong> A literal Two Sigma qualification
+          bullet. QuantStart's stated substitute for missing quant-finance experience.</li>
+        <li><strong>Evaluation discipline / not fooling yourself.</strong> HRT: <em>"simplicity, reproducibility, and
+          generality"</em>, <em>"easy to lie to ourselves."</em> Paleologo prescribes Feynman's Cargo Cult
+          Science. López de Prado's entire evaluation taxonomy (#8–#10).</li>
+        <li><strong>Original problem-framing over domain knowledge.</strong> SIG, verbatim: <em>"The ability to develop
+          a new idea or approach to a problem is far more valued than having a preexisting knowledge
+          of finance."</em> Paleologo's "creativity."</li>
+        <li><strong>Communication.</strong> HRT rates it equal to technical ability; Two Sigma names it; Optiver names
+          <em>"clear communication across disciplines."</em></li>
+        <li><strong>Curiosity and humility as observable behaviors.</strong> Paleologo's top-four traits from 50–100
+          managers; Optiver's <em>"curiosity and ownership."</em></li>
+        <li><strong>The résumé itself, specific and quantified.</strong> The one artifact every source names.
+          Paleologo screened <em>"a couple thousand résumés."</em> Jane Street: no cover letter needed —
+          the résumé plus a free-text box is the channel.</li>
+        <li><strong>Referrals, mentors, and warm channels.</strong> Jacobson got his seat via a former boss/mentor.
+          Paleologo: get <em>"one or two mentors."</em> Street of Walls: <em>"scout out your own role"</em> and
+          contact hiring managers directly. H.W. Anderson sources by tracking people in industry.</li>
+        <li><strong>A substantive GitHub — as a tiebreaker.</strong> Quantt: <em>"Recruiters and hiring managers do
+          check this, <strong>especially when deciding between similar candidates</strong>."</em> H.W. Anderson values
+          people who <em>"created... their own systematic trading strategies."</em> But note QM's honest
+          framing that the industry default is "show of interest."</li>
+        <li><strong>A personal website, specifically.</strong> Lowest rank, and the evidence is mostly <em>absence</em>:
+          zero mentions across Paleologo, Jane Street's FAQ, HRT, Two Sigma, D. E. Shaw, SIG, and
+          Optiver. Its realistic function is conversion of already-interested readers.</li>
+      </ol>
+
+      <h2 id="c-red-flag-list">(c) Red-flag list — things on a personal site that actively hurt a quant candidate</h2>
+      <ol>
+        <li><strong>A headline return or Sharpe number with no trial count.</strong> López de Prado: <em>"it is
+          imperative to control for the number of trials"</em>; <em>"It typically takes about 20 such
+          iterations to discover a (false) investment strategy"</em> at 5% significance. A backtest Sharpe
+          with no disclosed search process is read as evidence of <em>not knowing this</em>, which is
+          disqualifying in a way that having no number is not.</li>
+        <li><strong>"Out-of-sample" used as a magic word.</strong> López de Prado, verbatim: <strong>"It does not matter if
+          the backtest is a walk-forward out-of-sample. The fact that we are repeating a test over and
+          over on the same data will likely lead to a false discovery."</strong> Brad's live OOS track record
+          is genuinely valuable — but only if presented with the trial count, the pre-registration date,
+          and the sample size, and with explicit acknowledgment that a short live sample has enormous
+          error bars.</li>
+        <li><strong>Implausible numbers.</strong> Quantt's named examples: a Sharpe of 12; 95%+ directional accuracy;
+          a P&amp;L figure from a paper-trading sim with no costs or slippage. Dev Kewlani's live site
+          carries <em>"250%+ annual returns (pre-costs)"</em> on an hourly-rebalanced crypto strategy — a
+          concrete example of the failure mode.</li>
+        <li><strong>Results with no cost, slippage, or capacity model.</strong> The presence of per-leg commissions,
+          bid/ask, margin constraints, and hedge-cost attribution (as in Makarewicz's repo) is what
+          separates a real vol backtest from a toy. Their absence is immediately visible to a vol
+          person.</li>
+        <li><strong>No risk section at all.</strong> Optiver screens for <em>"comfort with uncertainty and risk"</em>;
+          Paleologo's own career is in risk. A vol strategy presented without drawdown behavior, tail
+          exposure, gap risk, and what would make it stop working reads as naive about short-vol
+          payoffs specifically.</li>
+        <li><strong>"AI trading bot" / buzzword ML framing.</strong> HRT: <em>"an incremental 0.1% improvement in the
+          accuracy of a neural network's ability to distinguish dog breeds might not translate to
+          predicting the price of a stock."</em> López de Prado: <em>"ML algorithms will confuse statistical
+          flukes with patterns."</em> Longmore's own confession: <em>"throwing machine learning at market data
+          and calling it research."</em> Model complexity presented as the achievement is a negative signal.</li>
+        <li><strong>Skills walls / technology laundry lists.</strong> Quantt: <em>"If you write 'C++, Java, Scala, Rust,
+          Julia, MATLAB, R, Python' but can only competently code in two of those languages, you've
+          created a trap for yourself... Interviewers will pick the most obscure item on your list."</em>
+          Same applies to a badge grid of libraries.</li>
+        <li><strong>Anything he cannot defend for 20 minutes.</strong> Bester: <em>"they will ask you specific questions
+          about stuff on your CV."</em> HRT: shallow fundamentals is the top failure mode. Name-dropping
+          "combinatorial purged cross-validation" without having implemented and understood it is
+          worse than not mentioning it.</li>
+        <li><strong>Vague accomplishment language.</strong> Quantt: <em>"'Developed quantitative models' tells a
+          recruiter nothing. Which models? What data? What was the result?"</em></li>
+        <li><strong>Academic-portfolio layout.</strong> The publications/projects grid (crangi.github.io) signals
+          coursework, not desk-ready research. Brad is an industry practitioner and should not adopt
+          a PhD-applicant template.</li>
+        <li><strong>A bare artifact dump with no framing.</strong> Makarewicz's landing page — "Notebook Reports" and
+          six file links — wastes genuinely strong research. Also its inverse: a beautiful landing
+          page with nothing behind it.</li>
+        <li><strong>Burying the transferable work.</strong> Hegde's ML-for-trade-order-selection experience at
+          Fidelity sits inside a reverse-chron list dominated by robotics. Brad's state-estimation and
+          real-time optimization work must be surfaced and translated into market vocabulary, or it
+          reads as generic ML résumé filler — which the pinned project memory correctly identifies as
+          lower-value for this audience.</li>
+        <li><strong>Overclaiming the identity.</strong> Calling himself a "quant" before holding the role invites the
+          comparison he'd lose. "Engineer building a volatility research program" is defensible;
+          "quantitative researcher" on a site with no desk experience is not.</li>
+        <li><strong>Anything unfalsifiable.</strong> Feynman via Paleologo: <em>"give all of the information to help
+          others to judge the value of your contribution; not just the information that leads to
+          judgment in one particular direction."</em> Results presented so that no reader could ever
+          disconfirm them are read as evasion by people whose job is disconfirming things.</li>
+      </ol>
+
+      <h2 id="d-blunt-assessment">(d) Blunt assessment: how much does a personal site move the needle?</h2>
+      <p><strong>Less than Brad hopes. Materially less.</strong> The evidence:</p>
+      <p><strong>Against:</strong></p>
+      <ul>
+        <li><strong>Giuseppe Paleologo</strong> — Global Head of QR at Balyasny, ex-HRT/Millennium/Citadel, self-
+          reported screener of <em>"a couple thousand résumés"</em> — wrote ~15 pages of buy-side quant career
+          advice in December 2025 and mentioned personal websites, blogs, GitHub, and side projects
+          <strong>zero times.</strong> His enumerated pre-interview actions are: follow firms and apply promptly,
+          research the employer, attend recruiting events with a résumé, join clubs, read Matt Levine,
+          read eight books. Nothing about building or publishing anything.</li>
+        <li><strong>Jane Street's</strong> interviewing page and ~25-question FAQ mention them zero times, and
+          explicitly say a <strong>cover letter is unnecessary</strong> — the résumé plus a free-text box is the
+          entire pre-interview channel.</li>
+        <li><strong>HRT's</strong> own interviewing post: zero mentions.</li>
+        <li><strong>Two Sigma, D. E. Shaw, SIG, Optiver</strong> job/careers pages: zero mentions.</li>
+        <li><strong>QuantStart</strong> names <em>"your current network"</em> and <em>"dedicated quantitative finance
+          recruiters"</em> as the routes.</li>
+        <li><strong>Even the most pro-project source available (QM/quantymacro)</strong> concedes: <em>"most people
+          (including interviewers, practitioners that are way more experienced than me), view personal
+          projects as nothing more than a 'show of interest'."</em> His disagreement is explicitly a
+          minority position, and explicitly scoped to junior/grad roles.</li>
+        <li><strong>Quantt's</strong> honest framing: projects get checked <em>"especially when deciding between similar
+          candidates"</em> — i.e., a tiebreaker.</li>
+        <li><strong>Harel Jacobson</strong>, the closest topical analogue in the whole report, got his quant trader
+          seat <em>"under [his former boss's] mentorship."</em> The vol writing came afterward.</li>
+      </ul>
+      <p><strong>For:</strong></p>
+      <ul>
+        <li><strong>Ernie Chan</strong>: <em>"Everybody that I have worked with since I became an independent trader is
+          inbound... These traders reached out to me because of the books I published."</em> Public
+          artifacts demonstrably generate inbound — at book scale, over years.</li>
+        <li><strong>H.W. Anderson</strong>, an actual quant search firm, explicitly seeks people who have <em>"created and
+          are able to create their own systematic trading strategies"</em> — the most Brad-favourable
+          recruiter language found.</li>
+        <li><strong>Two Sigma's own posted qualification</strong> asks for <em>"an in-depth research project, examining
+          real-world data."</em> Something must evidence that, and a well-built site is the natural vehicle.</li>
+        <li><strong>QuantStart</strong> concedes a switcher can substitute <em>"examples of other rigourous research"</em> for
+          quant-finance experience. The site is where that evidence lives.</li>
+        <li><strong>Ray</strong> went UCLA CS → HRT Algorithm Engineer in New York with a public blog that is purely
+          expository — and it reached Reddit and Hacker News. Not proof of causation, but the closest
+          positive case, and the mechanism is <em>demonstrated clarity of thought</em>, not a track record.</li>
+        <li>Firms are unanimous that <strong>finance background is not required</strong> (Jane Street: <em>"Finance
+          background: optional"</em>; Two Sigma: <em>"more than half... come from outside the finance
+          industry"</em>; SIG: originality <em>"far more valued than having a preexisting knowledge of
+          finance"</em>). <strong>The switcher door is genuinely open.</strong> The bottleneck is not "does he have
+          finance experience" — it is getting a résumé read at all, given Paleologo's ~700 quant hires
+          per year against a supply that includes ~20,000 sell-side people trying to switch.</li>
+      </ul>
+      <p><strong>Ranked expected value of Brad's channels:</strong></p>
+      <ol>
+        <li><strong>Referral / warm introduction</strong> into a specific team. Every source points here; Jacobson's
+          actual path; Paleologo's mentor advice; H.W. Anderson's sourcing model.</li>
+        <li><strong>A résumé that is specific, quantified, and legible as quant-adjacent</strong>, applied promptly
+          to posted roles. The one artifact universally named.</li>
+        <li><strong>Specialist recruiter relationships</strong> (Selby Jennings, Durlston, H.W. Anderson, Oxford
+          Knight) — they are named as a route by QuantStart and are actively sourcing.</li>
+        <li><strong>Interview readiness</strong> — probability, stats, LeetCode-hard, and the ability to defend
+          everything he has ever written down.</li>
+        <li><strong>The site + GitHub</strong> — conversion and tiebreaking. Real, but downstream of 1–4.</li>
+        <li><strong>Public writing at scale over time</strong> (the Chan mechanism) — highest ceiling, longest
+          horizon, least reliable on a job-search timeline.</li>
+      </ol>
+      <p><strong>The reframe that follows.</strong> The site should stop being conceived as a lead-generation
+        instrument and start being conceived as <strong>a defensibility instrument</strong>: the thing that makes a
+        warm reader confident enough to spend an hour, and the thing that makes Brad unshakeable when
+        someone probes his claims in an interview. Its highest-leverage content is not the best
+        strategy he has found — it is the documented evidence that he knows how easily he could have
+        fooled himself, and what he did about it. That is the one thing a career switcher can
+        credibly offer that a strong résumé cannot, and — per Paleologo's polled managers, per HRT's
+        own blog, per Feynman via both — it is exactly what the buyers say they are looking for.</p>
+
+      <hr>
+
+      <h2 id="appendix-urls">Appendix — every URL fetched and verified for this report</h2>
+
+      <p><strong>Career-switcher / practitioner sites</strong></p>
+      <ul>
+        <li><a href="https://oneraynyday.github.io/about/" target="_blank" rel="noopener">oneraynyday.github.io/about/</a></li>
+        <li><a href="https://robotwealth.com/about-robot-wealth/" target="_blank" rel="noopener">robotwealth.com/about-robot-wealth/</a></li>
+        <li><a href="https://epchan.com/" target="_blank" rel="noopener">epchan.com/</a></li>
+        <li><a href="https://engineerquant.substack.com/about" target="_blank" rel="noopener">engineerquant.substack.com/about</a></li>
+        <li><a href="https://quantjourney.substack.com/about" target="_blank" rel="noopener">quantjourney.substack.com/about</a></li>
+        <li><a href="https://tradingtechnologies.com/blog/2021/02/08/5-questions-with-harel-jacobson-of-oporto-delta/" target="_blank" rel="noopener">tradingtechnologies.com/blog/2021/02/08/5-questions-with-harel-jacobson-of-oporto-delta/</a></li>
+        <li><a href="https://letianzj.github.io/" target="_blank" rel="noopener">letianzj.github.io/</a></li>
+        <li><a href="https://markrbest.github.io/" target="_blank" rel="noopener">markrbest.github.io/</a></li>
+        <li><a href="https://tr8dr.github.io/about/" target="_blank" rel="noopener">tr8dr.github.io/about/</a></li>
+        <li><a href="https://jonathankinlay.com/" target="_blank" rel="noopener">jonathankinlay.com/</a></li>
+        <li><a href="https://anthonymakarewicz.github.io/volatility-trading/" target="_blank" rel="noopener">anthonymakarewicz.github.io/volatility-trading/</a></li>
+        <li><a href="https://github.com/anthonymakarewicz/volatility-trading" target="_blank" rel="noopener">github.com/anthonymakarewicz/volatility-trading</a></li>
+        <li><a href="https://rickiheicklen.com/" target="_blank" rel="noopener">rickiheicklen.com/</a></li>
+        <li><a href="https://dev-kewlani.github.io/" target="_blank" rel="noopener">dev-kewlani.github.io/</a></li>
+        <li><a href="https://crangi.github.io/" target="_blank" rel="noopener">crangi.github.io/</a></li>
+        <li><a href="https://hegde95.github.io/" target="_blank" rel="noopener">hegde95.github.io/</a></li>
+        <li><a href="https://databento.com/blog/quants-worth-following-ernie-chan" target="_blank" rel="noopener">databento.com/blog/quants-worth-following-ernie-chan</a></li>
+      </ul>
+
+      <p><strong>Firm-official</strong></p>
+      <ul>
+        <li><a href="https://www.janestreet.com/join-jane-street/" target="_blank" rel="noopener">janestreet.com/join-jane-street/</a></li>
+        <li><a href="https://www.janestreet.com/join-jane-street/interviewing/" target="_blank" rel="noopener">janestreet.com/join-jane-street/interviewing/</a></li>
+        <li><a href="https://careers.twosigma.com/careers/JobDetail/New-York-New-York-United-States-Quantitative-Researcher-Intern-2027-Summer/13945" target="_blank" rel="noopener">careers.twosigma.com/careers/JobDetail/New-York-New-York-United-States-Quantitative-Researcher-Intern-2027-Summer/13945</a></li>
+        <li><a href="https://www.twosigma.com/articles/from-stem-to-finance-employees-share-their-stories/" target="_blank" rel="noopener">twosigma.com/articles/from-stem-to-finance-employees-share-their-stories/</a></li>
+        <li><a href="https://www.twosigma.com/careers/quantitative-research-data-science/" target="_blank" rel="noopener">twosigma.com/careers/quantitative-research-data-science/</a></li>
+        <li><a href="https://www.deshaw.com/careers/quantitative-analyst-2636" target="_blank" rel="noopener">deshaw.com/careers/quantitative-analyst-2636</a></li>
+        <li><a href="https://sig.com/careers/quant/" target="_blank" rel="noopener">sig.com/careers/quant/</a></li>
+        <li><a href="https://www.optiver.com/join-us/students/internships/research/" target="_blank" rel="noopener">optiver.com/join-us/students/internships/research/</a></li>
+        <li><a href="https://www.hudsonrivertrading.com/hrtbeat/engineering-and-interviewing-at-hrt/" target="_blank" rel="noopener">hudsonrivertrading.com/hrtbeat/engineering-and-interviewing-at-hrt/</a></li>
+        <li><a href="https://www.hudsonrivertrading.com/hrtbeat/trading-machine-learning/" target="_blank" rel="noopener">hudsonrivertrading.com/hrtbeat/trading-machine-learning/</a></li>
+      </ul>
+
+      <p><strong>Named practitioners / research</strong></p>
+      <ul>
+        <li><a href="https://byfire.substack.com/p/2025-buy-side-quant-job-advice" target="_blank" rel="noopener">byfire.substack.com/p/2025-buy-side-quant-job-advice</a> (Paleologo)</li>
+        <li><a href="https://www.garp.org/hubfs/Whitepapers/a1Z1W0000054x6lUAA.pdf" target="_blank" rel="noopener">garp.org/hubfs/Whitepapers/a1Z1W0000054x6lUAA.pdf</a> (López de Prado)</li>
+        <li><a href="https://icme.stanford.edu/events/tech-talk-featuring-stanford-alum-gappy-paleologo-global-head-quantitative-research-balyasny" target="_blank" rel="noopener">icme.stanford.edu/events/tech-talk-featuring-stanford-alum-gappy-paleologo-global-head-quantitative-research-balyasny</a></li>
+        <li><a href="https://www.rebellionresearch.com/2024-quant-of-the-year-dr-giuseppe-paleologo-balyasnys-incoming-head-of-quant-research-future-of-generative-ai-in-hedge-funds" target="_blank" rel="noopener">rebellionresearch.com/2024-quant-of-the-year-dr-giuseppe-paleologo-balyasnys-incoming-head-of-quant-research-future-of-generative-ai-in-hedge-funds</a></li>
+        <li><a href="https://www.efinancialcareers.com/news/2018/05/quant-hedge-fund-interviews" target="_blank" rel="noopener">efinancialcareers.com/news/2018/05/quant-hedge-fund-interviews</a> (Bester)</li>
+        <li><a href="https://www.efinancialcareers.com/news/2016/02/quant-hedge-funds-are-ramping-up-their-hiring-heres-what-they-look-for-in-candidates" target="_blank" rel="noopener">efinancialcareers.com/news/2016/02/quant-hedge-funds-are-ramping-up-their-hiring-heres-what-they-look-for-in-candidates</a> (Hodzic, Baker)</li>
+        <li><a href="https://github.com/dwcoder/QuantitativePrimer" target="_blank" rel="noopener">github.com/dwcoder/QuantitativePrimer</a></li>
+      </ul>
+
+      <p><strong>Recruiters</strong></p>
+      <ul>
+        <li><a href="https://www.hw-anderson.com/quant-headhunter" target="_blank" rel="noopener">hw-anderson.com/quant-headhunter</a></li>
+        <li><a href="https://durlstonpartners.com/engineer-to-quant-challenge-accepted/" target="_blank" rel="noopener">durlstonpartners.com/engineer-to-quant-challenge-accepted/</a></li>
+        <li><a href="https://www.streetofwalls.com/finance-training-courses/quantitative-hedge-fund-training/quant-recruiting/" target="_blank" rel="noopener">streetofwalls.com/finance-training-courses/quantitative-hedge-fund-training/quant-recruiting/</a></li>
+        <li><a href="https://www.quantstart.com/articles/engineering-to-quant-finance-how-to-make-the-transition/" target="_blank" rel="noopener">quantstart.com/articles/engineering-to-quant-finance-how-to-make-the-transition/</a></li>
+      </ul>
+
+      <p><strong>Commercial / anonymous</strong></p>
+      <ul>
+        <li><a href="https://quantymacro.substack.com/p/personal-projects-guide" target="_blank" rel="noopener">quantymacro.substack.com/p/personal-projects-guide</a></li>
+        <li><a href="https://www.quantt.co.uk/resources/quant-resume-guide" target="_blank" rel="noopener">quantt.co.uk/resources/quant-resume-guide</a></li>
+        <li><a href="https://www.quantt.co.uk/resources/landing-your-first-role-breaking-into-quant-finance" target="_blank" rel="noopener">quantt.co.uk/resources/landing-your-first-role-breaking-into-quant-finance</a></li>
+        <li><a href="https://openquant.co/blog/quantitative-finance-portfolio-projects" target="_blank" rel="noopener">openquant.co/blog/quantitative-finance-portfolio-projects</a></li>
+        <li><a href="https://youngandcalculated.substack.com/p/the-hiring-funnel-at-top-quant-firms" target="_blank" rel="noopener">youngandcalculated.substack.com/p/the-hiring-funnel-at-top-quant-firms</a></li>
+        <li><a href="https://moontower.substack.com/p/a-talk-i-gave-at-a-quant-bootcamp" target="_blank" rel="noopener">moontower.substack.com/p/a-talk-i-gave-at-a-quant-bootcamp</a> (paywalled; not cited for substance)</li>
+        <li><a href="https://news.ycombinator.com/item?id=17235210" target="_blank" rel="noopener">news.ycombinator.com/item?id=17235210</a> (via HN Algolia API; low signal, not cited for substance)</li>
+      </ul>
+
+      <p><strong>Could not access:</strong> all of reddit.com (crawler-blocked); quantnet.com (HTTP 403).</p>
+    </main>
+  </div>
+</body>
+</html>
