@@ -541,11 +541,27 @@ def handbook_pages() -> list[str]:
     return [f"handbook/{name}" for name in names]
 
 
+def docs_pages() -> list[str]:
+    """Project-documentation pages for the sitemap, overview first.
+
+    Discovered rather than declared, like the handbook: docs/ mirrors the
+    repo's Markdown documentation and is still growing, so a page added there
+    reaches the sitemap on the next build without a second edit here. The
+    pages are hand-authored in this repository but carry no stamp markers, so
+    they join the sitemap only — the build never writes them.
+    """
+    names = sorted(p.name for p in (ROOT / "docs").glob("*.html"))
+    if "index.html" in names:
+        names.remove("index.html")
+        names.insert(0, "index.html")
+    return [f"docs/{name}" for name in names]
+
+
 def sitemap_pages() -> list[str]:
     """Every indexable page outside the log, in the order the nav presents it."""
     pages = list(STATIC_PAGES)
     after_track = pages.index("vol/track-record.html") + 1
-    return pages[:after_track] + handbook_pages() + pages[after_track:]
+    return pages[:after_track] + handbook_pages() + docs_pages() + pages[after_track:]
 
 
 def render_sitemap(entries: list[Entry]) -> str:

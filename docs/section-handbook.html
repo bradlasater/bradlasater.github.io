@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Handbook &amp; sync — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/section-handbook.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="How the Crack the Sky handbook reaches bradlasater.com: the private data_ingest_infra source repository, the scripts/sync_docs.py pipeline, the OKLCH reskin, and the handbook-chrome.css overlay.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/section-handbook.html">
+  <meta property="og:title" content="Handbook &amp; sync — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html" class="active">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Handbook &amp; sync</h1>
+        </div>
+        <div class="meta">
+          living document · maintain by hand<br>
+          handbook/ · scripts/sync_docs.py · assets/css/handbook-chrome.css
+        </div>
+      </header>
+
+      <h2 id="purpose">Purpose</h2>
+      <p class="lead">
+        <code>handbook/</code> is the published copy of <em>Crack the Sky</em>, the
+        system handbook for the running ingest box. It is authored in a different,
+        private repository (<code>data_ingest_infra/docs</code>), kept next to the
+        code it describes so the two are edited in the same commit — moving it
+        here would break exactly the property that makes it trustworthy. This
+        repository therefore owns none of the content:
+        <a href="https://github.com/bradlasater/bradlasater.github.io/blob/main/scripts/sync_docs.py" target="_blank" rel="noopener"><code>scripts/sync_docs.py</code></a>
+        copies the source over, re-skins it into the site's design system, adds
+        the metadata a public URL needs, and treats <code>handbook/</code> as
+        derived output.
+      </p>
+      <div class="callout">
+        <strong>Rule.</strong> Never hand-edit anything under <code>handbook/</code>.
+        Every file there is overwritten from source on each sync, and anything
+        that no longer exists upstream is deleted. Every synced file carries a
+        banner comment saying so. The edit belongs in the source repository,
+        followed by <code>python3 scripts/sync_docs.py</code> and a commit here.
+      </div>
+
+      <h2 id="key-files">Key files</h2>
+      <table>
+        <thead>
+          <tr><th>Path</th><th>Role</th><th>Owned by</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>data_ingest_infra/docs</code></td>
+            <td>The actual handbook source — HTML pages plus one shared <code>site.css</code>. Sits at <code>../data_ingest_infra/docs</code> relative to this repo; private, not cloned everywhere.</td>
+            <td>hand (upstream repo)</td>
+          </tr>
+          <tr>
+            <td><code>handbook/*.html</code> (13 pages)</td>
+            <td>The published handbook: index plus one page per system section (ingest, marketdata, pricing, canary, knobs, …). Synced and transformed; each carries the doctype-adjacent sync banner.</td>
+            <td>generated</td>
+          </tr>
+          <tr>
+            <td><code>handbook/site.css</code></td>
+            <td>The handbook's own shared dark theme, re-skinned at sync time into the site's OKLCH tokens. Carries the CSS sync banner.</td>
+            <td>generated</td>
+          </tr>
+          <tr>
+            <td><code>scripts/sync_docs.py</code></td>
+            <td>The pipeline: fetch, reskin (<code>FONT_MAP</code>/<code>COLOR_MAP</code>), metadata injection, orphan deletion, <code>--check</code> mode.</td>
+            <td>hand</td>
+          </tr>
+          <tr>
+            <td><code>assets/css/handbook-chrome.css</code></td>
+            <td>Overlay stylesheet loaded last on every handbook page (and every <code>docs/</code> page). Owns what string replacement cannot express. Never touched by the sync.</td>
+            <td>hand</td>
+          </tr>
+          <tr>
+            <td><code>handbook/box-operations.html</code></td>
+            <td>The structural exception: off-repo machine state (secrets, installed crontab, self-hosted runner, Healthchecks, IBKR Flex). Own inline styles, no sidebar.</td>
+            <td>generated (but singular)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="how-it-works">How it works</h2>
+      <p>
+        Run <code>python3 scripts/sync_docs.py</code> (optionally
+        <code>--source DIR</code>; default <code>../data_ingest_infra/docs</code>).
+        The script builds the full planned output in memory, then for each file:
+      </p>
+      <ul>
+        <li><strong>Classify.</strong> <code>.html</code> files go through
+          <code>transform_html()</code>, <code>.css</code> files get a banner plus
+          the reskin, and any other file type aborts the run — add a rule rather
+          than copying blind. A missing <code>index.html</code> upstream is also
+          fatal, since <code>/handbook/</code> would 404.</li>
+        <li><strong>Swap the fonts stylesheet first.</strong> The upstream Google
+          Fonts URL names IBM Plex and would trip the reskin's own tripwire, so
+          it is rewritten to the site's Inter / JetBrains Mono / Newsreader URL
+          before anything else.</li>
+        <li><strong>Reskin.</strong> <code>FONT_MAP</code> (IBM Plex Mono →
+          JetBrains Mono, IBM Plex Sans → Inter) and <code>COLOR_MAP</code>
+          (the handbook's warm hex palette → the site's OKLCH tokens, status-chip
+          borders and timeline bars included) are applied as literal string
+          replacements to every synced file, diagrams and inline styles
+          included. Two categorical source colours (<code>#7aa3b0</code>,
+          <code>#4d7380</code>) survive deliberately — they encode REST vs S3
+          identity in the diagrams. Anything unrecognised — a leftover hex
+          colour, an unmapped <code>font-family</code> — fails the sync loudly
+          instead of quietly publishing a page in the old theme.</li>
+        <li><strong>Inject public-URL metadata.</strong> After the reskin (so the
+          tripwire never scans injected content): the sync banner right after
+          the doctype, <code>" — Brad Lasater"</code> appended to the title, and
+          a head block with canonical URL, theme colour, robots, Open Graph /
+          Twitter card tags, favicon, and the
+          <code>handbook-chrome.css</code> link — all marked "Added by
+          scripts/sync_docs.py; not present in the source repository."</li>
+        <li><strong>Link back out.</strong> One <code>&larr; bradlasater.com</code>
+          link is injected as the first item of <code>nav.toc</code>; on the one
+          page without a sidebar it goes at the top of <code>&lt;body&gt;</code>
+          with the <code>hb-back--plain</code> variant instead.</li>
+        <li><strong>Delete orphans.</strong> Any file in <code>handbook/</code>
+          that upstream no longer has is removed. This is why hand edits are
+          not merely overwritten but actively hunted down.</li>
+      </ul>
+      <p>
+        <code>--check</code> mode writes nothing and exits 1 listing stale and
+        orphaned files — the CI-friendly form. Two caveats, both deliberate: it
+        exits 0 when the source repository is not present (so it is safe on a
+        machine where the private repo was never cloned), and it cannot detect
+        drift it cannot see. No workflow in <code>.github/workflows/</code>
+        currently runs it; freshness is a discipline, not an enforced gate.
+        Exit codes: 0 ok (or source absent), 1 stale under <code>--check</code>,
+        2 could not run — an unreadable file must not be reported as "stale".
+      </p>
+
+      <h2 id="two-layer-styling">Two-layer styling</h2>
+      <p>
+        The published handbook renders in the site's design system through two
+        layers with disjoint ownership:
+      </p>
+      <ul>
+        <li><strong>Layer 1 — the reskin (owned by <code>sync_docs.py</code>).</strong>
+          Rewrites palette and font names inside the synced files themselves, so
+          <code>handbook/site.css</code>, the inline SVG diagrams, and
+          box-operations' inline styles all come out in OKLCH tokens and the
+          site's faces. Handbook pages do not load
+          <code>/assets/css/site.css</code>, so the tokens are copied as
+          literals — there is nothing to inherit.</li>
+        <li><strong>Layer 2 — <code>assets/css/handbook-chrome.css</code> (owned
+          by hand, loaded last, never touched by the sync).</strong> Everything
+          string replacement cannot express: selection colour, smooth scrolling,
+          content links underlined at rest (the handbook's own stylesheet only
+          underlines on hover), a <code>:focus-visible</code> outline, the
+          site's inline-code chip treatment, the radius scale (10px containers,
+          pill badges), and the injected <code>.hb-back</code> link — including
+          the specificity fight to keep it from being styled as a chapter link
+          by <code>nav.toc a</code>.</li>
+      </ul>
+      <p>
+        Consequence: if the site's <code>:root</code> palette ever changes, you
+        must update <em>three</em> places by hand — <code>COLOR_MAP</code> in
+        <code>sync_docs.py</code>, the literals in
+        <code>handbook-chrome.css</code>, and the source theme upstream — or the
+        handbook quietly drifts off-palette.
+      </p>
+
+      <h2 id="conventions-and-gotchas">Conventions and gotchas</h2>
+      <ul>
+        <li><strong>The sidebar is upstream's.</strong> Every handbook page
+          carries the same <code>nav.toc</code> chapter list with exactly one
+          <code>class="active"</code> on its own chapter; ingest adds an
+          <code>ol.sub</code> of in-page anchors. This is authored in the source
+          repo and copied verbatim — the sync only prepends the back link.
+          Reorder chapters upstream, then re-sync.</li>
+        <li><strong>box-operations.html is the exception.</strong> It documents
+          machine state the repo cannot declare, keeps its own inline
+          <code>&lt;style&gt;</code> (no <code>handbook/site.css</code>), and has
+          no sidebar and no <code>&lt;main&gt;</code>. The sync's reskin still
+          applies to its inline styles (its status-tag washes have their own
+          <code>COLOR_MAP</code> entries), and handbook-chrome.css reaches it
+          through <code>body &gt;</code> selectors and
+          <code>.hb-back--plain</code>. If you ever add a second sidebar-less
+          page upstream, check both of those paths still hold.</li>
+        <li><strong>A new upstream colour or font breaks the build — that is the
+          feature.</strong> When the sync aborts on an unmapped value, decide
+          whether it maps to a site token (<code>COLOR_MAP</code> /
+          <code>FONT_MAP</code>) or is categorical
+          (<code>ALLOWED_SOURCE_COLORS</code>); never just allowlist your way
+          past a genuine theme leak.</li>
+        <li><strong>The sync refuses a pre-bannered source.</strong> If a synced
+          file ever lands back in the upstream repo (e.g. copied the wrong
+          direction while debugging), <code>transform_html()</code> aborts
+          rather than double-transforming. Strip the banner upstream, or fix
+          your copy-paste.</li>
+        <li><strong>Known sharp edges, unpatched.</strong> The audit lists five:
+          an 8-digit hex hole in the leftover-colour scan, og:title
+          double-escaping if an upstream title ever contains a raw entity,
+          <code>FONTS_URL_RE</code> over-matching single-quoted hrefs, upstream
+          subdirectories silently dropped by <code>plan()</code>, and
+          <code>--check</code> passing on a typo'd source path. See
+          <a href="audit-2026-09-02.html#ci-repo-hygiene">audit item 50</a>.</li>
+      </ul>
+
+      <h2 id="history">History</h2>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Milestone</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-09-01</td>
+            <td>Handbook first published under a Handbook nav tab (<code>35f6fbb</code>): 13 pages plus <code>site.css</code> copied verbatim from <code>data_ingest_infra/docs</code>; <code>handbook-chrome.css</code> created (49 lines) mostly for the back link.</td>
+          </tr>
+          <tr>
+            <td>2026-09-01</td>
+            <td>Reskin at sync time (<code>96a45dd</code>): <code>FONT_MAP</code>/<code>COLOR_MAP</code> transform into the site's OKLCH tokens, with loud failure on unmapped colours; handbook-chrome.css grows into the full interaction overlay.</td>
+          </tr>
+          <tr>
+            <td>2026-09-01</td>
+            <td>PR autofix pair (<code>e09b394</code>, <code>d64ae15</code>): the crude "Plex survived" tripwire replaced with a per-declaration font allowlist scan, plus a regex-escape follow-up fix.</td>
+          </tr>
+          <tr>
+            <td>2026-09-01</td>
+            <td>First content re-sync (<code>6d3f488</code>): upstream prose updates land in ingest, data-flow, knobs, not-built, repo-layout.</td>
+          </tr>
+          <tr>
+            <td>2026-09-02</td>
+            <td>Sync banners name the "Crack the Sky" handbook (<code>1d3052b</code>) — banner-only change across all synced files.</td>
+          </tr>
+          <tr>
+            <td>2026-09-02</td>
+            <td>Full-repo audit fixes (<code>a73f908</code>): og:title now HTML-escaped; unreadable files exit 2 instead of being misreported as stale under <code>--check</code>; chrome CSS gains a few rules.</td>
+          </tr>
+          <tr>
+            <td>2026-09-02</td>
+            <td>Sync falls stale upstream: <code>--check</code> reports <code>404.html</code> (new upstream, absent here), <code>ingest.html</code>, <code>knobs.html</code>, and <code>site.css</code> out of date. Recorded as audit item 1; still open.</td>
+          </tr>
+          <tr>
+            <td>2026-09-03</td>
+            <td><code>/docs/</code> section added (<code>a205377</code>): handbook-chrome.css's header comment and scope extended — it now also serves the hand-maintained docs pages, this one included.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="watch-outs">Watch-outs</h2>
+      <div class="callout">
+        Open items in the <a href="audit-2026-09-02.html">2026-09-02 audit</a>
+        that touch this section:
+        <strong>item 1</strong> — the sync is stale right now; run
+        <code>python3 scripts/sync_docs.py</code> and commit
+        (<a href="audit-2026-09-02.html#do-first-correctness-credibility">#do-first-correctness-credibility</a>).
+        <strong>Item 3</strong> — no handbook page loads analytics.js, so
+        handbook pageviews are invisible; the fix belongs in the upstream
+        template (same section).
+        <strong>Item 37</strong> — print output is unreadable; add
+        <code>@media print</code> rules to handbook-chrome.css
+        (<a href="audit-2026-09-02.html#css-design">#css-design</a>).
+        <strong>Item 50</strong> — five sync_docs.py hardening notes
+        (<a href="audit-2026-09-02.html#ci-repo-hygiene">#ci-repo-hygiene</a>).
+      </div>
+    </main>
+  </div>
+</body>
+</html>

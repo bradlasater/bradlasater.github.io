@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tooling &amp; CI — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/section-infra.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="How bradlasater.github.io is automated — the two GitHub workflows, the pre-commit hook, the build and validation scripts, the journal-prompt job, and the Jekyll layer.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/section-infra.html">
+  <meta property="og:title" content="Tooling &amp; CI — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html" class="active">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Tooling &amp; CI</h1>
+        </div>
+        <div class="meta">
+          living document · maintain by hand<br>
+          .github/ · scripts/ · .pre-commit-config.yaml
+        </div>
+      </header>
+
+      <h2 id="purpose">Purpose</h2>
+      <p class="lead">
+        This is the automation layer: two GitHub Actions workflows, one pre-commit
+        hook, four Python scripts, and the thin Jekyll layer GitHub Pages insists
+        on. The site itself is hand-written HTML with no build step, so everything
+        here exists to do one of two jobs — keep generated files
+        (<code>sitemap.xml</code>, <code>feed.xml</code>, log pages, timestamps)
+        honest against their sources, and make the published track record
+        impossible to revise after the fact. When something on the site looks
+        like it "updated itself", the answer is in one of these files.
+      </p>
+
+      <h2 id="key-files">Key files</h2>
+      <table>
+        <thead>
+          <tr><th>Path</th><th>Role</th><th>Hand or generated</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>.github/workflows/validate-track-record.yml</code></td>
+            <td>CI guard for <code>data/track-record.json</code>: append-only enforcement, force-push rejection.</td>
+            <td>hand</td>
+          </tr>
+          <tr>
+            <td><code>.github/workflows/build-site.yml</code></td>
+            <td>Checks generated files on PRs; rebuilds and commits them on push to <code>main</code>.</td>
+            <td>hand</td>
+          </tr>
+          <tr>
+            <td><code>.pre-commit-config.yaml</code></td>
+            <td>One local hook: runs <code>scripts/build_site.py</code> before every commit.</td>
+            <td>hand</td>
+          </tr>
+          <tr>
+            <td><code>scripts/build_site.py</code></td>
+            <td>The generator: log entry pages, feed, sitemap, llms.txt section, all timestamps.</td>
+            <td>hand (its outputs are generated)</td>
+          </tr>
+          <tr>
+            <td><code>scripts/validate_track_record.py</code></td>
+            <td>Structural validation of the track record plus the append-only git walk.</td>
+            <td>hand</td>
+          </tr>
+          <tr>
+            <td><code>scripts/append_observation.py</code></td>
+            <td>The only supported way to add a day (or a paper→live transition) to the record.</td>
+            <td>hand</td>
+          </tr>
+          <tr>
+            <td><code>scripts/journal_prompts.py</code></td>
+            <td>Rewrites the prompt table in <code>journal-prompts.html</code> from recent git activity.</td>
+            <td>hand</td>
+          </tr>
+          <tr>
+            <td><code>scripts/sync_docs.py</code></td>
+            <td>Copies the handbook in from the private <code>data_ingest_infra</code> repo. Owned by the <a href="section-handbook.html">Handbook &amp; sync</a> page; listed here because it is deliberately <em>not</em> wired into CI or the hook.</td>
+            <td>hand</td>
+          </tr>
+          <tr>
+            <td><code>_config.yml</code>, <code>CNAME</code></td>
+            <td>Jekyll excludes and the custom-domain record for GitHub Pages.</td>
+            <td>hand</td>
+          </tr>
+          <tr>
+            <td><code>robots.txt</code>, <code>.gitignore</code></td>
+            <td>Crawler policy (allow everything, by name) and repo hygiene.</td>
+            <td>hand</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="how-it-works">How it works</h2>
+
+      <h3 id="validate-track-record-workflow">validate-track-record.yml — the integrity guard</h3>
+      <p>
+        Fires on push and pull request, but only when one of four paths changes:
+        <code>data/track-record.json</code>, the two scripts that touch it, or the
+        workflow itself. That path filter is the attack surface as well as the
+        trigger — the workflow watches its own definition so a "harmless" CI edit
+        cannot weaken the check unseen.
+      </p>
+      <p>
+        Three design rules, each of which exists because the naive version had a
+        working bypass (all reproduced in commit <code>fb61b8d</code> before being
+        fixed):
+      </p>
+      <ul>
+        <li>
+          <strong>Reject force-pushes outright.</strong> The first step checks
+          <code>github.event.forced</code> and exits 1. Rewriting history destroys
+          the timestamp trail the record rests on, and no file-level check can
+          detect it after the fact.
+        </li>
+        <li>
+          <strong>Walk the whole range, not one hop.</strong> A push of N commits
+          fires one run at the tip, so comparing HEAD to HEAD^ let an earlier
+          commit in the same push tamper unseen. The workflow resolves a baseline
+          ref (<code>github.event.before</code> on push, the PR base SHA on pull
+          requests, <code>merge-base</code> with the default branch for new
+          branches) and passes it to
+          <code>validate_track_record.py --check-append-only --ref</code>, which
+          inspects every commit in the range and then the working tree.
+          <code>fetch-depth: 0</code> is load-bearing — a shallow clone cannot see
+          the pre-push commit.
+        </li>
+        <li>
+          <strong>Fail closed.</strong> If the baseline cannot be read — git
+          missing, ref unresolvable, baseline JSON corrupt — the validator exits 2
+          ("could not run"), never a silent pass. Exit codes: 0 ok, 1 validation
+          failed, 2 could not run.
+        </li>
+      </ul>
+      <p>
+        The schema itself (fields, modes, immutable metadata) is documented in the
+        <a href="track-record-schema.html">track-record data contract</a> page; the
+        point here is that enforcement lives in CI, not in local tooling.
+        <code>append_observation.py</code> validates before writing, but it only
+        sees the file in front of it — a locally tampered file appends cleanly and
+        is rejected on push. That split is deliberate: local tooling is
+        convenience, CI is the guarantee.
+      </p>
+
+      <h3 id="build-site-workflow">build-site.yml — the rebuild bot</h3>
+      <p>
+        Two jobs, one workflow, triggered by pushes to <code>main</code> and pull
+        requests that touch HTML, <code>content/log/**</code>, the generated
+        metadata files, <code>scripts/build_site.py</code>, or the workflow
+        itself:
+      </p>
+      <ul>
+        <li>
+          <strong><code>check</code> (pull requests only)</strong> runs
+          <code>python3 scripts/build_site.py --check</code>, which exits 1 if any
+          generated file is stale. A reviewer sees drift before it merges.
+        </li>
+        <li>
+          <strong><code>rebuild</code> (push to main only, with
+          <code>contents: write</code>)</strong> runs the generator for real, then
+          commits as <code>github-actions[bot]</code> with the subject
+          <code>chore: rebuild derived site metadata</code>. This is what rescues
+          a page edited directly in the GitHub web UI — it still ends up with a
+          correct <code>lastmod</code> instead of a silently stale one.
+        </li>
+      </ul>
+      <p>
+        Two contracts hold this loop together, and both were bugs once:
+      </p>
+      <ul>
+        <li>
+          <strong>Stage before diffing.</strong> The commit step does
+          <code>git add -A</code> <em>then</em> <code>git diff --cached --quiet</code>.
+          The original version diffed the working tree first; <code>git diff</code>
+          ignores untracked files, so a newly generated page (a log entry added
+          through the web UI) read as "nothing to rebuild" and was never
+          committed. Fixed in the 2026-09-02 audit pass (<code>a73f908</code>).
+        </li>
+        <li>
+          <strong>The <code>BUILD_COMMIT_SUBJECT</code> contract.</strong>
+          <code>build_site.py</code> computes every timestamp from the last commit
+          to touch the file, excluding commits whose subject is
+          <code>chore: rebuild derived site metadata</code> (the constant
+          <code>BUILD_COMMIT_SUBJECT</code>, scripts/build_site.py:57). The
+          workflow's commit step must use exactly that subject. Change one side
+          without the other and the build chases its own tail: stamping a date
+          changes the file, which changes its last-commit date, which demands
+          another stamp, forever.
+        </li>
+      </ul>
+
+      <h3 id="pre-commit-hook">The pre-commit hook and the re-stage dance</h3>
+      <p>
+        <code>.pre-commit-config.yaml</code> defines a single local hook —
+        <code>python3 scripts/build_site.py</code> with
+        <code>pass_filenames: false</code> and <code>always_run: true</code> — so
+        every commit regenerates derived files regardless of what was staged. It
+        is opt-in (<code>pip install pre-commit &amp;&amp; pre-commit install</code>,
+        per the <a href="readme.html">README</a>) because pre-commit installs are
+        per-clone.
+      </p>
+      <p>
+        The gotcha: when the hook rewrites files, pre-commit fails the commit
+        because the working tree changed mid-commit. You must
+        <code>git add</code> the regenerated files and run the commit again so the
+        generated changes land in the same commit as their sources. That is
+        expected behaviour, not a broken hook — the alternative is a commit whose
+        sitemap disagrees with its content, which the CI <code>check</code> job
+        will catch anyway.
+      </p>
+
+      <h3 id="journal-prompts">journal_prompts.py — the 04:00 writing prompt</h3>
+      <p>
+        <code>journal-prompts.html</code> is a local morning-writing tool, not
+        site content: it carries <code>noindex</code> and is excluded in
+        <code>_config.yml</code>, so it never publishes. A launchd job
+        (<code>com.bradlasater.journal-prompts</code>, scheduled at 04:00 local)
+        runs <code>scripts/journal_prompts.py</code>, which scans the last 48
+        hours of commits in two repos — this one and the sibling
+        <code>data_ingest_infra</code> — groups them per repo per day, and rewrites
+        the table between <code>&lt;!-- PROMPTS:BEGIN --&gt;</code> /
+        <code>END</code> markers plus the <code>GENERATED</code> stamp. Commits
+        whose only changes are log entries (or the derived
+        <code>feed.xml</code>/<code>sitemap.xml</code>) are skipped — an entry
+        about an entry is noise. Dirty working trees get an "uncommitted" row, and
+        no activity is a valid row: "no surprise, no entry" is the rule the page
+        teaches. Missing markers fail loudly rather than clobbering the
+        hand-authored guide around the table.
+      </p>
+
+      <h3 id="jekyll-layer">The Jekyll layer: _config.yml and CNAME</h3>
+      <p>
+        GitHub Pages runs Jekyll over the repo by default. The site is plain HTML
+        with no templating, so <code>_config.yml</code> has exactly one job: keep
+        source and tooling out of the published site via its
+        <code>exclude</code> list — <code>content</code>, <code>scripts</code>,
+        <code>notes</code>, <code>data/SCHEMA.md</code>, <code>README.md</code>,
+        <code>ROADMAP.md</code>, <code>journal-prompts.html</code>. This is
+        discoverability, not tidiness: without it, the log-entry fragments in
+        <code>content/</code> are served as broken half-pages at their own URLs,
+        competing with the real entry pages they generate. If you add a new
+        top-level source directory, add it here too. <code>CNAME</code> is one
+        line — <code>bradlasater.com</code> — and is what makes Pages serve the
+        custom domain; delete it and the site silently reverts to the
+        <code>github.io</code> URL.
+      </p>
+
+      <h2 id="generated-files">Generated files: who writes what, when</h2>
+      <table>
+        <thead>
+          <tr><th>File</th><th>Generator</th><th>When it runs</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>log/&lt;entry&gt;.html</code>, <code>log/index.html</code> (between BUILD markers)</td>
+            <td><code>scripts/build_site.py</code></td>
+            <td>Pre-commit hook on every local commit; <code>check</code> job on PRs; rebuild bot on push to main.</td>
+          </tr>
+          <tr>
+            <td><code>feed.xml</code>, <code>sitemap.xml</code></td>
+            <td><code>scripts/build_site.py</code></td>
+            <td>Same as above.</td>
+          </tr>
+          <tr>
+            <td><code>llms.txt</code> (log section between BUILD markers)</td>
+            <td><code>scripts/build_site.py</code></td>
+            <td>Same as above.</td>
+          </tr>
+          <tr>
+            <td><code>dateModified</code> / <code>lastmod</code> stamps in every page</td>
+            <td><code>scripts/build_site.py</code> (dates from git history, never hand-typed)</td>
+            <td>Same as above.</td>
+          </tr>
+          <tr>
+            <td><code>journal-prompts.html</code> (PROMPTS / GENERATED markers)</td>
+            <td><code>scripts/journal_prompts.py</code></td>
+            <td>launchd at 04:00 local; not in CI, not in the hook.</td>
+          </tr>
+          <tr>
+            <td><code>handbook/*</code></td>
+            <td><code>scripts/sync_docs.py</code></td>
+            <td>By hand only — CI and the hook cannot see the private source repo. See <a href="section-handbook.html">Handbook &amp; sync</a>.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Do not hand-edit anything in the left column — the generator owns it and
+        your edit will be overwritten or flagged as drift. Edit the sources
+        (<code>content/log/*.html</code>, the pages themselves, the handbook
+        upstream) and let the pipeline propagate.
+      </p>
+
+      <h2 id="conventions-and-gotchas">Conventions and gotchas</h2>
+      <ul>
+        <li>
+          Every <code>actions/checkout</code> uses <code>fetch-depth: 0</code>.
+          Timestamps and the append-only walk both read git history; a shallow
+          clone silently invents wrong dates or an unverifiable baseline. Do not
+          "optimise" this away.
+        </li>
+        <li>
+          The workflows are path-filtered. A push touching only
+          <code>assets/</code> or <code>docs/</code> fires neither of them, which
+          is usually what you want — but it means the rebuild bot is not a safety
+          net for pages outside its trigger list.
+        </li>
+        <li>
+          <code>build_site.py</code> renders month names from a fixed table, not
+          the locale — a non-English dev machine would otherwise render different
+          strings than CI and desync <code>--check</code>.
+        </li>
+        <li>
+          <code>journal_prompts.py</code> assumes <code>data_ingest_infra</code>
+          exists as a sibling checkout; a missing repo is skipped, not an error.
+          Its launchd job lives on Brad's machine — a fresh clone has neither the
+          hook nor the schedule until you install them.
+        </li>
+        <li>
+          Exit-code discipline across all four scripts: 1 means "you did something
+          wrong", 2 means "the check could not run". Anything that cannot be
+          verified must exit 2 — never report an unverifiable result as a pass.
+        </li>
+        <li>
+          The nav is hand-maintained in the static pages <em>and</em> in the
+          <code>nav()</code> function of <code>scripts/build_site.py</code>.
+          Change one without the other and generated log pages drift from the
+          rest of the site (this exact desync was caught by Copilot review in
+          <code>a7301f2</code>).
+        </li>
+      </ul>
+
+      <h2 id="history">History</h2>
+      <p>
+        From <code>git log -- .github/ scripts/ .pre-commit-config.yaml</code>
+        (plus per-file logs for <code>CNAME</code>, <code>robots.txt</code>,
+        <code>_config.yml</code>, <code>.gitignore</code>); trivial and
+        same-day commits grouped.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Milestone</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-08-23</td>
+            <td><code>19dba32</code> — <code>CNAME</code> created; the custom domain goes live.</td>
+          </tr>
+          <tr>
+            <td>2026-08-23</td>
+            <td><code>fc0514c</code> — discoverability infrastructure: <code>robots.txt</code>, sitemap, feed, <code>llms.txt</code>, <code>build_site.py</code> and the build-site workflow. Same day, <code>ebc8075</code> adds <code>feed.xml</code>/<code>sitemap.xml</code> to its triggers.</td>
+          </tr>
+          <tr>
+            <td>2026-08-23</td>
+            <td><code>2edb410</code> — the track record lands: <code>validate_track_record.py</code>, <code>append_observation.py</code>, <code>data/track-record.json</code>, and the validate-track-record workflow.</td>
+          </tr>
+          <tr>
+            <td>2026-08-23</td>
+            <td><code>fb61b8d</code> — three confirmed append-only bypasses closed: whole-range walk from <code>github.event.before</code>, force-push rejection, fail-closed exit 2. Each was reproduced before and after the fix.</td>
+          </tr>
+          <tr>
+            <td>2026-08-24</td>
+            <td><code>0dce7b5</code> — pre-commit hook added to regenerate derived files on every commit.</td>
+          </tr>
+          <tr>
+            <td>2026-08-24</td>
+            <td><code>6bf2a7c</code> — remaining repo-review fixes across the scripts.</td>
+          </tr>
+          <tr>
+            <td>2026-09-01</td>
+            <td><code>85849c6</code> — <code>journal_prompts.py</code> and the launchd morning-prompt tool added (same commit as analytics and <code>cv.pdf</code>).</td>
+          </tr>
+          <tr>
+            <td>2026-09-01</td>
+            <td><code>b7cfb5f</code> — <code>journal_prompts.py</code> hardened after PR #11 review; <code>93a4286</code> stops tracking <code>__pycache__</code> bytecode.</td>
+          </tr>
+          <tr>
+            <td>2026-09-01/02</td>
+            <td><code>35f6fbb</code>, <code>96a45dd</code>, <code>1d3052b</code> — handbook sync pipeline built and re-skinned at sync time. Covered by <a href="section-handbook.html">Handbook &amp; sync</a>.</td>
+          </tr>
+          <tr>
+            <td>2026-09-02</td>
+            <td><code>a73f908</code> — full-repo audit: hardening across all four scripts (strict dates, NaN/Infinity rejection, git-failure handling), and the staged-then-diff fix in the build-site rebuild step.</td>
+          </tr>
+          <tr>
+            <td>2026-09-02</td>
+            <td><code>a7301f2</code> — Copilot review follow-up: <code>nav()</code> generator synced with the hand-written nav.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="watch-outs">Watch-outs</h2>
+      <div class="callout">
+        The 2026-09-02 audit deferred a set of follow-ups that touch this layer
+        directly — see <a href="audit-2026-09-02.html#ci-repo-hygiene">CI / repo
+        hygiene</a>, <a href="audit-2026-09-02.html#build-script">Build
+        script</a>, and <a href="audit-2026-09-02.html#data-contract-validator">Data
+        contract / validator</a> in the audit page before changing anything here.
+        The pipeline is young and several of its guarantees are enforced by
+        convention (the commit-subject contract, the nav duplication) rather than
+        by code — those are exactly the items the audit lists.
+      </div>
+    </main>
+  </div>
+</body>
+</html>

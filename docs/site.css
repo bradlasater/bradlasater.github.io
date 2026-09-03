@@ -269,6 +269,37 @@ li { margin-bottom: 6px; }
   margin: 6px 0 24px;
 }
 
+/* docs/-only additions (not part of the upstream handbook theme). .meta-note
+   is the standard drift warning on mirror pages; pre/blockquote cover the
+   Markdown constructs the synced theme never needed. */
+.meta-note {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 6px 0 24px;
+}
+pre {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  padding: 16px 18px;
+  margin: 16px 0 24px;
+  overflow-x: auto;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+blockquote {
+  border-left: 3px solid var(--copper);
+  margin: 16px 0 24px;
+  padding: 4px 0 4px 18px;
+  color: var(--body);
+}
+
 .diagram {
   background: var(--bg-2);
   border: 1px solid var(--line);

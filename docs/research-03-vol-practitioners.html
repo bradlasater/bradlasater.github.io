@@ -51,6 +51,18 @@
             <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
           </ol>
         </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
       </ol>
     </nav>
 
@@ -65,7 +77,7 @@
         </div>
       </header>
 
-      <p>This page mirrors <code>notes/research/03-vol-practitioners.md</code>; edit the Markdown, then re-sync this page.</p>
+      <p class="meta-note">This page mirrors <code>notes/research/03-vol-practitioners.md</code>; edit the Markdown, then re-sync this page.</p>
 
       <p>
         <strong>Date of research:</strong> 2026-08-23<br>
@@ -165,9 +177,9 @@
 
       <p><strong>His verbatim authority statement (this is the model for Brad's bio — copy the shape, not the content):</strong></p>
 
-      <div class="callout">
+      <blockquote>
         "Euan Sinclair is an option trader with over 25 years of professional trading experience. He has traded options on indexes, stocks, commodities and interest rate products. He currently trades equity options at Bluefin Capital Management. He holds a PhD in theoretical physics from the University of Bristol and has written three books: <em>Volatility Trading</em>, <em>Option Trading</em> and <em>Positional Option Trading</em>, all published by Wiley."
-      </div>
+      </blockquote>
 
       <p>Four sentences. Years of experience → <em>what instruments</em> → current seat → credential + artifacts. No adjectives. No "passionate about." No "proven track record."</p>
 
@@ -233,9 +245,9 @@
       <p><strong>Site type &amp; IA.</strong> Blogger (Blogspot), default-ish template. Sidebar: Home, Systematic Investment, Systematic Trading, code repository links, books, media, resources, archive back to 2013, popular posts, ~54-label tag cloud. Deliberately ugly. It works <em>because</em> the content is dense.</p>
 
       <p><strong>Research post structure.</strong> Not a rigid template but a stable habit:</p>
-      <div class="callout">
+      <blockquote>
         Recap of prior findings in the series → "Prior Art" (enumerate the methodological options) → Methods → Testing (multiple scenarios) → Discussion &amp; Conclusion → what's next.
-      </div>
+      </blockquote>
 
       <p>Example post analyzed: "Jumping back in the pool(ing)..." (2026-07-03, ~3,500 words). Sections: Introduction &amp; Recap → Prior Art (6 approaches, 2 pooling strategies) → Methods → Testing (five in-sample/out-of-sample period combinations: 5/10/20/40-yr IS against 1-yr and 5-yr OOS) → Discussion &amp; Conclusion.</p>
 
@@ -321,9 +333,9 @@ asset class pooled       0.557     NaN</code></pre>
       <p><strong>Charts.</strong> A single well-chosen diagnostic figure per post. In the vol-surface post: a 2×3 grid of heatmaps — clean vol / sparse observations / CNN repair / interpolation baseline / model uncertainty / error — across maturity × log-moneyness. Static. No caption, no figure numbering (a weakness Brad can improve on).</p>
 
       <p><strong>Code.</strong> Extensive and inline. PyTorch <code>RepairCNN</code> class (~15 lines), <code>repair_loss</code> function (~12 lines with weighted MSE + calendar penalty + smoothness penalty), parameter ranges in <code>U()</code> pseudo-code notation, then a <strong>~800-line self-contained reproducible script at the end</strong>, headed:</p>
-      <div class="callout">
+      <blockquote>
         <code>"""Deep Learning for Volatility Surface Repair. Self-contained, CPU-friendly PyTorch script...</code>
-      </div>
+      </blockquote>
 
       <p>"CPU-friendly" is a deliberate reproducibility signal.</p>
 
@@ -340,9 +352,9 @@ asset class pooled       0.557     NaN</code></pre>
       </ul>
 
       <p><strong>Negative results / discarded findings.</strong> He <em>reports a metric he threw away</em>:</p>
-      <div class="callout">
+      <blockquote>
         "I mention it because this is precisely the failure mode that agentic research pipelines are good at manufacturing at scale — a plausible number, in the expected direction, that dissolves against a null nobody bothered to run."
-      </div>
+      </blockquote>
 
       <p><strong>Hedging phrasing — the highest-value quotes in this whole document.</strong> From the vol-surface post's "What this experiment shows and does not show":</p>
       <ul>
@@ -619,9 +631,9 @@ asset class pooled       0.557     NaN</code></pre>
       </ul>
 
       <p><strong>Their standard performance disclaimer, verbatim — the single most reusable sentence block in this file:</strong></p>
-      <div class="callout">
+      <blockquote>
         <em>"Performance is backtested and hypothetical. Performance is gross of all costs (including, but not limited to, advisor fees, manager fees, taxes, and transaction costs) unless explicitly stated otherwise. Performance assumes the reinvestment of all dividends. Past performance is not indicative of future results."</em>
-      </div>
+      </blockquote>
 
       <p>Note: <strong>no</strong> Summary/TLDR bullet box at the top of their posts — headings do the work (<code>Diversifying Value</code> → <code>But How Much?</code> → <code>What About Other Factors?</code> → <code>Conclusion</code> → <code>Appendix A</code>).</p>
 
@@ -813,14 +825,14 @@ Ranked. Cheapest decisive test first.
       </ul>
 
       <h3 id="boilerplate-disclaimer">Boilerplate disclaimer (Newfound — copy verbatim, adapted)</h3>
-      <div class="callout">
+      <blockquote>
         "Performance is backtested and hypothetical. Performance is gross of all costs (including, but not limited to, advisor fees, manager fees, taxes, and transaction costs) unless explicitly stated otherwise. Performance assumes the reinvestment of all dividends. Past performance is not indicative of future results."
-      </div>
+      </blockquote>
 
       <h3 id="non-solicitation">Non-solicitation / not-regulated (Carver)</h3>
-      <div class="callout">
+      <blockquote>
         "Not regulated or authorised to provide investment advice." + an explicit statement that you do not sell courses or signals.
-      </div>
+      </blockquote>
 
       <h3 id="words-to-delete">Words to delete on sight</h3>
       <p>"proven," "consistently," "robust" (unqualified), "proprietary," "cutting-edge," "passionate about," "significant returns," "battle-tested," "alpha-generating," any Sharpe stated without a period, a cost assumption, and an interval.</p>

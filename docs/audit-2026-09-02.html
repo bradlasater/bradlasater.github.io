@@ -51,6 +51,18 @@
             <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
           </ol>
         </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
       </ol>
     </nav>
 
@@ -65,7 +77,7 @@
         </div>
       </header>
 
-      <p class="flow-caption">This page mirrors <code>notes/audit-2026-09-02.md</code>; edit the Markdown, then re-sync this page.</p>
+      <p class="meta-note">This page mirrors <code>notes/audit-2026-09-02.md</code>; edit the Markdown, then re-sync this page.</p>
 
       <p class="lead">
         Findings from the full-repo audit (branch <code>audit-2026-09-02</code>). Everything that was
@@ -261,14 +273,14 @@
           and <code>bayesshammai.substack.com</code> cited in body but absent from the appendix.</li>
         <li><code>ROADMAP.md</code> §G: the <code>ensure_ascii</code> item reads backwards — <code>json.dumps</code>
           escapes the em-dash <strong>to</strong> <code>—</code>, which is what produces the confusing diff.</li>
-        <li><strong>docs/ is invisible to the sitemap</strong>: <code>build_site.py</code>'s page list does not
-          include <code>docs/*.html</code>, so the new section is absent from sitemap.xml.
-          Decide: add docs pages to the build's static-page list (gets stamping and
-          sitemap for free) or leave them to organic discovery via <code>/docs/</code>.</li>
-        <li><code>docs/site.css</code> gaps the mirrors worked around: no <code>pre</code> rule, no
-          <code>blockquote</code> style, no muted body-note class (four pages approximated the
-          drift warning three different ways). Standardise a <code>.meta-note</code> class and
-          apply it everywhere.</li>
+        <li><del><strong>docs/ is invisible to the sitemap</strong></del> <strong>Done 2026-09-03</strong>:
+          <code>docs_pages()</code> discovery added to <code>build_site.py</code> (handbook-style,
+          overview first); all docs pages are now in sitemap.xml. They carry no
+          stamp markers, so the build never writes them.</li>
+        <li><del><code>docs/site.css</code> gaps</del> <strong>Done 2026-09-03</strong>: <code>.meta-note</code>,
+          <code>pre</code>, and <code>blockquote</code> rules added; all eleven mirror pages now use
+          <code>.meta-note</code> for the drift warning, and research-03's callout-blockquotes are
+          real <code>&lt;blockquote&gt;</code> elements.</li>
       </ol>
     </main>
   </div>

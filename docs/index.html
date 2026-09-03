@@ -51,6 +51,18 @@
             <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
           </ol>
         </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
       </ol>
     </nav>
 
@@ -80,6 +92,44 @@
         it mirrors. For the trading system itself, see the
         <a href="/handbook/">Crack the Sky handbook</a> and the
         <a href="/vol/">volatility system overview</a>.
+      </div>
+
+      <h2>Site sections — maintainer orientation</h2>
+      <p>
+        One page per section of the site: what it is, which files own it, how it is
+        built and maintained, the conventions that will bite you, and a summarised
+        history of how it got here. Written for the future maintainer of this
+        repository — start with the orientation page.
+      </p>
+      <div class="cards">
+        <a class="card" href="section-site.html">
+          <div class="card-title">Orientation</div>
+          <p>The whole site on one page — section map, how the pieces fit, and the timeline so far.</p>
+        </a>
+        <a class="card" href="section-home-cv.html">
+          <div class="card-title">Homepage, CV &amp; 404</div>
+          <p>The recruiting surface: index.html, cv.html, the redesigned 404, and the shared chrome.</p>
+        </a>
+        <a class="card" href="section-vol.html">
+          <div class="card-title">Volatility system</div>
+          <p>vol/ — the overview, the evaluation protocol, and the browser-computed track record.</p>
+        </a>
+        <a class="card" href="section-handbook.html">
+          <div class="card-title">Handbook &amp; sync</div>
+          <p>The Crack the Sky handbook and the sync_docs.py pipeline that publishes it.</p>
+        </a>
+        <a class="card" href="section-log.html">
+          <div class="card-title">Research log</div>
+          <p>log/, content/ fragments, and the build pipeline that turns entries into pages and feed.</p>
+        </a>
+        <a class="card" href="section-docs.html">
+          <div class="card-title">Docs section</div>
+          <p>This section — how the mirrors work, and how to add or re-sync a page.</p>
+        </a>
+        <a class="card" href="section-infra.html">
+          <div class="card-title">Tooling &amp; CI</div>
+          <p>scripts/, the GitHub workflows, pre-commit, and the generated metadata files.</p>
+        </a>
       </div>
 
       <h2>The site</h2>

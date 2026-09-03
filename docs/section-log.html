@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research log — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/section-log.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="Maintainer notes for the research log: the content/log fragment convention and the build_site.py pipeline that turns entries into pages, feed, sitemap, and llms.txt.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/section-log.html">
+  <meta property="og:title" content="Research log — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html" class="active">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Research log</h1>
+        </div>
+        <div class="meta">
+          living document · maintain by hand<br>
+          scripts/build_site.py · content/log/ · log/ · feed.xml · sitemap.xml · llms.txt
+        </div>
+      </header>
+
+      <h2 id="purpose">Purpose</h2>
+      <p class="lead">
+        The research log at <a href="/log/">/log/</a> is the dated public journal of the
+        volatility build: what you tried, what you expected, what happened, and what you had
+        wrong — negative results included. Each entry gets its own URL on purpose: retrieval
+        engines return passages, so an entry sharing a URL with twenty others cannot be cited
+        on its own. Behind it sits <code>scripts/build_site.py</code>, the one script that turns
+        hand-authored fragments into entry pages and regenerates everything derived — the log
+        index, <code>feed.xml</code>, <code>sitemap.xml</code>, the log section of
+        <code>llms.txt</code>, and every <code>dateModified</code> on the site. As of this
+        writing the log has shipped no entries yet; the index renders a "No entries yet"
+        pending state.
+      </p>
+
+      <h2 id="key-files">Key files</h2>
+      <table>
+        <thead>
+          <tr><th>Path</th><th>Role</th><th>Owned by</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>content/log/&lt;slug&gt;.html</code></td>
+            <td>One hand-authored fragment per entry: an <code>&lt;!--meta --&gt;</code> block, then plain HTML body.</td>
+            <td>Hand</td>
+          </tr>
+          <tr>
+            <td><code>content/log/TEMPLATE.html.example</code></td>
+            <td>Starting point for a new entry. The <code>.example</code> suffix keeps it out of the build's <code>*.html</code> glob.</td>
+            <td>Hand</td>
+          </tr>
+          <tr>
+            <td><code>scripts/build_site.py</code></td>
+            <td>The generator. Renders entries, injects the index, stamps dates from git, writes feed / sitemap / llms.txt, deletes orphans.</td>
+            <td>Hand (source of truth)</td>
+          </tr>
+          <tr>
+            <td><code>log/index.html</code></td>
+            <td>The log landing page. Hand-authored shell; everything between the <code>BUILD:LOG-ENTRIES</code> markers is overwritten.</td>
+            <td>Mixed</td>
+          </tr>
+          <tr>
+            <td><code>log/&lt;slug&gt;.html</code></td>
+            <td>One generated page per entry, with BlogPosting JSON-LD and a prev/next pager.</td>
+            <td>Generated — never hand-edit</td>
+          </tr>
+          <tr>
+            <td><code>feed.xml</code></td>
+            <td>Atom feed of the log. Wholly regenerated.</td>
+            <td>Generated — never hand-edit</td>
+          </tr>
+          <tr>
+            <td><code>sitemap.xml</code></td>
+            <td>Every indexable page with git-derived <code>lastmod</code>. 404.html is deliberately absent.</td>
+            <td>Generated — never hand-edit</td>
+          </tr>
+          <tr>
+            <td><code>llms.txt</code></td>
+            <td>Hand-authored, except the log-entries section between its own <code>BUILD:LOG-ENTRIES</code> markers.</td>
+            <td>Mixed</td>
+          </tr>
+          <tr>
+            <td><code>.github/workflows/build-site.yml</code></td>
+            <td>CI: <code>--check</code> on pull requests, rebuild-and-commit on pushes to main.</td>
+            <td>Hand</td>
+          </tr>
+          <tr>
+            <td><code>.pre-commit-config.yaml</code></td>
+            <td>Local hook that runs the build on every commit.</td>
+            <td>Hand</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="how-it-works">How it works</h2>
+
+      <h3>The fragment convention</h3>
+      <p>
+        An entry is a file in <code>content/log/</code> named
+        <code>YYYY-MM-DD-a-short-slug.html</code> — the filename stem becomes the URL
+        (<code>/log/&lt;slug&gt;.html</code>). The file opens with a meta block:
+      </p>
+      <pre><code>&lt;!--meta
+title: Short, specific title — state the finding, not the topic
+date: 2026-09-01
+stage: Surface construction
+summary: One sentence that stands alone; it becomes the meta description, feed summary, and index card.
+--&gt;</code></pre>
+      <p>
+        <code>title</code>, <code>date</code>, and <code>summary</code> are required;
+        <code>stage</code> is optional and renders as a badge. Lines starting with
+        <code>#</code> are comments. The date must be ISO <code>YYYY-MM-DD</code> and not in
+        the future. Everything after the block is the body: plain HTML (<code>p</code>,
+        <code>ul</code>, <code>h2</code>, <code>table</code>, <code>blockquote</code>,
+        <code>code</code>) — no <code>h1</code>, the page supplies one from the title. Parsing
+        failures are hard exits (<code>SystemExit</code> with the filename), not warnings.
+      </p>
+      <p>
+        Slug rules, added in the 2026-09-02 audit: the slug must match
+        <code>[A-Za-z0-9._~-]+</code> (RFC 3986 unreserved characters — it is interpolated
+        unescaped into URLs, HTML attributes, the Atom feed, and the sitemap), and
+        <code>index</code> is reserved, because an entry with that slug would be silently
+        overwritten by the index injection. Duplicate slugs are rejected.
+      </p>
+
+      <h3>The build pass</h3>
+      <p>
+        <code>main()</code> runs six steps. Entries are sorted newest-first by
+        <code>(date, slug)</code> and each is rendered through <code>ENTRY_TEMPLATE</code> into
+        <code>log/&lt;slug&gt;.html</code>: full page chrome, <code>BlogPosting</code> +
+        <code>BreadcrumbList</code> JSON-LD, and a prev/next pager (older entry on the
+        <code>&larr;</code> side, newer on the <code>&rarr;</code> side, "All entries" in the
+        middle). <code>datePublished</code> is fixed at noon UTC of the entry date — the entry
+        records a day, not a moment, and noon renders the same date either side of the date
+        line. A "Last revised" line appears only when the fragment's last non-build commit is
+        later than the entry date — same-day edits before first publication are not revisions.
+      </p>
+      <p>
+        Then the entry list is injected into <code>log/index.html</code>, the log section into
+        <code>llms.txt</code>, <code>feed.xml</code> is rendered wholesale, timestamps are
+        stamped into the six <code>STATIC_PAGES</code>, and the sitemap is rendered last so it
+        sees the final entry list.
+      </p>
+
+      <h3>Markers and injection</h3>
+      <p>
+        Generated regions inside hand-authored files live between paired comments:
+        <code>&lt;!-- BUILD:LOG-ENTRIES:START --&gt;</code> …
+        <code>&lt;!-- BUILD:LOG-ENTRIES:END --&gt;</code>. The <code>MARKER</code> regex
+        (<code>build_site.py:74</code>) matches any <code>BUILD:&lt;NAME&gt;</code> pair and
+        <code>inject()</code> replaces the body of the named one; a missing marker is a hard
+        fail. Note the name class is <code>[A-Z-]+</code> — digits do not match, so a future
+        <code>BUILD:NAV2:START</code> would never fire (audit item 10). Do not hand-edit
+        anything between markers: the next build overwrites it. In particular the pending-state
+        copy ("No entries yet") lives in <code>render_log_index_list()</code>, not in
+        <code>log/index.html</code> — editing the HTML between the markers does nothing.
+      </p>
+
+      <h3>Dates come from git, never from your keyboard</h3>
+      <p>
+        Every <code>lastmod</code> and <code>dateModified</code> on the site is the committer
+        date (<code>%cI</code>) of the last commit to touch the file, via
+        <code>last_modified()</code>. A file git has never seen (a new entry previewed locally)
+        falls back to the current time; a genuine git <em>failure</em> raises rather than
+        silently stamping everything with the build time. The function is
+        <code>lru_cache</code>d — one git subprocess per path, since the feed and sitemap each
+        ask for every entry's date again. Month names come from a fixed table, not
+        <code>strftime('%B')</code>, because strftime follows the process locale and a
+        non-English dev machine would desync the CI <code>--check</code>.
+      </p>
+
+      <h3>The fixed-point dance with CI</h3>
+      <p>
+        Stamping a date into a file changes the file, which changes its last-commit date,
+        which demands another stamp — without an escape hatch the build never reaches a fixed
+        point. The hatch is <code>BUILD_COMMIT_SUBJECT = "chore: rebuild derived site
+        metadata"</code>: commits with exactly that subject are excluded from the timestamp
+        computation (<code>--invert-grep</code>). <code>build-site.yml</code> holds the other
+        half of the contract: on pull requests it runs <code>--check</code> (exit 1 if anything
+        derived is stale); on pushes to main it rebuilds and the bot commits with exactly that
+        subject. A comment in the workflow warns: change the subject in one place without the
+        other and the build chases its own tail. Locally, the pre-commit hook runs the build on
+        every commit — it regenerates files but does not stage them, so the commit fails with
+        "files were modified" until you re-add (audit item 46).
+      </p>
+
+      <h3>Orphan cleanup — destructive</h3>
+      <p>
+        After planning, the build globs <code>log/*.html</code> and <strong>deletes</strong>
+        any file that is not <code>index.html</code> and not in the planned set. This is how a
+        deleted fragment's page disappears — but it also means a hand-authored page dropped
+        into <code>log/</code> is destroyed without asking. Under <code>--check</code> the same
+        files are reported as <code>orphaned:</code> and fail the build. Do not keep anything
+        hand-written in <code>log/</code>. Audit item 11 proposes restricting deletion to files
+        bearing a generated-by marker; until then, treat the directory as build-owned.
+      </p>
+
+      <h3>Zero-entry state</h3>
+      <p>
+        With no fragments, <code>render_log_index_list()</code> emits the
+        <code>.pending</code> block ("No entries yet …"), the llms.txt section renders empty,
+        and the feed's <code>&lt;updated&gt;</code> falls back to the lastmod of
+        <code>log/index.html</code>. All three are live today — the pipeline has been exercised
+        end-to-end by CI since 2026-08-23, just never with a real entry. Expect the first entry
+        to surface rough edges nobody has hit yet; audit item 48 already flags one (the
+        log-index footer has 3 links, generated entry pages have 6 — harmonise when the first
+        entry ships).
+      </p>
+
+      <h2 id="conventions-and-gotchas">Conventions and gotchas</h2>
+      <ul>
+        <li>Do not hand-edit <code>log/&lt;slug&gt;.html</code>, <code>feed.xml</code>,
+          <code>sitemap.xml</code>, or anything between BUILD markers — the build owns them.
+          <code>log/index.html</code> and <code>llms.txt</code> are hand-edited
+          <em>outside</em> the markers only.</li>
+        <li>To add an entry: copy <code>content/log/TEMPLATE.html.example</code>, rename to
+          <code>YYYY-MM-DD-slug.html</code>, write, run
+          <code>python3 scripts/build_site.py</code>. The template's own comments carry the two
+          content rules: every <code>h2</code> section must pass the island test (quotable
+          alone), and keep the numbers in.</li>
+        <li><code>--check</code> is what CI runs. If it fails, run the build and commit the
+          result — do not patch generated files by hand to make the diff go away.</li>
+        <li><code>stamp()</code> silently no-ops if a page loses its stamp markers, and
+          <code>--check</code> still passes (audit item 8). If a page's "last updated" stops
+          moving, check its markers before blaming the build.</li>
+        <li>Entry titles are interpolated raw into Markdown in <code>llms.txt</code> — a
+          <code>[</code> or <code>]</code> in a title breaks the link (audit item 9). Avoid
+          brackets in titles until escaping lands.</li>
+        <li>The generated nav in <code>nav()</code> is a second copy of the site nav. It
+          already drifted once (the GitHub external-link attributes, fixed in
+          <code>a7301f2</code>) — when you change the header nav on the static pages, change it
+          here too.</li>
+        <li><code>render_entry()</code> escapes user text into HTML/JSON (<code>esc</code>,
+          <code>json_str</code> with <code>&lt;/</code> guarding), but the body HTML is
+          injected verbatim — the fragment is trusted input. It is your own repo, but do not
+          paste third-party HTML into a fragment.</li>
+        <li>Timestamps are committer dates with the contributor's offset (currently
+          <code>-06:00</code> sitewide). Audit item 49 questions how that reads for a
+          New-York-based candidate; no decision taken yet.</li>
+      </ul>
+
+      <h2 id="history">History</h2>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Milestone</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-08-23</td>
+            <td><code>log/index.html</code> scaffold lands in the quant repositioning
+              (<code>64c0895</code>) — the log exists as a section before any machinery.</td>
+          </tr>
+          <tr>
+            <td>2026-08-23</td>
+            <td><code>fc0514c</code> adds the whole pipeline in one commit:
+              <code>scripts/build_site.py</code>, <code>content/log/TEMPLATE.html.example</code>,
+              <code>feed.xml</code>, <code>sitemap.xml</code>, <code>llms.txt</code>,
+              <code>robots.txt</code>, and <code>build-site.yml</code>. Per-entry URLs and
+              git-derived dates (with the build-commit exclusion) are design decisions from
+              day one.</td>
+          </tr>
+          <tr>
+            <td>2026-08-23</td>
+            <td><code>a944743</code> adds entity markup (JSON-LD Blog/Person) and makes page
+              content extractable across the log and static pages.</td>
+          </tr>
+          <tr>
+            <td>2026-08-24</td>
+            <td><code>d22a3c9</code> repositions the site around the research-to-production
+              narrative; log copy and nav updated.</td>
+          </tr>
+          <tr>
+            <td>2026-08-24</td>
+            <td>Pre-commit hook added (<code>0dce7b5</code>), followed by a day of
+              stale-check churn — five "Regenerate derived files" commits as the hook, CI, and
+              timestamp stamping chased each other. <code>da4f951</code> (Copilot) closes the
+              loop: excluded commit subject plus a restored <code>--check</code>.</td>
+          </tr>
+          <tr>
+            <td>2026-08-24</td>
+            <td><code>6bf2a7c</code> replaces locale-dependent <code>strftime('%B')</code> with
+              the fixed month table, after the repo review.</td>
+          </tr>
+          <tr>
+            <td>2026-09-01</td>
+            <td><code>35f6fbb</code> publishes the handbook under a nav tab; the build's
+              <code>nav()</code> generator and sitemap gain handbook discovery
+              (<code>handbook_pages()</code>).</td>
+          </tr>
+          <tr>
+            <td>2026-09-01</td>
+            <td><code>4b11a36</code> surfaces the GitHub link in the nav, generated pages
+              included.</td>
+          </tr>
+          <tr>
+            <td>2026-09-02</td>
+            <td><code>a7301f2</code> fixes the first nav-drift bug: <code>nav()</code> now
+              emits the GitHub anchor with <code>target="_blank" rel="noopener"</code>,
+              matching the static pages.</td>
+          </tr>
+          <tr>
+            <td>2026-09-02</td>
+            <td><code>a73f908</code>, the full-repo audit: slug validation (reserved
+              <code>index</code>, RFC 3986 unreserved characters), <code>lru_cache</code> on
+              <code>last_modified()</code>, and git failures no longer masked. Also
+              <code>build-site.yml</code> stages before diffing so newly generated pages
+              actually commit.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="meta-note">
+        Interleaved "chore: rebuild derived site metadata" commits from the CI bot are omitted
+        above — they are the pipeline working as designed, not milestones.
+      </p>
+
+      <h2 id="watch-outs">Watch-outs</h2>
+      <div class="callout">
+        The 2026-09-02 audit has a whole section of open build-script items — see
+        <a href="audit-2026-09-02.html#build-script">Audit follow-ups · Build script</a>:
+        the silent <code>stamp()</code> no-op (item 8), Markdown bracket escaping (9),
+        the digit-blind marker regex (10), the unrestricted orphan deletion (11),
+        committer-vs-author date semantics (12), and the O(N) git-subprocess build (13).
+        CI-side, see
+        <a href="audit-2026-09-02.html#ci-repo-hygiene">Audit follow-ups · CI / repo hygiene</a>:
+        the rebuild job races on quick pushes (43), the bot's own commits re-trigger no-op
+        runs (44), and the pre-commit re-stage dance is undocumented in the README (46).
+        Also from the addendum: <code>docs/</code> was invisible to the sitemap (item 57) —
+        a <code>docs_pages()</code> discovery pass mirroring <code>handbook_pages()</code>
+        addresses it; check it has landed before trusting docs lastmod values.
+      </div>
+    </main>
+  </div>
+</body>
+</html>
