@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Volatility system — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/section-vol.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="Maintainer documentation for the volatility system section: the three vol/ pages, the append-only track-record data file, and the browser-computed statistics.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/section-vol.html">
+  <meta property="og:title" content="Volatility system — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html" class="active">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Volatility system</h1>
+        </div>
+        <div class="meta">
+          living document · maintain by hand<br>
+          vol/index.html · vol/methodology.html · vol/track-record.html<br>
+          data/track-record.json · assets/js/track-record.js
+        </div>
+      </header>
+
+      <h2 id="purpose">Purpose</h2>
+      <p class="lead">
+        The <code>vol/</code> section is the public face of the trading system
+        the whole site exists to support. Three pages: an overview that states
+        the premise and shows the architecture with per-stage status labels, an
+        evaluation protocol that was written and published <em>before</em> any
+        results exist (that ordering is the point), and a build-status page that
+        will host the live out-of-sample track record. The data file and the
+        JavaScript behind that third page are the engineered heart of the
+        section: an append-only record whose every statistic is recomputed in
+        the reader's browser. As of this writing the system is in development
+        and the record has <strong>zero observations</strong> — the page says
+        "Tracking has not started", and that is the correct state, not a bug.
+      </p>
+
+      <h2 id="key-files">Key files</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Path</th><th>Role</th><th>Owned by</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>vol/index.html</code></td>
+              <td>Overview: premise, the eight system stages with live status badges (Operational / Under validation / Planned), sources. The page's "last updated" stamps are regenerated.</td>
+              <td>Hand for prose; <code>build_site.py</code> stamps the timestamps</td>
+            </tr>
+            <tr>
+              <td><code>vol/methodology.html</code></td>
+              <td>Evaluation protocol: purged/embargoed CV, walk-forward, mandatory baselines, cost model, seven-statistic reporting table, kill criteria. Fixed before results; changes are commits.</td>
+              <td>Hand (timestamps stamped)</td>
+            </tr>
+            <tr>
+              <td><code>vol/track-record.html</code></td>
+              <td>Build status &amp; live record. The markup is a shell of empty containers (<code>tr-loading</code>, <code>tr-empty</code>, <code>tr-live</code>) that the JS fills; no numbers are hard-coded.</td>
+              <td>Hand (timestamps stamped)</td>
+            </tr>
+            <tr>
+              <td><code>assets/js/track-record.js</code></td>
+              <td>Fetches the JSON, validates it, derives every statistic and draws both SVG charts in the browser. ~850 lines, dependency-free, zero automated tests.</td>
+              <td>Hand</td>
+            </tr>
+            <tr>
+              <td><code>data/track-record.json</code></td>
+              <td>The single source of truth: append-only observation log (currently an empty skeleton with <code>inception: null</code>).</td>
+              <td>Append-only via <code>append_observation.py</code>; never edit history</td>
+            </tr>
+            <tr>
+              <td><code>data/SCHEMA.md</code></td>
+              <td>The data contract — field-by-field semantics and why the format is append-only. Mirrored as <a href="track-record-schema.html">track-record-schema.html</a>.</td>
+              <td>Hand</td>
+            </tr>
+            <tr>
+              <td><code>scripts/append_observation.py</code></td>
+              <td>Validated append helper; re-runs the full validator before writing. <code>--commit</code> creates the dated commit. Does <em>not</em> itself enforce append-only.</td>
+              <td>Hand</td>
+            </tr>
+            <tr>
+              <td><code>scripts/validate_track_record.py</code></td>
+              <td>Structural validation plus <code>--check-append-only</code>, which walks every commit in a push and fails closed if published history moved.</td>
+              <td>Hand</td>
+            </tr>
+            <tr>
+              <td><code>.github/workflows/validate-track-record.yml</code></td>
+              <td>CI wiring that runs the validator on pushes touching the data file.</td>
+              <td>Hand</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="how-it-works">How the track record works end-to-end</h2>
+      <p>
+        One observation per trading day lands via
+        <code>python3 scripts/append_observation.py --date … --nav … --gross-pnl … --costs … --positions … --mode paper</code>.
+        The script validates the whole document and refuses to modify or reorder
+        anything already present; with <code>--commit</code> each observation is
+        its own dated commit, so git history is the timestamp trail.
+        <code>--mode-change live</code> records a paper→live transition in
+        <code>mode_changes</code> instead of appending a day.
+      </p>
+      <p>
+        In CI, <code>validate_track_record.py --check-append-only</code> diffs
+        the file across the whole push range — not just HEAD against HEAD^,
+        because a multi-commit push could otherwise smuggle a rewrite in an
+        earlier commit — and fails closed (exit 2) if the baseline cannot be
+        read. Immutable metadata (<code>periods_per_year</code>,
+        <code>mode_changes</code>) is protected as well as the observations,
+        since rescaling the annualisation factor would quietly change every
+        derived statistic. None of this survives a force-push: never rewrite
+        this repository's history.
+      </p>
+      <p>
+        In the browser, <code>track-record.js</code> fetches
+        <code>/data/track-record.json</code> (with a 15-second abort timeout),
+        validates and sorts it in <code>normalise()</code>, then derives
+        everything from the returns implied by <code>nav</code>: cumulative and
+        annualised return, annualised volatility, Sharpe, PSR, MinTRL, max and
+        current drawdown, skew, kurtosis, cost share. Nothing is precomputed
+        anywhere — the page cannot disagree with the data because the page
+        <em>is</em> the data, computed at view time. Empty input renders the
+        "Tracking has not started" state; the loading state is the default
+        precisely so a no-JS reader is never told a falsehood.
+      </p>
+
+      <h2 id="conventions-and-gotchas">Conventions and gotchas</h2>
+      <ul>
+        <li>
+          <strong>MIN_RETURNS = 20.</strong> Inferential statistics (Sharpe,
+          PSR, MinTRL, skew, kurtosis) are withheld until there are 20 daily
+          returns — that is <strong>21 observations</strong>, which is why the
+          page hints say "Withheld under 21 observations". Descriptive numbers
+          (cumulative return, drawdowns, costs) are always shown. This
+          asymmetry is deliberate, not a rounding bug.
+        </li>
+        <li>
+          <strong>Sharpe is excess over a 0% risk-free rate</strong>, sample sd
+          (<code>ddof=1</code>). Skewness and kurtosis are the biased sample
+          moments g1/b2 matching <code>scipy.stats</code> with
+          <code>bias=True</code>; kurtosis is raw, so normal = 3, not 0.
+          Pandas defaults differ — do not "fix" the JS to match pandas.
+        </li>
+        <li>
+          <strong>PSR and MinTRL use the per-period Sharpe, never the
+          annualised one</strong>, benchmark zero, one-sided at 95%, following
+          Bailey &amp; López de Prado (2012) eq. 7 and 12. MinTRL is reported in
+          returns and shown against the actual count, so a too-short record
+          says so in the verdict box rather than implying significance.
+        </li>
+        <li>
+          <strong><code>inception</code> stays <code>null</code> until the first
+          observation</strong>; the append script sets it. The JS ignores the
+          field and takes inception from the first observation's date.
+        </li>
+        <li>
+          <strong><code>mode_changes</code> records paper→live transitions</strong>
+          and the equity chart draws each as a labelled vertical boundary, so
+          simulated and real-capital stretches are never visually conflated.
+          The hero badge reads off the latest observation's <code>mode</code>.
+        </li>
+        <li>
+          <strong>The JS sorts observations by date itself</strong> and throws
+          on duplicates — so the page renders correctly even if the file's
+          order is disturbed, but this also masks a validator bypass (see
+          watch-outs below).
+        </li>
+        <li>
+          <strong>Days-live depends on the viewer's clock</strong> (inception →
+          now, clamped at 1), not on the data. Two viewers in different
+          timezones can legitimately see different numbers on the same day.
+        </li>
+        <li>
+          <strong>The error state has no retry.</strong> A failed fetch renders
+          a terminal error line until a manual reload.
+        </li>
+        <li>
+          <strong>Do not hand-edit the "last updated" times or
+          <code>article:modified_time</code> in the vol pages.</strong>
+          <code>build_site.py</code> stamps them from git history; that is what
+          the many "rebuild derived site metadata" commits in the log are.
+          Hand-edits get overwritten and dirty the diff.
+        </li>
+        <li>
+          <strong>Guards against degenerate data exist for a reason:</strong>
+          a relative sd floor and a <code>MAX_PLAUSIBLE_SHARPE = 30</code> cap
+          suppress statistics on a suspiciously smooth or extreme NAV series
+          rather than displaying a Sharpe of 10<sup>14</sup>. Do not remove
+          them when "cleaning up".
+        </li>
+      </ul>
+
+      <h2 id="history">History</h2>
+      <p>
+        Grouped from <code>git log -- vol/ data/ assets/js/track-record.js scripts/ .github/workflows/validate-track-record.yml</code>;
+        the repetitive "rebuild derived site metadata" commits are timestamp
+        re-stamps and are folded into the rows that caused them.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Date</th><th>Milestone</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>2026-08-23</td><td><code>64c0895</code> — quant repositioning creates the section: overview and methodology pages.</td></tr>
+            <tr><td>2026-08-23</td><td><code>2edb410</code> — track record lands end-to-end in one commit: page, JS, empty JSON, SCHEMA.md, both scripts, CI workflow.</td></tr>
+            <tr><td>2026-08-23</td><td><code>fb61b8d</code> — integrity hardening: validator walks the whole push range and fails closed; JS gains MIN_RETURNS withholding and the degenerate-data guards.</td></tr>
+            <tr><td>2026-08-23</td><td><code>a944743</code> — JSON-LD entity markup added across the three pages.</td></tr>
+            <tr><td>2026-08-24</td><td><code>d22a3c9</code> — copy rewritten around the research-to-production narrative (all three pages).</td></tr>
+            <tr><td>2026-08-24</td><td>JSON-LD <code>image</code> moved from TechArticle to Person nodes (<code>bbd7612</code>, <code>d461dcd</code>, <code>a9b7825</code>, <code>053d5a2</code>) plus three PR-review patches (<code>803cb7f</code>, <code>b7b1b98</code>, <code>42ac4f4</code>).</td></tr>
+            <tr><td>2026-08-24</td><td><code>6bf2a7c</code> — remaining repo-review fixes to SCHEMA.md and the append script.</td></tr>
+            <tr><td>2026-08-25</td><td><code>e66e1d4</code> — copy fix: duplicated volatility sentence on the overview.</td></tr>
+            <tr><td>2026-09-01</td><td><code>35f6fbb</code>, <code>4b11a36</code> — nav gains the Handbook tab across vol pages; GitHub link surfaced above the fold.</td></tr>
+            <tr><td>2026-09-02</td><td><code>94e42fc</code> — "Why volatility, why now" rationale; external links open in new tabs.</td></tr>
+            <tr><td>2026-09-02</td><td><code>a73f908</code> — full-repo audit: bug fixes across the validator, the append script, and <code>track-record.js</code>; the open items from that audit are the watch-outs below.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="watch-outs">Watch-outs</h2>
+      <div class="callout">
+        The open issues for this section live in the 2026-09-02 audit. The ones
+        that will bite first: <code>track-record.js</code> has no automated
+        tests, the JS sort masks validator bypasses, days-live depends on the
+        viewer's clock, and a failed fetch is terminal with no retry — see
+        <a href="audit-2026-09-02.html#frontend-js">frontend JS items</a>.
+        Validator-side gaps (timezone semantics of "future", the
+        <code>--mode</code> default after going live) are under
+        <a href="audit-2026-09-02.html#data-contract-validator">data contract /
+        validator</a>, and the timestamp-stamping behaviour that dirties diffs
+        is under
+        <a href="audit-2026-09-02.html#ci-repo-hygiene">CI / repo hygiene</a>.
+        And the standing rule from <code>data/SCHEMA.md</code>: the append-only
+        guarantee dies with a force-push — never rewrite this repository's
+        history.
+      </div>
+    </main>
+  </div>
+</body>
+</html>

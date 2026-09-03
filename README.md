@@ -136,7 +136,11 @@ publicly on `/vol/track-record.html`. Three mechanisms back that claim:
 2. CI (`.github/workflows/validate-track-record.yml`) walks every commit in a
    push and fails the build if any published observation, `mode_changes` entry,
    or immutable metadata field was modified, removed or reordered.
-3. Force-pushes are rejected by that workflow.
+3. `main` carries branch protection: force-pushes and deletion are disabled,
+   enforced for admins. The workflow's `github.event.forced` check is a second
+   layer for the paths it watches — it is path-filtered, so a force-push that
+   left the watched files untouched would fire no run, and no file-level check
+   can detect a rewrite after the fact. The branch rule is the durable guard.
 
 ### Rules
 
@@ -176,21 +180,19 @@ Full field reference: [`data/SCHEMA.md`](data/SCHEMA.md).
 
 ---
 
-## Analytics — one open setup step
+## Analytics
 
 `assets/js/analytics.js` uses [GoatCounter](https://www.goatcounter.com): no
-cookies, no consent banner, honours Do Not Track, and skips localhost.
-
-It is **currently inert.** `CODE` is an empty string, so the script returns
-before injecting anything — no pageviews and no events are being recorded. To
-activate it, create a site at goatcounter.com and set `CODE` to your subdomain:
+cookies, no consent banner, honours Do Not Track and Global Privacy Control,
+and skips localhost. It is **live** — `CODE` is set:
 
 ```js
 var CODE = "bradlasater";   // for https://bradlasater.goatcounter.com
 ```
 
-It also records `mailto:` clicks as a `contact-email` event and cross-origin
-clicks as `outbound-<host>` — the two conversions that actually matter here.
+It records pageviews, `mailto:` clicks as a `contact-email` event, and
+cross-origin clicks as `outbound-<host>` — the two conversions that actually
+matter here.
 
 ---
 

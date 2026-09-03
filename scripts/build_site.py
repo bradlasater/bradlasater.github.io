@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import functools
 import html
 import json
 import pathlib
@@ -93,20 +94,25 @@ def git(*args: str) -> str:
     return proc.stdout
 
 
+@functools.lru_cache(maxsize=None)
 def last_modified(relpath: str) -> dt.datetime:
     """The commit date of the last non-build commit to touch ``relpath``.
 
     Falls back to the current time for a file git has never seen — a brand new
     entry being previewed locally, typically. Never fabricates a past date.
+
+    A git *failure* (not a repository, corrupt index, git missing) is not the
+    fallback case: ``git log`` on an untracked path exits 0 with empty output,
+    so an empty result genuinely means "never committed". Letting the error
+    propagate keeps a broken checkout from silently stamping every page with
+    the build time. Cached because render_feed and render_sitemap each ask for
+    every entry's date again, and each call is a git subprocess.
     """
-    try:
-        out = git(
-            "log", "-1", "--format=%cI", "--no-merges",
-            "--invert-grep", f"--grep=^{BUILD_COMMIT_SUBJECT}",
-            "--", relpath,
-        ).strip()
-    except RuntimeError:
-        out = ""
+    out = git(
+        "log", "-1", "--format=%cI", "--no-merges",
+        "--invert-grep", f"--grep=^{BUILD_COMMIT_SUBJECT}",
+        "--", relpath,
+    ).strip()
     if not out:
         return dt.datetime.now(dt.timezone.utc).replace(microsecond=0)
     return dt.datetime.fromisoformat(out).replace(microsecond=0)
@@ -160,6 +166,20 @@ class Entry:
             raise SystemExit(f"{self.src_rel}: date {self.date} is in the future.")
 
         self.slug = path.stem
+        if self.slug == "index":
+            # log/index.html is the entry list; an entry with this slug would
+            # be silently overwritten by the index injection in main().
+            raise SystemExit(
+                f"{self.src_rel}: 'index' is reserved for the log index page; rename the file."
+            )
+        if not re.fullmatch(r"[A-Za-z0-9._~-]+", self.slug):
+            # The slug is interpolated unescaped into URLs, HTML attributes,
+            # the Atom feed, and the sitemap. RFC 3986 unreserved characters
+            # are the only ones safe in all of those contexts.
+            raise SystemExit(
+                f"{self.src_rel}: filename slug {self.slug!r} is not URL-safe "
+                "(use letters, digits, and - . _ ~ only); rename the file."
+            )
         self.title = self.meta["title"]
         self.summary = self.meta["summary"]
         self.stage = self.meta.get("stage", "")
@@ -521,11 +541,27 @@ def handbook_pages() -> list[str]:
     return [f"handbook/{name}" for name in names]
 
 
+def docs_pages() -> list[str]:
+    """Project-documentation pages for the sitemap, overview first.
+
+    Discovered rather than declared, like the handbook: docs/ mirrors the
+    repo's Markdown documentation and is still growing, so a page added there
+    reaches the sitemap on the next build without a second edit here. The
+    pages are hand-authored in this repository but carry no stamp markers, so
+    they join the sitemap only — the build never writes them.
+    """
+    names = sorted(p.name for p in (ROOT / "docs").glob("*.html"))
+    if "index.html" in names:
+        names.remove("index.html")
+        names.insert(0, "index.html")
+    return [f"docs/{name}" for name in names]
+
+
 def sitemap_pages() -> list[str]:
     """Every indexable page outside the log, in the order the nav presents it."""
     pages = list(STATIC_PAGES)
     after_track = pages.index("vol/track-record.html") + 1
-    return pages[:after_track] + handbook_pages() + pages[after_track:]
+    return pages[:after_track] + handbook_pages() + docs_pages() + pages[after_track:]
 
 
 def render_sitemap(entries: list[Entry]) -> str:

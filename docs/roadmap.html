@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Roadmap — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/roadmap.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="What is planned, in progress, and done for bradlasater.com and the volatility system.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/roadmap.html">
+  <meta property="og:title" content="Roadmap — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html" class="active">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Roadmap</h1>
+        </div>
+        <div class="meta">
+          mirrors ROADMAP.md
+        </div>
+      </header>
+
+      <p class="meta-note">This page mirrors <code>ROADMAP.md</code>; edit the Markdown, then re-sync this page.</p>
+
+      <p class="lead">
+        Outstanding work on bradlasater.com, ordered by signal per unit of effort
+        against one question: <strong>does a quant hiring manager or a specialist
+        recruiter find this more convincing?</strong>
+      </p>
+      <p>
+        Two evidence bases feed this list. Items marked <em>(survey)</em> come from
+        a crawl of ~80 quant practitioners' personal sites and 20+ hiring-side
+        sources — full evidence in
+        <a href="research-notes.html"><code>notes/research/</code></a>, readable
+        version in <code>notes/quant-site-playbook.html</code>. Items marked
+        <em>(repo)</em> come from the codebase itself: a <code>TODO</code>, an
+        unconfigured value, an empty data file, or a promise the site already
+        makes in public.
+      </p>
+
+      <h2 id="the-frame">The frame</h2>
+      <p>
+        The hiring-side evidence says a personal site matters less than it feels
+        like it should. Giuseppe Paleologo — Global Head of QR at Balyasny,
+        ex-HRT, Millennium, Citadel, self-described screener of "a couple
+        thousand résumés" — published ~15 pages of buy-side quant career advice
+        in December 2025 mentioning personal websites, blogs, GitHub, and side
+        projects <strong>zero times</strong>. Jane Street's interviewing page,
+        HRT's interviewing post, and the Two Sigma, D. E. Shaw, SIG, and Optiver
+        careers pages all return the same zero-mention result. The most
+        project-favourable source still concedes projects are "nothing more than
+        a 'show of interest'." The honest recruiting-side calibration: GitHub
+        gets checked "especially when deciding between similar candidates."
+      </p>
+      <p>
+        So the site is <strong>not</strong> lead generation. It is a
+        <em>defensibility instrument</em> — the thing that converts a warm reader
+        from "plausible" to "worth an hour", and that makes a claim survive
+        twenty minutes of probing. Its highest-leverage content is not the best
+        strategy found; it is documented evidence of knowing how easily one could
+        have fooled oneself, and what was done about it.
+      </p>
+      <p>
+        That is the one thing a career switcher can offer that a strong résumé
+        cannot, and it is what the evaluation protocol already commits to.
+      </p>
+      <p>
+        The switcher door is open, firm-official: Jane Street's "Problem-solving
+        mindset: required. Finance background: optional."; Two Sigma's "more than
+        half of Two Sigma's employees come from outside the finance industry",
+        alongside a posted qualification reading "Performed an in-depth research
+        project, examining real-world data." D. E. Shaw's posted NYC quantitative
+        analyst base is $275k (UG/MS) / $300k (PhD), so the $250k target is
+        conservative.
+      </p>
+
+      <h2 id="a-now-cheap-and-each-currently-costing-something">A. Now — cheap, and each currently costing something</h2>
+      <ul>
+        <li><span class="badge shipped">done</span> <strong>Set the GoatCounter
+          <code>CODE</code></strong> in <code>assets/js/analytics.js:18</code>.
+          Done — set to <code>"bradlasater"</code>, so the loader now injects
+          GoatCounter on non-localhost pageviews and outbound/contact click
+          events. <em>(repo)</em></li>
+        <li><span class="badge shipped">done</span> <strong>Resolve the "roughly
+          60%" claim.</strong> Done. The two <code>TODO(brad)</code> comments are
+          deleted (they were shipping to view-source), and the number is now
+          qualified everywhere it appears: <strong>WAPE, against a
+          prior-season-average baseline</strong>, in the homepage hero, the CV
+          opening paragraph, and the Ticketmaster role bullets on both pages. An
+          unqualified percentage is the first thing a quant interviewer pushes
+          on. <em>(repo + survey)</em></li>
+        <li><span class="badge">open</span> <strong>Fix the GitHub
+          profile.</strong> Currently <code>bio: null</code>,
+          <code>location: null</code>, <code>blog: ""</code>, <code>name:
+          "bradlasater"</code>, no profile README, no repo descriptions, and two
+          near-duplicate repos (<code>data_ingest_infra</code>,
+          <code>data_ingestion_infra</code>). Set the real name,
+          <code>location: New York, NY</code>, <code>blog: bradlasater.com</code>,
+          a bio, a profile README linking the system and the log, descriptions
+          everywhere, and delete the duplicate. <em>Why this specifically:</em>
+          the highest-yield way the crawlers found this entire cohort was the
+          GitHub Users API filtered by bio text and <code>location:"New
+          York"</code> — a query technical recruiters genuinely run.
+          <em>(survey)</em></li>
+        <li><span class="badge">open</span> <strong>Point the "Source" buttons at
+          <code>algo_vol_base</code>, not the bare profile.</strong> Four buttons
+          labelled <em>Source</em> / <em>GitHub</em> land on a profile page. The
+          system repo exists. If it stays private, relabel the buttons rather
+          than implying code a visitor cannot reach. <em>(repo)</em></li>
+        <li><span class="badge">open</span> <strong>Add a DMARC record.</strong>
+          <code>_dmarc.bradlasater.com</code> does not exist. Mail <em>is</em>
+          deliverable — verified by SMTP probe, with SPF and DKIM both present —
+          so this is deliverability hardening, not an outage. But it makes
+          outbound mail to Gmail and Outlook more likely to be filtered, and
+          those are the recruiters. Start monitor-only: <code>v=DMARC1; p=none;
+          rua=mailto:brad@bradlasater.com</code>. <em>(repo)</em></li>
+        <li><span class="badge">open</span> <strong>Auto-renew and registrar-lock
+          <code>bradlasater.com</code>; never retire the
+          <code>bradlasater.github.io</code> fallback.</strong> Two reference
+          sites in the survey were lost exactly this way:
+          <code>frouah.com</code> (the standard free Heston reference) and
+          <code>kthohr.com</code> (an NYU PhD's site) both lapsed and now serve
+          online-casino spam under their owners' names. A lapsed domain does not
+          go quiet — it gets bought <em>because</em> it has inbound links.
+          <em>(survey)</em></li>
+        <li><span class="badge">open</span> <strong>Start the track
+          record.</strong> <code>data/track-record.json</code> has zero
+          observations, so the page reads "Tracking has not started". Its value
+          is a pure function of elapsed time, so the first append is worth more
+          than any further polishing — and it exercises the charts, statistics
+          and verdict banner against real data for the first time.
+          <em>(repo)</em></li>
+      </ul>
+
+      <h2 id="b-tier-1-evidence-content">B. Tier 1 — evidence content</h2>
+      <p>
+        This is where the entire gap is. The site promises process artifacts and
+        currently delivers none: the research log has no entries, the track
+        record has no observations, and there is no chart, equation, or code
+        anywhere on it. Every claim is prospective.
+      </p>
+      <ul>
+        <li><span class="badge">open</span> <strong>Promote post-mortems to a
+          named top-level nav item.</strong> Ranked the #1 signal independently
+          by two research lanes, and <em>nobody</em> in the prop/HFT lane has
+          one. Mark Best's line is the register: "Almost all of what I have
+          looked at has been a dead end… most research ends up in the bin."
+          Nobody fabricating results writes that sentence.</li>
+        <li><span class="badge">open</span> <strong>Add a literal <code>## What
+          this shows and does not show</code> heading to the entry
+          template</strong>, every bullet beginning "It does not show that…".
+          Jonathan Kinlay runs it as a fixed section in every article, alongside
+          a second fixed section named "Failure modes I actually saw". Highest
+          trust-per-word content available.</li>
+        <li><span class="badge">open</span> <strong>Ship a replication as the
+          first post.</strong> A named paper, cited, delta reported honestly —
+          Dean Markwick's model: "the results are not as conclusive as the
+          original paper." Proves competence with zero risk of an unfalsifiable
+          claim, and ships <em>before</em> the system has results of its own.
+          Candidates: Bakshi–Kapadia–Madan on the variance risk premium, or
+          Carr–Madan variance-swap replication against real option chains.</li>
+        <li><span class="badge">open</span> <strong>Write up the
+          infrastructure.</strong> Structured logging, daily reconciliation,
+          silent-failure alerting, the append-only track-record validator and the
+          three bypasses it now closes. Proves engineering seriousness, is fully
+          verifiable by a reader, carries zero alpha and zero claim risk, and is
+          publishable <em>now</em>, before any results exist. Four separate
+          people in the prop/HFT lane lean on exactly this.</li>
+        <li><span class="badge">open</span> <strong>Add a standing "this analysis
+          may contain errors" disclaimer.</strong> The most transferable single
+          artifact in the survey, three clauses (Kipp Rogers): who I am · this
+          does not represent any employer's views · these are products of
+          analysis which may contain errors · this is not investment advice. Pair
+          with a per-post invitation to point out what looks wrong, and Carver's
+          companion line — explicitly not regulated, not selling courses or
+          signals.</li>
+        <li><span class="badge">open</span> <strong>Surface the running trial
+          count as a live number.</strong> The protocol already promises
+          automatic logging of every configuration evaluated. A counter that only
+          goes up is unfakeable, and nobody else in the survey has one. Without a
+          trial count a Sharpe is uninterpretable — and "out-of-sample" as a
+          magic word is itself a red flag (López de Prado: "It does not matter if
+          the backtest is a walk-forward out-of-sample").</li>
+        <li><span class="badge">open</span> <strong>State data provenance
+          everywhere.</strong> Vendor, instruments, exact date range, how
+          obtained, what was paid for or proxied, and what is wrong with it. The
+          <code>data_ingest_infra</code> repo already says Polygon — put that on
+          the site.</li>
+        <li><span class="badge">open</span> <strong>Publish a result where a
+          named baseline wins.</strong> HAR-RV, GARCH, implied-as-forecast and
+          naive short carry are already named in the protocol. Kinlay benchmarks
+          his CNN against plain interpolation and reports the gap is small and
+          may not survive real data. Clearest tell separating real research from
+          a backtest.</li>
+        <li><span class="badge">open</span> <strong>Extract one installable
+          artifact</strong> — an arbitrage-free SVI/SSVI fitter, or a
+          deflated-Sharpe / PBO-CSCV implementation. Third-party adoption is
+          unfakeable and IP-free. Best eleven words in the survey: Ties de Kok's
+          "Officially integrated into Stata as of Stata 17."</li>
+        <li><span class="badge">open</span> <strong>Trade-level logs.</strong>
+          <code>vol/methodology.html</code> promises "trade-level logs behind any
+          live track record, so the reported statistics can be recomputed
+          independently." The current schema stores daily aggregates only and
+          cannot express this. Extend the data contract or soften the promise —
+          do not leave it unbacked. <em>(repo)</em></li>
+      </ul>
+
+      <h2 id="c-positioning-and-structure">C. Positioning and structure</h2>
+      <ul>
+        <li><span class="badge">open</span> <strong>Move the market thesis above
+          the biography on the homepage.</strong> "Options are a market in
+          forecasts. The trade is the forecast error." is the right shape and is
+          currently buried on <code>/vol/</code>. Artur Sepp — Risk Magazine's
+          Quant of the Year 2024 — leads with "volatility regimes migrate across
+          asset classes, and models that feel robust fail at the worst moment. I
+          build frameworks designed to survive regime change." With no fund name
+          to lead with, a falsifiable thesis is the only substitute, and the
+          better asset because it is checkable.</li>
+        <li><span class="badge">open</span> <strong>Name the system; give it a
+          repo and a version.</strong> "The volatility system" cannot be cited,
+          starred, or referenced. Everyone credible in the survey has named
+          artifacts — Sepp's ROSAA, López de Prado's purged CV and deflated
+          Sharpe, Markwick's <code>HawkesProcesses.jl</code>.</li>
+        <li><span class="badge">open</span> <strong>Cut the capability tag
+          clouds</strong> (three groups, 26 tags). This is the flat-breadth
+          pattern that destroys depth signal. Skills walls are a named red flag:
+          "interviewers will pick the most obscure item on your list."
+          <em>Still outstanding after the 2026-08-24 repositioning pass.</em></li>
+        <li><span class="badge">open</span> <strong>Add <code>Code &amp;
+          Data</code> and <code>Post-mortems</code> as nav
+          destinations.</strong> Best information architecture found is Ties de
+          Kok's — About / Research / Code &amp; Data / Talks &amp; Classes / Blog
+          Posts / CV. One nav item per <em>kind of evidence</em>, so a reader
+          jumps to the type they trust.</li>
+        <li><span class="badge">open</span> <strong>Put the finding, not the
+          topic, in every log listing.</strong> Assume 45 seconds and no clicks.
+          Abdelmessih puts a one-line finding under each post title.</li>
+        <li><span class="badge">open</span> <strong>State the IP boundary
+          explicitly:</strong> the vol system is built on personal time with
+          purchased retail data and contains nothing from any employer.
+          Signalling that you know where the line is <em>is itself</em> the
+          signal that you can be trusted near proprietary information.</li>
+        <li><span class="badge">open</span> <strong>Tighten the bio to Sinclair's
+          four-sentence shape:</strong> years → instruments → current seat →
+          credentials and artifacts. No adjectives.</li>
+        <li><span class="badge">open</span> <strong>Group the log by theme once
+          it passes ~10 entries.</strong> A chronological feed decays; a themed
+          index compounds.</li>
+      </ul>
+
+      <h2 id="d-research-post-craft">D. Research-post craft</h2>
+      <p>Apply when building the entry template in <code>content/log/</code>.</p>
+      <ul>
+        <li><span class="badge">open</span> Byline and date on every entry.
+          <strong>Non-negotiable</strong> — the Hull Tactical blog, where Euan
+          Sinclair writes, is active and expert and carries no author attribution
+          on any post. Unattributed research accrues to nobody.</li>
+        <li><span class="badge">open</span> Numbered, captioned figures
+          referenced in prose — bold <code>Figure N.</code> label, hairline rules
+          above and below, source line beneath.</li>
+        <li><span class="badge">open</span> Booktabs tables: horizontal rules
+          only. Vertical rules and zebra striping read as spreadsheet export, not
+          analysis.</li>
+        <li><span class="badge">open</span> Pre-rendered KaTeX at build time in
+          <code>build_site.py</code>; ship <code>katex.min.css</code> only,
+          self-hosted, one version, zero runtime math JS.</li>
+        <li><span class="badge">open</span> Real author-year citations with
+          anchor IDs. Cite specific results, not names — one correct reference to
+          Bailey &amp; López de Prado (2014) on the deflated Sharpe ratio beats
+          "Sinclair and López de Prado" as influences.</li>
+        <li><span class="badge">open</span> Code linked at an exact commit.
+          Ranked: linked repo &gt; inline snippet &gt; nothing &gt; screenshot of
+          code.</li>
+        <li><span class="badge">open</span> Costs as specific numbers — bid/ask,
+          exchange fees, delta-hedge slippage.</li>
+        <li><span class="badge">open</span> Uncertainty on every headline number:
+          <code>± SE</code>, CIs, medians and quartiles.</li>
+      </ul>
+      <p>
+        <strong>Cadence warning:</strong> three otherwise-credible reference
+        sites in the survey are 2–3.5 years stale, which reads worse than having
+        no research section at all. If a cadence cannot be sustained, present a
+        fixed set of finished pieces with no dates implying a schedule.
+      </p>
+
+      <h2 id="e-track-record">E. Track record</h2>
+      <p>
+        Rob Carver's twelve-year public series is the reference implementation:
+        lead with the worst number, state the accounting basis, decompose the
+        P&amp;L, benchmark against named third-party indices <em>with
+        correlations</em>, report costs as a first-class result, show the full
+        path, and admit discretionary errors by name.
+      </p>
+      <p>
+        Four things <strong>even Carver does not do</strong> — genuine
+        differentiation, all within reach given the append-only CI:
+      </p>
+      <ul>
+        <li><span class="badge">open</span> <strong>Live-vs-backtest
+          overlay</strong> — backtest curve, hard vertical line at go-live,
+          realized path after it, gap quantified and attributed.</li>
+        <li><span class="badge">open</span> <strong>Confidence interval on the
+          realized Sharpe</strong> — <code>SE(SR) ≈ √((1+SR²/2)/N)</code>. On
+          eighteen months it will be humiliatingly wide. Publishing it anyway is
+          the single most credible thing that could go on that page. (The page
+          already reports MinTRL, which is the same instinct.)</li>
+        <li><span class="badge">open</span> <strong>Frozen, pre-registered
+          definition</strong> — "parameters were frozen on
+          <code>&lt;date&gt;</code>; config hash <code>&lt;hash&gt;</code>;
+          nothing below has been re-fit", verifiable against git history.</li>
+        <li><span class="badge">open</span> <strong>A change log</strong> — every
+          intervention, override and parameter change, dated, with the reason.
+          Silence about changes reads as changes concealed.</li>
+      </ul>
+      <p>
+        Frame the record around <strong>out-of-sample discipline and divergence
+        explanation, not returns.</strong> Not one person in the prop/HFT lane
+        publishes an equity curve with a headline Sharpe; in that population it
+        reads as either a compliance violation or an overfit. The only
+        performance-shaped artifact anyone published was a paper-vs-live
+        reconciliation where divergence was explained mechanistically ("the
+        forecast takes about 200 ms to calculate on a new bar, thus in paper and
+        live the orders are sent later than in sim").
+      </p>
+
+      <h2 id="f-mechanics-and-distribution">F. Mechanics and distribution</h2>
+      <p>Shipped:</p>
+      <ul>
+        <li><span class="badge shipped">done</span> <code>robots.txt</code> with
+          explicit AI-crawler allows, and <code>llms.txt</code>.</li>
+        <li><span class="badge shipped">done</span> <code>feed.xml</code> +
+          <code>sitemap.xml</code> generated by <code>build_site.py</code>, built
+          and committed.</li>
+        <li><span class="badge shipped">done</span> JSON-LD
+          <code>@graph</code> with a stable <code>Person</code> <code>@id</code>
+          — better structured data than 15 of the 20 sites torn down.</li>
+        <li><span class="badge shipped">done</span> Per-entry log URLs —
+          retrieval engines return passages, so an entry sharing a URL with
+          twenty others cannot be cited on its own.</li>
+      </ul>
+      <p>Outstanding:</p>
+      <ul>
+        <li><span class="badge">open</span> <strong>Add <code>/cv.pdf</code>
+          alongside the HTML CV.</strong> Recruiters forward PDFs and ATSs ingest
+          PDFs; hiring managers read HTML. Ship both. (The print stylesheet now
+          produces a correct printed CV, so this is close to free.)</li>
+        <li><span class="badge">open</span> <strong>Self-host Inter / Newsreader
+          / JetBrains Mono as woff2.</strong> Google Fonts is a render-blocking
+          third-party request.</li>
+        <li><span class="badge shipped">done</span> <strong>Rewrite the meta
+          description in the third person, naming city and specialty.</strong>
+          Done: the homepage description now opens "Brad Lasater is an applied
+          scientist and machine-learning engineer in New York…", following
+          Gundersen's model. <code>cv.html</code> and the Open Graph tags were
+          brought into line at the same time.</li>
+        <li><span class="badge">open</span> <strong>Submit the feed to
+          Quantocracy</strong> once there are 2–3 real entries. Best live
+          aggregator in this niche and the cheapest real distribution available —
+          it puts the log in the same daily roundup as Carver and Kinlay.</li>
+      </ul>
+      <p>
+        <strong>Stack verdict: stay put. Do not migrate.</strong> Hand-written
+        HTML on GitHub Pages with a custom domain sits at or above the median of
+        the entire survey and ahead of nearly all of it on structured data. No
+        Vercel, Astro, or Next.js appears anywhere in the quant cohort; Jekyll
+        dominates and Quarto is the one validated notebook path (worth
+        considering later for <code>/research/</code> alone if
+        <code>.ipynb</code> publishing is wanted — never site-wide).
+      </p>
+
+      <h2 id="g-code-health">G. Code health</h2>
+      <p>Low stakes, none visitor-facing, all <em>(repo)</em>.</p>
+      <ul>
+        <li><span class="badge">open</span> <strong>Add a
+          <code>.gitignore</code>.</strong> None exists; only a global ignore
+          rule keeps <code>.claude/settings.local.json</code> and scratch
+          directories out of commits.</li>
+        <li><span class="badge">open</span>
+          <strong><code>ensure_ascii=False</code></strong> in
+          <code>append_observation.py</code> — <code>json.dumps</code> re-escapes
+          the em-dash in <code>strategy</code> to <code>—</code> on first
+          write, producing a confusing diff on the very first observation
+          commit.</li>
+        <li><span class="badge">open</span> <strong>Dead CSS:</strong>
+          <code>.btn__icon</code>, <code>.card--link</code>,
+          <code>.stack-4</code>, <code>.stack-6</code>, <code>.measure</code>,
+          the <code>.num</code>/<code>time</code> selector, and the
+          <code>--c-surface-hover</code> custom property are unreferenced by any
+          HTML or JS.</li>
+        <li><span class="badge">open</span> <strong><code>[id] {
+          scroll-margin-top: 6rem }</code></strong> applies to every element with
+          an id, including each <code>&lt;span&gt;</code> stat readout — 28 ids
+          on the track-record page against 1 used as a link target. Harmless now;
+          will silently alter any future <code>scrollIntoView()</code>.</li>
+        <li><span class="badge">open</span> <strong>Breakpoint overlap:</strong>
+          <code>min-width: 44rem</code> and <code>max-width: 44rem</code> both
+          match at exactly 704px. Benign today (disjoint properties), latent
+          trap.</li>
+        <li><span class="badge">open</span> <strong>Repeated inline styles</strong>
+          — <code>style="font-size: var(--step-3); margin-top:
+          var(--sp-3);"</code> verbatim on four pages. The only thing that would
+          force a <code>style-src 'unsafe-inline'</code> relaxation if a CSP is
+          added.</li>
+        <li><span class="badge">open</span> <strong>Footer drift</strong> — five
+          distinct footers across seven pages; <code>404.html</code>, the page
+          most needing wayfinding, has the fewest links. Now that
+          <code>build_site.py</code> exists, this wants a single partial. (Nav
+          was consolidated this way already; note it lives in <em>two</em> places
+          — the static HTML and <code>build_site.py:210</code> — so a nav change
+          is still a two-place edit.)</li>
+        <li><span class="badge">open</span> <strong>Section landmark
+          naming</strong> — <code>index.html</code> and
+          <code>vol/index.html</code> label nearly every section with
+          <code>aria-labelledby</code>; <code>vol/methodology.html</code>,
+          <code>vol/track-record.html</code> and <code>log/index.html</code>
+          label none.</li>
+      </ul>
+
+      <h2 id="h-open-decisions">H. Open decisions</h2>
+      <p>Genuinely undecided, and not to be resolved on taste alone.</p>
+      <p>
+        <strong>Dark-only design.</strong> The survey is blunt: across ~80 sites
+        essentially one ships a real dark toggle, not one site in the hedge-fund
+        lane implements dark mode at all, and every serious research site is
+        light-only with a near-grayscale palette — making the current dark-only
+        system the outlier. Against that: dark was an explicit design
+        instruction, the palette is fully tokenised, and the contrast
+        measurements clear AA throughout (body 16.9:1, muted 6.7:1). This is a
+        real tension between measured peer convention and stated preference, and
+        it is Brad's call. A light-mode variant would mean redefining the token
+        block under <code>prefers-color-scheme</code>, not a rewrite.
+      </p>
+
+      <h2 id="i-decided-against-do-not-relitigate">I. Decided against — do not relitigate</h2>
+      <table>
+        <thead>
+          <tr><th>Decision</th><th>Evidence</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>No JS charting library</strong></td>
+            <td>Exactly one site out of twenty uses interactive charts; it cost
+              ten scripts and thirteen stylesheets on a landing page. Hand-rolled
+              inline SVG beats both Plotly bloat and static PNGs.</td>
+          </tr>
+          <tr>
+            <td><strong>No framework migration</strong></td>
+            <td>None appear in the cohort. Migration would be pure motion.</td>
+          </tr>
+          <tr>
+            <td><strong>No hosted search</strong></td>
+            <td>The site is far too small; nobody at this scale has it.</td>
+          </tr>
+          <tr>
+            <td><strong>No further visual polish</strong></td>
+            <td>Three top-tier people's sites are not mobile-responsive at all,
+              and one deliberately loads <code>non-responsive.css</code>. Peter
+              Jäckel — author of "Let's Be Rational" — publishes hand-written
+              HTML with IE6 workarounds. López de Prado's own homepage is a
+              357-byte <code>&lt;frameset&gt;</code> served from IIS. Visible
+              design effort exceeding research effort is itself a negative
+              signal.</td>
+          </tr>
+          <tr>
+            <td><strong>No OKLCH fallbacks</strong></td>
+            <td>Baseline support is Chrome 111+, Safari 15.4+, Firefox 113+, all
+              from 2023. Acceptable for this audience.</td>
+          </tr>
+          <tr>
+            <td><strong>No SHA-pinning of GitHub Actions</strong></td>
+            <td>Overhead for a personal site. Revisit if anyone else gains write
+              access — note the append-only guarantee ultimately depends on
+              branch protection, since the workflow runs the validator from the
+              commit under test.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="anti-patterns-check-any-new-page-against-these">Anti-patterns — check any new page against these</h2>
+      <ol>
+        <li>A headline return or Sharpe with no trial count.</li>
+        <li>"Out-of-sample" used as a magic word, without pre-registration date,
+          sample size, and error bars.</li>
+        <li>Implausible numbers.</li>
+        <li>Results with no cost, slippage, or capacity model.</li>
+        <li>No risk section — fatal for anything short-vol-adjacent.</li>
+        <li>"AI trading bot" framing, or model complexity presented as the
+          achievement.</li>
+        <li>Skills walls and technology laundry lists.</li>
+        <li>Anything that cannot be defended for twenty minutes.</li>
+        <li>Vague accomplishment language.</li>
+        <li>Overclaiming the identity. <strong>Amended 2026-08-24:</strong> the
+          homepage descriptor now reads "Applied Scientist · Quantitative
+          Research · Systematic Volatility", adopting <em>Quantitative
+          Research</em> as the term recruiters actually search on. This was a
+          deliberate override of the original rule, which held that
+          "quantitative researcher" on a site with no desk experience invites a
+          comparison that is lost. The rule still binds everywhere else: the site
+          does not claim desk experience, a trading seat, or institutional
+          P&amp;L, and <code>jobTitle</code> in JSON-LD remains "Applied
+          Scientist".</li>
+      </ol>
+      <p>
+        <strong>Delete on sight:</strong> proven · consistently · robust
+        (unqualified) · proprietary · cutting-edge · passionate about ·
+        significant returns · battle-tested · alpha-generating · any Sharpe
+        stated without a period, a cost assumption, and an interval.
+      </p>
+    </main>
+  </div>
+</body>
+</html>

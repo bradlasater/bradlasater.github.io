@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Homepage, CV &amp; 404 — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/section-home-cv.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="Maintainer notes for the recruiting surface of bradlasater.com — index.html, cv.html, 404.html, the shared design system, and the analytics wiring.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/section-home-cv.html">
+  <meta property="og:title" content="Homepage, CV &amp; 404 — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html" class="active">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Homepage, CV &amp; 404</h1>
+        </div>
+        <div class="meta">
+          living document · maintain by hand<br>
+          index.html · cv.html · 404.html
+        </div>
+      </header>
+
+      <h2 id="purpose">Purpose</h2>
+      <p class="lead">
+        The recruiting surface. These three pages are what a hiring manager, recruiter, or
+        future collaborator actually sees: the homepage pitches the volatility build and the
+        research-to-production narrative, the CV carries the full record, and the 404 salvages
+        anyone who follows a stale link. Everything here is hand-authored static HTML — no
+        template, no generator — which makes it the fastest part of the site to change and the
+        easiest to quietly break.
+      </p>
+
+      <h2 id="key-files">Key files</h2>
+      <table>
+        <thead>
+          <tr><th>Path</th><th>Role</th><th>Owned by</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>index.html</code></td>
+            <td>Homepage: hero pitch, current-work feature, why-volatility rationale, selected experience, credentials, availability, contact.</td>
+            <td>Hand; <code>dateModified</code> and the "last updated" stamp are rewritten by <code>scripts/build_site.py</code></td>
+          </tr>
+          <tr>
+            <td><code>cv.html</code></td>
+            <td>Full CV: portrait hero, complete role history (including Marines and teaching), education, patents, technology tags.</td>
+            <td>Hand; stamped like <code>index.html</code></td>
+          </tr>
+          <tr>
+            <td><code>cv.pdf</code></td>
+            <td>PDF version, linked only from the CV footer.</td>
+            <td>Hand — regenerate it yourself when the CV changes; nothing checks that it is in sync</td>
+          </tr>
+          <tr>
+            <td><code>404.html</code></td>
+            <td>GitHub Pages not-found page. <code>noindex</code>, and deliberately absent from the build's <code>STATIC_PAGES</code> so it never enters the sitemap.</td>
+            <td>Hand</td>
+          </tr>
+          <tr>
+            <td><code>assets/css/site.css</code></td>
+            <td>The design system for the whole public site: OKLCH tokens, fluid type, layout, components, print rules. All three pages above are built from it.</td>
+            <td>Hand</td>
+          </tr>
+          <tr>
+            <td><code>assets/css/error.css</code></td>
+            <td>404-only overlay on top of <code>site.css</code> tokens — the framed figure and its caption. Loaded by <code>404.html</code> only.</td>
+            <td>Hand</td>
+          </tr>
+          <tr>
+            <td><code>assets/js/analytics.js</code></td>
+            <td>GoatCounter wiring, included on all three pages (and every generated page).</td>
+            <td>Hand</td>
+          </tr>
+          <tr>
+            <td><code>llms.txt</code></td>
+            <td>Plain-text site summary for LLM crawlers. The prose is hand-maintained; the log-entries block between the <code>BUILD:LOG-ENTRIES</code> markers is injected by the build.</td>
+            <td>Hand + build (one injected block)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="how-it-works">How it works</h2>
+      <p>
+        <strong>Homepage structure.</strong> A single-column page of
+        <code>&lt;section class="shell section"&gt;</code> blocks, each with an eyebrow, an
+        <code>h2.section__title</code>, and an <code>aria-labelledby</code> hook. The hero leads
+        with name, role line, a one-sentence thesis, and two bio paragraphs, then a primary
+        action pair ("See the volatility system", "Full CV"). After that: a
+        <code>.feature</code> block on the system under construction, the "Why volatility, why
+        now" rationale (the argument that past work and volatility trading are the same
+        estimation problem), selected experience as <code>.role</code> articles, credentials as
+        a <code>.deflist</code>, availability, and contact. The contact section carries the
+        build-stamped "last updated" line.
+      </p>
+      <p>
+        <strong>CV structure.</strong> Same chrome, plus a <code>.hero--cv</code> with a
+        <code>&lt;picture&gt;</code> portrait (320w/720w WebP srcset over
+        <code>headshot.jpg</code>, explicit dimensions, <code>fetchpriority="high"</code>).
+        Six roles instead of four, education and recognition as <code>.deflist</code>s, and a
+        three-group <code>.taggroup</code> skills block. The JSON-LD is a near-copy of the
+        homepage graph (same <code>#brad</code> Person node) plus a BreadcrumbList — keep the
+        two files' structured data in sync when job titles, the <code>seeks</code> demand, or
+        the bio change.
+      </p>
+      <p>
+        <strong>404.</strong> Reuses the hero classes, then adds
+        <code>assets/css/error.css</code> for the framed <code>assets/deja.jpg</code> figure —
+        the astronaut alone in a field, "somewhere off the planned trajectory". The source
+        image is only 332×152, so the CSS fades the frame edges into the page background to
+        read as cinematic rather than pixelated, and the og:image points at it anyway (audit
+        item 38 wants a 1200×630 variant). Four action buttons cover everything actually on
+        the site.
+      </p>
+      <p>
+        <strong>Design system.</strong> <code>assets/css/site.css</code> is dark-only
+        (<code>color-scheme: dark</code>) with OKLCH tokens: cool neutral ramps at hue 255, a
+        blue accent at hue 232, and teal/warm-red semantic colours chosen to stay separable
+        for deuteranopic viewers (always paired with a sign or label, never colour alone).
+        Text is deliberately never pure white — halation makes it harder to read on dark.
+        Fonts are Inter (sans), Newsreader (serif) and JetBrains Mono, all from Google Fonts
+        with preconnect hints. Type is a fluid <code>--step-*</code> clamp scale across
+        320–1280px viewports; spacing is a 4pt <code>--sp-*</code> scale; content shells are
+        72rem (48rem narrow). The header collapses to a stacked, non-sticky layout at
+        <code>max-width: 56rem</code> — that number was measured in the browser (seven nav
+        items plus the brand fit at 880px and wrap at 850px), so re-measure it whenever a nav
+        item is added or renamed.
+      </p>
+      <p>
+        <strong>Analytics.</strong> <code>assets/js/analytics.js</code> injects GoatCounter
+        (site code <code>bradlasater</code>) with a guard flag so a double include cannot
+        double-count. It refuses to run on localhost/127.0.0.1 and honours Do Not Track and
+        Global Privacy Control. No cookies, no personal data, hence no consent banner. Beyond
+        pageviews it records two custom events, because the question that matters for a job
+        search is whether anyone who landed went on to act: <code>contact-email</code> on
+        mailto clicks, and <code>outbound-&lt;hostname&gt;</code> on external links. Count
+        failures are swallowed — analytics must never break the page.
+      </p>
+
+      <h2 id="conventions-and-gotchas">Conventions and gotchas</h2>
+      <ul>
+        <li>
+          <strong>External links open in a new tab.</strong> Every off-site anchor carries
+          <code>target="_blank" rel="noopener"</code>; where the target is also an identity
+          claim (LinkedIn, sometimes GitHub) the tokens merge into
+          <code>rel="me noopener"</code> — do not drop the <code>me</code>, it pairs with the
+          <code>&lt;link rel="me"&gt;</code> tags in the head. Internal links stay same-tab.
+        </li>
+        <li>
+          <strong>Accessibility is structural, not bolted on.</strong> Every page opens with a
+          <code>.skip-link</code> to <code>#main</code>, and <code>&lt;main id="main"
+          tabindex="-1"&gt;</code> so the skip target can take focus. Focus is a
+          <code>:focus-visible</code> box-shadow ring, with a forced-colors media query that
+          restores a real outline because box-shadow is not painted in Windows High
+          Contrast. Nav marks the current page with <code>aria-current="page"</code>.
+        </li>
+        <li>
+          <strong>Do not hand-edit the date stamps.</strong> The "This page was last updated"
+          line and the JSON-LD <code>dateModified</code> on <code>index.html</code> and
+          <code>cv.html</code> are rewritten by <code>scripts/build_site.py</code> from the
+          file's last commit, excluding the build's own "chore: rebuild derived site
+          metadata" commits (without that exclusion the stamp loop would never reach a fixed
+          point). The pre-commit hook regenerates them; CI fails the push if they go stale.
+          A hand-typed date is treated as an incentive to lie — that is the whole point of
+          the mechanism.
+        </li>
+        <li>
+          <strong>British spelling in visible prose</strong> ("optimisation", "modelling"),
+          but <code>og:description</code> and the JSON-LD blocks use American spelling with
+          <code>inLanguage: "en-US"</code> / <code>og:locale en_US</code>. This was a
+          deliberate nod to US recruiters, it has already caused two regressions
+          (2026-09-01, commits <code>93a4286</code> and <code>455d6e4</code>), and whether to
+          keep or unify it is an open question — audit item 33. Until that is decided, match
+          the split exactly when editing.
+        </li>
+        <li>
+          <strong>The homepage and CV JSON-LD are hand-duplicated.</strong> The
+          <code>Person</code>, patent <code>CreativeWork</code> and
+          <code>ProfilePage</code> nodes exist in both files; the CV adds a BreadcrumbList.
+          Nothing keeps them in sync except you.
+        </li>
+        <li>
+          <strong><code>llms.txt</code> is prose, not generated.</strong> If you reposition
+          the site (new target roles, new sections), rewrite it by hand — only the
+          log-entries block between the BUILD markers is machine-owned.
+        </li>
+      </ul>
+
+      <h2 id="history">History</h2>
+      <p>
+        Summarised from <code>git log --follow</code> over <code>index.html</code>,
+        <code>cv.html</code> and <code>404.html</code>; stamp-only rebuild commits
+        ("chore: rebuild derived site metadata") and CI-fix churn are folded away.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Milestone</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2026-08-23</td><td>Initial portfolio site (<code>a1f829a</code>).</td></tr>
+          <tr><td>2026-08-23</td><td>Repositioned toward quantitative finance; the OKLCH design system arrives in <code>site.css</code> (<code>64c0895</code>).</td></tr>
+          <tr><td>2026-08-23</td><td>Analytics wired in — one <code>analytics.js</code> line added to each page (<code>2edb410</code>).</td></tr>
+          <tr><td>2026-08-23</td><td>Discoverability pass: robots.txt, sitemap, feed, <code>llms.txt</code> (<code>fc0514c</code>).</td></tr>
+          <tr><td>2026-08-24</td><td>Repositioned around the research-to-production narrative (<code>d22a3c9</code>); headshot added to the CV and the Person schema (<code>f0b412f</code>); printed-CV contact loss and accessibility gaps fixed (<code>c79c6f4</code>).</td></tr>
+          <tr><td>2026-09-01</td><td>Handbook joins the nav — the header breakpoint later re-measured for the extra item (<code>35f6fbb</code>).</td></tr>
+          <tr><td>2026-09-01</td><td>Analytics enabled (GoatCounter site code set) and <code>cv.pdf</code> shipped (<code>85849c6</code>).</td></tr>
+          <tr><td>2026-09-01</td><td>GitHub surfaced above the fold; homepage tightened; CV spelling regressions fixed twice the same day (<code>4b11a36</code>, <code>93a4286</code>, <code>455d6e4</code>).</td></tr>
+          <tr><td>2026-09-02</td><td>"Why volatility, why now" section added; external links switch to <code>target="_blank"</code> (<code>94e42fc</code>).</td></tr>
+          <tr><td>2026-09-02</td><td>Full-repo audit: cross-cutting fixes plus the 404 redesign — <code>deja.jpg</code> astronaut, <code>error.css</code>, new og image (<code>a73f908</code>).</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="watch-outs">Watch-outs</h2>
+      <div class="callout">
+        Open items from the 2026-09-02 audit that touch this section:
+        item 28 — the mailto <code>contact-email</code> event may undercount because same-tab
+        navigation can cancel the request
+        (<a href="audit-2026-09-02.html#frontend-js">frontend-js</a>);
+        items 32–33 — <code>&lt;time&gt;</code> semantics for role dates, and the unresolved
+        en-GB/en-US split
+        (<a href="audit-2026-09-02.html#markup-accessibility-meta">markup-accessibility-meta</a>);
+        items 38–40 and 42 — the undersized 404 og-image, 404 alignment polish, inline styles
+        on <code>cv.html</code> that should become classes, and the README's "below 56rem"
+        wording being off by one from the actual <code>max-width: 56rem</code> behaviour
+        (<a href="audit-2026-09-02.html#css-design">css-design</a>).
+      </div>
+    </main>
+  </div>
+</body>
+</html>

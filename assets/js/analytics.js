@@ -19,11 +19,17 @@
 
   if (!CODE) return;
 
+  // Idempotent: a page that includes this file twice must not inject the
+  // tracker twice or register the click listener twice (double events).
+  if (window.__analyticsLoaded) return;
+  window.__analyticsLoaded = true;
+
   var host = location.hostname;
   if (host === "localhost" || host === "127.0.0.1" || host === "") return;
 
-  // Respect an explicit opt-out.
+  // Respect an explicit opt-out (Do Not Track or Global Privacy Control).
   if (navigator.doNotTrack === "1" || window.doNotTrack === "1") return;
+  if (navigator.globalPrivacyControl) return;
 
   var endpoint = "https://" + CODE + ".goatcounter.com/count";
 
@@ -31,7 +37,7 @@
   script.async = true;
   script.src = "https://gc.zgo.at/count.js";
   script.setAttribute("data-goatcounter", endpoint);
-  document.head.appendChild(script);
+  (document.head || document.documentElement).appendChild(script);
 
   /* Outbound and contact clicks as events. This is the question that actually
      matters for a job search: did anyone who landed here go on to email, or
@@ -53,12 +59,18 @@
 
       if (!label) return;
 
-      if (window.goatcounter && typeof window.goatcounter.count === "function") {
-        window.goatcounter.count({
-          path: label,
-          title: link.textContent.trim().slice(0, 80),
-          event: true
-        });
+      // The tracker may be blocked, half-loaded, or replaced by an extension;
+      // a failing count call must never surface as an uncaught page error.
+      try {
+        if (window.goatcounter && typeof window.goatcounter.count === "function") {
+          window.goatcounter.count({
+            path: label,
+            title: link.textContent.trim().slice(0, 80),
+            event: true
+          });
+        }
+      } catch (err) {
+        /* analytics must never break the page */
       }
     },
     true

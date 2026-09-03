@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project documentation — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="Project documentation for bradlasater.github.io — repository guide, roadmap, track-record data contract, audits, and the research notes behind the site.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/">
+  <meta property="og:title" content="Project documentation — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html" class="active">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Project documentation</h1>
+        </div>
+        <div class="meta">
+          multi-page · dark · indexed<br>
+          Markdown mirrors + maintainer pages<br>
+          all maintained by hand
+        </div>
+      </header>
+
+      <p class="lead">
+        Every part of this project keeps its own document, in the open. This index
+        is the map: how the site itself is built and deployed, where it is going,
+        the contract the published track record is held to, the audit trail, and
+        the research the whole thing stands on.
+      </p>
+      <div class="callout">
+        Two kinds of page live here. <strong>Mirrors</strong> render a Markdown file in the
+        <a href="https://github.com/bradlasater/bradlasater.github.io" target="_blank" rel="noopener">repository</a>
+        — the Markdown is the source of truth, the page name says which file it
+        mirrors, and every mirror carries a drift warning. <strong>Site
+        sections</strong> pages (below) are originals: living maintainer
+        documentation with no Markdown source, edited by hand. For the trading
+        system itself, see the
+        <a href="/handbook/">Crack the Sky handbook</a> and the
+        <a href="/vol/">volatility system overview</a>.
+      </div>
+
+      <h2>Site sections — maintainer orientation</h2>
+      <p>
+        One page per section of the site: what it is, which files own it, how it is
+        built and maintained, the conventions that will bite you, and a summarised
+        history of how it got here. Written for the future maintainer of this
+        repository — start with the orientation page.
+      </p>
+      <div class="cards">
+        <a class="card" href="section-site.html">
+          <div class="card-title">Orientation</div>
+          <p>The whole site on one page — section map, how the pieces fit, and the timeline so far.</p>
+        </a>
+        <a class="card" href="section-home-cv.html">
+          <div class="card-title">Homepage, CV &amp; 404</div>
+          <p>The recruiting surface: index.html, cv.html, the redesigned 404, and the shared chrome.</p>
+        </a>
+        <a class="card" href="section-vol.html">
+          <div class="card-title">Volatility system</div>
+          <p>vol/ — the overview, the evaluation protocol, and the browser-computed track record.</p>
+        </a>
+        <a class="card" href="section-handbook.html">
+          <div class="card-title">Handbook &amp; sync</div>
+          <p>The Crack the Sky handbook and the sync_docs.py pipeline that publishes it.</p>
+        </a>
+        <a class="card" href="section-log.html">
+          <div class="card-title">Research log</div>
+          <p>log/, content/ fragments, and the build pipeline that turns entries into pages and feed.</p>
+        </a>
+        <a class="card" href="section-docs.html">
+          <div class="card-title">Docs section</div>
+          <p>This section — how the mirrors work, and how to add or re-sync a page.</p>
+        </a>
+        <a class="card" href="section-infra.html">
+          <div class="card-title">Tooling &amp; CI</div>
+          <p>scripts/, the GitHub workflows, pre-commit, and the generated metadata files.</p>
+        </a>
+      </div>
+
+      <h2>The site</h2>
+      <div class="cards">
+        <a class="card" href="readme.html">
+          <div class="card-title">Repository README</div>
+          <p>How the site is built, deployed, and maintained — nav conventions, the build script, analytics, design decisions.</p>
+        </a>
+        <a class="card" href="roadmap.html">
+          <div class="card-title">Roadmap</div>
+          <p>What is planned, in progress, and done — the public to-do list for the site and the volatility system.</p>
+        </a>
+      </div>
+
+      <h2>The data contract</h2>
+      <div class="cards">
+        <a class="card" href="track-record-schema.html">
+          <div class="card-title">Track-record data contract</div>
+          <p>The append-only schema behind <code>data/track-record.json</code> — what every field means and how CI enforces that history cannot be revised.</p>
+        </a>
+      </div>
+
+      <h2>Audits</h2>
+      <div class="cards">
+        <a class="card" href="baseline-audit.html">
+          <div class="card-title">Baseline audit (2026-08-23)</div>
+          <p>The pre-launch gap list — what was missing before the site went public.</p>
+        </a>
+        <a class="card" href="audit-2026-09-02.html">
+          <div class="card-title">Audit follow-ups (2026-09-02)</div>
+          <p>Deferred improvements from the full-repo audit, grouped and prioritised — 50 items plus an 8-item addendum from the docs-mirror pass.</p>
+        </a>
+      </div>
+
+      <h2>Research notes</h2>
+      <div class="cards">
+        <a class="card" href="research-notes.html">
+          <div class="card-title">Overview</div>
+          <p>What the research notes are and how to read them.</p>
+        </a>
+        <a class="card" href="research-01-prop-hft.html">
+          <div class="card-title">01 · Prop &amp; HFT</div>
+          <p>The proprietary trading and HFT landscape — who hires, what they screen for.</p>
+        </a>
+        <a class="card" href="research-02-hedge-funds.html">
+          <div class="card-title">02 · Hedge funds</div>
+          <p>Quant roles on the buy side — funds, teams, and how they evaluate researchers.</p>
+        </a>
+        <a class="card" href="research-03-vol-practitioners.html">
+          <div class="card-title">03 · Vol practitioners</div>
+          <p>The people who trade volatility for a living and what their public work teaches.</p>
+        </a>
+        <a class="card" href="research-04-switchers-hiring.html">
+          <div class="card-title">04 · Switchers &amp; hiring</div>
+          <p>Career-switcher case evidence and how quant hiring actually works.</p>
+        </a>
+        <a class="card" href="research-05-discovery-build.html">
+          <div class="card-title">05 · Discovery &amp; build</div>
+          <p>How the research turned into this site and the volatility system build.</p>
+        </a>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

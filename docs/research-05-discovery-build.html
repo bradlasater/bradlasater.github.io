@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research notes 05 · Discovery &amp; build — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/research-05-discovery-build.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="How the career research turned into bradlasater.com and the volatility system build.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/research-05-discovery-build.html">
+  <meta property="og:title" content="Research notes 05 · Discovery &amp; build — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html" class="active">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Research notes 05 · Discovery &amp; build</h1>
+        </div>
+        <div class="meta">
+          mirrors notes/research/05-discovery-and-build.md
+        </div>
+      </header>
+
+      <p class="meta-note">This page mirrors <code>notes/research/05-discovery-and-build.md</code>; edit the Markdown, then re-sync this page.</p>
+
+      <p class="lead">Research 05 — Discovery Sweep + Technical Teardown of Quant Personal Sites</p>
+
+      <p><strong>Scope:</strong> breadth discovery through non-search channels (GitHub API, curated lists, Quantocracy,
+      aggregators) plus a raw-HTML technical teardown of the strongest sites.
+      <strong>Method:</strong> every URL was fetched. Discovery used the authenticated GitHub API (<code>gh api search/users</code>,
+      <code>search/repositories</code>, then per-user profile fetch to surface the <code>blog</code> field), the Quantocracy
+      blogroll, <code>awesome-quant</code> and <code>awesome-systematic-trading</code> raw READMEs, and targeted search.
+      Teardown used <code>curl</code> against the <strong>raw HTML + response headers</strong> (not markdown-converted text), so
+      every stack claim below is grounded in an observed tag, asset path, or HTTP header.
+      <strong>Date of capture:</strong> 2026-08-23/24.</p>
+
+      <hr>
+
+      <h2 id="part-0-accuracy-notes-and-negative-findings">PART 0 — Accuracy notes and negative findings</h2>
+
+      <p>Three domains that appear in quant reading lists and citations are <strong>dead or hijacked</strong>. These are
+      reported as cautionary findings, not as sites to emulate:</p>
+
+      <table>
+        <thead>
+          <tr><th>Domain</th><th>Was</th><th>Now (observed)</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>kthohr.com</code></td>
+            <td>Keith O'Hara, NYU PhD, econometrics; author of the <code>optim</code>/<code>stats</code> C++ libs</td>
+            <td>302s to <code>idcolympus88.com</code>, an Indonesian online-gambling site. 700KB, Product JSON-LD.</td>
+          </tr>
+          <tr>
+            <td><code>frouah.com</code></td>
+            <td>Fabrice Douglas Rouah — the standard free reference for Heston model derivations</td>
+            <td>Serves "Online Casino Real Money: Top Sites Reviewed &amp; Ranked" with FAQPage JSON-LD.</td>
+          </tr>
+          <tr>
+            <td><code>luiscota.com</code></td>
+            <td>Luis Cota, Brooklyn NY, quantitative/systematic trading (GitHub bio still lists it)</td>
+            <td>Connection fails outright (curl exit, 0 bytes).</td>
+          </tr>
+          <tr>
+            <td><code>symmys.com</code></td>
+            <td>Attilio Meucci's personal/ARPM site</td>
+            <td>301s to <code>arpm.co</code> — a company site, no longer personal.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><strong>Implication for Brad:</strong> a custom domain is an asset that <em>decays</em>. A lapsed registration on a site
+      carrying your name does not go quiet — it gets bought precisely because it has inbound links, and it
+      starts serving casino spam under your name. Auto-renew plus registrar-lock is a career-hygiene item,
+      not a domain-admin chore. It also argues for keeping the <code>bradlasater.github.io</code> GitHub Pages URL
+      alive as a permanent fallback that cannot be seized.</p>
+
+      <p>Also note: <code>cims.nyu.edu/~ritter/</code> (Gordon Ritter, Ritter Alpha LP; teaches at Baruch/NYU/Columbia/
+      UChicago) returns <strong>403 to both curl and WebFetch</strong>. Its existence is confirmed by search results and
+      by <code>cims.nyu.edu/~ritter/GordonRitterCV.pdf</code> appearing in the index, but since I could not load it,
+      it is excluded from the verified list and from the teardown.</p>
+
+      <hr>
+
+      <h2 id="part-1-discovery-sweep-verified-personal-sites">PART 1 — Discovery sweep: verified personal sites</h2>
+
+      <p>All 19 below were fetched successfully (HTTP 200) and inspected.</p>
+
+      <h3 id="tier-a-closest-models">Tier A — closest models for what Brad is building</h3>
+
+      <p><strong>1. <code>https://gregorygundersen.com/blog/</code> — Gregory Gundersen</strong>
+      <em>Quantitative researcher, Tudor Investment Corporation, New York.</em> Meta description reads literally
+      "Gregory Gundersen is a quantitative researcher in New York."
+      This is the single best template in the sample. Nine years of continuous technical writing on
+      statistics, ML, and quant finance, including "An Intuitive Explanation of Black–Scholes." Every post
+      is laid out like a journal article: numbered figures with bold <code>Figure N.</code> captions bounded by
+      hairline rules, a real author-year bibliography, booktabs-style tables, and pre-rendered KaTeX. It
+      looks like something a researcher wrote for other researchers, and there is not one decorative
+      element anywhere. The archive is grouped by year, which makes a decade of consistency legible at a
+      glance — exactly the signal Brad wants his research log to send.</p>
+
+      <p><strong>2. <code>https://artursepp.com/</code> — Artur Sepp</strong>
+      <em>Head of Investment Services Quant Group, LGT (Zurich); Risk Magazine Quant of the Year 2024; PhD
+      Mathematical Statistics, Tartu.</em> The closest analogue to Brad's stated ambition: a practitioner who
+      publishes volatility research and maintains open-source Python libraries (<code>qis</code>, <code>stochvolmodels</code>,
+      <code>optimalportfolios</code>) alongside the writing. The site cross-links SSRN author page, Google Scholar,
+      GitHub, LinkedIn, and X from the header — meaning any one of his identities leads a recruiter to all
+      the others. Technically it is unremarkable WordPress; the credibility is entirely carried by the
+      research artifacts and the citation trail.</p>
+
+      <p><strong>3. <code>https://jgatheral.github.io/</code> — Jim Gatheral</strong>
+      <em>Presidential Professor of Mathematics, Baruch College; formerly head of Equity Quantitative
+      Analytics, Merrill Lynch; author of "The Volatility Surface."</em> Directly instructive for Brad because
+      it is <strong>Jekyll on a bare <code>*.github.io</code> domain</strong> — the most senior figure in the sample uses the exact
+      free stack Brad is on, with no custom domain at all. The homepage is 4KB with zero external scripts.
+      The <code>/publications/</code> page is nothing but a list of SSRN and arXiv links. It demonstrates that in this
+      field, the substance-to-chrome ratio <em>is</em> the design.</p>
+
+      <p><strong>4. <code>https://www.moontowermeta.com/</code> — Kris Abdelmessih</strong>
+      <em>Former options market maker (Susquehanna-lineage floor/vol trading), writes "Party at the
+      Moontower."</em> The most respected practitioner-voice vol blog. Heavy use of footnotes for the "here's
+      the caveat a real trader would raise" asides, which is exactly the register Brad's post-mortems
+      should hit. Technically the weakest of the Tier A group (420KB, 24 scripts, 24 stylesheets on
+      WordPress) — proof that in vol-land, audience follows insight and forgives page weight.</p>
+
+      <h3 id="tier-b-nyc-practitioners">Tier B — NYC practitioners, directly comparable career stage</h3>
+
+      <p><strong>5. <code>https://zachjs.com/</code> — Zachary J. Snow</strong>
+      <em>Software engineer in systematic trading, New York City; CMU SCS 2019.</em> A 1,970-byte homepage. Name,
+      one-sentence positioning ("I am Zach, a software engineer working in systematic trading in New York
+      City"), a <code>/resume.pdf</code> link, GitHub, LinkedIn. Notable as the minimum viable credible site, and as
+      the one deployment in the sample that puts Cloudflare in front of GitHub Pages.</p>
+
+      <p><strong>6. <code>https://sunnybala.com/</code> — Sunny Balasubramanian</strong>
+      <em>Quantitative researcher, crypto &amp; equities; formerly Citadel, AQR; Columbia SEAS '16.</em> The meta
+      description is a full paragraph that names the prior employers outright — deliberate recruiter-SEO,
+      and the single most copyable move on the site. Jekyll on GitHub Pages with a custom domain, JSON-LD
+      <code>WebSite</code> schema, OG preview image. Projects-first rather than writing-first.</p>
+
+      <p><strong>7. <code>https://florianwechsung.github.io/</code> — Florian Wechsung</strong>
+      <em>Quantitative Researcher, Citadel GQS, New York; former NYU Courant postdoc.</em> Hugo on a bare
+      <code>*.github.io</code>. Retains the academic structure — publications list with Google Scholar link, MathJax,
+      syntax highlighting — after moving from academia to a top-tier fund. A useful model for how a
+      research identity survives the transition to industry.</p>
+
+      <p><strong>8. <code>https://cswaney.github.io/</code> — Colin Swaney</strong>
+      <em>Quantitative researcher and developer, greater New York.</em> Jekyll on GitHub Pages, KaTeX + MathJax,
+      Rouge highlighting. Content is solid market-microstructure work; the presentation is undermined by
+      loading three unrelated display typefaces (Fjalla One, Lora, <strong>Indie Flower</strong> — a handwriting font).
+      Included specifically as a counter-example: one whimsical font choice makes serious content read as
+      hobbyist.</p>
+
+      <p><strong>9. <code>https://algoquant.github.io/</code> — Jerzy Pawlowski</strong>
+      <em>Adjunct professor at NYU Tandon; previously portfolio manager and quant analyst.</em> Exactly the
+      practitioner-adjunct profile the brief asked for. Jekyll on GitHub Pages using the off-the-shelf
+      <code>beautiful-jekyll</code> / <code>architect-theme</code>. Has <code>sitemap.xml</code> and <code>feed.xml</code>. <strong>Its homepage renders no
+      <code>&lt;title&gt;</code> tag at all</strong> and the theme's Google Font is Architects Daughter (another handwriting face)
+      — a demonstration that adopting a stock theme unmodified leaves visible defects.</p>
+
+      <p><strong>10. <code>https://quantguild.com/</code> — Roman Paolucci</strong>
+      <em>New York, NY; runs Quant Guild (quant education); Columbia-affiliated.</em> The only site in the sample
+      using <strong>Plotly for genuinely interactive charts</strong> (8 references), plus MathJax. Cloudflare-hosted.
+      Shows what interactive figures cost: 56KB HTML, 10 scripts, 13 stylesheets for a landing page.</p>
+
+      <p><strong>11. <code>https://joshuapjacob.com/</code> — Joshua P. Jacob</strong>
+      <em>Research Engineer, New York.</em> Built on <strong>SvelteKit</strong> — the only JS-framework personal site found in
+      the quant cohort — yet still only 6.2KB. Included to show a framework build <em>can</em> stay light, though
+      it buys nothing a static generator wouldn't.</p>
+
+      <h3 id="tier-c-canonical-practitioner-references">Tier C — canonical practitioner references</h3>
+
+      <p><strong>12. <code>http://www.jaeckel.org/</code> — Peter Jäckel</strong>
+      <em>Author of "Monte Carlo Methods in Finance" and "Let's Be Rational" (the implied-vol inversion
+      algorithm used across the industry).</em> Hand-written static HTML with an inline <code>&lt;style&gt;</code> block that
+      still contains IE6 "holly hack" workarounds. No SSG, no external CSS or JS files, no analytics, no
+      RSS. The entire site is a flat list of ~40 PDFs
+      (<code>StochasticVolatilityModels-PastPresentAndFuture.pdf</code>, <code>QuantoSkewWithStochasticVolatility.pdf</code>…).
+      The source carries <code>&lt;!-- Time-stamp: "2026-08-18 19:21:25 pj" --&gt;</code> — updated five days before
+      capture. The most important calibration point in this whole report: <strong>zero design, total
+      credibility</strong>, because the artifacts are load-bearing.</p>
+
+      <p><strong>13. <code>https://www.quantresearch.org/</code> — Marcos López de Prado</strong>
+      <em>One of Brad's two stated influences.</em> The homepage is a <strong>357-byte HTML <code>&lt;frameset&gt;</code></strong> served from
+      Microsoft-IIS/10.0 + ASP.NET — a literal 1990s frames layout, on the personal site of the person who
+      wrote the book on backtest overfitting. Reinforces the same lesson as Jäckel: the audience is buying
+      the research, not the CSS.</p>
+
+      <p><strong>14. <code>https://qoppac.blogspot.com/</code> — Robert Carver</strong>
+      <em>Ex-AHL (ran their multi-billion fixed income book); author of "Systematic Trading," "Advanced
+      Futures Trading Strategies"; visiting lecturer, Queen Mary University of London.</em> On <strong>Blogger</strong>, at
+      a <code>blogspot.com</code> subdomain, 208KB with 32 images. One of the most-read systematic trading blogs in
+      the world. Directly relevant to Brad: Carver's reputation rests on publicly trading his own money
+      with a documented, open-source Python system since April 2014 — the same "show the live track record
+      and the machinery" play Brad is running.</p>
+
+      <p><strong>15. <code>https://jonathankinlay.com/</code> — Jonathan Kinlay</strong>
+      <em>Quantitative researcher and trader (Systematic Strategies LLC).</em> WordPress 7.1, and the heaviest
+      page in the sample at <strong>580KB with 43 images</strong>. Both KaTeX and MathJax are loaded. Uses Plausible
+      rather than GA. Notable for linking arXiv preprints and his own GitHub pipelines inline with blog
+      posts — research artifacts embedded in the writing.</p>
+
+      <p><strong>16. <code>https://alexchinco.com/</code> — Alex Chinco</strong>
+      <em>Finance academic (formerly Baruch/Zicklin, NYC).</em> Titled simply <strong>"Research Notebook"</strong> — a framing
+      Brad should consider, since it sets the expectation of work-in-progress rather than polished
+      marketing. WordPress, Lora + Oswald, footnotes, and a bare <code>cv_alexander_chinco.pdf</code> at the domain
+      root.</p>
+
+      <p><strong>17. <code>https://emanuelderman.com/</code> — Emanuel Derman</strong>
+      <em>Professor Emeritus of Financial Engineering, Columbia; formerly head of quantitative strategies,
+      Goldman Sachs; co-author of the Derman-Kani local volatility model.</em> WordPress 6.7, 67KB. Writer-
+      first presentation (books, essays, columns) rather than a paper repository.</p>
+
+      <p><strong>18. <code>https://www.hardikp.com/</code> — Hardik Patel</strong>
+      <em>ML/quant engineer; listed in <code>awesome-systematic-trading</code>'s blogs section.</em> Jekyll on GitHub Pages
+      with a custom domain. Has the most complete structured data in the sample: JSON-LD with a nested
+      <code>Person</code> author object plus <code>sameAs</code> links. PT Serif + PT Sans. Atom feed.</p>
+
+      <p><strong>19. <code>https://wilsonfreitas.net/</code> — Wilson Freitas</strong>
+      <em>Quant, São Paulo; <strong>maintainer of <code>awesome-quant</code></strong> (the field's most-used curated list).</em> The only
+      <strong>Quarto</strong> site found in the quant cohort (<code>generator: quarto-1.2.335</code>), deployed on <strong>Netlify</strong>.
+      Ships reading-time estimates, code copy-buttons, TOC, footnotes, and MathJax out of the box. This is
+      the existence proof that Quarto is a legitimate choice for a quant personal site.</p>
+
+      <h3 id="non-quant-build-reference">Non-quant build reference (included for stack comparison only)</h3>
+
+      <p><strong>20. <code>https://eugeneyan.com/</code> — Eugene Yan.</strong> Applied scientist, not a quant. Included because it is
+      the most-copied "research blog" build in ML: GitHub Pages behind Cloudflare with a custom domain,
+      hand-maintained <code>main.min.css</code>, <code>darkmode.js</code> toggle, <code>monokai.css</code> for code, <code>anchor.min.js</code> for
+      heading permalinks, and <strong>Algolia search</strong>. Merriweather (serif body) + Raleway (sans headings).</p>
+
+      <h3 id="channel-notes">Channel notes</h3>
+
+      <ul>
+        <li><strong>GitHub API was by far the highest-yield channel.</strong> Querying <code>search/users</code> with <code>in:bio</code>
+          qualifiers (<code>quantitative … location:"New York"</code>, <code>volatility trading</code>, <code>systematic trading</code>,
+          <code>market making</code>, <code>derivatives pricing</code>) and then fetching each profile's <code>blog</code> field surfaced
+          ~20 NYC-area quant practitioners with live personal sites in minutes. This is reproducible and
+          worth re-running periodically — it is also, notably, how a recruiter <em>could</em> find Brad, which
+          argues for making his GitHub profile bio and website field carry the same positioning as the site.</li>
+        <li><strong><code>awesome-quant</code> has no practitioner-blog section</strong> (verified against the raw README: sections run
+          Numerical Libraries → … → Related Lists). Its "Commercial &amp; Proprietary Services" section has been
+          heavily spammed with low-quality API startups. <code>awesome-systematic-trading</code> <em>does</em> carry a real
+          blogs list (Robot Wealth / Kris Longmore, Blackarbs, Hardik Patel, Quantsportal / Jacques Joubert,
+          Tom Starke, Max Dama).</li>
+        <li><strong>Quantocracy remains the best live aggregator</strong>, but its feed has drifted heavily toward Substack
+          newsletters (Beyond Passive, Delphic Alpha, Concretum, Paper to Profit, VertoxQuant) and away from
+          self-hosted personal blogs.</li>
+        <li><strong>Substack-with-custom-domain</strong> (<code>vertoxquant.com</code>) is now a common quant-writer pattern. It is the
+          worst technical profile measured: <strong>121 <code>&lt;script src&gt;</code> tags</strong> and 18 stylesheets on the index.</li>
+      </ul>
+
+      <hr>
+
+      <h2 id="part-2-technical-teardown">PART 2 — Technical teardown</h2>
+
+      <h3 id="master-table">Master table</h3>
+
+      <table>
+        <thead>
+          <tr><th>Site</th><th>Generator (observed)</th><th>Hosting (from headers)</th><th>Custom domain</th><th>Raw HTML</th><th>Scripts</th><th>Math</th><th>Charts</th><th>Dark mode</th><th>JSON-LD</th><th>Feed</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>gregorygundersen.com</td><td>none (hand-rolled; Jekyll-style permalinks)</td><td>Apache, self-hosted</td><td>yes</td><td>127KB index / 422KB post</td><td>3</td><td><strong>KaTeX pre-rendered</strong> + MathJax fallback</td><td>static PNG</td><td>no</td><td>no</td><td><code>/feed.xml</code></td></tr>
+          <tr><td>jgatheral.github.io</td><td><code>Jekyll v3.10.0</code></td><td><code>server: GitHub.com</code></td><td><strong>no</strong></td><td>4.1KB</td><td><strong>0</strong></td><td>none</td><td>none</td><td>no</td><td><code>WebSite</code></td><td>yes</td></tr>
+          <tr><td>artursepp.com</td><td>WordPress</td><td>Automattic (<code>a8c-cdn</code>)</td><td>yes</td><td>104KB</td><td>8</td><td>MathJax</td><td>static</td><td>no</td><td>no</td><td>yes</td></tr>
+          <tr><td>moontowermeta.com</td><td>WordPress + AMP for WP</td><td>Automattic</td><td>yes</td><td>421KB</td><td>24</td><td>none</td><td>static</td><td><code>data-theme</code></td><td><code>CollectionPage</code></td><td>yes</td></tr>
+          <tr><td>jonathankinlay.com</td><td><code>WordPress 7.1</code></td><td>nginx/1.25.5</td><td>yes</td><td><strong>580KB</strong></td><td>11</td><td>KaTeX + MathJax</td><td>43 images</td><td>no</td><td><code>CollectionPage</code></td><td>yes</td></tr>
+          <tr><td>alexchinco.com</td><td>WordPress</td><td>Apache</td><td>yes</td><td>39KB</td><td>10</td><td>none on index</td><td>static</td><td>no</td><td>no</td><td>yes</td></tr>
+          <tr><td>emanuelderman.com</td><td><code>WordPress 6.7</code></td><td>hcdn/PHP 8.1</td><td>yes</td><td>67KB</td><td>10</td><td>none</td><td>static</td><td>no</td><td>no</td><td>yes</td></tr>
+          <tr><td>sunnybala.com</td><td><code>Jekyll v3.10.0</code></td><td><code>server: GitHub.com</code></td><td>yes</td><td>11KB</td><td>3</td><td>none</td><td>static</td><td>no</td><td><code>WebSite</code></td><td>no</td></tr>
+          <tr><td>hardikp.com</td><td><code>Jekyll v3.10.0</code></td><td><code>server: GitHub.com</code></td><td>yes</td><td>8KB</td><td>2</td><td>none on index</td><td>none</td><td>no</td><td><code>WebSite</code>+<code>Person</code></td><td>Atom</td></tr>
+          <tr><td>cswaney.github.io</td><td>Jekyll (Rouge)</td><td><code>server: GitHub.com</code></td><td><strong>no</strong></td><td>15.5KB</td><td>6</td><td>KaTeX + MathJax</td><td>none</td><td>no</td><td>no</td><td>no</td></tr>
+          <tr><td>algoquant.github.io</td><td>Jekyll (beautiful-jekyll)</td><td><code>server: GitHub.com</code></td><td><strong>no</strong></td><td>4.6KB</td><td>1</td><td>none</td><td>none</td><td>no</td><td>no</td><td>yes + sitemap</td></tr>
+          <tr><td>florianwechsung.github.io</td><td><code>Hugo 0.100.2</code></td><td><code>server: GitHub.com</code></td><td><strong>no</strong></td><td>7.8KB</td><td>5</td><td>MathJax</td><td>none</td><td>no</td><td>no</td><td><code>index.xml</code></td></tr>
+          <tr><td>zachjs.com</td><td>undetermined</td><td>GitHub Pages <strong>behind Cloudflare</strong></td><td>yes</td><td><strong>2.0KB</strong></td><td>1</td><td>none</td><td>none</td><td>no</td><td>no</td><td>no</td></tr>
+          <tr><td>eugeneyan.com</td><td>undetermined (custom)</td><td>GitHub Pages behind Cloudflare</td><td>yes</td><td>62KB</td><td>11</td><td>none</td><td>static</td><td><strong>toggle</strong></td><td>no</td><td>yes</td></tr>
+          <tr><td>wilsonfreitas.net</td><td><strong><code>quarto-1.2.335</code></strong></td><td><strong>Netlify</strong></td><td>yes</td><td>41KB</td><td>15</td><td>MathJax</td><td>static</td><td>Quarto default</td><td>no</td><td>yes</td></tr>
+          <tr><td>joshuapjacob.com</td><td><strong>SvelteKit</strong></td><td>nginx/1.27.1</td><td>yes</td><td>6.2KB</td><td>1</td><td>none</td><td>none</td><td>no</td><td>no</td><td>no</td></tr>
+          <tr><td>quantguild.com</td><td>undetermined</td><td>Cloudflare</td><td>yes</td><td>57KB</td><td>10</td><td>MathJax</td><td><strong>Plotly</strong></td><td>no</td><td>no</td><td>no</td></tr>
+          <tr><td>jaeckel.org</td><td><strong>none</strong> (hand-written)</td><td>Apache/2.4.68</td><td>yes</td><td>70KB</td><td>0 ext</td><td>none</td><td>none</td><td>no</td><td>no</td><td>no</td></tr>
+          <tr><td>quantresearch.org</td><td><strong>none</strong> (<code>&lt;frameset&gt;</code>)</td><td>Microsoft-IIS/10.0</td><td>yes</td><td><strong>357 B</strong></td><td>0</td><td>none</td><td>none</td><td>no</td><td>no</td><td>no</td></tr>
+          <tr><td>qoppac.blogspot.com</td><td>Blogger</td><td>GSE</td><td><strong>no</strong></td><td>209KB</td><td>2</td><td>none</td><td>32 images</td><td>no</td><td>no</td><td>RSS+Atom</td></tr>
+          <tr><td>vertoxquant.com</td><td>Substack</td><td><code>x-served-by: Substack</code></td><td>yes</td><td>87KB</td><td><strong>121</strong></td><td>none</td><td>none</td><td>no</td><td>no</td><td>yes</td></tr>
+        </tbody>
+      </table>
+
+      <h3 id="deep-dive-gundersens-build">Deep dive: Gundersen's build (the one to copy)</h3>
+
+      <p><strong>Math is pre-rendered at build time.</strong> The Black–Scholes post's raw HTML contains 186 instances each
+      of <code>&lt;span class="katex"&gt;</code>, <code>katex-mathml</code>, <code>katex-html</code>, and
+      <code>&lt;annotation encoding="application/x-tex"&gt;</code>. The only <code>&lt;script src&gt;</code> on the entire page is Google
+      Analytics. There is <strong>no math library executing in the browser</strong> — KaTeX ran server-side and only its
+      stylesheet ships. This is why a 422KB page still feels instant: the bytes are inert pre-computed
+      markup, not a layout engine. (Minor defect: two KaTeX CSS versions, 0.11.1 and 0.13.3, are both
+      pulled from jsDelivr.)</p>
+
+      <p><strong>The entire stylesheet is 6,040 bytes.</strong> Verbatim key values:</p>
+
+      <pre><code>html   { font-family: -apple-system, Helvetica, arial, sans-serif;
+         color: rgba(0, 0, 0, 0.8); line-height: 1.5em; }
+.wrap  { max-width: 700px; margin: 0 auto; }
+.article { font-size: 15px; line-height: 1.6em; color: rgba(0, 0, 0, 0.8); }
+a      { color: rgba(0, 0, 0, 0.8); text-decoration: underline; }</code></pre>
+
+      <p>Observations that matter:</p>
+      <ul>
+        <li><strong>Body text is <code>rgba(0,0,0,0.8)</code>, never <code>#000</code>.</strong> Headings use the same family as body — one
+          typeface for the whole site.</li>
+        <li><strong>Links are black and underlined</strong>, not blue. Hover <em>reduces</em> contrast (<code>0.5</code>) and removes the
+          underline — inverted from the usual convention, and it keeps a citation-dense page from turning
+          into a field of blue.</li>
+        <li><strong>700px measure at 15px</strong> ≈ 75–85 characters per line — the academic-paper measure.</li>
+        <li><strong>No dark mode, no <code>prefers-color-scheme</code>, no custom webfont, no CSS framework.</strong></li>
+      </ul>
+
+      <p><strong>Figures are numbered and ruled like a journal:</strong></p>
+      <pre><code>.article .figure { border-top: 1px solid hsla(0,0%,0%,0.2);
+                   border-bottom: 1px solid hsla(0,0%,0%,0.2); padding: 20px 0; }
+.article .figure .caption { font-size: 13px; }
+.article .figure .caption-label { font-weight: bold; }   /* renders "Figure 1." */</code></pre>
+
+      <p>Confirmed in the post source: <code>&lt;div class="figure"&gt;</code> … <code>&lt;span class="caption-label"&gt;Figure 1.</code></p>
+
+      <p><strong>Tables use the LaTeX <code>booktabs</code> convention</strong> — horizontal rules only, never vertical:</p>
+      <pre><code>table { border-top: 2px solid black; border-bottom: 1px solid black;
+        border-collapse: collapse; font-size: 14px; }
+table thead &gt; tr &gt; th { border-bottom: 1px solid black; }</code></pre>
+
+      <p><strong>There is a real bibliography.</strong> <code>#bibliography ol.bibliography</code>, with author-year anchor IDs
+      (<code>id="merton1973theory"</code>, <code>id="ito1944stochastic"</code>, <code>id="bru2002comments"</code>,
+      <code>id="derman2002boy"</code>) and correctly formatted references — Merton (1973) <em>Bell Journal of Economics
+      and Management Science</em>, Itô (1944) <em>Proc. Imperial Academy</em>, Nielsen (1992) <em>Understanding N(d1) and
+      N(d2)</em>. Six citations on a single blog post.</p>
+
+      <p><strong>The archive is grouped by year</strong>, with the year set in the left margin
+      (<code>#blog .year { position: relative; right: 100px; color: rgba(0,0,0,0.5); }</code>), post dates in bold
+      uppercase 12px, titles at 18px, and a one-line subtitle under each. There is a tag navigation bar
+      (<code>ul#tag-nav</code>). Footnotes get a 12px block behind a top rule.</p>
+
+      <h3 id="cross-cutting-patterns">Cross-cutting patterns</h3>
+
+      <p><strong>Hosting.</strong> GitHub Pages is the single most common host in the static cohort (8 of 20:
+      gatheral, algoquant, cswaney, wechsung on bare subdomains; sunnybala, hardikp, zachjs, eugeneyan
+      with custom domains). Two of those put <strong>Cloudflare in front of GitHub Pages</strong> (<code>x-github-request-id</code>
+      <em>and</em> <code>cf-ray</code> both present on zachjs.com and eugeneyan.com). Netlify appears once (Quarto). No
+      Vercel, no Astro, no Next.js anywhere in the quant cohort.</p>
+
+      <p><strong>Custom domains are common but explicitly not required.</strong> A Presidential Professor at Baruch, a
+      Citadel GQS researcher, and an NYU Tandon adjunct all run bare <code>*.github.io</code>. Nobody in this audience
+      reads a <code>github.io</code> URL as amateur — if anything it reads as "engineer who didn't waste time on
+      branding." Brad already has <code>bradlasater.com</code>; keep it, but understand it's a convenience, not a
+      credibility gate.</p>
+
+      <p><strong>Charts are overwhelmingly static images.</strong> Across ~20 sites, exactly one (quantguild.com) uses an
+      interactive charting library. Gundersen — writing about Black–Scholes, drift, log-normal densities
+      and vol surfaces — uses <strong>plain PNGs</strong> with numbered captions. The field's convention is a
+      matplotlib figure exported to file, captioned, and cited in the text.</p>
+
+      <p><strong>Dark mode is rare.</strong> Only eugeneyan.com ships a real toggle. Every serious research site in the
+      sample is light-only with a near-grayscale palette.</p>
+
+      <p><strong>Structured data is a real differentiator.</strong> Only 5 of 20 have any JSON-LD, and three of those are
+      auto-generated by Yoast/Jekyll defaults (<code>WebSite</code>/<code>CollectionPage</code>, which say nothing about the
+      person). Only hardikp.com carries a genuine nested <code>Person</code> object.</p>
+
+      <hr>
+
+      <h2 id="part-3-synthesis">PART 3 — Synthesis</h2>
+
+      <h3 id="a-recommended-stack-and-feature-checklist">(a) Recommended stack and feature checklist</h3>
+
+      <p>Brad's current state, audited: hand-written HTML/CSS on GitHub Pages, custom domain <code>bradlasater.com</code>
+      (confirmed <code>server: GitHub.com</code> on the live site), a 25KB design-token stylesheet with
+      <code>--font-sans/serif/mono</code> and a <code>--measure</code> variable, hand-rolled SVG charts in
+      <code>assets/js/track-record.js</code>, <code>Person</code> JSON-LD already on the homepage, OG + Twitter cards, an HTML CV
+      at <code>/cv.html</code>, and a track-record JSON schema with a CI validation workflow.</p>
+
+      <p><strong>Verdict: stay exactly where he is. Do not migrate.</strong> He is already at or above the median of this
+      sample on every axis that matters, and ahead of nearly all of it on structured data and on
+      hand-rolled SVG charts (which beat both Plotly bloat and static PNGs). Migrating to Astro/Next.js
+      would be pure motion. The gap is not the stack — it's roughly six missing features.</p>
+
+      <p><strong>Keep as-is:</strong> GitHub Pages hosting; custom domain <em>plus</em> the <code>bradlasater.github.io</code> fallback;
+      hand-written HTML; hand-rolled inline SVG for charts; <code>Person</code> JSON-LD; the CI-validated
+      <code>track-record.json</code>.</p>
+
+      <p><strong>Add, in priority order:</strong></p>
+
+      <ol>
+        <li><strong>Pre-rendered KaTeX.</strong> Non-negotiable for a vol site — he will need
+          <code>$\sigma_{\text{imp}}$</code>, <code>$d_1$</code>, <code>$d_2$</code>, variance-swap replication integrals. Render at build time
+          (<code>katex.renderToString</code>) in a small Node/Python build step and commit the output, exactly as
+          Gundersen does. Ship <code>katex.min.css</code> only, <strong>one version</strong>, self-hosted rather than from a CDN.
+          Zero runtime math JS.</li>
+        <li><strong><code>sitemap.xml</code> and <code>robots.txt</code></strong> — both currently <strong>missing</strong>. This is the cheapest SEO fix
+          available and it directly serves the "recruiter Googles his name" scenario.</li>
+        <li><strong>An RSS/Atom feed for the research log</strong> — currently missing. Quantocracy and the quant community
+          run on feeds; a feed is how a post gets picked up and amplified beyond his own network.</li>
+        <li><strong>Numbered, captioned figures with a <code>Figure N.</code> label and hairline rules</strong>, and <strong>booktabs
+          tables</strong> (horizontal rules only). These two CSS conventions do more to make a page read as
+          research than any other change on this list.</li>
+        <li><strong>A references section with real citations</strong> on any methodology page — Sinclair, López de Prado,
+          Gatheral, Carr–Madan, Bakshi–Kapadia–Madan. Author-year anchors. This is the strongest
+          "I read the literature" signal available, and it's free.</li>
+        <li><strong>Both CV formats.</strong> He has <code>/cv.html</code>; add a linked <code>/cv.pdf</code>. Recruiters forward PDFs; ATSs
+          ingest PDFs; hiring managers read HTML.</li>
+        <li><strong>Footnotes/sidenotes</strong> for the caveats and "here's what would break this" asides — the register
+          Moontower uses and the one that reads as trader-honest rather than salesy.</li>
+        <li><strong>Visible dates on everything</strong> — published and last-updated. For a live track record this is a
+          correctness requirement, not a nicety.</li>
+      </ol>
+
+      <p><strong>Explicitly do not add:</strong> a JS charting library (Plotly cost quantguild.com 10 scripts for a landing
+      page); a dark-mode toggle (essentially nobody serious in this sample has one — spend the effort on
+      the light palette); Algolia or any hosted search (his site is far too small); a CSS framework; a
+      SPA framework. And drop the Google Fonts dependency — Inter/Newsreader/JetBrains Mono should be
+      self-hosted <code>woff2</code> to remove a third-party render-blocking request and the privacy footprint.</p>
+
+      <p><strong>If he ever wants notebook publishing:</strong> Quarto is the validated choice (<code>wilsonfreitas.net</code>,
+      maintainer of <code>awesome-quant</code>, ships it on Netlify with reading time, copy buttons, TOC, footnotes).
+      It renders <code>.ipynb</code> directly and can output to a subdirectory of the existing Pages site, so it can be
+      adopted for <code>/research/</code> alone without touching the hand-written pages. Do not adopt it site-wide.</p>
+
+      <h3 id="b-quality-tells">(b) Quality tells — serious researcher vs. bootcamp portfolio</h3>
+
+      <p><strong>Reads as a serious researcher:</strong></p>
+      <ul>
+        <li>One typeface family, used consistently. Gundersen uses a single system stack for body <em>and</em>
+          headings across the entire site.</li>
+        <li>Text at ~80% black, not pure black; a near-grayscale palette; at most one accent color.</li>
+        <li>A fixed measure of 650–750px. Full-bleed body text is the single loudest amateur tell.</li>
+        <li><strong>Numbered figures with captions that are referenced in the prose</strong> ("as Figure 3 shows"). Unnumbered
+          decorative screenshots are the opposite signal.</li>
+        <li><strong>Tables with horizontal rules only</strong> (booktabs). Vertical rules and zebra striping read as
+          spreadsheet export, not analysis.</li>
+        <li><strong>Real citations with page-anchored references.</strong> Six on a single Gundersen blog post.</li>
+        <li><strong>Dated entries, including a visible last-updated stamp.</strong> Jäckel's hand-written HTML carries a
+          timestamp comment from five days before capture.</li>
+        <li><strong>Dense archive listings grouped by year.</strong> A reverse-chronological list going back years is itself
+          the credential — it proves sustained output, which is the thing that cannot be faked in a weekend.</li>
+        <li><strong>Negative results published.</strong> Post-mortems and documented failures. In this audience, evidence of
+          not fooling yourself outranks headline performance.</li>
+        <li><strong>Explicit methodology pages</strong> separate from results, with assumptions and known limitations stated.</li>
+        <li>Links out to the primary artifacts: SSRN, arXiv, Google Scholar, the actual repo. Sepp links all
+          five identities from the header.</li>
+        <li>Prose in first person about <em>decisions and tradeoffs</em>, not third-person marketing copy.</li>
+      </ul>
+
+      <p><strong>Reads as a bootcamp portfolio:</strong></p>
+      <ul>
+        <li>Hero section with a large photo, a tagline, and a "Let's build something amazing together" CTA.</li>
+        <li>A <strong>skills grid with technology logos</strong>, or worse, proficiency bars ("Python ████░ 80%"). Nobody who
+          has hired a quant has ever been persuaded by a progress bar.</li>
+        <li>Card-grid "Projects" with stock thumbnails and no results, no methodology, no data provenance.</li>
+        <li>Animated gradients, scroll-triggered fade-ins, parallax, typewriter effects, particle backgrounds.</li>
+        <li>Multiple display typefaces, especially handwriting faces (Indie Flower on cswaney.github.io,
+          Architects Daughter on algoquant.github.io both actively damage otherwise credible sites).</li>
+        <li>Emoji as section headers.</li>
+        <li><strong>Performance numbers with no sample period, no out-of-sample split, no cost assumptions, no
+          capacity discussion, and no drawdown.</strong> A Sharpe with no confidence interval is a red flag to this
+          audience specifically — evaluating that claim is literally their job.</li>
+        <li>Undated content, or a "latest post" that is 18 months old.</li>
+        <li>"Passionate about" anything.</li>
+        <li>A testimonials section on a personal site.</li>
+      </ul>
+
+      <p><strong>The single sharpest discriminator:</strong> a bootcamp portfolio is organized around <em>what the author can
+      do</em> (skills, tools, project count). A researcher's site is organized around <em>what the author found</em>
+      (results, methods, and the specific ways the result might be wrong). Brad's <code>/vol/methodology.html</code>
+      and <code>/vol/track-record.html</code> split is already the right shape — that structure is the asset.</p>
+
+      <h3 id="c-seo-and-discoverability">(c) SEO and discoverability for "Brad Lasater quant"</h3>
+
+      <p><strong>Already correct:</strong> canonical URL, <code>Person</code> JSON-LD with <code>jobTitle</code>, <code>knowsAbout</code>, and <code>sameAs</code> to
+      GitHub + LinkedIn; OG tags with a real <code>og:image</code>; <code>theme-color</code>; a descriptive <code>&lt;title&gt;</code> in the
+      <code>Name — Role, Specialty</code> form. This is better structured data than 15 of the 20 sites measured.</p>
+
+      <p><strong>Fix now:</strong></p>
+
+      <ol>
+        <li><strong>Ship <code>sitemap.xml</code> and <code>robots.txt</code>.</strong> Both missing. Static XML is fine; there are only ~7 pages.
+          <code>robots.txt</code> should reference the sitemap.</li>
+        <li><strong>Extend <code>sameAs</code>.</strong> Currently only GitHub and LinkedIn. Every serious site in the sample points at
+          its full identity graph. Add X/Bluesky if he uses them, and — the moment he has anything posted —
+          Google Scholar and SSRN author pages. <code>sameAs</code> is exactly how search engines merge scattered
+          profiles into one entity, which is what makes a Knowledge-Panel-style result for his name possible.</li>
+        <li><strong>Add <code>alumniOf</code>, <code>worksFor</code>, and <code>address</code>/<code>homeLocation</code> (New York, NY) to the <code>Person</code> schema.</strong>
+          "New York" appearing as structured data, not just prose, is directly on-target for the recruiter
+          query he cares about.</li>
+        <li><strong>Put the positioning sentence in the meta description in the third person, naming the city and the
+          specialty.</strong> Gundersen's is the model: <em>"Gregory Gundersen is a quantitative researcher in New
+          York."</em> Sunny Balasubramanian's names his prior employers outright — for someone at Brad's stage,
+          naming Nift / Ticketmaster / Lockheed Martin / Boeing in the description does the same work.
+          Search engines frequently surface the meta description verbatim, so this is the one sentence a
+          recruiter is most likely to read before deciding whether to click.</li>
+        <li><strong>Add <code>BlogPosting</code> / <code>ScholarlyArticle</code> JSON-LD to each research-log entry</strong>, with <code>datePublished</code>,
+          <code>dateModified</code>, <code>author</code> (referencing the same <code>Person</code> <code>@id</code>), and <code>keywords</code>. Give the <code>Person</code>
+          node a stable <code>@id</code> (e.g. <code>https://bradlasater.com/#person</code>) and reference it from every page so
+          the whole site resolves to one entity rather than several.</li>
+        <li><strong>Make the GitHub profile carry the same positioning.</strong> The GitHub API sweep proves this is a live
+          discovery channel — <code>search/users</code> with <code>in:bio</code> plus <code>location:"New York"</code> surfaces exactly this
+          cohort. Brad's GitHub <code>bio</code>, <code>location: New York, NY</code>, and <code>blog: https://bradlasater.com</code> fields
+          should mirror the site's positioning, and his profile README should link the vol system and the
+          research log. That query is one a technically-minded recruiter genuinely runs.</li>
+        <li><strong>Title pattern for interior pages:</strong> <code>Specific Topic — Brad Lasater</code>, with the distinguishing term
+          first. Gatheral's title stuffs his full research specialty into the tag; that's aggressive but it
+          works, because searches in this field are topic-led ("rough volatility") as often as name-led.</li>
+        <li><strong>Protect the name asset.</strong> Set <code>bradlasater.com</code> to auto-renew with registrar lock, and never
+          retire the <code>bradlasater.github.io</code> fallback. Two of the reference sites in this very report have
+          already been lost to lapsed registration and now serve casino spam under a quant's name.</li>
+      </ol>
+
+      <p><strong>Realistic expectation:</strong> "Brad Lasater" is a low-competition query, so the site should rank first
+      for it quickly once a sitemap exists. The harder and more valuable target is being findable for
+      <em>topic</em> queries — "systematic volatility research log," "variance risk premium out-of-sample" — and
+      that is won by publishing dated, cited, indexable HTML posts consistently over months. The archive
+      grouped by year is both the SEO surface and the credibility artifact; they are the same thing.</p>
+    </main>
+  </div>
+</body>
+</html>

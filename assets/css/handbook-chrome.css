@@ -1,8 +1,13 @@
 /* ==========================================================================
-   bradlasater.com — handbook chrome
+   bradlasater.com — handbook & docs chrome
 
-   The published handbook is re-skinned into the site's design system in two
-   layers:
+   Loaded last on every handbook page (handbook/*.html, synced) and every
+   project-documentation page (docs/*.html, hand-maintained mirrors of the
+   repo's Markdown docs). Both sections use the same dark doc theme
+   (handbook/site.css and its owned snapshot docs/site.css) plus this file.
+
+   For the handbook specifically, the published pages are re-skinned into the
+   site's design system in two layers:
 
    1. scripts/sync_docs.py rewrites the palette, font names, and font
       stylesheet of every synced file at publish time (see FONT_MAP and
@@ -51,6 +56,15 @@ body > ul li a,
 /* Specificity 0,1,1 loses to the sidebar's and cards' own hover rules, so
    this only reaches content links. */
 a:hover { color: oklch(0.820 0.125 232); }  /* --c-accent-hover */
+
+/* Handbook pages do not load site.css, and neither the synced stylesheet nor
+   the inline styles set any focus indicator — keyboard users got whatever the
+   UA default happened to paint. An outline (not the site's box-shadow ring,
+   which needs --c-bg behind it) in the site accent. */
+:focus-visible {
+  outline: 2px solid oklch(0.745 0.135 232);  /* --c-accent */
+  outline-offset: 2px;
+}
 
 /* Inline code gets the site's .prose code treatment — but not inside tables,
    where the site leaves table code unchipped. */

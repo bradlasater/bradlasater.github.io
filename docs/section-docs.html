@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Docs section — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/section-docs.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="How the docs/ section of bradlasater.com works — hand-maintained dark HTML mirrors of the repo's Markdown documentation, the invariants they share, and how to add or re-sync a page.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/section-docs.html">
+  <meta property="og:title" content="Docs section — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html" class="active">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Docs section</h1>
+        </div>
+        <div class="meta">
+          living document · maintain by hand<br>
+          docs/*.html · docs/site.css · scripts/build_site.py
+        </div>
+      </header>
+
+      <p class="lead">
+        <code>docs/</code> is the section you are reading. It publishes the
+        repository's Markdown documentation — the README, the roadmap, the
+        track-record data contract, the audits, and the research notes — as
+        dark, indexed HTML pages under <code>/docs/</code>, so the project's
+        paper trail is readable on the site itself rather than only on GitHub.
+        The Markdown files are the source of truth; every page here is a
+        hand-maintained copy of one.
+      </p>
+
+      <h2 id="key-files">Key files</h2>
+      <table>
+        <tr><th>Path</th><th>Role</th><th>Owned by</th></tr>
+        <tr>
+          <td class="job">docs/index.html</td>
+          <td>Section landing page — the map of everything below.</td>
+          <td>Hand</td>
+        </tr>
+        <tr>
+          <td class="job">docs/site.css</td>
+          <td>The dark doc theme. An <em>owned snapshot</em> of the handbook's
+            synced stylesheet, copied so the handbook sync can never restyle
+            this section. Edit freely — nothing regenerates it.</td>
+          <td>Hand</td>
+        </tr>
+        <tr>
+          <td class="job">docs/*.html (the mirrors)</td>
+          <td>One HTML page per Markdown source; each names its source in a
+            <code>.meta-note</code> drift warning at the top.</td>
+          <td>Hand</td>
+        </tr>
+        <tr>
+          <td class="job">assets/css/handbook-chrome.css</td>
+          <td>Shared chrome loaded last on every docs <em>and</em> handbook
+            page — selection colour, content-link underlines, and the
+            <code>.hb-back</code> link out of the section. Not owned by docs/
+            alone; a change here affects the handbook too.</td>
+          <td>Hand (shared)</td>
+        </tr>
+        <tr>
+          <td class="job">scripts/build_site.py</td>
+          <td><code>docs_pages()</code> globs <code>docs/*.html</code> into the
+            sitemap, overview first. The build never writes docs pages — they
+            carry no stamp markers and join <code>sitemap.xml</code> only.</td>
+          <td>Hand</td>
+        </tr>
+        <tr>
+          <td class="job">sitemap.xml</td>
+          <td>Where docs pages surface for crawlers.</td>
+          <td>Generated — do not hand-edit</td>
+        </tr>
+      </table>
+
+      <h2 id="the-mirrors">The mirrors</h2>
+      <p>
+        Eleven mirror pages today; the index and the Site-sections pages
+        (this one included) are originals. The page name tells you the
+        source; the mapping as of 2026-09-03:
+      </p>
+      <table>
+        <tr><th>Page</th><th>Source of truth</th></tr>
+        <tr><td class="job">readme.html</td><td><code>README.md</code></td></tr>
+        <tr><td class="job">roadmap.html</td><td><code>ROADMAP.md</code></td></tr>
+        <tr><td class="job">track-record-schema.html</td><td><code>data/SCHEMA.md</code></td></tr>
+        <tr><td class="job">baseline-audit.html</td><td><code>notes/baseline-audit.md</code></td></tr>
+        <tr><td class="job">audit-2026-09-02.html</td><td><code>notes/audit-2026-09-02.md</code></td></tr>
+        <tr><td class="job">research-notes.html</td><td><code>notes/README.md</code></td></tr>
+        <tr><td class="job">research-01-prop-hft.html</td><td><code>notes/research/01-prop-hft.md</code></td></tr>
+        <tr><td class="job">research-02-hedge-funds.html</td><td><code>notes/research/02-hedge-funds.md</code></td></tr>
+        <tr><td class="job">research-03-vol-practitioners.html</td><td><code>notes/research/03-vol-practitioners.md</code></td></tr>
+        <tr><td class="job">research-04-switchers-hiring.html</td><td><code>notes/research/04-switchers-and-hiring.md</code></td></tr>
+        <tr><td class="job">research-05-discovery-build.html</td><td><code>notes/research/05-discovery-and-build.md</code></td></tr>
+      </table>
+
+      <h2 id="invariants">Invariants</h2>
+      <p>
+        These hold on every page in the section, mirrors and originals alike.
+        Nothing enforces them except you — there is no CI check — so they are
+        the first place to look when a page looks wrong.
+      </p>
+      <ul>
+        <li><strong>The sidebar is byte-identical on every page.</strong> The
+          whole <code>&lt;nav class="toc"&gt;</code> block is the same text
+          everywhere, with exactly one <code>class="active"</code> marking the
+          current page. Verified today by hashing the block with the active
+          class stripped: all pages agree. When you add a page, you edit this
+          block on <em>every</em> page — see below.</li>
+        <li><strong>Every mirror carries the drift warning.</strong> A
+          <code>&lt;p class="meta-note"&gt;</code> directly under the header:
+          <q>This page mirrors <code>&lt;path&gt;</code>; edit the Markdown,
+          then re-sync this page.</q> Original pages (the index, the section
+          pages) do not carry it; their <code>.meta</code> block says
+          <q>living document · maintain by hand</q> instead.</li>
+        <li><strong>External links open in a new tab.</strong> Every off-site
+          anchor gets <code>target="_blank" rel="noopener"</code>. Internal
+          links are relative (<code>section-vol.html</code>).</li>
+        <li><strong>Headings are deep-linkable.</strong> Every
+          <code>h2</code> has a slugified <code>id</code>
+          (<code>&lt;h2 id="the-append-only-invariant"&gt;</code>) so audit
+          items and cross-references can point into a page.</li>
+        <li><strong>The build never touches these pages.</strong> They are
+          hand-authored, carry no stamp markers, and reach
+          <code>sitemap.xml</code> only through <code>docs_pages()</code>
+          discovery. Rebuilding the site cannot clobber them.</li>
+      </ul>
+
+      <h2 id="adding-and-re-syncing-pages">Adding and re-syncing pages</h2>
+      <h3>Add a new mirror</h3>
+      <ol>
+        <li>Copy the shell from an existing mirror — the head boilerplate,
+          fonts, skip link, and sidebar are verbatim; change only
+          <code>&lt;title&gt;</code>, the description, canonical,
+          <code>og:url</code>, and <code>og:title</code>.</li>
+        <li>Set the header <code>.meta</code> to <q>mirrors
+          <code>&lt;path&gt;</code></q> and add the <code>.meta-note</code>
+          drift warning naming the Markdown source.</li>
+        <li>Move <code>class="active"</code> onto your new sidebar item.</li>
+        <li>Add the sidebar item to <strong>every page in the
+          section</strong>. This is the painful part: every
+          <code>docs/*.html</code> file (nineteen today, and growing),
+          byte-identically. Do not hand-edit each one — write
+          the block once and splice it in with a script (the block is
+          delimited by <code>&lt;nav class="toc"&gt;</code> …
+          <code>&lt;/nav&gt;</code>, and the active class is the only
+          per-page difference, so a small Python loop over
+          <code>docs/*.html</code> does it safely).</li>
+        <li>Rebuilding the site picks the page up automatically:
+          <code>docs_pages()</code> globs <code>docs/*.html</code>, so the
+          new page lands in <code>sitemap.xml</code> on the next build with
+          no second edit.</li>
+      </ol>
+      <h3>Re-sync a mirror after editing its Markdown</h3>
+      <p>
+        There is no pipeline — the sync is you. Edit the Markdown, then
+        hand-port the changes into the mirror: same heading ids for the same
+        sections, keep the drift warning intact. For large edits it is faster
+        to regenerate the body from scratch (copy the shell, rewrite the
+        <code>&lt;main&gt;</code> content) than to patch. The research-note
+        mirrors show the pattern: tables stay tables, fenced code becomes
+        <code>pre</code>, quotes become <code>blockquote</code>.
+      </p>
+
+      <h2 id="history">History</h2>
+      <table>
+        <tr><th>When</th><th>What happened</th></tr>
+        <tr>
+          <td class="when">2026-08-23</td>
+          <td>Baseline audit notes land in <code>notes/</code> (peer-survey
+            research plus a prioritised site worklist) — the material this
+            section would eventually mirror.</td>
+        </tr>
+        <tr>
+          <td class="when">2026-09-02</td>
+          <td>Full-repo audit commit fixes bugs across scripts, JS, CSS and
+            markup, and writes <code>notes/audit-2026-09-02.md</code> — the
+            50-item follow-up list whose size made the case for reading the
+            docs on the site.</td>
+        </tr>
+        <tr>
+          <td class="when">2026-09-03</td>
+          <td><code>docs/</code> born in a single commit on branch
+            <code>audit-2026-09-02</code>: the twelve mirrors above, the
+            landing index, and <code>docs/site.css</code> as an owned
+            snapshot of the handbook theme (plus small
+            <code>handbook-chrome.css</code> additions). ~6,800 lines.</td>
+        </tr>
+        <tr>
+          <td class="when">2026-09-03</td>
+          <td>Mirroring surfaced eight new gaps, recorded as addendum items
+            51–58 in the audit — including <q>docs/ is invisible to the
+            sitemap</q> (57) and the <code>docs/site.css</code> gaps the
+            mirrors had worked around three different ways (58).</td>
+        </tr>
+        <tr>
+          <td class="when">2026-09-03</td>
+          <td>Same day, both closed: <code>docs_pages()</code> added to
+            <code>scripts/build_site.py</code> so docs reach the sitemap by
+            discovery (57), and <code>.meta-note</code>, <code>pre</code> and
+            <code>blockquote</code> rules added to <code>docs/site.css</code>
+            with the drift warning standardised across all mirrors (58).</td>
+        </tr>
+        <tr>
+          <td class="when">2026-09-03</td>
+          <td>The <q>Site sections</q> maintainer-orientation group — six
+            original pages, including this one — added to the sidebar on
+            every docs page, and cards for them added to the index.</td>
+        </tr>
+      </table>
+
+      <h2 id="watch-outs">Watch-outs</h2>
+      <div class="callout">
+        <strong>Addendum items 51–56 are still open.</strong> Notably:
+        <code>notes/README.md</code> claims notes/ is <q>excluded from the
+        published site</q> while this section mirrors all of it — decide
+        deliberately whether the candid internal tone stays public; and the
+        research-note sources contain known factual inconsistencies (dead
+        counts, tier/appendix mismatches) that the mirrors faithfully
+        reproduce. Details and the rest of the list:
+        <a href="audit-2026-09-02.html#addendum-docs-mirror-pass">audit
+        addendum — docs-mirror pass</a>.
+      </div>
+      <div class="callout">
+        <strong>The sidebar invariant is unenforced.</strong> One forgotten
+        page breaks byte-identity silently. If you add pages often, script
+        the splice (see <a href="#adding-and-re-syncing-pages">Adding and
+        re-syncing pages</a>) or add a CI check — the hashing trick used to
+        verify this section is a five-line script.
+      </div>
+    </main>
+  </div>
+</body>
+</html>

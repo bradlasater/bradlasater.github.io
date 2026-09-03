@@ -136,7 +136,7 @@ a:hover { color: var(--c-accent-hover); }
    table rows and axis ticks. Large standalone values keep proportional
    figures, because equal-width digits make a number like 121 look loose
    at display sizes. */
-.num, table, time, .chart__tick {
+table, time, .chart__tick {
   font-variant-numeric: tabular-nums lining-nums;
 }
 
@@ -449,7 +449,6 @@ main { flex: 1; }
   font-weight: 600;
 }
 .btn--primary:hover { background: var(--c-accent-hover); border-color: var(--c-accent-hover); color: var(--c-on-accent); }
-.btn__icon { width: 1em; height: 1em; flex: none; opacity: 0.7; }
 
 /* --------------------------------------------------------------------------
    7. Cards & grids
@@ -657,7 +656,6 @@ main { flex: 1; }
    13. Data tables
    -------------------------------------------------------------------------- */
 
-.table-wrap:focus-visible { box-shadow: var(--ring); }
 .table-wrap { overflow-x: auto; border: 1px solid var(--c-border); border-radius: var(--radius); }
 table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
 th, td { padding: var(--sp-3) var(--sp-4); text-align: left; }
@@ -863,8 +861,6 @@ details.tableview > .table-wrap { margin-top: var(--sp-3); max-height: 26rem; ov
 }
 .measure { max-width: var(--measure); }
 .muted { color: var(--c-text-muted); }
-.stack-4 > * + * { margin-top: var(--sp-4); }
-.stack-6 > * + * { margin-top: var(--sp-6); }
 
 /* --------------------------------------------------------------------------
    17. Print — recruiters and hiring managers still print résumés.
@@ -875,10 +871,8 @@ details.tableview > .table-wrap { margin-top: var(--sp-3); max-height: 26rem; ov
     --c-bg: #fff; --c-bg-subtle: #fff; --c-surface: #fff;
     --c-text: #000; --c-text-secondary: #222; --c-text-muted: #555;
     --c-border: #ccc; --c-border-strong: #999; --c-accent: #0b57d0;
-  }
-  /* Semantic colours need resetting too — the dark-theme green, red and amber
-     all fall below 2.9:1 on white paper. */
-  :root {
+    /* Semantic colours need resetting too — the dark-theme green, red and
+       amber all fall below 2.9:1 on white paper. */
     --c-pos: #076b4e;
     --c-neg: #a5231b;
     --c-warn: #7a5600;

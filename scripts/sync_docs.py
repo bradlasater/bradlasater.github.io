@@ -49,6 +49,7 @@ Exit codes: 0 ok (or source absent), 1 stale (--check), 2 could not run.
 from __future__ import annotations
 
 import argparse
+import html
 import pathlib
 import re
 import shutil
@@ -208,7 +209,7 @@ def head_block(name: str, title: str) -> str:
             '  <meta property="og:site_name" content="Brad Lasater">',
             '  <meta property="og:locale" content="en_US">',
             f'  <meta property="og:url" content="{url}">',
-            f'  <meta property="og:title" content="{title}">',
+            f'  <meta property="og:title" content="{html.escape(html.unescape(title), quote=True)}">',
             f'  <meta property="og:image" content="{SITE}/assets/og.png">',
             '  <meta property="og:image:width" content="1200">',
             '  <meta property="og:image:height" content="630">',
@@ -356,6 +357,8 @@ def main() -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except RuntimeError as exc:
+    except (RuntimeError, OSError, UnicodeError) as exc:
+        # Exit 2, not 1: under --check an unreadable file must not be
+        # reported as "stale".
         print(f"error: {exc}", file=sys.stderr)
         raise SystemExit(2)

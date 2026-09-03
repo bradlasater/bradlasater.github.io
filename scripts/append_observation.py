@@ -41,6 +41,7 @@ from validate_track_record import (  # noqa: E402
     REPO_ROOT,
     CannotRun,
     Failure,
+    _parse_date,
     load,
     validate_structure,
 )
@@ -139,9 +140,12 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
-        dt.date.fromisoformat(args.date)
-    except ValueError:
-        print(f"FAIL  --date {args.date!r} is not an ISO YYYY-MM-DD date", file=sys.stderr)
+        # The date is stored verbatim, so it must be checked against the same
+        # strict YYYY-MM-DD rule the validator applies — a bare fromisoformat
+        # would let "20260902" or a week date through and write it to disk.
+        _parse_date(args.date, "--date")
+    except Failure as exc:
+        print(f"FAIL  {exc}", file=sys.stderr)
         return 1
 
     if args.mode_change is None and (

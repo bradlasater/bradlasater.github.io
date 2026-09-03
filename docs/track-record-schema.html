@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Track-record data contract — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/track-record-schema.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="The append-only schema behind data/track-record.json — every field, and how CI enforces that published history cannot be revised.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/track-record-schema.html">
+  <meta property="og:title" content="Track-record data contract — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html" class="active">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Track-record data contract</h1>
+        </div>
+        <div class="meta">
+          mirrors data/SCHEMA.md
+        </div>
+      </header>
+
+      <p class="meta-note">This page mirrors <code>data/SCHEMA.md</code>; edit the Markdown, then re-sync this page.</p>
+
+      <p class="lead">
+        This file is the single source of truth for the published out-of-sample track
+        record at <a href="/vol/track-record.html"><code>/vol/track-record.html</code></a>. The page computes every statistic it shows
+        from this file in the browser; nothing is precomputed and pasted in.
+      </p>
+
+      <h2 id="why-the-format-is-append-only">Why the format is append-only</h2>
+      <p>
+        The value of a published track record is a function of elapsed time, and it only
+        holds if the record cannot be quietly revised after the fact. Two mechanisms
+        enforce that here:
+      </p>
+      <ol>
+        <li><strong>Every observation is a separate commit.</strong> The git history is the timestamp
+          trail. A reader can check when any given number first appeared.</li>
+        <li><strong>CI rejects edits to existing observations.</strong> <code>.github/workflows/validate-track-record.yml</code>
+          runs <code>scripts/validate_track_record.py --check-append-only</code> on every push and
+          pull request that touches the data file, walking <strong>every commit</strong> from the
+          merge-base with the base branch through HEAD — not just the previous commit —
+          so tampering in an intermediate commit is caught too. The build fails if any
+          already-published observation changed or disappeared, and the workflow
+          rejects force-pushes it can see. Appending is the only legal edit.</li>
+      </ol>
+      <p>
+        Neither mechanism is worth anything if history gets rewritten. The workflow is
+        path-filtered, so the durable guard is branch protection: <strong>force-pushes and
+        deletion are disabled on <code>main</code>, enforced for admins.</strong> Never force-push this
+        repository.
+      </p>
+
+      <h2 id="top-level-fields">Top-level fields</h2>
+      <table>
+        <thead>
+          <tr><th>Field</th><th>Type</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>schema_version</code></td><td>integer</td><td>Currently <code>1</code>. Bump on any breaking change.</td></tr>
+          <tr><td><code>strategy</code></td><td>string</td><td>Human-readable name shown on the page.</td></tr>
+          <tr><td><code>inception</code></td><td><code>YYYY-MM-DD</code> or <code>null</code></td><td>Date tracking began. <code>null</code> until the first observation is appended, at which point the append script sets it.</td></tr>
+          <tr><td><code>base_currency</code></td><td>string</td><td>Display only.</td></tr>
+          <tr><td><code>periods_per_year</code></td><td>integer</td><td>Annualisation factor. <code>252</code> for daily observations.</td></tr>
+          <tr><td><code>mode_changes</code></td><td>array</td><td>Records each paper→live transition. See below.</td></tr>
+          <tr><td><code>observations</code></td><td>array</td><td>Append-only, strictly ascending by <code>date</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="mode-changes"><code>mode_changes</code></h2>
+      <p>
+        The record starts paper-traded and may later move to real capital. That
+        transition is recorded rather than silently swapped, and the page draws it as a
+        labelled boundary on the equity curve so the simulated and live portions are
+        never visually conflated.
+      </p>
+      <pre><code>{ "date": "2027-03-01", "from": "paper", "to": "live", "note": "Funded with real capital." }</code></pre>
+
+      <h2 id="observations"><code>observations[]</code></h2>
+      <p>One entry per trading day.</p>
+      <table>
+        <thead>
+          <tr><th>Field</th><th>Type</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>date</code></td><td><code>YYYY-MM-DD</code></td><td>Strictly ascending, no duplicates, never in the future.</td></tr>
+          <tr><td><code>nav</code></td><td>number &gt; 0</td><td>Net asset value at the close, <strong>after</strong> costs. Returns are derived from this.</td></tr>
+          <tr><td><code>gross_pnl</code></td><td>number</td><td>That day's P&amp;L before frictions.</td></tr>
+          <tr><td><code>costs</code></td><td>number ≥ 0</td><td>That day's total frictions: spread paid, commissions, fees, borrow, hedging costs.</td></tr>
+          <tr><td><code>positions</code></td><td>integer ≥ 0</td><td>Open positions at the close.</td></tr>
+          <tr><td><code>mode</code></td><td><code>"paper"</code> | <code>"live"</code></td><td>Which capital this day was traded with.</td></tr>
+        </tbody>
+      </table>
+      <p>
+        <code>gross_pnl</code> and <code>costs</code> exist so the page can show what share of gross P&amp;L the
+        frictions consumed. That number is the honest one: a strategy whose edge is
+        mostly eaten by costs is reporting the error bar on its cost model.
+      </p>
+
+      <h2 id="appending-a-day">Appending a day</h2>
+      <pre><code>python3 scripts/append_observation.py \
+  --date 2026-09-01 --nav 100123.45 \
+  --gross-pnl 150.00 --costs 26.55 --positions 4 --mode paper</code></pre>
+      <p>
+        The script validates before writing and refuses to modify or reorder anything
+        that already exists. Add <code>--commit</code> to have it create the commit for you.
+      </p>
+      <p>To record a transition to real capital:</p>
+      <pre><code>python3 scripts/append_observation.py --mode-change live --date 2027-03-01 \
+  --note "Funded with real capital."</code></pre>
+
+      <h2 id="statistics-the-page-derives">Statistics the page derives</h2>
+      <p>Computed in <code>assets/js/track-record.js</code> from the returns implied by <code>nav</code>:</p>
+      <ul>
+        <li>Cumulative and annualised return, annualised volatility.</li>
+        <li><strong>Annualised Sharpe ratio</strong>, reported but deliberately de-emphasised.</li>
+        <li><strong>Probabilistic Sharpe Ratio (PSR)</strong> — the probability the true Sharpe exceeds
+          zero, given the observed skewness, kurtosis, and sample length.</li>
+        <li><strong>Minimum Track Record Length (MinTRL)</strong> — how many observations would be
+          needed for the observed Sharpe to be statistically distinguishable from zero
+          at 95% confidence. Shown against the actual count, so a track record that is
+          too short to mean anything says so rather than implying otherwise.</li>
+        <li>Maximum and current drawdown.</li>
+        <li>Cost share of gross P&amp;L.</li>
+      </ul>
+      <p>
+        Sharpe uses the sample standard deviation (<code>ddof=1</code>); skewness and kurtosis use
+        the standard moment estimators with raw (not excess) kurtosis, so a normal
+        distribution gives a kurtosis of 3, not 0. PSR and MinTRL follow Bailey &amp; López de Prado.
+      </p>
+    </main>
+  </div>
+</body>
+</html>

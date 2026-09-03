@@ -9,7 +9,11 @@ name: Validate track record
 #   * It inspects EVERY commit in the push, not just the tip. A push carries
 #     many commits but fires one workflow run, so checking only HEAD against
 #     HEAD^ let an earlier commit in the same push rewrite history unseen.
-#   * It rejects force-pushes outright. Rewriting history destroys the
+#   * It rejects force-pushes when it runs — but this workflow is
+#     path-filtered, so a force-push that leaves the watched files' final
+#     content untouched fires no run at all. The durable guard is branch
+#     protection on main (force-pushes and deletion disabled, enforced for
+#     admins); this step is a second layer. Rewriting history destroys the
 #     timestamp trail the whole record rests on, and no file-level check can
 #     detect it after the fact.
 

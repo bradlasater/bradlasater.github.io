@@ -1,9 +1,10 @@
 # notes/
 
-Working notes. **Excluded from the published site** in `_config.yml` — nothing in
-here is served at a URL, and it should stay that way: these files contain candid
-assessments of the site's weaknesses, and a public "here is what is wrong with
-me" page is not the goal.
+Working notes. Since 2026-09-03 these are **mirrored on the published site**
+under `/docs/` — a deliberate reversal of the original "never publish the
+candid stuff" stance: the research below argues that showing the work,
+gaps included, is the stronger signal. The Markdown here remains the source
+of truth; edit it, then re-sync the mirror page under `docs/`.
 
 ## Start here
 
@@ -16,6 +17,7 @@ ones. The files below are the evidence behind it.
 |---|---|
 | `quant-site-playbook.html` | The readable compiled version. Open in a browser. The survey findings in full, plus the post template, phrasing conventions, and the reference-site tables. |
 | `baseline-audit.md` | State of the site as of 2026-08-23, before any of this landed. What was already strong, and what the gaps were. |
+| `audit-2026-09-02.md` | The 2026-09-02 full-repo audit: 50 deferred improvements plus the docs-mirror addendum, grouped and prioritised. |
 
 ## Raw research
 
@@ -43,4 +45,4 @@ Roughly 80 distinct personal sites after de-duplication across lanes.
   was excluded rather than reported second-hand.
 - A few reference sites are dormant (2–3.5 years stale) or dead. Those are
   reported as cautionary findings, not as models — see the dead-domain note in
-  `research/05`.
+  `research/05-discovery-and-build.md`.

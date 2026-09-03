@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Site sections — orientation — Brad Lasater</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
+
+  <link rel="canonical" href="https://bradlasater.com/docs/section-site.html">
+  <meta name="theme-color" content="#14171c">
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+  <meta name="description" content="Whole-site orientation for the maintainer of bradlasater.com — the section map, the three build and sync pipelines, the golden rules, and a summarised history.">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Brad Lasater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="https://bradlasater.com/docs/section-site.html">
+  <meta property="og:title" content="Site sections — orientation — Brad Lasater">
+  <meta property="og:image" content="https://bradlasater.com/assets/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/css/handbook-chrome.css">
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <nav class="toc" aria-label="Documentation index">
+      <a class="hb-back" href="/">&#8592; bradlasater.com</a>
+      <div class="toc-kicker">bradlasater.github.io</div>
+      <div class="toc-title">Project documentation</div>
+      <ol>
+        <li><a href="index.html">Overview</a></li>
+        <li><a href="readme.html">Repository README</a></li>
+        <li><a href="roadmap.html">Roadmap</a></li>
+        <li><a href="track-record-schema.html">Track-record data contract</a></li>
+        <li class="toc-sep"></li>
+        <li><a href="baseline-audit.html">Baseline audit (2026-08-23)</a></li>
+        <li><a href="audit-2026-09-02.html">Audit follow-ups (2026-09-02)</a></li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="research-notes.html">Research notes</a>
+          <ol class="sub">
+            <li><a href="research-01-prop-hft.html">01 · Prop &amp; HFT</a></li>
+            <li><a href="research-02-hedge-funds.html">02 · Hedge funds</a></li>
+            <li><a href="research-03-vol-practitioners.html">03 · Vol practitioners</a></li>
+            <li><a href="research-04-switchers-hiring.html">04 · Switchers &amp; hiring</a></li>
+            <li><a href="research-05-discovery-build.html">05 · Discovery &amp; build</a></li>
+          </ol>
+        </li>
+        <li class="toc-sep"></li>
+        <li>
+          <a href="section-site.html" class="active">Site sections</a>
+          <ol class="sub">
+            <li><a href="section-home-cv.html">Homepage, CV &amp; 404</a></li>
+            <li><a href="section-vol.html">Volatility system</a></li>
+            <li><a href="section-handbook.html">Handbook &amp; sync</a></li>
+            <li><a href="section-log.html">Research log</a></li>
+            <li><a href="section-docs.html">Docs section</a></li>
+            <li><a href="section-infra.html">Tooling &amp; CI</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <header class="doc">
+        <div>
+          <div class="kicker">bradlasater.github.io</div>
+          <h1>Site sections — orientation</h1>
+        </div>
+        <div class="meta">
+          living document · maintain by hand<br>
+          covers: index.html · cv.html · vol/ · handbook/ · log/ · docs/
+        </div>
+      </header>
+
+      <h2 id="purpose">Purpose</h2>
+      <p class="lead">
+        bradlasater.com is a recruiting instrument, not a blog: a static GitHub
+        Pages site aimed at quantitative finance roles, built around an
+        in-development systematic volatility research and execution platform
+        and — more importantly — the research process behind it. Everything on
+        it exists to make one case to a hiring manager: here is a person who
+        does the work in the open, writes it down, and holds himself to a
+        public, unrevisable track record. This page is the whole site on one
+        screen. Read it first; the six section pages go deeper.
+      </p>
+
+      <h2 id="section-map">Section map</h2>
+      <p>
+        One row per part of the site, with the page in this documentation set
+        that owns it. There is no bundler and no framework — plain HTML and CSS,
+        two small vanilla-JS files, served by GitHub Pages from
+        <code>main</code> at the repository root.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Section</th>
+            <th>URL</th>
+            <th>Owning files</th>
+            <th>Docs page</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Homepage, CV &amp; 404</td>
+            <td><a href="/">/</a> · <a href="/cv.html">/cv.html</a></td>
+            <td><code>index.html</code>, <code>cv.html</code>, <code>404.html</code>, <code>assets/css/site.css</code></td>
+            <td><a href="section-home-cv.html">section-home-cv.html</a></td>
+          </tr>
+          <tr>
+            <td>Volatility system</td>
+            <td><a href="/vol/">/vol/</a></td>
+            <td><code>vol/*.html</code>, <code>data/track-record.json</code>, <code>assets/js/track-record.js</code></td>
+            <td><a href="section-vol.html">section-vol.html</a></td>
+          </tr>
+          <tr>
+            <td>Handbook (Crack the Sky)</td>
+            <td><a href="/handbook/">/handbook/</a></td>
+            <td><code>handbook/</code> — synced, never edited here</td>
+            <td><a href="section-handbook.html">section-handbook.html</a></td>
+          </tr>
+          <tr>
+            <td>Research log</td>
+            <td><a href="/log/">/log/</a></td>
+            <td><code>content/log/*.html</code> (authored) → <code>log/</code> (generated)</td>
+            <td><a href="section-log.html">section-log.html</a></td>
+          </tr>
+          <tr>
+            <td>Docs (this section)</td>
+            <td><a href="/docs/">/docs/</a></td>
+            <td><code>docs/*.html</code>, Markdown sources in <code>notes/</code> and the repo root</td>
+            <td><a href="section-docs.html">section-docs.html</a></td>
+          </tr>
+          <tr>
+            <td>Tooling &amp; CI</td>
+            <td>— no public URL</td>
+            <td><code>scripts/</code>, <code>.github/workflows/</code>, <code>.pre-commit-config.yaml</code></td>
+            <td><a href="section-infra.html">section-infra.html</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        One surface sits outside the map deliberately:
+        <code>journal-prompts.html</code> is a private morning-writing working
+        file — <code>noindex</code>, excluded from the published site in
+        <code>_config.yml</code>, and regenerated daily by
+        <code>scripts/journal_prompts.py</code>.
+      </p>
+
+      <h2 id="how-the-pieces-fit">How the pieces fit</h2>
+      <p>
+        Three scripts own derived files. The single most useful habit this page
+        can give you: before editing anything, check whether one of these owns
+        it — if so, edit the source and re-run the script instead.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Pipeline</th>
+            <th>Owns (never hand-edit)</th>
+            <th>Runs when</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>scripts/build_site.py</code></td>
+            <td><code>log/&lt;entry&gt;.html</code>, the entry list in <code>log/index.html</code>,
+              <code>feed.xml</code>, <code>sitemap.xml</code>, the log section of
+              <code>llms.txt</code>, and the <code>lastmod</code>/<code>dateModified</code>
+              timestamps stamped into every page</td>
+            <td>Pre-commit hook, and CI (<code>--check</code>) fails a push that
+              leaves its outputs stale</td>
+          </tr>
+          <tr>
+            <td><code>scripts/sync_docs.py</code></td>
+            <td>Everything in <code>handbook/</code> — copied from the private
+              <code>data_ingest_infra</code> repo and re-skinned into the site
+              theme at sync time</td>
+            <td>By hand only. Deliberately not in the hook or CI: neither has the
+              private source repo, so neither can detect drift</td>
+          </tr>
+          <tr>
+            <td><code>scripts/journal_prompts.py</code></td>
+            <td>The prompt table between the <code>PROMPTS</code> markers and the
+              <code>GENERATED</code> stamp in <code>journal-prompts.html</code>;
+              the surrounding guide is hand-authored</td>
+            <td>launchd, daily at 06:00 ET, from recent git activity in this repo
+              and <code>data_ingest_infra</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        The fourth data flow has no generator:
+        <code>scripts/append_observation.py</code> appends one dated day to
+        <code>data/track-record.json</code> (its own dated commit), CI validates
+        the append-only invariant, and <code>assets/js/track-record.js</code>
+        computes every statistic in the browser at view time. Nothing is
+        precomputed, so the rendered record cannot disagree with the data file.
+      </p>
+
+      <h2 id="conventions-and-gotchas">Conventions and gotchas</h2>
+      <ul>
+        <li><strong>The append-only invariant is the point of the site.</strong>
+          Never force-push, never rebase or amend a commit that published an
+          observation, never edit a published number — append a correction
+          instead. CI walks every commit and rejects history rewrites, but the
+          rule is yours to keep. See
+          <a href="track-record-schema.html">the data contract</a>.</li>
+        <li><strong>The nav is hand-maintained in eight places.</strong> Seven
+          HTML files (<code>index.html</code>, <code>cv.html</code>,
+          <code>404.html</code>, <code>vol/index.html</code>,
+          <code>vol/methodology.html</code>, <code>vol/track-record.html</code>,
+          <code>log/index.html</code>) <em>plus</em> the <code>nav()</code>
+          function in <code>scripts/build_site.py</code>, which stamps it into
+          generated log pages. Change one and not the rest and the site drifts
+          visibly. Handbook pages are the exception: they keep their own sidebar
+          and link back out.</li>
+        <li><strong>The header stacks below 56rem, and that number is measured,
+          not round.</strong> Brand plus seven items fit at 880px and wrap at
+          850px. Adding or renaming a nav item without re-measuring strands the
+          GitHub link on its own line and reads as broken.</li>
+        <li><strong>Root-relative paths everywhere.</strong> Opening
+          <code>index.html</code> over <code>file://</code> does not work —
+          stylesheets are root-relative and <code>track-record.js</code> uses
+          <code>fetch()</code>. Develop through
+          <code>python3 -m http.server</code>.</li>
+        <li><strong>British spelling in prose.</strong> Deliberate exceptions:
+          JSON-LD (American, for search) and proper nouns spelled as the
+          institution spells them.</li>
+        <li><strong>Docs pages mirror Markdown.</strong> Most pages in
+          <code>/docs/</code> mirror a Markdown file in the repo — edit the
+          Markdown, then re-sync the mirror. The section pages (this one and
+          its six siblings) are the exception: original, maintained by hand.</li>
+      </ul>
+
+      <h2 id="history">History</h2>
+      <p>
+        The repo is young — first commit 2026-08-23 — so this is nearly the
+        whole story. Trivial commits (<code>chore: rebuild derived site
+        metadata</code> runs, Copilot autofixes, upload commits) are grouped or
+        omitted. Full detail: <code>git log --date=short</code>.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Milestone</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-08-23</td>
+            <td>Initial portfolio site, and <code>CNAME</code> for
+              bradlasater.com (<code>a1f829a</code>, <code>19dba32</code>).</td>
+          </tr>
+          <tr>
+            <td>2026-08-23</td>
+            <td>Repositioned toward quantitative finance with a design system;
+              discoverability infrastructure (robots.txt, sitemap, feed,
+              llms.txt); live out-of-sample track-record page with an analytics
+              loader left inert (<code>64c0895</code>, <code>fc0514c</code>,
+              <code>2edb410</code>).</td>
+          </tr>
+          <tr>
+            <td>2026-08-24</td>
+            <td>Headshot and Person schema; ROADMAP consolidated into one list;
+              pre-commit hook added to auto-regenerate derived files
+              (<code>f0b412f</code>, <code>2260565</code>,
+              <code>0dce7b5</code>).</td>
+          </tr>
+          <tr>
+            <td>2026-08-24/25</td>
+            <td>Repo-review fixes merged; pre-commit restaging documented
+              (<code>ff9ecee</code>, <code>7f0ecb4</code>).</td>
+          </tr>
+          <tr>
+            <td>2026-09-01</td>
+            <td>Handbook published under a Handbook nav tab — synced from
+              <code>data_ingest_infra</code> and re-skinned into the site theme
+              at sync time (<code>35f6fbb</code>, <code>96a45dd</code>,
+              <code>6d3f488</code>).</td>
+          </tr>
+          <tr>
+            <td>2026-09-01</td>
+            <td>Analytics enabled (GoatCounter <code>CODE</code> set),
+              <code>cv.pdf</code> shipped, morning journal-prompt tool added
+              (<code>85849c6</code>).</td>
+          </tr>
+          <tr>
+            <td>2026-09-02</td>
+            <td>"Why volatility, why now" rationale section; external links open
+              in new tabs (<code>94e42fc</code>).</td>
+          </tr>
+          <tr>
+            <td>2026-09-02</td>
+            <td>Full-repo audit on branch <code>audit-2026-09-02</code>:
+              cross-cutting bug fixes in scripts, JS, CSS and markup; 404
+              redesigned (<code>a73f908</code>).</td>
+          </tr>
+          <tr>
+            <td>2026-09-03</td>
+            <td><code>/docs/</code> added — this documentation set
+              (<code>a205377</code>).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="golden-rules">Golden rules</h2>
+      <div class="callout">
+        <ul>
+          <li><strong>Never force-push this repository.</strong> The track
+            record's entire value is that history cannot be revised; the git
+            log is the timestamp trail, and no file-level check can detect a
+            rewrite after the fact.</li>
+          <li><strong>The nav lives in seven HTML files plus
+            <code>nav()</code> in <code>scripts/build_site.py</code>.</strong>
+            Edit all of them or the generated log pages drift from the static
+            ones.</li>
+          <li><strong><code>handbook/</code> is synced, never edited.</strong>
+            Edit the source in <code>data_ingest_infra</code>, then run
+            <code>python3 scripts/sync_docs.py</code>.</li>
+          <li><strong>Docs mirrors: edit the Markdown source, then re-sync the
+            HTML.</strong> The page name says which file it mirrors.</li>
+          <li><strong>Run <code>python3 scripts/build_site.py</code> before
+            pushing</strong> (the pre-commit hook does it for you) — CI's
+            <code>--check</code> fails on stale derived files.</li>
+        </ul>
+      </div>
+
+      <h2 id="watch-outs">Watch-outs</h2>
+      <div class="callout">
+        Known open items, from the 2026-09-02 audit:
+        <ul>
+          <li>The handbook sync is reported stale for several pages — run
+            <code>sync_docs.py</code> and commit
+            (<a href="audit-2026-09-02.html#do-first-correctness-credibility">audit §Do first</a>).</li>
+          <li>The README's analytics section still claims analytics is inert;
+            it was enabled on 2026-09-01 and the docs now contradict the code
+            (<a href="audit-2026-09-02.html#do-first-correctness-credibility">same section</a>).</li>
+          <li><code>build_site.py</code> has known silent-failure modes around
+            stamp markers and generated-page drift
+            (<a href="audit-2026-09-02.html#build-script">audit §Build script</a>).</li>
+          <li>CI and repo-hygiene gaps, including the validate workflow not
+            triggering on schema edits
+            (<a href="audit-2026-09-02.html#ci-repo-hygiene">audit §CI / repo hygiene</a>).</li>
+        </ul>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -341,6 +341,8 @@
    */
   function drawChart(container, series, opts) {
     container.textContent = "";
+    // An empty series would make lo/hi ±Infinity and emit NaN path data.
+    if (!series.length) return;
 
     var W = 760;
     var H = opts.height || 260;
@@ -552,6 +554,18 @@
       if (typeof o.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(o.date)) {
         throw new Error("observation " + i + " has an invalid date");
       }
+      // The shape check above passes strings like "2026-13-45", and Date.parse
+      // normalises some out-of-range days (Chromium treats "2026-02-30" as a
+      // March date) instead of rejecting them, so compare the parsed UTC
+      // components against the source string.
+      var parts = o.date.split("-");
+      var parsed = parseDate(o.date);
+      if (!isFinite(parsed.getTime()) ||
+          parsed.getUTCFullYear() !== +parts[0] ||
+          parsed.getUTCMonth() !== +parts[1] - 1 ||
+          parsed.getUTCDate() !== +parts[2]) {
+        throw new Error("observation " + i + " has a non-existent date " + o.date);
+      }
       if (!isNum(o.nav) || o.nav <= 0) {
         throw new Error("observation " + i + " has an invalid nav");
       }
@@ -571,7 +585,9 @@
   function renderHero(doc, observations, stats) {
     var inception = parseDate(observations[0].date);
     var latest = parseDate(observations[observations.length - 1].date);
-    setText("tr-days", String(daysBetweenUTC(inception, new Date()) + 1));
+    // Clamp at 1: a viewer whose clock lags inception would otherwise see "0"
+    // or negative days on a record that has demonstrably started.
+    setText("tr-days", String(Math.max(1, daysBetweenUTC(inception, new Date()) + 1)));
     setText("tr-inception", fmtDate(inception));
     setText("tr-latest", fmtDate(latest));
     setText("tr-obs", String(stats.n));
@@ -722,8 +738,8 @@
         },
         { text: isNum(o.gross_pnl) ? o.gross_pnl.toFixed(2) : "—", cls: "numeric" },
         { text: isNum(o.costs) ? o.costs.toFixed(2) : "—", cls: "numeric" },
-        { text: String(o.positions), cls: "numeric" },
-        { text: String(o.mode), cls: "" }
+        { text: isNum(o.positions) ? String(o.positions) : "—", cls: "numeric" },
+        { text: typeof o.mode === "string" && o.mode ? o.mode : "—", cls: "" }
       ].forEach(function (cell) {
         var td = document.createElement("td");
         if (cell.cls.trim()) td.className = cell.cls.trim();

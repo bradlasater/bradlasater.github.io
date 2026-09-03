@@ -13,12 +13,17 @@ enforce that here:
 1. **Every observation is a separate commit.** The git history is the timestamp
    trail. A reader can check when any given number first appeared.
 2. **CI rejects edits to existing observations.** `.github/workflows/validate-track-record.yml`
-   runs `scripts/validate_track_record.py --check-append-only`, which diffs the
-   file against the previous commit and fails the build if any already-published
-   observation changed or disappeared. Appending is the only legal edit.
+   runs `scripts/validate_track_record.py --check-append-only` on every push and
+   pull request that touches the data file, walking **every commit** from the
+   merge-base with the base branch through HEAD — not just the previous commit —
+   so tampering in an intermediate commit is caught too. The build fails if any
+   already-published observation changed or disappeared, and the workflow
+   rejects force-pushes it can see. Appending is the only legal edit.
 
-Neither mechanism is worth anything if history gets rewritten, so **never
-force-push this repository.**
+Neither mechanism is worth anything if history gets rewritten. The workflow is
+path-filtered, so the durable guard is branch protection: **force-pushes and
+deletion are disabled on `main`, enforced for admins.** Never force-push this
+repository.
 
 ## Top-level fields
 
