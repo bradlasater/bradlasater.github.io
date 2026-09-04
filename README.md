@@ -214,23 +214,28 @@ rebuild without it.
 `www` and `bradlasater.github.io` both 301 to the apex, matching every
 `<link rel="canonical">`.
 
-**Email.** `brad@bradlasater.com` is deliverable — MX points at Porkbun
-forwarding (`fwd1`/`fwd2.porkbun.com`) with a specific `brad@` alias, confirmed
-by SMTP probe rather than assumed. Outbound appears to go via Zoho: SPF and
-DKIM (`zmail._domainkey`) are both present.
+**Email.** Inbound mail for `brad@bradlasater.com` is hosted on Zoho Mail —
+that address is the primary mailbox there, and the domain is verified. MX
+points at Zoho (`10 mx.zoho.com`, `20 mx2.zoho.com`, `50 mx3.zoho.com`), not
+Porkbun forwarding. SPF is
+`v=spf1 include:zohomail.com include:_spf.porkbun.com ~all`; DKIM
+(`zmail._domainkey`) is published.
 
-**One real gap: there is no DMARC record.** Without
-`_dmarc.bradlasater.com`, receivers have no published policy for SPF/DKIM
-failures, which makes outbound mail to Gmail and Outlook more likely to be
-filtered — i.e. mail to recruiters. Start monitor-only:
+**DMARC is published, monitor-only** (live 2026-09-04):
 
 ```
 _dmarc.bradlasater.com  TXT  "v=DMARC1; p=none; rua=mailto:brad@bradlasater.com"
 ```
 
-Tighten to `p=quarantine` after reviewing reports. The domain is also not
-GitHub domain-verified (takeover protection); adding the
-`_github-pages-challenge-bradlasater` TXT record would close that.
+Receivers now have a published policy for SPF/DKIM alignment failures, and
+send aggregate reports to that address. `p=none` changes no delivery
+behaviour — it buys visibility before enforcement, so a legitimate mail
+stream that fails alignment shows up in a report rather than in a bounce.
+Tighten to `p=quarantine` once a few weeks of reports come back clean.
+
+**One remaining gap:** the domain is not GitHub domain-verified (takeover
+protection); adding the `_github-pages-challenge-bradlasater` TXT record
+would close that.
 
 ---
 

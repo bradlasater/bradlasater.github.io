@@ -164,13 +164,13 @@
           labelled <em>Source</em> / <em>GitHub</em> land on a profile page. The
           system repo exists. If it stays private, relabel the buttons rather
           than implying code a visitor cannot reach. <em>(repo)</em></li>
-        <li><span class="badge">open</span> <strong>Add a DMARC record.</strong>
-          <code>_dmarc.bradlasater.com</code> does not exist. Mail <em>is</em>
-          deliverable — verified by SMTP probe, with SPF and DKIM both present —
-          so this is deliverability hardening, not an outage. But it makes
-          outbound mail to Gmail and Outlook more likely to be filtered, and
-          those are the recruiters. Start monitor-only: <code>v=DMARC1; p=none;
-          rua=mailto:brad@bradlasater.com</code>. <em>(repo)</em></li>
+        <li><span class="badge shipped">done</span> <strong>Add a DMARC
+          record.</strong> Done — <code>_dmarc.bradlasater.com</code> publishes
+          <code>v=DMARC1; p=none; rua=mailto:brad@bradlasater.com</code> as of
+          2026-09-04. Monitor-only, so nothing is quarantined yet; aggregate
+          reports go to <code>brad@bradlasater.com</code>. Tighten to
+          <code>p=quarantine</code> once a few weeks of reports come back clean.
+          <em>(repo)</em></li>
         <li><span class="badge">open</span> <strong>Auto-renew and registrar-lock
           <code>bradlasater.com</code>; never retire the
           <code>bradlasater.github.io</code> fallback.</strong> Two reference

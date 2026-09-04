@@ -68,12 +68,11 @@ real-world data." D. E. Shaw's posted NYC quantitative analyst base is $275k
       Four buttons labelled *Source* / *GitHub* land on a profile page. The system
       repo exists. If it stays private, relabel the buttons rather than implying
       code a visitor cannot reach. *(repo)*
-- [ ] **Add a DMARC record.** `_dmarc.bradlasater.com` does not exist. Mail *is*
-      deliverable — verified by SMTP probe, with SPF and DKIM both present — so
-      this is deliverability hardening, not an outage. But it makes outbound mail
-      to Gmail and Outlook more likely to be filtered, and those are the
-      recruiters. Start monitor-only:
-      `v=DMARC1; p=none; rua=mailto:brad@bradlasater.com`. *(repo)*
+- [x] **Add a DMARC record.** Done — `_dmarc.bradlasater.com` publishes
+      `v=DMARC1; p=none; rua=mailto:brad@bradlasater.com` as of 2026-09-04.
+      Monitor-only, so nothing is quarantined yet; aggregate reports go to
+      `brad@bradlasater.com`. Tighten to `p=quarantine` once a few weeks of
+      reports come back clean. *(repo)*
 - [ ] **Auto-renew and registrar-lock `bradlasater.com`; never retire the
       `bradlasater.github.io` fallback.** Two reference sites in the survey were
       lost exactly this way: `frouah.com` (the standard free Heston reference) and
