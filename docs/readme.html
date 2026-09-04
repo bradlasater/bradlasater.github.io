@@ -349,18 +349,22 @@ python3 scripts/build_site.py          # picks the pages up in sitemap.xml</code
         DKIM (<code>zmail._domainkey</code>) is published.
       </p>
       <p>
-        <strong>One real gap: there is no DMARC record.</strong> Without
-        <code>_dmarc.bradlasater.com</code>, receivers have no published policy
-        for SPF/DKIM failures, which makes outbound mail to Gmail and Outlook
-        more likely to be filtered — i.e. mail to recruiters. Start
-        monitor-only:
+        <strong>DMARC is published, monitor-only</strong> (live 2026-09-04):
       </p>
       <pre><code>_dmarc.bradlasater.com  TXT  "v=DMARC1; p=none; rua=mailto:brad@bradlasater.com"</code></pre>
       <p>
-        Tighten to <code>p=quarantine</code> after reviewing reports. The
-        domain is also not GitHub domain-verified (takeover protection);
-        adding the <code>_github-pages-challenge-bradlasater</code> TXT record
-        would close that.
+        Receivers now have a published policy for SPF/DKIM alignment failures,
+        and send aggregate reports to that address. <code>p=none</code> changes
+        no delivery behaviour — it buys visibility before enforcement, so a
+        legitimate mail stream that fails alignment shows up in a report rather
+        than in a bounce. Tighten to <code>p=quarantine</code> once a few weeks
+        of reports come back clean.
+      </p>
+      <p>
+        <strong>One remaining gap:</strong> the domain is not GitHub
+        domain-verified (takeover protection); adding the
+        <code>_github-pages-challenge-bradlasater</code> TXT record would close
+        that.
       </p>
 
       <h2 id="conventions">Conventions</h2>

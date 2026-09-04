@@ -221,18 +221,21 @@ Porkbun forwarding. SPF is
 `v=spf1 include:zohomail.com include:_spf.porkbun.com ~all`; DKIM
 (`zmail._domainkey`) is published.
 
-**One real gap: there is no DMARC record.** Without
-`_dmarc.bradlasater.com`, receivers have no published policy for SPF/DKIM
-failures, which makes outbound mail to Gmail and Outlook more likely to be
-filtered — i.e. mail to recruiters. Start monitor-only:
+**DMARC is published, monitor-only** (live 2026-09-04):
 
 ```
 _dmarc.bradlasater.com  TXT  "v=DMARC1; p=none; rua=mailto:brad@bradlasater.com"
 ```
 
-Tighten to `p=quarantine` after reviewing reports. The domain is also not
-GitHub domain-verified (takeover protection); adding the
-`_github-pages-challenge-bradlasater` TXT record would close that.
+Receivers now have a published policy for SPF/DKIM alignment failures, and
+send aggregate reports to that address. `p=none` changes no delivery
+behaviour — it buys visibility before enforcement, so a legitimate mail
+stream that fails alignment shows up in a report rather than in a bounce.
+Tighten to `p=quarantine` once a few weeks of reports come back clean.
+
+**One remaining gap:** the domain is not GitHub domain-verified (takeover
+protection); adding the `_github-pages-challenge-bradlasater` TXT record
+would close that.
 
 ---
 
