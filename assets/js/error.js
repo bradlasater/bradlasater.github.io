@@ -1,19 +1,24 @@
 /* ==========================================================================
-   404 copy variants.
+   404 image caption variants.
 
-   The 404 page ships one plain headline and body in its HTML. That pair is
-   the no-JavaScript fallback and must stay literal and useful on its own.
-   On load this file replaces both with one of the variants below, drawn at
-   random so the page is not always the same three sentences. The draw is
-   independent of the last one, so consecutive visits can repeat.
+   The 404 page states the plain fact in markup and never moves it: the
+   "Error 404" eyebrow, the "Page not found" headline, and the body paragraph
+   that points at the links are all static. A visitor with JavaScript off
+   loses nothing that tells them where they are or what to do next.
+
+   What this file swaps is the figure's caption, and only that. The caption is
+   the one place on the page where the copy can have a voice, because the
+   astronaut image is already doing something other than wayfinding. The
+   caption in the HTML is the no-JavaScript fallback and reads correctly on
+   its own; on load it is replaced by one of the variants below.
 
    Rules for editing:
-     - The "Error 404" eyebrow above the headline is not swapped, so the fact
-       that the page is missing is stated whichever variant is drawn. A
-       variant may therefore be oblique, but it still has to read as the only
-       prose on the page.
-     - Every variant must work with the astronaut image above it, which does
-       not change.
+     - A variant is a caption for the astronaut image, not a headline. It sits
+       under a picture in small centred monospace, so keep it to roughly one
+       or two lines; a paragraph belongs in the body copy, which is static.
+     - Every variant must work with that image, which does not change.
+     - Because the headline is no longer swapped, a variant is free to be
+       oblique. The page has already said "Page not found" above it.
      - Text is set with textContent, never innerHTML, so a variant is copy and
        can never inject markup.
    ========================================================================== */
@@ -22,27 +27,17 @@
   "use strict";
 
   var VARIANTS = [
-    {
-      headline: "You won’t know.",
-      body: "That URL doesn’t exist. Or maybe it never did. The astronaut above is in a similar position: drifting, unmoored, and definitely not coming back. Try the links below before the blood in your head gets too loud."
-    },
-    {
-      headline: "I am not your friend. I am just a page that knows how to 404.",
-      body: "This page is not your friend. It is just a man who knows how to feel… nothing. The astronaut above tried to find what you were looking for. Today’s the day it got tired. Keep the blood in your head and your feet on the ground. The links below are exactly what you need."
-    },
-    {
-      headline: "I’ve got a twenty-dollar bill that says this page is never coming back.",
-      body: "That URL doesn’t exist. It faded. It passed. It was glorious once, maybe. The astronaut above is in a similar position: somewhere real, but not where anyone meant to end up. The links below are all that remain."
-    }
+    "You won’t know.",
+    "I am not your friend. I am just a page that knows how to 404.",
+    "I’ve got a twenty-dollar bill that says this page is never coming back."
   ];
 
   function render() {
-    var headline = document.getElementById("error-headline");
-    var body = document.getElementById("error-body");
+    var caption = document.getElementById("error-caption");
 
-    // Either element missing means this file was included on a page it was
-    // not written for. Leave that page's own copy alone.
-    if (!headline || !body) return;
+    // A missing element means this file was included on a page it was not
+    // written for. Leave that page's own copy alone.
+    if (!caption) return;
 
     var pickIndex = Math.floor(Math.random() * VARIANTS.length);
     try {
@@ -54,9 +49,7 @@
     } catch (err) {
       /* Storage may be unavailable; keep the independently random fallback. */
     }
-    var pick = VARIANTS[pickIndex];
-    headline.textContent = pick.headline;
-    body.textContent = pick.body;
+    caption.textContent = VARIANTS[pickIndex];
   }
 
   // The script is deferred, so the document is normally already parsed; the

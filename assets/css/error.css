@@ -1,7 +1,19 @@
 /* Error pages (404) — layered on top of site.css tokens. */
 
+/* 500px: the image is shown at 1.5x its native size (332x152 source ->
+   498x228 displayed, plus the 1px border each side).
+
+   Deliberate middle ground. assets/deja.jpg is a 332px thumbnail, so this
+   costs 1.5x upscaling in CSS pixels and 3x on a 2x display. Native size was
+   pixel-exact but read as incidental; 2x gave the figure presence but put the
+   softness back. 1.5x keeps most of the presence for noticeably less blur.
+
+   The real fix is a bigger source. Replace deja.jpg with an original of at
+   least 996x456 and this frame becomes pixel-exact on a 2x display with no CSS
+   change; 1328x608 would allow going back up to 2x. Keep the width a clean
+   multiple of the source's 332px so this arithmetic stays checkable. */
 .error__figure {
-  max-width: 680px;
+  max-width: 500px;
   margin: var(--sp-7) auto 0;
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
