@@ -339,12 +339,14 @@ python3 scripts/build_site.py          # picks the pages up in sitemap.xml</code
         apex, matching every <code>&lt;link rel="canonical"&gt;</code>.
       </p>
       <p>
-        <strong>Email.</strong> <code>brad@bradlasater.com</code> is deliverable
-        — MX points at Porkbun forwarding
-        (<code>fwd1</code>/<code>fwd2.porkbun.com</code>) with a specific
-        <code>brad@</code> alias, confirmed by SMTP probe rather than assumed.
-        Outbound appears to go via Zoho: SPF and DKIM
-        (<code>zmail._domainkey</code>) are both present.
+        <strong>Email.</strong> Inbound mail for
+        <code>brad@bradlasater.com</code> is hosted on Zoho Mail — that
+        address is the primary mailbox there, and the domain is verified. MX
+        points at Zoho (<code>10 mx.zoho.com</code>,
+        <code>20 mx2.zoho.com</code>, <code>50 mx3.zoho.com</code>), not
+        Porkbun forwarding. SPF is
+        <code>v=spf1 include:zohomail.com include:_spf.porkbun.com ~all</code>;
+        DKIM (<code>zmail._domainkey</code>) is published.
       </p>
       <p>
         <strong>One real gap: there is no DMARC record.</strong> Without

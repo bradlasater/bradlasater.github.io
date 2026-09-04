@@ -214,10 +214,12 @@ rebuild without it.
 `www` and `bradlasater.github.io` both 301 to the apex, matching every
 `<link rel="canonical">`.
 
-**Email.** `brad@bradlasater.com` is deliverable — MX points at Porkbun
-forwarding (`fwd1`/`fwd2.porkbun.com`) with a specific `brad@` alias, confirmed
-by SMTP probe rather than assumed. Outbound appears to go via Zoho: SPF and
-DKIM (`zmail._domainkey`) are both present.
+**Email.** Inbound mail for `brad@bradlasater.com` is hosted on Zoho Mail —
+that address is the primary mailbox there, and the domain is verified. MX
+points at Zoho (`10 mx.zoho.com`, `20 mx2.zoho.com`, `50 mx3.zoho.com`), not
+Porkbun forwarding. SPF is
+`v=spf1 include:zohomail.com include:_spf.porkbun.com ~all`; DKIM
+(`zmail._domainkey`) is published.
 
 **One real gap: there is no DMARC record.** Without
 `_dmarc.bradlasater.com`, receivers have no published policy for SPF/DKIM
