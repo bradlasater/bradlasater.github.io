@@ -44,7 +44,17 @@
     // not written for. Leave that page's own copy alone.
     if (!headline || !body) return;
 
-    var pick = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
+    var pickIndex = Math.floor(Math.random() * VARIANTS.length);
+    try {
+      var previous = parseInt(window.sessionStorage.getItem("error-variant"), 10);
+      if (VARIANTS.length > 1 && previous >= 0 && previous < VARIANTS.length) {
+        pickIndex = (previous + 1 + Math.floor(Math.random() * (VARIANTS.length - 1))) % VARIANTS.length;
+      }
+      window.sessionStorage.setItem("error-variant", String(pickIndex));
+    } catch (err) {
+      /* Storage may be unavailable; keep the independently random fallback. */
+    }
+    var pick = VARIANTS[pickIndex];
     headline.textContent = pick.headline;
     body.textContent = pick.body;
   }
