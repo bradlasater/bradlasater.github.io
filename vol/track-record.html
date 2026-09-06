@@ -51,7 +51,7 @@
       "@type": "Dataset",
       "@id": "https://bradlasater.com/vol/track-record.html#dataset",
       "name": "Live out-of-sample track record — systematic volatility platform",
-      "description": "Daily net asset value, gross P&L, modelled costs, and open position count for a systematic volatility trading system, recorded out of sample. The file is append-only and enforced by continuous integration: every observation lands as its own dated commit, and any modification to an already-published day fails the build.",
+      "description": "Daily net asset value, gross P&L, modelled costs, and open position count for a systematic volatility trading system, to be recorded out of sample. The file holds no observations yet — the record begins when the first stage trades. It is append-only and enforced by continuous integration: every observation will land as its own dated commit, and any modification to an already-published day fails the build.",
       "url": "https://bradlasater.com/vol/track-record.html",
       "creator": { "@id": "https://bradlasater.com/#brad" },
       "isAccessibleForFree": true,
@@ -122,8 +122,8 @@
     <p class="hero__bio">
       Every observation below is appended once and never revised. Each one is a
       separate dated commit, and CI rejects any change to an already-published
-      day — so the elapsed time is verifiable rather than asserted. That
-      property, not the returns, is what makes this page worth reading.
+      day, so a day that has been published cannot be quietly revised. That
+      property, not the returns, is what will make this page worth reading.
     </p>
     <div class="actions">
       <a class="btn" href="/vol/methodology.html">Evaluation protocol</a>
@@ -172,7 +172,7 @@
 
       <div class="figure-hero">
         <span class="figure-hero__value" id="tr-days">—</span>
-        <span class="figure-hero__unit">days live</span>
+        <span class="figure-hero__unit">days elapsed</span>
         <span class="badge badge--dot badge--active" id="tr-mode">—</span>
       </div>
       <p class="figure-hero__note">
