@@ -79,7 +79,7 @@
           "@type": "Question",
           "@id": "https://bradlasater.com/vol/methodology.html#costs",
           "name": "How are execution costs and frictions modelled in an options backtest?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Fills are never assumed at the mid, because in options the spread is frequently larger than the entire modelled edge. The cost model charges half-spread crossing scaled by quoted width and order size relative to displayed depth, commissions and exchange fees per contract, legging risk on multi-leg structures, delta-hedging costs at the actual rebalancing frequency including the hedge's own spread, early-assignment and borrow costs where the system extends beyond the European, cash-settled Phase 1 universe, and margin requirements modelled well enough to know whether a drawdown becomes a forced liquidation." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Fills are never assumed at the mid, because in options the spread is frequently larger than the entire modelled edge. The cost model charges half-spread crossing scaled by quoted width and order size relative to displayed depth, commissions and exchange fees per contract, legging risk on multi-leg structures, delta-hedging costs at the actual rebalancing frequency including the hedge's own spread, SPY early-assignment and borrow costs (while SPX/SPXW remain European-style and cash-settled), and margin requirements modelled well enough to know whether a drawdown becomes a forced liquidation." }
         },
         {
           "@type": "Question",
@@ -256,9 +256,8 @@
         <li>Commissions and exchange fees per contract.</li>
         <li>Legging risk on multi-leg structures.</li>
         <li>Delta-hedging costs at the actual rebalancing frequency, including the hedge&rsquo;s own spread.</li>
-        <li>Early-assignment and borrow costs, which do not apply to the European, cash-settled
-            Phase 1 universe and are modelled only when the system extends to American-style
-            products.</li>
+        <li>SPY early-assignment and borrow costs (SPX/SPXW remain European-style and
+            cash-settled).</li>
         <li>Margin requirements, modelled well enough to know whether a drawdown becomes a forced liquidation.</li>
       </ul>
       <p>
