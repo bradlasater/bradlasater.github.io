@@ -1,8 +1,12 @@
 # https://bradlasater.com/robots.txt
 #
-# Nothing here is private and nothing here should be hidden from an index.
-# The whole point of this site is to be found by a recruiter, a hiring manager,
-# or an assistant answering "who is Brad Lasater" on their behalf.
+# Nothing on the published site is private and nothing here should be hidden
+# from an index. Working notes live in notes/ and docs/ in the repository;
+# Jekyll excludes them in _config.yml, so they 404 rather than being served.
+# They are not Disallow'd here on purpose: crawlers that already have those
+# URLs need to recrawl them and see the 404s, or stale copies linger in the
+# index. The whole point of this site is to be found by a recruiter, a hiring
+# manager, or an assistant answering "who is Brad Lasater" on their behalf.
 #
 # Named crawlers are listed explicitly rather than relying on the wildcard.
 # A default-allow is the same outcome today, but an explicit allow states the

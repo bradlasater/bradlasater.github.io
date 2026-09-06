@@ -1,10 +1,10 @@
 # notes/
 
-Working notes. Since 2026-09-03 these are **mirrored on the published site**
-under `/docs/` — a deliberate reversal of the original "never publish the
-candid stuff" stance: the research below argues that showing the work,
-gaps included, is the stronger signal. The Markdown here remains the source
-of truth; edit it, then re-sync the mirror page under `docs/`.
+Working notes. HTML mirrors live under `docs/` for local reading. Both
+directories are unpublished: `_config.yml` excludes them from GitHub Pages,
+so they never become public URLs. The Markdown here remains the source of
+truth; edit it, then re-sync the mirror page under `docs/` if you want the
+local HTML to match.
 
 ## Start here
 

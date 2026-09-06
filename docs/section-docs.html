@@ -79,13 +79,13 @@
       </header>
 
       <p class="lead">
-        <code>docs/</code> is the section you are reading. It publishes the
-        repository's Markdown documentation — the README, the roadmap, the
-        track-record data contract, the audits, and the research notes — as
-        dark, indexed HTML pages under <code>/docs/</code>, so the project's
-        paper trail is readable on the site itself rather than only on GitHub.
-        The Markdown files are the source of truth; every page here is a
-        hand-maintained copy of one.
+        <code>docs/</code> is the section you are reading. It is a local HTML
+        mirror of the repository's Markdown documentation — the README, the
+        roadmap, the track-record data contract, the audits, and the research
+        notes — so the paper trail is readable in a browser without publishing
+        it. <code>_config.yml</code> excludes this directory from GitHub Pages;
+        it is not in the sitemap. The Markdown files are the source of truth;
+        every page here is a hand-maintained copy of one.
       </p>
 
       <h2 id="key-files">Key files</h2>
@@ -119,14 +119,14 @@
         </tr>
         <tr>
           <td class="job">scripts/build_site.py</td>
-          <td><code>docs_pages()</code> globs <code>docs/*.html</code> into the
-            sitemap, overview first. The build never writes docs pages — they
-            carry no stamp markers and join <code>sitemap.xml</code> only.</td>
+          <td>Does not write docs pages and does not list them in the sitemap.
+            <code>_config.yml</code> excludes the directory from GitHub Pages.</td>
           <td>Hand</td>
         </tr>
         <tr>
           <td class="job">sitemap.xml</td>
-          <td>Where docs pages surface for crawlers.</td>
+          <td>Public pages only. <code>docs/</code> is unpublished and must
+            not appear here.</td>
           <td>Generated — do not hand-edit</td>
         </tr>
       </table>
@@ -179,9 +179,9 @@
           (<code>&lt;h2 id="the-append-only-invariant"&gt;</code>) so audit
           items and cross-references can point into a page.</li>
         <li><strong>The build never touches these pages.</strong> They are
-          hand-authored, carry no stamp markers, and reach
-          <code>sitemap.xml</code> only through <code>docs_pages()</code>
-          discovery. Rebuilding the site cannot clobber them.</li>
+          hand-authored, carry no stamp markers, and are unpublished.
+          Rebuilding the site cannot clobber them, and it must not list them
+          in <code>sitemap.xml</code>.</li>
       </ul>
 
       <h2 id="adding-and-re-syncing-pages">Adding and re-syncing pages</h2>
@@ -204,10 +204,9 @@
           <code>&lt;/nav&gt;</code>, and the active class is the only
           per-page difference, so a small Python loop over
           <code>docs/*.html</code> does it safely).</li>
-        <li>Rebuilding the site picks the page up automatically:
-          <code>docs_pages()</code> globs <code>docs/*.html</code>, so the
-          new page lands in <code>sitemap.xml</code> on the next build with
-          no second edit.</li>
+        <li>Do not add the new page to the sitemap. <code>docs/</code> is
+          unpublished working material; a page added here is a local note,
+          not a public URL.</li>
       </ol>
       <h3>Re-sync a mirror after editing its Markdown</h3>
       <p>
