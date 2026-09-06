@@ -246,9 +246,9 @@
             options the quoted spread is frequently wider than the modelled edge. Multi-leg
             structures carry legging risk, and index settlement carries hazards of its own —
             AM-settled SPX expiries print off the opening auction, not the close. Early
-            assignment, stock borrow, and share delivery do not apply to European, cash-settled
-            index options; they become first-class risks only when the system extends to
-            American-style products. Any backtest that quietly assumes mid fills is measuring the
+            assignment, stock borrow, and share delivery do not apply to SPX/SPXW (European,
+            cash-settled), but they do apply to SPY (American-style, physically settled) and are
+            therefore first-class Phase 1 execution risks. Any backtest that quietly assumes mid fills is measuring the
             size of its own assumption.
           </p>
         </div>
