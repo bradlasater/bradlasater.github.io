@@ -97,7 +97,7 @@
           "@type": "Question",
           "@id": "https://bradlasater.com/vol/methodology.html#publishing",
           "name": "What gets published, including the failures?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Four things are published regardless of how they reflect on the system: every result with its full statistics table and never a headline number alone, every dead hypothesis with what was expected and what actually happened, every material change to the protocol dated and reasoned, and trade-level logs behind any live track record so the reported statistics can be recomputed independently." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Four things will be published regardless of how they reflect on the system, in force from the first result: every result with its full statistics table and never a headline number alone, every dead hypothesis with what was expected and what actually happened, every material change to the protocol dated and reasoned, and trade-level logs behind any live track record so the reported statistics can be recomputed independently." }
         }
       ]
     },
@@ -282,7 +282,7 @@
           <tbody>
             <tr><td>Raw Sharpe</td><td>The conventional headline, and the least informative number here.</td></tr>
             <tr><td>Deflated Sharpe</td><td>Adjusts for the number of trials, non-normal returns, and sample length. The number I actually believe.</td></tr>
-            <tr><td>Trial count</td><td>Every configuration evaluated, logged automatically rather than recalled. Deflation is meaningless without it.</td></tr>
+            <tr><td>Trial count</td><td>Every configuration evaluated, to be logged automatically rather than recalled. Deflation is meaningless without it, which is why the registry belongs inside the backtesting stage rather than bolted on afterwards.</td></tr>
             <tr><td>Probability of backtest overfitting</td><td>Estimated by combinatorially symmetric cross-validation.</td></tr>
             <tr><td>Maximum drawdown &amp; time to recover</td><td>What determines whether a strategy is survivable in practice.</td></tr>
             <tr><td>Turnover &amp; cost share of gross P&amp;L</td><td>If most of the gross edge is eaten by frictions, the edge is the cost model&rsquo;s error bar.</td></tr>
@@ -313,7 +313,8 @@
       <p>
         Publication is not selective, because a research record that only contains successes is
         indistinguishable from one that has been curated after the fact. Four things go up
-        regardless of how they reflect on the system:
+        regardless of how they reflect on the system. None has been triggered yet;
+        they take effect with the first result:
       </p>
       <ul>
         <li>Every result with its full statistics table, never a headline number alone.</li>

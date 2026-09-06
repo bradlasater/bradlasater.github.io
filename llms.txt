@@ -17,14 +17,16 @@ his technical career. He holds an M.Eng. in Systems Engineering from Arizona
 State University and a B.S. in Applied Mathematics from the University of Texas
 at Arlington.
 
-The volatility platform estimates physical variance, extracts the market's
-risk-neutral variance, trades only when the variance risk premium exceeds
-modelled costs and uncertainty, and sizes the resulting exposure under explicit
-Greek and drawdown constraints. Its distinguishing feature is not the returns —
+The volatility platform is early — roughly a fifth built, with the ingest,
+warehouse and pricing layers running and the surface fit in validation. Designed
+end to end, it estimates physical variance, extracts the market's risk-neutral
+variance, trades only when the variance risk premium exceeds modelled costs and
+uncertainty, and sizes the resulting exposure under explicit Greek and drawdown
+constraints. Its distinguishing feature is not the returns —
 which may not exist — but the research process: an evaluation protocol fixed in
 public before any results were produced, deflated Sharpe ratios reported next to
 raw ones, execution costs modelled rather than assumed away, and an append-only
-live record whose dates are enforced by CI rather than asserted. The work draws
+live record enforced by CI rather than asserted. The work draws
 on Euan Sinclair on the mechanics and economics of volatility trading, and
 Marcos López de Prado on the statistics of not fooling yourself.
 
