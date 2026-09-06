@@ -68,7 +68,7 @@
       "image": "https://bradlasater.com/assets/headshot.jpg",
       "email": "mailto:brad@bradlasater.com",
       "jobTitle": "Applied Scientist",
-      "description": "Applied scientist and machine-learning engineer with ten years of production ML, forecasting, optimization, and state-estimation work at Nift, Ticketmaster, Lockheed Martin, and Boeing. Owns the full research-to-production lifecycle, and is building an end-to-end systematic volatility research and execution platform for defined-risk SPX and XSP structures. Pursuing quantitative research, research-engineering, and quantitative developer roles in New York.",
+      "description": "Applied scientist and machine-learning engineer with ten years of production ML, forecasting, optimization, and state-estimation work at Nift, Ticketmaster, Lockheed Martin, and Boeing. Owns the full research-to-production lifecycle, and is building an end-to-end systematic volatility research and execution platform for defined-risk SPY and SPX/SPXW structures. Pursuing quantitative research, research-engineering, and quantitative developer roles in New York.",
       "disambiguatingDescription": "The Brad Lasater who holds U.S. Patent 10,204,323, served as a Sergeant in the United States Marine Corps, and publishes the build log and evaluation protocol for a systematic volatility trading system at bradlasater.com.",
       "sameAs": [
         "https://github.com/bradlasater",
@@ -193,8 +193,8 @@
       volatility. I am building a full-stack options platform spanning point-in-time data,
       arbitrage-aware volatility surfaces, physical-variance forecasting, risk-neutral variance
       extraction, variance-risk-premium signals, Greek-aware portfolio construction, event-driven
-      backtesting, execution, and live monitoring. The work is versioned in public under an
-      evaluation protocol committed before any results existed — written to separate genuine edge
+      backtesting, execution, and operations monitoring. The work is versioned in public under an
+      <a href="/vol/methodology.html">evaluation protocol</a> committed before any results existed — written to separate genuine edge
       from backtest noise once there are results to judge.
     </p>
     <div class="actions">
@@ -212,18 +212,21 @@
       <div class="feature__body">
         <p>
           A research and execution platform for defined-risk index-volatility strategies,
-          beginning with SPX and XSP at roughly 7–45 days to expiry. The system links
+          beginning with SPY and SPX/SPXW options at roughly 5–45 days to expiry, with VIX
+          options captured for the term structure. The system links
           point-in-time options data, arbitrage-aware surface construction, physical-variance
           forecasts, risk-neutral variance extraction, a no-trade gate, Greek-constrained sizing,
           event-driven backtesting, and execution under observed spreads and slippage.
         </p>
         <p>
-          The evaluation rules were fixed and published <em>before</em> any results existed, and
+          The evaluation rules were <a href="/vol/methodology.html">fixed and published</a> <em>before</em> any results existed, and
           they bind the work as it lands: every trial logged, validation purged and walk-forward,
           costs modelled from executable quotes rather than assumed away, live observations
           append-only, and a post-mortem written whenever the system loses money or a hypothesis
           dies. None of it has produced a result yet — the data and pricing layers run today, the
-          surface fit is in validation, and the rest is designed but not built.
+          surface fit — raw SVI with butterfly and calendar arbitrage enforced in the fit — runs
+          over the archive with an SPY smile and the scheduled rebuild still open, and the rest is
+          designed but not built.
         </p>
         <div class="actions">
           <a class="btn btn--primary" href="/vol/">System overview</a>

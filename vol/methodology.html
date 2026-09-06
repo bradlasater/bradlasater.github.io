@@ -39,7 +39,7 @@
       "@id": "https://bradlasater.com/vol/methodology.html#article",
       "mainEntityOfPage": "https://bradlasater.com/vol/methodology.html",
       "headline": "Evaluation protocol for a systematic volatility trading system",
-      "description": "The pre-committed rules for judging a systematic volatility research and execution platform, whose Phase 1 universe is defined-risk SPX and XSP structures at roughly 7-45 days to expiry: purged and embargoed cross-validation, mandatory baselines, cost and friction modelling, deflated performance statistics, and kill criteria fixed in advance.",
+      "description": "The pre-committed rules for judging a systematic volatility research and execution platform, whose Phase 1 universe is defined-risk SPY and SPX/SPXW structures at roughly 5-45 days to expiry: purged and embargoed cross-validation, mandatory baselines, cost and friction modelling, deflated performance statistics, and kill criteria fixed in advance.",
       "inLanguage": "en-US",
       "dateModified": "2026-09-06T01:14:37-06:00",
       "author": { "@id": "https://bradlasater.com/#brad" },
@@ -61,7 +61,7 @@
           "@type": "Question",
           "@id": "https://bradlasater.com/vol/methodology.html#data",
           "name": "What data and universe does the system trade, and how is survivorship bias avoided?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Phase 1 trades defined-risk SPX and XSP structures at roughly 7-45 days to expiry. Both are European-style and cash-settled, which removes early assignment and share delivery from the Phase 1 risk surface. Every input is reconstructed as it stood at the decision timestamp rather than as it stands today. Liquidity screens are applied on the date of the decision rather than retrospectively, since selecting today's liquid names and testing them over history is survivorship bias wearing a lab coat. Any field that cannot be reconstructed point-in-time is excluded from the model." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Phase 1 trades defined-risk SPY and SPX/SPXW structures at roughly 5-45 days to expiry, with VIX options captured for the term structure. SPX and SPXW are European-style and cash-settled; SPY is American-style and physically settled, so early exercise is priced with an American model rather than assumed away. Every input is reconstructed as it stood at the decision timestamp rather than as it stands today. Liquidity screens are applied on the date of the decision rather than retrospectively, since selecting today's liquid names and testing them over history is survivorship bias wearing a lab coat. Any field that cannot be reconstructed point-in-time is excluded from the model." }
         },
         {
           "@type": "Question",
@@ -174,18 +174,20 @@
 
       <h2 id="data">What data and universe does the system trade, and how is survivorship bias avoided?</h2>
       <p>
-        Phase 1 trades defined-risk SPX and XSP structures at roughly 7&ndash;45 days to expiry, and
+        Phase 1 trades defined-risk SPY and SPX/SPXW structures at roughly 5&ndash;45 days to
+        expiry, with VIX options captured for the term structure, and
         every input is reconstructed as it stood at the decision timestamp rather than as it stands
         today. Three rules make that concrete:
       </p>
       <ul>
         <li>
-          <strong>Universe:</strong> defined-risk SPX and XSP structures at roughly 7&ndash;45 days
-          to expiry. Both are European-style and cash-settled, which removes early assignment and
-          share delivery from the Phase 1 risk surface. Liquidity screens are applied on the date of
-          the decision rather than retrospectively; when the universe extends beyond the index
-          complex, selecting today&rsquo;s liquid names and testing them over history is
-          survivorship bias wearing a lab coat.
+          <strong>Universe:</strong> defined-risk SPY and SPX/SPXW structures at roughly 5&ndash;45
+          days to expiry, with VIX options captured for the term structure. SPX and SPXW are
+          European-style and cash-settled; SPY is American-style and physically settled, so early
+          exercise is priced with an American model rather than assumed away. Liquidity screens
+          are applied on the date of the decision rather than retrospectively; when the universe
+          extends beyond the index complex, selecting today&rsquo;s liquid names and testing them
+          over history is survivorship bias wearing a lab coat.
         </li>
         <li>
           <strong>Point-in-time discipline:</strong> every input must be as it was available at the
