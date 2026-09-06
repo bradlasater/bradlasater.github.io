@@ -57,6 +57,8 @@ There is no deploy script and no build artefact to commit beyond what
 | `vol/track-record.html` | Build status and live out-of-sample record (see below) |
 | `log/index.html` | Research log index |
 | `handbook/` | System handbook, synced from `data_ingest_infra` (see below) |
+| `docs/` | Local HTML mirrors of notes, audits, and the roadmap. Unpublished. |
+| `notes/` | Working notes and peer research. Unpublished. |
 | `404.html` | Custom 404 (`noindex`) |
 | `assets/css/site.css` | The entire design system — dark-only, OKLCH tokens |
 | `assets/js/track-record.js` | Computes and renders every track-record statistic |
