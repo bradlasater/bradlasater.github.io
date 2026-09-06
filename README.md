@@ -6,9 +6,9 @@ HTML and CSS with two small vanilla-JS files, served by GitHub Pages from the
 
 Its purpose is narrow: it is a recruiting instrument aimed at quantitative
 finance roles, built around an end-to-end systematic volatility research and
-execution platform — Phase 1 trades defined-risk SPX and XSP structures at
-roughly 7–45 days to expiry — and, more importantly, the research process
-behind it.
+execution platform — Phase 1 trades defined-risk SPY and SPX/SPXW structures
+at roughly 5–45 days to expiry, with VIX options captured for the term
+structure — and, more importantly, the research process behind it.
 
 ---
 
