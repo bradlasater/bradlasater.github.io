@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Volatility System — Brad Lasater</title>
-<meta name="description" content="An end-to-end systematic volatility trading system built from scratch: data ingestion, surface construction, forecasting, sizing, execution, and evaluation — documented in the open.">
+<meta name="description" content="An end-to-end systematic volatility research and execution platform, stage by stage, each labelled with what runs today and what is still designed: ingestion, pricing, ATM term structure, forecasting, sizing, execution, and evaluation.">
 <link rel="canonical" href="https://bradlasater.com/vol/">
 <meta name="theme-color" content="#14171c">
 <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
@@ -15,7 +15,7 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bradlasater.com/vol/">
 <meta property="og:title" content="An end-to-end volatility system, under active construction">
-<meta property="og:description" content="Defined-risk SPY and SPX/SPXW options at roughly 5-45 days to expiry, with VIX options captured for the term structure — data, surface, forecast, sizing, execution, evaluation. Each stage labelled with its current status.">
+<meta property="og:description" content="Defined-risk SPY and SPX/SPXW options at roughly 5-45 days to expiry, with VIX options captured for the term structure. Ingest, pricing and the ATM term structure run today; the smile fit and everything downstream is designed and not built. Each stage carries its status.">
 <meta property="og:image" content="https://bradlasater.com/assets/og.png">
 <meta property="og:site_name" content="Brad Lasater">
 <meta property="og:locale" content="en_US">
@@ -39,7 +39,7 @@
       "@id": "https://bradlasater.com/vol/#article",
       "mainEntityOfPage": "https://bradlasater.com/vol/",
       "headline": "An end-to-end volatility system, under active construction",
-      "description": "The architecture of a systematic volatility research and execution platform, beginning with SPY and SPX/SPXW options at roughly 5-45 days to expiry, with VIX options captured for the term structure: point-in-time options data and cleaning, arbitrage-free surface construction, volatility forecasting, signal and sizing, risk and hedging, execution with modelled frictions, evaluation, and operations. Each stage is labelled with its current implementation status.",
+      "description": "The architecture of a systematic volatility research and execution platform, beginning with SPY and SPX/SPXW options at roughly 5-45 days to expiry, with VIX options captured for the term structure: point-in-time options data and cleaning, implied-volatility inversion and an ATM term structure, a planned arbitrage-free smile and surface fit, volatility forecasting, signal and sizing, risk and hedging, execution with modelled frictions, evaluation, and operations. Each stage is labelled with its current implementation status, and most of them are not yet built.",
       "inLanguage": "en-US",
       "dateModified": "2026-09-06T11:53:33+00:00",
       "author": { "@id": "https://bradlasater.com/#brad" },
@@ -110,8 +110,11 @@
       SPY and SPX/SPXW structures at roughly 5–45 days to expiry, with VIX options captured for
       the term structure.</strong> The architecture is designed
       to generalise to additional underlyings and strategy families once the initial research and
-      execution loop is validated. Every stage below is something I am building myself rather than
-      importing.
+      execution loop is validated. What I own at every stage below is the interface, the
+      validation, and the failure handling &mdash; not necessarily the implementation. PyArrow,
+      NumPy and SciPy do the work they are good at; the pricing identities, the entitlement
+      probes and the coverage audits are mine because they are what decides whether a number is
+      trustworthy.
     </p>
     <div class="actions">
       <a class="btn btn--primary" href="/vol/methodology.html">Evaluation protocol</a>
@@ -159,8 +162,9 @@
       <h2 class="section__title" id="architecture-title">System stages</h2>
       <p class="section__lede">
         Each stage is independently testable and independently loggable. Failures are attributed to
-        a stage, not to &ldquo;the model.&rdquo; Status labels are current: what runs today, what is
-        being checked, and what is designed but not yet built.
+        a stage, not to &ldquo;the model.&rdquo; Two of the nine stages run today; the rest are
+        designed and not built, and each card says which it is. Where a stage is partly blocked by
+        the data entitlement rather than by unwritten code, it says that too.
       </p>
     </div>
 
@@ -171,25 +175,62 @@
         <p class="card__status"><span class="badge badge--live badge--dot">Operational</span></p>
         <div class="card__body">
           <p>
-            The ingestion layer takes end-of-day and intraday options chains, underlying prices,
-            dividend schedules, and the discount curve. Cleaning is the unglamorous half of the edge: dropping stale
-            and crossed quotes, filtering by open interest and spread width, reconstructing the
-            forward from put&ndash;call parity rather than trusting a vendor field, and flagging
-            quotes that violate static no-arbitrage bounds.
+            The ingestion layer takes end-of-day and intraday options chains, option trades and
+            day bars, underlying prices, dividend schedules, and the Treasury curve, on a
+            schedule with a daily coverage audit that reports on the <em>absence</em> of a job
+            rather than only on its failures.
+          </p>
+          <p>
+            <strong>What cleaning can do on this data tier:</strong> filter by open interest,
+            flag quotes that violate static no-arbitrage bounds, and reconstruct the forward
+            from put&ndash;call parity rather than trusting a vendor field &mdash; which is
+            necessary here rather than merely preferable, because index levels are not entitled.
+          </p>
+          <p>
+            <strong>What it cannot, yet:</strong> option NBBO is not entitled, so there is no
+            bid, ask or mid anywhere in the warehouse. Every price is a traded price &mdash; last
+            trade, else day close. Dropping crossed and locked quotes and filtering by spread
+            width are all defined in terms of fields this tier does not provide, and are blocked
+            behind a quote entitlement.
+          </p>
+        </div>
+      </article>
+
+      <article class="card" id="stage-term-structure" aria-labelledby="stage-term-structure-title">
+        <h3 class="card__title" id="stage-term-structure-title">ATM term structure</h3>
+        <p class="card__status"><span class="badge badge--live badge--dot">Operational</span></p>
+        <div class="card__body">
+          <p>
+            Implied volatility is inverted per contract from the traded price &mdash; Newton with
+            bounds, Brent fallback, an error rather than a NaN when the price sits outside the
+            discounted no-arbitrage bounds &mdash; and reduced to an ATM term structure: one row
+            per date, root and expiry, carrying the parity forward, the ATM strike and both leg
+            IVs.
+          </p>
+          <p>
+            It is built from option day bars rather than chain snapshots, because day bars reach
+            back to 2022-08-31 while the snapshot sweep only begins in 2026. Pricing is done in
+            the forward measure, which reduces Black&ndash;Scholes&ndash;Merton to Black-76 &mdash;
+            a spot and a dividend yield are exactly what this tier does not provide.
           </p>
         </div>
       </article>
 
       <article class="card" id="stage-surface" aria-labelledby="stage-surface-title">
-        <h3 class="card__title" id="stage-surface-title">Surface construction</h3>
-        <p class="card__status"><span class="badge badge--active badge--dot">Under validation</span></p>
+        <h3 class="card__title" id="stage-surface-title">Smile &amp; surface</h3>
+        <p class="card__status"><span class="badge">Planned</span></p>
         <div class="card__body">
           <p>
-            Surface construction inverts quotes to implied volatility, then fits a parametric
-            surface in total implied variance — SVI per slice, moving toward SSVI for a globally
-            consistent surface. Calendar-spread
-            and butterfly no-arbitrage constraints are enforced on the fit, not checked afterwards,
-            so downstream Greeks are internally consistent.
+            The ATM curve gives the level and slope of at-the-money volatility. It says nothing
+            off-strike or between expiries, because there is <em>no smile fit and no
+            interpolator</em> &mdash; the single largest gap between what runs and what the rest
+            of this architecture assumes.
+          </p>
+          <p>
+            The design is a parametric fit in total implied variance, SVI per slice moving toward
+            SSVI for a globally consistent surface, with calendar-spread and butterfly
+            no-arbitrage constraints enforced on the fit rather than checked afterwards, so that
+            downstream Greeks are internally consistent. None of it is written yet.
           </p>
         </div>
       </article>

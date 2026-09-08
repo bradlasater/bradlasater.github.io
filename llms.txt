@@ -18,11 +18,18 @@ his technical career. He holds an M.Eng. in Systems Engineering from Arizona
 State University and a B.S. in Applied Mathematics from the University of Texas
 at Arlington.
 
-The volatility platform is early — roughly a fifth built, with the ingest,
-warehouse and pricing layers running and the surface fit — raw SVI with
-butterfly and calendar arbitrage enforced in the fit — running over the
-archive. Designed
-end to end, it estimates physical variance, extracts the market's risk-neutral
+The volatility platform is early. The ingest, warehouse and pricing layers run:
+options chains, trades and day bars land on a schedule under a daily coverage
+audit, implied volatility is inverted per contract with own Greeks and checked
+each evening against put-call parity and reprice identities, and those are
+reduced to an ATM implied-volatility term structure — one row per date, root and
+expiry, back to 2022-08-31 — with the forward recovered from put-call parity
+because no index level is entitled on this data tier. There is no smile fit and
+no interpolator yet, so nothing off-strike or between expiries can be evaluated,
+and every stage downstream of that is designed and not built.
+
+The target architecture, none of which yet runs: it estimates physical variance,
+extracts the market's risk-neutral
 variance, trades only when the variance risk premium exceeds modelled costs and
 uncertainty, and sizes the resulting exposure under explicit Greek and drawdown
 constraints. Its distinguishing feature is not the returns —

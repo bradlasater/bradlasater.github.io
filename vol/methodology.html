@@ -79,7 +79,7 @@
           "@type": "Question",
           "@id": "https://bradlasater.com/vol/methodology.html#costs",
           "name": "How are execution costs and frictions modelled in an options backtest?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Fills are never assumed at the mid, because in options the spread is frequently larger than the entire modelled edge. The cost model charges half-spread crossing scaled by quoted width and order size relative to displayed depth, commissions and exchange fees per contract, legging risk on multi-leg structures, delta-hedging costs at the actual rebalancing frequency including the hedge's own spread, SPY early-assignment and borrow costs (while SPX/SPXW remain European-style and cash-settled), and margin requirements modelled well enough to know whether a drawdown becomes a forced liquidation." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Fills are never assumed at the mid, because in options the spread is frequently larger than the entire modelled edge. The intended cost model charges half-spread crossing scaled by quoted width and order size relative to displayed depth, commissions and exchange fees per contract, legging risk on multi-leg structures, delta-hedging costs at the actual rebalancing frequency including the hedge's own spread, SPY early-assignment and borrow costs (while SPX/SPXW remain European-style and cash-settled), and margin requirements modelled well enough to know whether a drawdown becomes a forced liquidation. The spread-dependent components of that model cannot be calibrated on the current data entitlement, which carries no option NBBO: every price available is a traded price, so the crossing cost can be bounded but not measured. No backtest result will be published under this protocol until that is resolved and stated." }
         },
         {
           "@type": "Question",
@@ -195,9 +195,17 @@
           curve. Any field that cannot be reconstructed point-in-time is excluded from the model.
         </li>
         <li>
-          <strong>Quote hygiene:</strong> stale, crossed, and locked quotes dropped; static
-          no-arbitrage bounds enforced; forward implied from put&ndash;call parity rather than
-          taken from a vendor field.
+          <strong>Quote hygiene, on the entitled inputs:</strong> static no-arbitrage bounds
+          enforced &mdash; a price outside the discounted bounds raises rather than returning a
+          NaN &mdash; open-interest filtering, and the forward implied from put&ndash;call parity
+          rather than taken from a vendor field.
+        </li>
+        <li>
+          <strong>Quote hygiene that is blocked, and why:</strong> dropping crossed and locked
+          quotes and filtering by spread width are defined in terms of bid and ask. Option NBBO
+          is not entitled on the current data tier, so no bid, ask or mid exists anywhere in the
+          warehouse and every price is a traded price &mdash; last trade, else day close. These
+          checks are specified and unimplemented, not implemented and unmentioned.
         </li>
       </ul>
 
@@ -248,11 +256,15 @@
       <h2 id="costs">How are execution costs and frictions modelled in an options backtest?</h2>
       <p>
         Fills are never assumed at the mid, because in options the spread is frequently larger than
-        the entire modelled edge. Every backtested trade in this system is charged for the following,
-        at minimum:
+        the entire modelled edge. Every backtested trade in this system is to be charged for the
+        following, at minimum:
       </p>
       <ul>
-        <li>Half-spread crossing, scaled by quoted width at the decision time and by order size relative to displayed depth.</li>
+        <li>Half-spread crossing, scaled by quoted width at the decision time and by order size
+            relative to displayed depth. <strong>Not yet calibratable:</strong> quoted width and
+            displayed depth are NBBO fields, and option NBBO is not entitled on the current data
+            tier. With no bid or ask the crossing cost can be bounded &mdash; roughly half the
+            spread in volatility terms &mdash; but it cannot be measured or corrected for.</li>
         <li>Commissions and exchange fees per contract.</li>
         <li>Legging risk on multi-leg structures.</li>
         <li>Delta-hedging costs at the actual rebalancing frequency, including the hedge&rsquo;s own spread.</li>
