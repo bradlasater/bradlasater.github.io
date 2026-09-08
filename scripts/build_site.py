@@ -6,6 +6,8 @@ Everything this script writes is derived from three sources of truth:
   * ``content/log/*.html`` — one hand-authored fragment per research-log entry.
   * ``data/components.json`` — the implementation status of every stage of the
     volatility system.
+  * ``data/evidence/*.json`` — one published diagnostic report per file, each
+    the ingest box's own output under a required provenance envelope.
   * ``git`` — the commit history, which supplies every ``lastmod`` and
     ``dateModified`` on the site.
 
@@ -24,6 +26,8 @@ Outputs (all generated, none hand-edited):
   * ``llms.txt``           — log section, injected between BUILD markers
   * ``index.html``         — build-status strip, injected between BUILD markers
   * ``vol/index.html``     — architecture grid, injected between BUILD markers
+  * ``vol/build-status.html`` — pipeline, evidence and milestone, injected
+  * ``vol/evidence/<slug>.html`` — one page per published diagnostic
   * timestamps stamped into every page's metadata
 
 The component manifest exists because hand-written status prose is how this
@@ -100,6 +104,19 @@ CHROME_PAGES: dict[str, tuple[str, str, str]] = {
 }
 
 COMPONENTS_PATH = ROOT / "data" / "components.json"
+EVIDENCE_SRC_DIR = ROOT / "data" / "evidence"
+EVIDENCE_OUT_DIR = ROOT / "vol" / "evidence"
+
+# How a published diagnostic was derived. This is required on every report and
+# is not cosmetic: with no option NBBO entitlement, every analytic this project
+# produces comes from traded prices, and a reader who assumed a quote midpoint
+# would draw the wrong conclusion from an identical-looking number.
+INPUT_TYPES = {
+    "last_trade_else_day_close": "Traded prices — last trade, else day close. No quote midpoint.",
+    "day_bars": "Session aggregates from the option day-bar archive.",
+    "nbbo_mid": "Quote midpoints. Requires an option NBBO entitlement.",
+    "mixed": "More than one input kind; see the report's own limitations.",
+}
 
 # The four implementation states, in the order a component moves through them.
 # Each maps to a label and the badge classes that render it. A badge is never
@@ -353,18 +370,31 @@ class Component:
     def runs_today(self) -> bool:
         return self.state in ("operational", "implemented_unvalidated")
 
-    def live_evidence(self) -> list[dict]:
-        """Evidence links whose target actually exists.
+    def live_evidence(self, pending: frozenset[str] = frozenset()) -> list[dict]:
+        """Evidence links whose target exists, or is being generated this build.
 
         The manifest names the artifact a component will publish before it has
         been published, so that the next acceptance test is legible. Rendering
         those links regardless would ship 404s from the one page whose whole
         purpose is that its claims can be checked.
+
+        ``pending`` carries the hrefs this build is about to write. Without it a
+        report's first build would drop its own link — the page does not exist
+        on disk at the moment the check runs — and only the *second* build would
+        pick it up, which makes --check fail in CI on the run that adds a report.
         """
         out = []
         for item in self.evidence:
             href = item["href"]
-            if href.startswith("/"):
+            if href.startswith("/vol/evidence/"):
+                # This directory is generated in full from data/evidence, so the
+                # pending set is the complete truth about it. Consulting disk
+                # here would be wrong in both directions: a report's first build
+                # has not written the page yet, and a withdrawn report's page is
+                # still on disk at this point and is deleted later in the pass.
+                if href not in pending:
+                    continue
+            elif href.startswith("/"):
                 target = ROOT / href.lstrip("/")
                 if target.suffix and not target.exists():
                     continue
@@ -398,6 +428,114 @@ def load_components() -> list[Component]:
 
     components.sort(key=lambda c: c.order)
     return components
+
+
+# ---------------------------------------------------------------------------
+# evidence
+# ---------------------------------------------------------------------------
+
+class Evidence:
+    """One published diagnostic report, parsed from data/evidence/<slug>.json.
+
+    The ``report`` object is the box's own output, copied in verbatim; this
+    class validates only the envelope around it. Four envelope fields are
+    required because a diagnostic without them is not checkable: when the data
+    was from, what kind of input produced it, which revision of the code
+    computed it, and what it does not establish.
+    """
+
+    REQUIRED = ("title", "summary", "component", "data_timestamp", "input_type", "code_version")
+
+    def __init__(self, path: pathlib.Path, component_ids: set[str]):
+        self.src_rel = str(path.relative_to(ROOT))
+        try:
+            doc = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise SystemExit(f"{self.src_rel}: {exc}") from None
+
+        if doc.get("schema_version") != 1 or isinstance(doc.get("schema_version"), bool):
+            raise SystemExit(f"{self.src_rel}: schema_version must be 1.")
+
+        for key in self.REQUIRED:
+            if not isinstance(doc.get(key), str) or not doc[key].strip():
+                raise SystemExit(f"{self.src_rel}: {key!r} must be a non-empty string.")
+
+        self.slug = path.stem
+        if not re.fullmatch(r"[a-z0-9-]+", self.slug):
+            raise SystemExit(
+                f"{self.src_rel}: filename slug {self.slug!r} must be lowercase letters, "
+                "digits and hyphens; it becomes the URL."
+            )
+
+        if doc["component"] not in component_ids:
+            raise SystemExit(
+                f"{self.src_rel}: component {doc['component']!r} is not in data/components.json. "
+                "A report that names no component cannot be shown as that component's evidence."
+            )
+
+        if doc["input_type"] not in INPUT_TYPES:
+            raise SystemExit(
+                f"{self.src_rel}: input_type {doc['input_type']!r} is not one of "
+                f"{', '.join(INPUT_TYPES)}."
+            )
+
+        try:
+            stamp_dt = dt.datetime.fromisoformat(doc["data_timestamp"].replace("Z", "+00:00"))
+        except ValueError:
+            raise SystemExit(
+                f"{self.src_rel}: data_timestamp {doc['data_timestamp']!r} is not an ISO timestamp."
+            ) from None
+        if stamp_dt.tzinfo is None:
+            raise SystemExit(f"{self.src_rel}: data_timestamp needs a timezone offset.")
+        now = dt.datetime.now(dt.timezone.utc)
+        if stamp_dt > now:
+            raise SystemExit(f"{self.src_rel}: data_timestamp {doc['data_timestamp']} is in the future.")
+
+        limitations = doc.get("known_limitations", [])
+        if not isinstance(limitations, list) or not limitations:
+            raise SystemExit(
+                f"{self.src_rel}: 'known_limitations' must be a non-empty list. Every report "
+                "states what it does not establish; if there is genuinely nothing, say so "
+                "explicitly rather than omitting the field."
+            )
+        for item in limitations:
+            if not isinstance(item, str) or not item.strip():
+                raise SystemExit(f"{self.src_rel}: every known_limitations entry must be a string.")
+
+        report = doc.get("report")
+        if not isinstance(report, dict) or not report:
+            raise SystemExit(f"{self.src_rel}: 'report' must be a non-empty object.")
+
+        unknown = set(doc) - set(self.REQUIRED) - {"schema_version", "known_limitations", "report"}
+        if unknown:
+            raise SystemExit(f"{self.src_rel}: unknown field(s) {', '.join(sorted(unknown))}.")
+
+        self.title = doc["title"]
+        self.summary = doc["summary"]
+        self.component = doc["component"]
+        self.data_timestamp = doc["data_timestamp"]
+        self.data_moment = stamp_dt
+        self.input_type = doc["input_type"]
+        self.code_version = doc["code_version"]
+        self.known_limitations = limitations
+        self.report = report
+
+    @property
+    def out_rel(self) -> str:
+        return f"vol/evidence/{self.slug}.html"
+
+    @property
+    def url(self) -> str:
+        return f"{SITE}/vol/evidence/{self.slug}.html"
+
+
+def load_evidence(components: list[Component]) -> list[Evidence]:
+    if not EVIDENCE_SRC_DIR.is_dir():
+        return []
+    ids = {c.id for c in components}
+    reports = [Evidence(p, ids) for p in sorted(EVIDENCE_SRC_DIR.glob("*.json"))]
+    reports.sort(key=lambda e: (e.data_moment, e.slug), reverse=True)
+    return reports
 
 
 # ---------------------------------------------------------------------------
@@ -781,7 +919,234 @@ def render_architecture(components: list[Component]) -> str:
     return "\n\n" + "\n\n".join(cards) + "\n\n    "
 
 
-def render_component_table(components: list[Component]) -> str:
+def render_report_value(value, depth: int = 0) -> str:
+    """Render one JSON value from a box report.
+
+    Generic rather than bespoke per report, because these payloads are the
+    box's own dataclasses and will gain fields without asking this renderer
+    first. A renderer that only knew today's fields would silently drop
+    tomorrow's, which for a page whose purpose is checkability is the one
+    failure mode that matters.
+    """
+    if isinstance(value, bool):
+        return "yes" if value else "no"
+    if value is None:
+        return "&mdash;"
+    if isinstance(value, (int, float)):
+        return esc(f"{value:,.6g}" if isinstance(value, float) else f"{value:,}")
+    if isinstance(value, str):
+        return esc(value)
+    if isinstance(value, list):
+        if not value:
+            return "<span class=\"report__none\">none</span>"
+        items = "".join(f"<li>{render_report_value(v, depth + 1)}</li>" for v in value)
+        return f"<ul class=\"report__list\">{items}</ul>"
+    if isinstance(value, dict):
+        if not value:
+            return "<span class=\"report__none\">none</span>"
+        rows = "".join(
+            f"<tr><th scope=\"row\">{esc(str(k))}</th>"
+            f"<td>{render_report_value(v, depth + 1)}</td></tr>"
+            for k, v in value.items()
+        )
+        return f"<table class=\"report__table\"><tbody>{rows}</tbody></table>"
+    return esc(str(value))
+
+
+def render_evidence_section(components: list[Component], reports: list[Evidence]) -> str:
+    """The diagnostic-reports block on the build-status page.
+
+    A component with no published report shows its acceptance test instead of a
+    number, which is the same rule the trading-record page already follows: an
+    empty state says it is empty rather than showing a placeholder.
+    """
+    by_component = {c.id: c for c in components}
+    published = {}
+    for r in reports:
+        published.setdefault(r.component, []).append(r)
+
+    cards = []
+    for c in components:
+        owned = published.get(c.id, [])
+        if owned:
+            for r in owned:
+                cards.append(
+                    f'      <article class="card">\n'
+                    f'        <p class="proof__kicker">{esc(c.name)}</p>\n'
+                    f'        <h3 class="card__title"><a href="/{r.out_rel}">{esc(r.title)}</a></h3>\n'
+                    f'        <p class="card__status">'
+                    f'<span class="badge badge--live badge--dot">Published</span></p>\n'
+                    f'        <div class="card__body">\n'
+                    f'          <p>{esc(r.summary)}</p>\n'
+                    f'          <p class="report__meta">Data as of {esc(human_date(r.data_moment))} '
+                    f'&middot; {esc(INPUT_TYPES[r.input_type])}</p>\n'
+                    f'        </div>\n'
+                    f'      </article>'
+                )
+        elif c.evidence:
+            # The component names an artifact it intends to publish.
+            names = ", ".join(esc(item["label"]) for item in c.evidence)
+            cards.append(
+                f'      <article class="card">\n'
+                f'        <p class="proof__kicker">{esc(c.name)}</p>\n'
+                f'        <h3 class="card__title">{names}</h3>\n'
+                f'        <p class="card__status"><span class="badge">Not yet published</span></p>\n'
+                f'        <div class="card__body">\n'
+                f'          <p><strong>What would make it publishable:</strong> '
+                f'{esc(c.next_acceptance)}</p>\n'
+                f'        </div>\n'
+                f'      </article>'
+            )
+    if not cards:
+        return (
+            '\n    <p class="pending"><strong>No diagnostics yet</strong>'
+            'No component names an artifact to publish.</p>\n  '
+        )
+    return "\n" + '    <div class="grid">\n' + "\n".join(cards) + "\n    </div>\n  "
+
+
+EVIDENCE_TEMPLATE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title_esc} — Diagnostic — Brad Lasater</title>
+<meta name="description" content="{summary_attr}">
+<link rel="canonical" href="{url}">
+<meta name="theme-color" content="#14171c">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{url}">
+<meta property="og:title" content="{title_attr}">
+<meta property="og:description" content="{summary_attr}">
+<meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta property="og:site_name" content="Brad Lasater">
+<meta property="article:modified_time" content="{modified}">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/assets/js/analytics.js" defer></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href="/">Brad Lasater<span class="brand__dot">.</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+{nav}
+      </ul>
+    </nav>
+  </div>
+</header>
+{section_nav}
+<main id="main">
+
+  <section class="shell hero">
+    <p class="hero__role">Volatility System · Diagnostic · {component_name}</p>
+    <h1 class="hero__name" style="font-size: var(--step-3); margin-top: var(--sp-3);">{title_esc}</h1>
+    <p class="hero__bio">{summary_esc}</p>
+    <div class="actions">
+      <a class="btn btn--primary" href="/vol/build-status.html">Build status</a>
+      <a class="btn" href="/data/evidence/{slug}.json">Raw report</a>
+    </div>
+  </section>
+
+  <section class="shell section" aria-labelledby="provenance-title">
+    <div class="section__head">
+      <span class="section__eyebrow">Provenance</span>
+      <h2 class="section__title" id="provenance-title">Where this came from</h2>
+    </div>
+    <dl class="statusstrip">
+      <div class="statusstrip__item">
+        <dt>Data timestamp</dt>
+        <dd>{data_timestamp_esc}</dd>
+      </div>
+      <div class="statusstrip__item">
+        <dt>Input type</dt>
+        <dd>{input_type_desc}</dd>
+      </div>
+      <div class="statusstrip__item">
+        <dt>Code version</dt>
+        <dd><code>{code_version_esc}</code></dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="shell section" aria-labelledby="limits-title">
+    <div class="section__head">
+      <span class="section__eyebrow">Limitations</span>
+      <h2 class="section__title" id="limits-title">What this does not establish</h2>
+    </div>
+    <div class="prose">
+      <ul>
+{limitations}
+      </ul>
+    </div>
+  </section>
+
+  <section class="shell section" aria-labelledby="report-title">
+    <div class="section__head">
+      <span class="section__eyebrow">Report</span>
+      <h2 class="section__title" id="report-title">The output, as produced</h2>
+      <p class="section__lede">
+        Rendered from the job's own output without reshaping, so that this page and
+        <a href="/data/evidence/{slug}.json">the raw file</a> cannot disagree.
+      </p>
+    </div>
+    <div class="table-wrap">
+{report}
+    </div>
+  </section>
+
+  <section class="shell section" aria-label="Page metadata">
+    <div class="prose">
+      <p class="page-updated">
+        This page was last updated <time class="page-updated__time" datetime="{modified}">{modified_human}</time>.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">{footer}</div>
+</footer>
+
+</body>
+</html>
+"""
+
+
+def render_evidence_page(report: Evidence, components: list[Component]) -> str:
+    component = next(c for c in components if c.id == report.component)
+    modified = last_modified(report.src_rel)
+    limitations = "\n".join(f"        <li>{esc(x)}</li>" for x in report.known_limitations)
+    return EVIDENCE_TEMPLATE.format(
+        title_esc=esc(report.title),
+        title_attr=esc(report.title),
+        summary_esc=esc(report.summary),
+        summary_attr=esc(report.summary),
+        url=report.url,
+        slug=report.slug,
+        component_name=esc(component.name),
+        data_timestamp_esc=esc(report.data_timestamp),
+        input_type_desc=esc(INPUT_TYPES[report.input_type]),
+        code_version_esc=esc(report.code_version),
+        limitations=limitations,
+        report=render_report_value(report.report),
+        nav=nav("", "vol"),
+        section_nav=section_nav("vol-build-status"),
+        footer=site_footer(),
+        modified=modified.isoformat(),
+        modified_human=human_date(modified),
+    )
+
+
+def render_component_table(components: list[Component], reports: list[Evidence]) -> str:
     """The full pipeline on the build-status page: contracts, evidence, tests.
 
     An ordered list rather than a table or a drawn diagram. A table of ten rows
@@ -790,6 +1155,7 @@ def render_component_table(components: list[Component]) -> str:
     numbering it carries the one thing the card grid on /vol/ cannot: that
     these stages are a sequence, each consuming the one above it.
     """
+    pending = frozenset(f"/{r.out_rel}" for r in reports)
     rows = []
     for c in components:
         fields = [
@@ -803,7 +1169,7 @@ def render_component_table(components: list[Component]) -> str:
             ("Outputs", esc(c.outputs), ""),
         ])
 
-        evidence = c.live_evidence()
+        evidence = c.live_evidence(pending)
         if evidence:
             links = ", ".join(
                 f'<a href="{esc(item["href"])}">{esc(item["label"])}</a>' for item in evidence
@@ -987,7 +1353,18 @@ def handbook_pages() -> list[str]:
     return [f"handbook/{name}" for name in names]
 
 
-def sitemap_pages() -> list[str]:
+def evidence_pages(reports: list[Evidence]) -> list[str]:
+    """Published diagnostics, from the manifest rather than from the output dir.
+
+    Deriving these from ``vol/evidence/*.html`` on disk would put the sitemap one
+    build behind: on the run that first writes a report, the glob happens before
+    the file exists, so the page would be generated and left out of the sitemap
+    until some later build. Reading the source list makes one pass sufficient.
+    """
+    return sorted(r.out_rel for r in reports)
+
+
+def sitemap_pages(reports: list[Evidence]) -> list[str]:
     """Every indexable page outside the log, in the order the nav presents it.
 
     ``docs/`` is unpublished working material (Jekyll-excluded in
@@ -995,13 +1372,20 @@ def sitemap_pages() -> list[str]:
     local note, not a public URL.
     """
     pages = list(STATIC_PAGES)
+    after_status = pages.index("vol/build-status.html") + 1
     after_track = pages.index("vol/track-record.html") + 1
-    return pages[:after_track] + handbook_pages() + pages[after_track:]
+    return (
+        pages[:after_status]
+        + evidence_pages(reports)
+        + pages[after_status:after_track]
+        + handbook_pages()
+        + pages[after_track:]
+    )
 
 
-def render_sitemap(entries: list[Entry]) -> str:
+def render_sitemap(entries: list[Entry], reports: list[Evidence]) -> str:
     urls = []
-    for rel in sitemap_pages():
+    for rel in sitemap_pages(reports):
         # "vol/index.html" is served at "/vol/"; the directory form is the
         # canonical URL declared on the page, so the sitemap must agree.
         loc = SITE + "/" + re.sub(r"(^|/)index\.html$", r"\1", rel)
@@ -1074,6 +1458,7 @@ def main() -> int:
 
     entries = load_entries()
     components = load_components()
+    reports = load_evidence(components)
     planned: dict[str, str] = {}
 
     # 1. One page per entry.
@@ -1103,10 +1488,14 @@ def main() -> int:
     planned["vol/index.html"] = inject(vol_index, "ARCHITECTURE", render_architecture(components))
 
     build_status = (ROOT / "vol" / "build-status.html").read_text(encoding="utf-8")
-    build_status = inject(build_status, "COMPONENT-TABLE", render_component_table(components))
+    build_status = inject(build_status, "COMPONENT-TABLE", render_component_table(components, reports))
+    build_status = inject(build_status, "EVIDENCE", render_evidence_section(components, reports))
     planned["vol/build-status.html"] = inject(
         build_status, "NEXT-MILESTONE", render_next_milestone(components)
     )
+
+    for report in reports:
+        planned[report.out_rel] = render_evidence_page(report, components)
 
     # 6. Site chrome. The nav used to be hand-maintained in seven HTML files and
     #    again in nav() here, and there were five different footers; both now
@@ -1126,13 +1515,20 @@ def main() -> int:
         planned[rel] = stamp(text, last_modified(rel))
 
     # 8. Sitemap last, so it sees the final entry list.
-    planned["sitemap.xml"] = render_sitemap(entries)
+    planned["sitemap.xml"] = render_sitemap(entries, reports)
 
-    # Remove generated entry pages whose source fragment is gone.
+    # Remove generated pages whose source is gone — a retracted log entry, or a
+    # diagnostic whose JSON was withdrawn. A published report that no longer has
+    # a source file must not keep serving.
     orphans = sorted(
         p for p in (ROOT / "log").glob("*.html")
         if p.name != "index.html" and f"log/{p.name}" not in planned
     )
+    if EVIDENCE_OUT_DIR.is_dir():
+        orphans += sorted(
+            p for p in EVIDENCE_OUT_DIR.glob("*.html")
+            if f"vol/evidence/{p.name}" not in planned
+        )
 
     stale: list[str] = []
     for rel, content in sorted(planned.items()):

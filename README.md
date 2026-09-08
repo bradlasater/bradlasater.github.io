@@ -66,6 +66,7 @@ There is no deploy script and no build artefact to commit beyond what
 | `assets/css/handbook-chrome.css` | Site-owned interaction layer loaded last on every handbook page |
 | `assets/js/analytics.js` | GoatCounter loader (see setup below) |
 | `data/components.json` | Implementation status of every system stage. See below |
+| `data/evidence/*.json` | Published diagnostic reports, one per file. See below |
 | `data/track-record.json` | The append-only track record. See `data/SCHEMA.md` |
 | `scripts/append_observation.py` | Appends one day to the record |
 | `scripts/validate_track_record.py` | Structural + append-only validation |
@@ -120,6 +121,54 @@ The loader validates hard and fails the build on a bad manifest — unknown
 state, missing or empty text field, misspelt key, duplicate `id` or `order`,
 a `validated_on` that is malformed, impossible, or in the future. A typo must
 not silently render as an absent field.
+
+---
+
+## Published diagnostics (`data/evidence/`)
+
+One JSON file per published report, rendered to `/vol/evidence/<slug>.html` and
+listed on the build-status page. The filename is the URL.
+
+**These are the ingest box's own outputs, copied in verbatim under `report`.**
+`coverage_audit` writes `_meta/coverage.json` and `drift_check` writes
+`_meta/drift_check.json` on the box; publishing one here is a deliberate act of
+copying it in, not an automatic export. Nothing is invented: a component with no
+report shows its next acceptance test instead of a number, the same rule
+`/vol/track-record.html` already follows.
+
+Every file needs a provenance envelope, and the build refuses without it:
+
+| Field | Why it is required |
+|---|---|
+| `data_timestamp` | A diagnostic without a date is not checkable |
+| `input_type` | With no NBBO entitlement every analytic here comes from traded prices; a reader who assumed a quote midpoint would draw the wrong conclusion from an identical-looking number |
+| `code_version` | A `Crack-the-Sky` commit SHA, so the number can be traced to the code that produced it |
+| `known_limitations` | A non-empty list of what the report does **not** establish |
+
+`component` must name a stage in `data/components.json`, so a report cannot be
+orphaned from the thing it is evidence for.
+
+The `report` object is rendered generically rather than by a per-report
+template, because these payloads are the box's own dataclasses and will gain
+fields without asking this renderer first — a template that knew only today's
+fields would silently drop tomorrow's, which on a page whose purpose is
+checkability is the one failure that matters.
+
+Adding or withdrawing a report converges in a single build: the sitemap, the
+component table's evidence links, and the generated page all derive from the
+source list rather than from what happens to be on disk mid-pass. Withdrawing a
+report deletes its page.
+
+### Not yet done
+
+The term-structure diagnostic needs a chart showing residuals, rejected
+observations and failure cases. `assets/js/track-record.js` already contains a
+dependency-free SVG chart engine that should be extracted to a shared
+`assets/js/chart.js` and used by both. That extraction is deliberately **not**
+done yet: it is a pure refactor of working, carefully-commented code that has no
+automated test, and doing it before there is a second consumer to validate
+against risks breaking the one page that currently depends on it. Extract it
+when the term-structure report exists.
 
 ---
 

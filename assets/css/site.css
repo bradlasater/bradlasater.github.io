@@ -679,6 +679,37 @@ main { flex: 1; }
 .section-nav a:hover { color: var(--c-text); }
 .section-nav a[aria-current] { color: var(--c-accent); }
 
+/* Published diagnostic reports. Rendered generically from the job's own JSON,
+   so the styling has to survive arbitrary nesting rather than a known shape. */
+.report__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+}
+.report__table th,
+.report__table td {
+  padding: var(--sp-2) var(--sp-3);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--c-border);
+}
+.report__table th {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--c-text-secondary);
+  white-space: nowrap;
+  width: 1%;
+}
+.report__table td { font-family: var(--font-mono); color: var(--c-text); }
+/* A nested object is a table inside a cell; strip its outer padding and rule so
+   it reads as a sub-list rather than a second, misaligned grid. */
+.report__table .report__table { margin: calc(var(--sp-2) * -1) 0; }
+.report__table .report__table tr:last-child th,
+.report__table .report__table tr:last-child td { border-bottom: 0; }
+.report__list { margin: 0; padding-left: var(--sp-4); font-family: var(--font-mono); }
+.report__none { color: var(--c-text-muted); font-style: italic; }
+.report__meta { color: var(--c-text-muted); font-size: var(--step--1); }
+
 /* Callout — used where a page has to qualify its own claim. Warm rule rather
    than a card, so it reads as an aside to the text it interrupts. */
 .callout {
