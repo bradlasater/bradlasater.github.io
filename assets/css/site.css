@@ -639,6 +639,39 @@ main { flex: 1; }
   color: var(--c-text-muted);
 }
 
+/* Callout — used where a page has to qualify its own claim. Warm rule rather
+   than a card, so it reads as an aside to the text it interrupts. */
+.callout {
+  margin-top: var(--sp-5);
+  padding: var(--sp-4) var(--sp-5);
+  border-left: 3px solid color-mix(in oklch, var(--c-warn) 45%, transparent);
+  background: var(--c-bg-subtle);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--c-text-secondary);
+  font-size: var(--step--1);
+}
+.callout > * + * { margin-top: var(--sp-3); }
+.callout strong { color: var(--c-text); }
+
+/* Proof-point cards on the homepage: problem, contribution, outcome. */
+.proof__kicker {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+.proof .card__body strong { color: var(--c-text); }
+
+/* Availability, promoted into the hero beside the actions. */
+.hero__availability {
+  margin-top: var(--sp-5);
+  color: var(--c-text-secondary);
+  font-size: var(--step--1);
+}
+.hero__availability strong { color: var(--c-text); }
+
 /* Feature card — the volatility system slot. */
 .feature {
   background:

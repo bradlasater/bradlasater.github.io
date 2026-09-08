@@ -21,7 +21,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="article:modified_time" content="2026-09-07T19:17:51-06:00">
+<meta property="article:modified_time" content="2026-09-07T19:21:41-06:00">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -41,7 +41,7 @@
       "headline": "Evaluation protocol for a systematic volatility trading system",
       "description": "The pre-committed rules for judging a systematic volatility research and execution platform, whose Phase 1 universe is defined-risk SPY and SPX/SPXW structures at roughly 5-45 days to expiry: purged and embargoed cross-validation, mandatory baselines, cost and friction modelling, deflated performance statistics, and kill criteria fixed in advance.",
       "inLanguage": "en-US",
-      "dateModified": "2026-09-07T19:17:51-06:00",
+      "dateModified": "2026-09-07T19:21:41-06:00",
       "author": { "@id": "https://bradlasater.com/#brad" },
       "publisher": { "@id": "https://bradlasater.com/#brad" },
       "isPartOf": { "@id": "https://bradlasater.com/#website" },
@@ -73,7 +73,7 @@
           "@type": "Question",
           "@id": "https://bradlasater.com/vol/methodology.html#baselines",
           "name": "What baselines must a volatility forecast beat before it is allowed to size a position?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Four baselines are mandatory: implied volatility itself as the forecast of realised volatility, HAR-RV on high-frequency realised variance, a GARCH-family conditional variance model, and \u2014 for the strategy as a whole \u2014 naive short-variance carry, unconditionally sized. A learned model that cannot beat HAR-RV is not a discovery. It is a defect, and it gets debugged rather than deployed." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Four baselines are mandatory: implied volatility itself as the forecast of realised volatility, HAR-RV on high-frequency realised variance, a GARCH-family conditional variance model, and \u2014 for the strategy as a whole \u2014 naive short-variance carry, unconditionally sized. The rule is a promotion rule rather than a presumption that a more complex model must work: a learned model is promoted only where it demonstrates incremental out-of-sample value over the appropriate baseline. A model that fails to beat HAR-RV has produced a result, not a defect, and that result gets written up rather than debugged away." }
         },
         {
           "@type": "Question",
@@ -249,8 +249,11 @@
         <li>For the strategy as a whole: naive short-variance carry, unconditionally sized.</li>
       </ul>
       <p>
-        A learned model that cannot beat HAR-RV is not a discovery. It is a defect, and it gets
-        debugged rather than deployed.
+        The rule is a promotion rule, not a presumption that the more complex model must work: a
+        learned model is promoted only where it demonstrates incremental out-of-sample value over
+        the appropriate baseline. A model that fails to beat HAR-RV has produced a result &mdash;
+        that on this data, at this horizon, the cheap forecast is the better one &mdash; and that
+        result gets written up rather than debugged away. Most of them will be that.
       </p>
 
       <h2 id="costs">How are execution costs and frictions modelled in an options backtest?</h2>
@@ -306,17 +309,33 @@
 
       <h2 id="kill">What pre-committed conditions retire a strategy?</h2>
       <p>
-        Kill criteria are fixed in advance, because the temptation to keep adjusting a losing
-        strategy is the expensive one and it is strongest exactly when judgement is worst. Any one
-        of the following retires a strategy from this system to the research log rather than the
-        portfolio:
+        Kill criteria have to be fixed in advance, because the temptation to keep adjusting a
+        losing strategy is the expensive one and it is strongest exactly when judgement is worst.
+        Any one of the following retires a strategy from this system to the research log rather
+        than the portfolio:
       </p>
       <ul>
-        <li>Deflated Sharpe not distinguishable from zero at the chosen confidence level.</li>
-        <li>Live out-of-sample performance below the lower bound of the backtest&rsquo;s predicted range for a pre-set window.</li>
-        <li>Realised costs exceeding modelled costs by more than a pre-set margin — the model was wrong about the world, whatever the P&amp;L says.</li>
+        <li>Deflated Sharpe not distinguishable from zero at the confidence level fixed for the experiment.</li>
+        <li>Live out-of-sample performance below the lower bound of the backtest&rsquo;s predicted range for the underperformance window fixed for the experiment.</li>
+        <li>Realised costs exceeding modelled costs by more than the cost margin fixed for the experiment — the model was wrong about the world, whatever the P&amp;L says.</li>
         <li>Return attribution showing the P&amp;L came from an exposure the strategy was not intended to take, even if that P&amp;L is positive.</li>
       </ul>
+      <div class="callout">
+        <p>
+          <strong>Three of those four are unresolved parameters, and saying otherwise would be the
+          same error this document exists to prevent.</strong> The confidence level, the
+          underperformance window and the cost margin are named above but have no values yet,
+          because no experiment has been specified. They are locked per experiment, in the
+          experiment&rsquo;s own record, before it runs &mdash; which is the only point at which
+          &ldquo;fixed in advance&rdquo; means anything. Until then this section states the shape
+          of the rule, not the rule.
+        </p>
+        <p>
+          One number <em>is</em> fixed, because it is already in use: the minimum track record
+          length on the <a href="/vol/track-record.html">trading record</a> is computed at 95%
+          confidence, one-sided.
+        </p>
+      </div>
       <p>
         That last one matters most. A strategy that makes money for reasons other than its thesis
         is not a working strategy; it is an unmeasured risk that has not yet been paid for.
@@ -333,12 +352,16 @@
         <li>Every result with its full statistics table, never a headline number alone.</li>
         <li>Every dead hypothesis, with what was expected and what actually happened.</li>
         <li>Every material change to this protocol, dated, with the reasoning.</li>
-        <li>Trade-level logs behind any live track record, so the reported statistics can be recomputed independently.</li>
+        <li>Trade-level logs behind any live track record, so the reported statistics can be
+            recomputed independently. <em>Not yet backed:</em> the published data contract stores
+            daily aggregates and cannot express a trade, so this commitment requires a schema
+            extension that has not been made. It is listed here because it was promised, and
+            deleting it quietly would be worse than flagging it.</li>
       </ul>
 
       <p class="muted">
         This protocol is versioned in the repository. Changes are commits, not edits —
-        last revised <time class="page-updated__time" datetime="2026-09-07T19:17:51-06:00">September 7, 2026</time>.
+        last revised <time class="page-updated__time" datetime="2026-09-07T19:21:41-06:00">September 7, 2026</time>.
       </p>
 
       <div class="actions">
