@@ -6,11 +6,38 @@
   <link href="https://bradlasater.com/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="https://bradlasater.com/log/" rel="alternate" type="text/html"/>
   <id>https://bradlasater.com/log/</id>
-  <updated>2026-09-07T19:24:12-06:00</updated>
+  <updated>2026-09-08T01:30:16+00:00</updated>
   <author>
     <name>Brad Lasater</name>
     <email>brad@bradlasater.com</email>
     <uri>https://bradlasater.com/</uri>
   </author>
   <rights>© 2026 Brad Lasater</rights>
+  <entry>
+    <title>Every price in this system is a traded price, and that changes which tests are even meaningful</title>
+    <link href="https://bradlasater.com/log/2026-09-07-pricing-with-imperfect-market-inputs.html" rel="alternate" type="text/html"/>
+    <id>https://bradlasater.com/log/2026-09-07-pricing-with-imperfect-market-inputs.html</id>
+    <published>2026-09-07T12:00:00+00:00</published>
+    <updated>2026-09-08T01:30:16+00:00</updated>
+    <summary type="text">Option NBBO is a 403 on this data tier, so implied volatility is inverted from last trade or day close rather than from a quote midpoint. The consequence is not merely noisier numbers — it invalidates one of the three daily identity checks whenever either leg of a pair is a stale print, and it makes the spread-based cost model uncalibratable rather than approximate.</summary>
+    <author><name>Brad Lasater</name></author>
+  </entry>
+  <entry>
+    <title>Half my datasets can be backfilled and half cannot, and that decides what a replay may claim</title>
+    <link href="https://bradlasater.com/log/2026-09-07-historical-completeness-vs-point-in-time.html" rel="alternate" type="text/html"/>
+    <id>https://bradlasater.com/log/2026-09-07-historical-completeness-vs-point-in-time.html</id>
+    <published>2026-09-07T12:00:00+00:00</published>
+    <updated>2026-09-08T01:30:16+00:00</updated>
+    <summary type="text">Option day bars reach back to 2022-08-31 and can be rebuilt from the vendor archive at any time; chain snapshots exist only from 2026-08-31 because there is no historical snapshot endpoint. That asymmetry, not storage cost, is what limits which backtests this system will ever be allowed to run.</summary>
+    <author><name>Brad Lasater</name></author>
+  </entry>
+  <entry>
+    <title>The ATM term structure agrees with itself by construction, so I had to work out when its agreement is evidence</title>
+    <link href="https://bradlasater.com/log/2026-09-07-atm-term-structure-before-a-surface.html" rel="alternate" type="text/html"/>
+    <id>https://bradlasater.com/log/2026-09-07-atm-term-structure-before-a-surface.html</id>
+    <published>2026-09-07T12:00:00+00:00</published>
+    <updated>2026-09-08T01:30:16+00:00</updated>
+    <summary type="text">The term structure inverts both the call and the put at the at-the-money strike and writes out both. When put-call parity happens to select that same strike, the two legs invert to identical volatilities as an algebraic identity — so their agreement proves nothing, and only the dates where the two strikes differ carry information.</summary>
+    <author><name>Brad Lasater</name></author>
+  </entry>
 </feed>

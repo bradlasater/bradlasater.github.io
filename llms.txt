@@ -56,6 +56,12 @@ Marcos López de Prado on the statistics of not fooling yourself.
 - [Track record schema](https://github.com/bradlasater/bradlasater.github.io/blob/main/data/SCHEMA.md): Field definitions and the immutability rules enforced on the data.
 
 <!-- BUILD:LOG-ENTRIES:START -->
+## Research log entries
+
+- [Every price in this system is a traded price, and that changes which tests are even meaningful](https://bradlasater.com/log/2026-09-07-pricing-with-imperfect-market-inputs.html): Option NBBO is a 403 on this data tier, so implied volatility is inverted from last trade or day close rather than from a quote midpoint. The consequence is not merely noisier numbers — it invalidates one of the three daily identity checks whenever either leg of a pair is a stale print, and it makes the spread-based cost model uncalibratable rather than approximate. (published 2026-09-07)
+- [Half my datasets can be backfilled and half cannot, and that decides what a replay may claim](https://bradlasater.com/log/2026-09-07-historical-completeness-vs-point-in-time.html): Option day bars reach back to 2022-08-31 and can be rebuilt from the vendor archive at any time; chain snapshots exist only from 2026-08-31 because there is no historical snapshot endpoint. That asymmetry, not storage cost, is what limits which backtests this system will ever be allowed to run. (published 2026-09-07)
+- [The ATM term structure agrees with itself by construction, so I had to work out when its agreement is evidence](https://bradlasater.com/log/2026-09-07-atm-term-structure-before-a-surface.html): The term structure inverts both the call and the put at the at-the-money strike and writes out both. When put-call parity happens to select that same strike, the two legs invert to identical volatilities as an algebraic identity — so their agreement proves nothing, and only the dates where the two strikes differ carry information. (published 2026-09-07)
+
 <!-- BUILD:LOG-ENTRIES:END -->
 
 ## Elsewhere

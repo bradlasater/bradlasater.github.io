@@ -1,0 +1,116 @@
+<!--meta
+title: Every price in this system is a traded price, and that changes which tests are even meaningful
+date: 2026-09-07
+stage: Pricing & identities
+summary: Option NBBO is a 403 on this data tier, so implied volatility is inverted from last trade or day close rather than from a quote midpoint. The consequence is not merely noisier numbers — it invalidates one of the three daily identity checks whenever either leg of a pair is a stale print, and it makes the spread-based cost model uncalibratable rather than approximate.
+-->
+
+<h2>The constraint</h2>
+<p>
+  This warehouse is not entitled to option NBBO. The REST quotes endpoint and the
+  <code>quotes_v1</code> flat file both return 403, and so do all index levels
+  (<code>I:SPX</code>, <code>I:VIX</code>). There is no bid, no ask, no mid and no displayed
+  depth anywhere in the data. The only price available for a contract is its last trade,
+  falling back to the day close.
+</p>
+<p>
+  Entitlements are probed rather than assumed: a job walks every endpoint the system relies
+  on and exits non-zero on drift <em>in either direction</em>, because a capability silently
+  gained is as much a change to reason about as one lost.
+</p>
+
+<h2>What I expected</h2>
+<p>
+  I expected this to be a precision problem. Without a midpoint, the inverted volatility
+  carries an unknown offset bounded by roughly half the spread, so I expected to characterise
+  that bound once, carry it as an error bar, and otherwise proceed as normal.
+</p>
+
+<h2>What happened</h2>
+<p>
+  The offset is real and is bounded roughly as expected. What I did not anticipate is that the
+  missing quote breaks a <em>validation</em> step rather than only degrading an estimate.
+</p>
+<p>
+  The daily canary checks three identities on at-the-money names, where at-the-money means
+  <code>|K/F &minus; 1| &le; 5%</code>:
+</p>
+<ul>
+  <li><strong>Reprice.</strong> The stored engine price must reproduce the input price. Independent for American-style SPY rows, which are priced on a binomial tree while the check runs against the stored value.</li>
+  <li><strong>Pair symmetry.</strong> For European pairs, call and put gamma must agree, and call and put vega must agree, at a shared volatility.</li>
+  <li><strong>Put&ndash;call parity.</strong> The call minus the put must equal the discounted forward less the discounted strike.</li>
+</ul>
+<p>
+  The third one cannot be run when either leg carries a last-trade price. Put&ndash;call parity
+  is a statement about a call and a put observed <em>at the same instant</em>. Two last trades
+  are two different instants, sometimes hours apart on an illiquid strike, and a parity
+  violation computed across them measures the gap between the prints rather than any error in
+  the pricing. So the check is skipped for those rows rather than being run and quietly failing.
+</p>
+
+<h2>Diagnosis</h2>
+<p>
+  There is a general lesson here that I had to be shown rather than reason my way to. A missing
+  input does not degrade every consumer equally. It degrades <em>estimates</em> smoothly and it
+  breaks <em>tests</em> discontinuously, because a test is usually an equality that holds under
+  an assumption the missing input was quietly supplying. Here that assumption was simultaneity.
+</p>
+<p>
+  Two related decisions follow from the same reasoning.
+</p>
+<p>
+  <strong>Vendor implied volatility and Greeks are copied into the warehouse but are never
+  inputs.</strong> They are unit-aligned for comparison and written into the daily report as
+  diagnostics. A null vendor volatility is not a failure and does not fail the job. The reason
+  is that a vendor number computed from a quote midpoint I cannot see is not a check on my
+  arithmetic; it is a second, differently-wrong number, and treating it as ground truth would
+  hide exactly the errors the canary exists to find. The live test is my own math on new
+  prices.
+</p>
+<p>
+  <strong>Inversion raises rather than returning a NaN.</strong> A price outside the discounted
+  no-arbitrage bounds has no implied volatility, and Newton with a Brent fallback will not find
+  one. Returning a NaN would let that row flow downstream and be dropped silently somewhere
+  later, at which point the dataset has a hole nobody chose. Raising forces the decision to be
+  made where the information is.
+</p>
+<p>
+  The forward is recovered from put&ndash;call parity rather than from a spot price, since no
+  index level is entitled either. Pricing then happens in the forward measure, which reduces
+  Black&ndash;Scholes&ndash;Merton to Black-76 &mdash; a spot and a dividend yield are precisely
+  the two things this tier does not provide, so the parameterisation that avoids needing them is
+  the correct one rather than a workaround.
+</p>
+
+<h2>What this forbids downstream</h2>
+<p>
+  The site previously claimed the cleaning layer dropped stale and crossed quotes and filtered
+  by spread width, and that the cost model charged half-spread crossing scaled by quoted width
+  and displayed depth. Crossed and locked are definitionally bid-and-ask states. Quoted width
+  and displayed depth are NBBO fields. None of it was implementable on this tier, and the claim
+  has been removed rather than softened.
+</p>
+<p>
+  The cost consequence is the one that matters, and it is worse than an approximation. In
+  options the spread is frequently wider than the entire modelled edge, so a cost model that
+  cannot measure the spread cannot be calibrated at all &mdash; it can only be bounded. A
+  backtest published under those conditions would be reporting the size of its own assumption.
+  That is why no backtest result will be published under this protocol until the input situation
+  is resolved and stated on the result itself.
+</p>
+
+<h2>What changed as a result</h2>
+<p>
+  The parity check now skips rather than fails when either leg is a last trade, and the skip is
+  recorded rather than silent. The canary's pass/fail rests on median reprice error and the
+  fraction of at-the-money names failing identities, not on far-out-of-the-money ticks, which
+  are noise rather than signal. The public pages now distinguish the hygiene that runs on
+  entitled inputs from the hygiene that is blocked behind an entitlement, and the build-status
+  page carries that distinction as a separate field so that a reader can tell unwritten code
+  from an unavailable input.
+</p>
+<p>
+  Every diagnostic this project publishes will state the kind of input it was computed from.
+  Traded-price analytics and quote-based analytics are not comparable, and a report that omits
+  which one it is invites the reader to assume the better of the two.
+</p>
