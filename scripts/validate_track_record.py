@@ -5,7 +5,8 @@ Two jobs:
 
 1. Structural validation — the file is well formed, observations are strictly
    ascending, nothing is dated in the future, mode changes form a connected
-   chain that agrees with the per-observation modes.
+   chain that agrees with the per-observation modes, and every day declares a
+   record_kind that never regresses to weaker evidence.
 
 2. Append-only enforcement (--check-append-only) — walk every commit from a
    baseline ref up to HEAD, plus the working tree, and fail if any published
@@ -47,7 +48,20 @@ REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 DEFAULT_PATH = REPO_ROOT / "data" / "track-record.json"
 
 VALID_MODES = ("paper", "live")
-OBS_REQUIRED = ("date", "nav", "gross_pnl", "costs", "positions", "mode")
+
+# How a day's numbers were produced, which is a different axis from `mode`
+# (whose capital was at risk). Backtest days are deliberately absent — see
+# data/SCHEMA.md; this file's guarantee is that a day was published before its
+# outcome was known, which a historical simulation cannot satisfy.
+#
+# The values are ordered by evidential strength, and the order is enforced:
+# once a broker-reconciled day is published the record may not fall back to
+# simulator marks, because that is a downgrade a reader would never spot in a
+# daily append.
+RECORD_KIND_ORDER = {"forward_sim": 0, "broker_executed": 1}
+VALID_RECORD_KINDS = tuple(RECORD_KIND_ORDER)
+
+OBS_REQUIRED = ("date", "nav", "gross_pnl", "costs", "positions", "mode", "record_kind")
 
 # Changing any of these retroactively reinterprets numbers that are already
 # published, so they are frozen once the first observation exists.
@@ -176,6 +190,21 @@ def _validate_observation(obs: Any, where: str, today: dt.date) -> dt.date:
             f"{where}: mode must be one of {list(VALID_MODES)}, got {obs['mode']!r}"
         )
 
+    # Membership rejects a wrong type as well as an unknown label, and the repr
+    # in the message distinguishes the string "1" from the integer 1 — the two
+    # failures a hand-edited file is most likely to produce.
+    if obs["record_kind"] not in VALID_RECORD_KINDS:
+        raise Failure(
+            f"{where}: record_kind must be one of {list(VALID_RECORD_KINDS)}, "
+            f"got {obs['record_kind']!r}"
+            + (
+                ". Backtest days do not belong in this file; publish a "
+                "historical simulation as a separate diagnostic report"
+                if obs["record_kind"] == "backtest"
+                else ""
+            )
+        )
+
     return date
 
 
@@ -279,6 +308,50 @@ def _validate_mode_changes(
             )
 
 
+def _validate_record_kinds(observations: list[dict[str, Any]]) -> None:
+    """Check the record-kind ladder, and that it agrees with the capital mode.
+
+    Two rules, both of which exist to stop the file laundering weak evidence as
+    strong.
+
+    1. **The kind may never regress.** `record_kind` orders the observations by
+       how much the numbers can be trusted, and the page reports each kind as
+       its own series. Allowing a broker-reconciled run to fall back to
+       simulator marks would put a weaker segment at the *end* of the record —
+       the part a reader weights most heavily — with nothing but a field in a
+       JSON file to mark it. A genuine return to simulation is a change in what
+       the record means and has to be handled deliberately, not appended.
+
+    2. **A `live` day must be broker-executed.** `forward_sim` is defined as
+       running against live data with nothing at risk, so a day that both put
+       real capital at risk and reported simulator marks is describing itself
+       incorrectly whichever field is wrong. If unreconciled live days ever
+       need publishing, that is a third kind and a schema-version bump, not a
+       quiet loosening of this rule.
+    """
+    previous: dict[str, Any] | None = None
+    for index, obs in enumerate(observations):
+        where = f"observations[{index}]"
+        kind = obs["record_kind"]
+
+        if previous is not None:
+            if RECORD_KIND_ORDER[kind] < RECORD_KIND_ORDER[previous["record_kind"]]:
+                raise Failure(
+                    f"{where} ({obs['date']}) has record_kind {kind!r} after "
+                    f"{previous['record_kind']!r} on {previous['date']}; the "
+                    f"record kind may not regress to weaker evidence"
+                )
+
+        if obs["mode"] == "live" and kind != "broker_executed":
+            raise Failure(
+                f"{where} ({obs['date']}) is mode 'live' but record_kind "
+                f"{kind!r}; a day with real capital at risk has actual fills "
+                f"and must be reconciled against them"
+            )
+
+        previous = obs
+
+
 def validate_structure(doc: dict[str, Any]) -> list[str]:
     """Validate the document in isolation. Raises Failure on any hard error."""
     # `True == 1` and `1.0 == 1` in Python, so a bare `!= 1` would let a
@@ -299,11 +372,20 @@ def validate_structure(doc: dict[str, Any]) -> list[str]:
     observations = _validate_observations(doc, today)
     _validate_inception(doc, observations)
     _validate_mode_changes(doc, observations, today)
+    _validate_record_kinds(observations)
 
     notes = [f"{len(observations)} observation(s)"]
     if observations:
         notes.append(f"span {observations[0]['date']} to {observations[-1]['date']}")
         notes.append("mode(s): " + ", ".join(sorted({o["mode"] for o in observations})))
+        # Ladder order, not alphabetical: the reader wants to see how far the
+        # record has actually climbed, and "broker_executed, forward_sim" reads
+        # as though it went backwards.
+        kinds = {o["record_kind"] for o in observations}
+        notes.append(
+            "record kind(s): "
+            + ", ".join(k for k in VALID_RECORD_KINDS if k in kinds)
+        )
     return notes
 
 

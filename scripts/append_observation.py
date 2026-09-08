@@ -5,7 +5,8 @@ Usage:
 
     python3 scripts/append_observation.py \
         --date 2026-09-01 --nav 100123.45 \
-        --gross-pnl 150.00 --costs 26.55 --positions 4 --mode paper
+        --gross-pnl 150.00 --costs 26.55 --positions 4 --mode paper \
+        --record-kind forward_sim
 
     python3 scripts/append_observation.py \
         --mode-change live --date 2027-03-01 --note "Funded with real capital."
@@ -39,11 +40,25 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from validate_track_record import (  # noqa: E402
     DEFAULT_PATH,
     REPO_ROOT,
+    VALID_RECORD_KINDS,
     CannotRun,
     Failure,
     _parse_date,
     load,
     validate_structure,
+)
+
+# Typed by hand at the end of a trading day, so the refusal has to explain the
+# design decision rather than just list the legal values — "backtest" is the
+# value a reasonable person expects to work, because the site's own copy names
+# three kinds of record.
+BACKTEST_REFUSAL = (
+    "backtest days do not belong in this file. Its guarantee is that each day "
+    "was published before its outcome was known, and a historical simulation "
+    "is generated in bulk from data that was already in hand, so appending one "
+    "here would borrow that guarantee without earning it. Publish the backtest "
+    "as its own diagnostic report and let the page show the two side by side. "
+    "See data/SCHEMA.md."
 )
 
 
@@ -71,6 +86,7 @@ def append_observation(doc: dict[str, Any], args: argparse.Namespace) -> None:
             "costs": round(float(args.costs), 2),
             "positions": int(args.positions),
             "mode": args.mode,
+            "record_kind": args.record_kind,
         }
     )
 
@@ -129,6 +145,18 @@ def main() -> int:
     parser.add_argument("--costs", type=float, default=None, help="total frictions for the day (required)")
     parser.add_argument("--positions", type=int, default=0, help="open positions at the close")
     parser.add_argument("--mode", choices=("paper", "live"), default="paper")
+    # Deliberately not an argparse `choices` list, unlike --mode: argparse would
+    # answer "backtest" with a bare "invalid choice", and the reason backtests
+    # are excluded is the one thing someone typing that needs to be told.
+    # Checked in main() instead, so the refusal is exit 1 with the explanation.
+    parser.add_argument(
+        "--record-kind",
+        default=None,
+        help=(
+            "how the day's numbers were produced (required): "
+            + " | ".join(VALID_RECORD_KINDS)
+        ),
+    )
     parser.add_argument(
         "--mode-change",
         choices=("paper", "live"),
@@ -148,16 +176,40 @@ def main() -> int:
         print(f"FAIL  {exc}", file=sys.stderr)
         return 1
 
-    if args.mode_change is None and (
-        args.nav is None or args.gross_pnl is None or args.costs is None
-    ):
-        print(
-            "FAIL  --nav, --gross-pnl and --costs are all required when "
-            "appending an observation; an omitted cost would publish a "
-            "plausible-looking $0-friction day",
-            file=sys.stderr,
-        )
-        return 1
+    if args.mode_change is None:
+        if args.nav is None or args.gross_pnl is None or args.costs is None:
+            print(
+                "FAIL  --nav, --gross-pnl and --costs are all required when "
+                "appending an observation; an omitted cost would publish a "
+                "plausible-looking $0-friction day",
+                file=sys.stderr,
+            )
+            return 1
+
+        # No default. A discriminator that guesses is worse than none at all:
+        # whichever value it picked would be an unearned claim about how the
+        # day's numbers were produced, made silently, on every append.
+        if args.record_kind is None:
+            print(
+                "FAIL  --record-kind is required when appending an observation "
+                f"({' | '.join(VALID_RECORD_KINDS)}); it says whether the day's "
+                "numbers came from a simulator or from reconciled broker fills, "
+                "and there is no honest default",
+                file=sys.stderr,
+            )
+            return 1
+        if args.record_kind not in VALID_RECORD_KINDS:
+            detail = (
+                BACKTEST_REFUSAL
+                if args.record_kind == "backtest"
+                else f"expected one of {list(VALID_RECORD_KINDS)}"
+            )
+            print(
+                f"FAIL  --record-kind {args.record_kind!r} is not a valid record "
+                f"kind: {detail}",
+                file=sys.stderr,
+            )
+            return 1
 
     try:
         doc = load(args.path)
@@ -166,7 +218,10 @@ def main() -> int:
             message = f"track record: record transition to {args.mode_change} on {args.date}"
         else:
             append_observation(doc, args)
-            message = f"track record: add {args.date} (nav {args.nav}, mode {args.mode})"
+            message = (
+                f"track record: add {args.date} (nav {args.nav}, "
+                f"mode {args.mode}, {args.record_kind})"
+            )
 
         # Validate the whole document before it is written, so a bad append
         # never lands on disk.
