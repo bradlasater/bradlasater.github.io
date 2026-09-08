@@ -63,6 +63,7 @@ There is no deploy script and no build artefact to commit beyond what
 | `404.html` | Custom 404 (`noindex`) |
 | `assets/css/site.css` | The entire design system — dark-only, OKLCH tokens |
 | `assets/js/track-record.js` | Computes and renders every track-record statistic |
+| `assets/js/chart.js` | Dependency-free SVG line charts (`window.SiteChart`) |
 | `assets/css/handbook-chrome.css` | Site-owned interaction layer loaded last on every handbook page |
 | `assets/js/analytics.js` | GoatCounter loader (see setup below) |
 | `data/components.json` | Implementation status of every system stage. See below |
@@ -74,8 +75,9 @@ There is no deploy script and no build artefact to commit beyond what
 | `scripts/sync_docs.py` | Copies the handbook in from `data_ingest_infra` |
 | `content/log/*.html` | Hand-authored research-log entry fragments |
 
-Only `vol/track-record.html` loads `track-record.js`; every page loads
-`analytics.js`.
+Only `vol/track-record.html` loads `track-record.js`, and it loads `chart.js`
+first — `track-record.js` refuses to render without it rather than showing
+statistics beside two empty boxes. Every page loads `analytics.js`.
 
 Data flows one way:
 `append_observation.py` → `data/track-record.json` → CI validation →
@@ -159,16 +161,27 @@ component table's evidence links, and the generated page all derive from the
 source list rather than from what happens to be on disk mid-pass. Withdrawing a
 report deletes its page.
 
+### The chart module
+
+`assets/js/chart.js` (`window.SiteChart`) draws the SVG line charts. It was
+extracted from `track-record.js` once a second consumer was in sight, and it
+knows about pixels, ticks and pointers — nothing about returns, volatility or
+record kinds. Domain concerns reach it through `opts`, **including the two
+formatters**: a chart module that hard-codes percentage formatting is not
+reusable by the next caller that plots something else.
+
+The extraction was verified by comparing rendered output rather than by trusting
+the diff. Both versions were served side by side against an 80-observation
+two-kind fixture, and all four charts (equity and drawdown, for each record
+kind) hashed byte-identical before and after. That is the check to repeat if
+this module is ever refactored again — there is no unit test here, and the
+charts are the part of the site most likely to break silently.
+
 ### Not yet done
 
 The term-structure diagnostic needs a chart showing residuals, rejected
-observations and failure cases. `assets/js/track-record.js` already contains a
-dependency-free SVG chart engine that should be extracted to a shared
-`assets/js/chart.js` and used by both. That extraction is deliberately **not**
-done yet: it is a pure refactor of working, carefully-commented code that has no
-automated test, and doing it before there is a second consumer to validate
-against risks breaking the one page that currently depends on it. Extract it
-when the term-structure report exists.
+observations and failure cases. `assets/js/chart.js` is ready for it (see
+above); what is missing is the data, which has to come off the ingest box.
 
 ---
 

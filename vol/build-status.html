@@ -209,7 +209,7 @@
           <dl class="stage__fields">
             <div class="stage__field">
               <dt>Runs today</dt>
-              <dd>Implied volatility is inverted per contract from the traded price by Newton with bounds and a Brent fallback; a price outside the discounted no-arbitrage bounds raises an error rather than returning a NaN. Greeks are computed from the full named catalogue, European closed-form for SPX and SPXW and a binomial tree for American-style SPY. Vendor implied volatility and Greeks are copied as diagnostics and are never inputs. A daily canary re-checks the stored numbers against three identities on at-the-money names: that the engine reprices its own input, that call and put gamma and vega agree, and that put-call parity holds.</dd>
+              <dd>Implied volatility is inverted per contract from the traded price: Newton with bounds and a Brent fallback for European contracts, and a Brent inversion of the binomial tree for American-style SPY, so SPY volatility now comes off the same engine that prices it. A price outside the discounted no-arbitrage bounds raises an error rather than returning a NaN, and an American put priced at intrinsic inverts to zero rather than failing, because exercised now it is worth that at every volatility. Greeks are computed from the full named catalogue, European closed-form for SPX and SPXW and a binomial tree for American-style SPY. Vendor implied volatility and Greeks are copied as diagnostics and are never inputs. A daily canary re-checks the stored numbers against three identities on at-the-money names: that the engine reprices its own input, that call and put gamma and vega agree, and that put-call parity holds.</dd>
             </div>
             <div class="stage__field">
               <dt>Designed to</dt>
@@ -244,7 +244,7 @@
           <dl class="stage__fields">
             <div class="stage__field">
               <dt>Runs today</dt>
-              <dd>Per-contract implied volatilities are reduced to an at-the-money term structure: one row per date, root and expiry, carrying the parity forward, the ATM strike and both leg implied volatilities. It is built from option day bars rather than chain snapshots because day bars reach back to 2022-08-31 while the snapshot sweep only begins in 2026. Pricing is done in the forward measure, which reduces Black-Scholes-Merton to Black-76, because a spot price and a dividend yield are exactly what this tier does not provide. The whole archive rebuilds in about seven minutes.</dd>
+              <dd>Per-contract implied volatilities are reduced to an at-the-money term structure: one row per date, root and expiry, carrying the parity forward, the ATM strike and both leg implied volatilities. It is built from option day bars rather than chain snapshots because day bars reach back to 2022-08-31 while the snapshot sweep only begins in 2026. Pricing is done in the forward measure, which reduces Black-Scholes-Merton to Black-76, because a spot price and a dividend yield are exactly what this tier does not provide. Vol time is a hybrid rather than a flat day count: trading sessions over 252 inside the attested and upcoming exchange calendar, falling back to ACT/365 past the horizon the calendar covers, and stamped per row so a later reader can tell which convention produced a given number rather than having to infer it. The whole archive rebuilds in about seven minutes.</dd>
             </div>
             <div class="stage__field">
               <dt>Designed to</dt>
@@ -593,9 +593,63 @@
     </div>
   </section>
 
+  <section class="shell section" id="failure-modes" aria-labelledby="failure-modes-title">
+    <div class="section__head">
+      <span class="section__eyebrow">03 &middot; Failure modes</span>
+      <h2 class="section__title" id="failure-modes-title">How this system can lie to me</h2>
+      <p class="section__lede">
+        A stale feed that produces plausible-looking numbers is more dangerous than one that
+        crashes, because nothing raises and the numbers still look like numbers. These two pages
+        are the standing inventory of that problem and the procedure for the day it happens. They
+        are working operational documents rather than write-ups, which is the point of linking
+        them.
+      </p>
+    </div>
+
+    <div class="grid">
+      <article class="card">
+        <p class="proof__kicker">Standing inventory</p>
+        <h3 class="card__title"><a href="/handbook/latent.html">Latent holes</a></h3>
+        <div class="card__body">
+          <p>
+            The failures that would not announce themselves: where a source of truth can quietly
+            diverge, which silent failures the current monitoring would miss, and the operational
+            consistency gaps that have not been closed yet. Kept as a live list rather than a
+            post-mortem, because the entries that matter are the ones nothing has surfaced.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <p class="proof__kicker">Procedure</p>
+        <h3 class="card__title"><a href="/handbook/red-day.html">Red day</a></h3>
+        <div class="card__body">
+          <p>
+            What to do when a check goes red: telling one kind of red from another, the repair path
+            when the coverage audit fails, what a pricing-canary failure means as distinct from a
+            data one, disk exhaustion, and early closes &mdash; which look like missing data every
+            time and are not.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <p class="proof__kicker">Target</p>
+        <h3 class="card__title"><a href="/handbook/architecture.html">Target architecture</a></h3>
+        <div class="card__body">
+          <p>
+            The full intended system in one diagram &mdash; inputs, data foundation, analytics and
+            decision, the trading control loop, and the research and governance loop that feeds
+            back into it. Most of it is not built; the pipeline above says which parts are.
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
   <section class="shell section" id="record" aria-labelledby="record-title">
     <div class="section__head">
-      <span class="section__eyebrow">03 &middot; Performance</span>
+      <span class="section__eyebrow">04 &middot; Performance</span>
       <h2 class="section__title" id="record-title">Trading record has not started</h2>
     </div>
     <div class="prose">
@@ -618,7 +672,7 @@
 
   <section class="shell section" id="milestone" aria-labelledby="milestone-title">
     <div class="section__head">
-      <span class="section__eyebrow">04 &middot; Next</span>
+      <span class="section__eyebrow">05 &middot; Next</span>
       <h2 class="section__title" id="milestone-title">The next milestone</h2>
       <p class="section__lede">
         Stated as an acceptance test rather than a task, so that it can be judged as passed or
