@@ -35,7 +35,13 @@
       <div class="toc-title">System handbook</div>
       <ol>
         <li><a href="index.html">Overview</a></li>
-        <li><a href="repo-layout.html" class="active">Repo layout</a></li>
+        <li>
+          <a href="repo-layout.html" class="active">Repo layout</a>
+          <ol class="sub">
+            <li><a href="repo-layout.html#repo-toplevel">Top level</a></li>
+            <li><a href="repo-layout.html#repo-not-there">Not in the repo</a></li>
+          </ol>
+        </li>
         <li><a href="data-flow.html">Data flow</a></li>
         <li>
           <a href="ingest.html">Ingest</a>
@@ -51,8 +57,11 @@
         <li><a href="pricing.html">pricing</a></li>
         <li><a href="warehouse-math.html">Warehouse → math</a></li>
         <li><a href="canary.html">Daily canary</a></li>
+        <li><a href="red-day.html">Red day</a></li>
         <li><a href="conventions.html">Desk conventions</a></li>
         <li><a href="not-built.html">Not built</a></li>
+        <li><a href="architecture.html">Target architecture</a></li>
+        <li><a href="latent.html">Latent holes</a></li>
         <li><a href="formula-stubs.html">Formula stubs</a></li>
         <li><a href="knobs.html">Documented knobs</a></li>
         <li class="toc-sep"></li>
@@ -69,10 +78,14 @@
         <div class="meta"><a href="index.html">← overview</a></div>
       </header>
 
+      <h2 id="repo-toplevel">Top level</h2>
       <p>
-        Three Python packages plus tests and ops scripts. Jobs are
-        <code>python -m ingest.jobs.&lt;name&gt;</code> from a venv, not an
-        installed distribution.
+        Four Python packages plus tests and ops scripts. Jobs are
+        <code>python -m ingest.jobs.&lt;name&gt;</code> (or
+        <code>python -m pricing.term_structure</code> /
+        <code>python -m signals.spot</code>) from the venv
+        (<code>pip install -e .</code> so imports do not depend on cwd). No
+        console-script entry points.
       </p>
       <table>
         <thead>
@@ -89,26 +102,31 @@
           </tr>
           <tr>
             <td class="job">pricing/</td>
-            <td>Calculators, not a surface. BSM catalog, IV invert, Engine (European analytic / American CRR), <code>from_market</code>, <code>drift_check</code>, <code>term_structure</code> (the ATM curve — still not a surface: no smile fit, no interpolator).</td>
+            <td>Calculators plus the one fitted object. BSM catalog, IV invert, Engine (European analytic / American CRR), <code>from_market</code>, <code>drift_check</code>, <code>calendar</code> (session counts from the attested + upcoming calendars), <code>daycount</code> (vol-time convention as a passed object; day-bar default is the hybrid — sessions inside the calendar horizon, ACT/365 past it — stamped per row as <code>bus/252</code> or <code>act/365</code>; money time is always ACT/365), <code>term_structure</code> (the ATM curve), <code>surface</code> (raw-SVI smile per expiry over the own-IV chain, with arb guards and term interpolation).</td>
+          </tr>
+          <tr>
+            <td class="job">signals/</td>
+            <td>Derived market series that sit on ingest + pricing reductions. <code>signals.spot</code> writes <code>spy_spot</code> — SPY cash level from the day-bar close, else the shortest-DTE parity proxy. <code>signals.har_rv</code> turns that series into <code>rv_forecast</code> — the walk-forward HAR-RV baseline with a lognormal uncertainty band.</td>
           </tr>
           <tr>
             <td class="job">tests/</td>
-            <td>Offline pytest: ingest, <code>tests/marketdata/</code>, <code>tests/pricing/</code>, plus Healthchecks/crontab drift tests.</td>
+            <td>Offline pytest: ingest, <code>tests/marketdata/</code>, <code>tests/pricing/</code>, plus Healthchecks/schedule drift tests.</td>
           </tr>
           <tr>
             <td class="job">docs/</td>
-            <td>This handbook: <code>index.html</code> plus one page per section, and <code>box-operations.html</code> for off-repo machine state.</td>
+            <td>This handbook: <code>index.html</code> plus one page per section, <code>red-day.html</code> / <code>latent.html</code>, and <code>box-operations.html</code> for off-repo machine state. Known holes that are in the tree live in <code>IMPROVEMENTS.md</code>.</td>
           </tr>
           <tr>
             <td class="job">deploy/</td>
-            <td><code>crontab</code> (source of schedule) and an optional systemd unit for the websocket job.</td>
+            <td><code>schedule.json</code> (source of schedule), <code>crontab</code> (kept installed through the timer cutover), the Ansible playbook + unit templates that generate the systemd timers, and an optional systemd unit for the websocket job.</td>
           </tr>
           <tr>
             <td class="job">scripts/</td>
-            <td>bootstrap, backfill, repair, prune_raw, Healthchecks setup, <code>build_term_structure.py</code> (rebuilds the ATM curve over the archive). Not a package.</td>
+            <td>bootstrap, backfill, backfill_underlying, repair, prune_raw, Healthchecks setup, <code>build_term_structure.py</code> (rebuilds the ATM curve over the archive), <code>build_surface.py</code> (same for the SVI surface), <code>build_spy_spot.py</code> (SPY spot series + overlap calibration), <code>build_rv_forecast.py</code> (walk-forward HAR-RV over the spot archive). Not a package.</td>
           </tr>
         </tbody>
       </table>
+      <h2 id="repo-not-there">Not in the repo</h2>
       <p>
         There is no <code>surfaces/</code>, no rates package, no ClickHouse
         client. The schemas module mentions ClickHouse in a docstring; no DDL

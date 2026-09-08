@@ -210,6 +210,56 @@
         arbitrage constraints enforced in the fit running over the archive, now say what is actually
         there: an at-the-money curve, no smile, no interpolator.
       </p>
+
+      <h2>Addendum, 2026-09-08: the smile landed the next day</h2>
+      <p>
+        This entry is left as written, because a dated record that gets edited when it becomes
+        inconvenient is worth nothing. But it is now out of date in a way a reader should not have to
+        discover for themselves.
+      </p>
+      <p>
+        A raw-SVI (Gatheral) smile fit shipped the following day and is scheduled daily, fifteen minutes
+        after the term structure so that both reductions read the same chain. It fits total implied
+        variance against log-moneyness per date, root and expiry, over own-inverted OTM strikes. SPY is
+        refused: its strikes are American and would invert under the wrong exercise boundary in a
+        European fit path.
+      </p>
+      <p>
+        Three of the four acceptance tests written above were met by the implementation rather than
+        argued around, which is the outcome I wanted from writing them down first:
+      </p>
+      <ul>
+        <li>
+          <strong>Constraints enforced in the fit, not checked afterwards</strong> &mdash; met. The
+          butterfly guard is a hard constraint inside the optimisation, and the calendar guard refits
+          against the previous expiry's total variance on a known union grid.
+        </li>
+        <li>
+          <strong>Report the failures</strong> &mdash; met, and more strictly than specified. A slice
+          that cannot be repaired raises rather than writing an arbitrageable smile, so the failure is
+          loud instead of being a row nobody reads.
+        </li>
+        <li>
+          <strong>Reproduce the baseline at the money</strong> &mdash; met by construction rather than by
+          calibration, which is better. The fit consumes the same chain, the same parity forward and the
+          same inversion as the ATM curve, so agreement between the two at the money is a cross-check
+          between two datasets rather than a target the fit was tuned against. Note that this is the
+          opposite situation to the tautology described above, and for the same underlying reason: what
+          makes an agreement informative is whether the two quantities could have disagreed.
+        </li>
+        <li>
+          <strong>Publish the residuals, not the curve</strong> &mdash; <em>not</em> met. No diagnostic
+          has been published, which is why the stage is marked implemented rather than operational, and
+          why the site says so.
+        </li>
+      </ul>
+      <p>
+        The claim this site carried on 6 September &mdash; a raw SVI fit with butterfly and calendar
+        arbitrage enforced in the fit, running over the archive &mdash; was false when it was written and
+        is true now. It was still worth correcting. A claim that happens to come true two days later was
+        not evidence on the day it was made, and the difference between those two things is most of what
+        this log is for.
+      </p>
     </div>
 
     <p class="muted" style="margin-top: var(--sp-7);">

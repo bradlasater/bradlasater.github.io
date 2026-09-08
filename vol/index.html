@@ -256,17 +256,21 @@
       <article class="card stage" id="stage-surface" aria-labelledby="stage-surface-title">
         <p class="stage__order"><span class="stage__num">04</span> Analytics</p>
         <h3 class="card__title" id="stage-surface-title">Smile &amp; surface</h3>
-        <p class="card__status"><span class="badge">Planned</span></p>
+        <p class="card__status"><span class="badge badge--active badge--dot">Implemented — under validation</span></p>
         <div class="card__body">
-          <p class="stage__summary">No smile fit and no interpolator. Nothing off-strike or between expiries can be evaluated yet.</p>
+          <p class="stage__summary">Raw SVI per expiry over OTM strikes, SPX/SPXW only, with butterfly and calendar arbitrage repaired inside the fit. Runs daily.</p>
           <dl class="stage__fields">
           <div class="stage__field">
             <dt>Runs today</dt>
-            <dd>Nothing. There is no smile fit and no interpolator, and no surfaces module in the tree. This is the single largest gap between what runs and what the rest of the architecture assumes.</dd>
+            <dd>A raw-SVI (Gatheral) smile is fitted per date, root and expiry to total implied variance against log-moneyness, over own-inverted OTM strikes from option day bars — calls above the parity forward, puts below. Butterfly and calendar constraints are repaired inside the fit rather than checked after it, and a slice that cannot be repaired raises rather than writing an arbitrageable smile. The fitted surface evaluates at any strike and maturity, interpolating linearly in total variance between expiries and holding flat outside them. It sits alongside the ATM curve rather than replacing it, and is built from the same chain, the same forward and the same inversion, so agreement between the two at the money is a cross-check between datasets rather than a calibration target. Scheduled daily after the term structure; the archive rebuilds separately.</dd>
           </div>
           <div class="stage__field">
             <dt>Designed to</dt>
-            <dd>A parametric fit in total implied variance — SVI per slice, moving toward SSVI for a globally consistent surface — with calendar-spread and butterfly no-arbitrage constraints enforced on the fit rather than checked afterwards, so that downstream Greeks are internally consistent.</dd>
+            <dd>A globally consistent, arbitrage-free volatility surface across the whole chain, extended to SSVI, that downstream Greeks and any off-strike valuation can rely on.</dd>
+          </div>
+          <div class="stage__field stage__field--blocked">
+            <dt>Blocked by</dt>
+            <dd>SPY is refused: its strikes are American and would invert under the wrong exercise boundary in a European fit path. An American inverter exists, so this is follow-up work rather than a structural limit. VIX options sit on the VX future and are a different modelling question.</dd>
           </div>
           </dl>
           <p class="stage__more"><a href="/vol/build-status.html#stage-surface">Inputs, outputs and acceptance test &rarr;</a></p>
@@ -276,13 +280,13 @@
       <article class="card stage" id="stage-forecasting" aria-labelledby="stage-forecasting-title">
         <p class="stage__order"><span class="stage__num">05</span> Analytics</p>
         <h3 class="card__title" id="stage-forecasting-title">Volatility forecasting</h3>
-        <p class="card__status"><span class="badge">Planned</span></p>
+        <p class="card__status"><span class="badge badge--progress badge--dot">In progress</span></p>
         <div class="card__body">
-          <p class="stage__summary">Realised-volatility estimators and HAR-RV and GARCH baselines, before any learned model is considered.</p>
+          <p class="stage__summary">A HAR-RV baseline forecast is implemented and tested on a continuous SPY series; it is not yet scheduled or evaluated.</p>
           <dl class="stage__fields">
           <div class="stage__field">
             <dt>Runs today</dt>
-            <dd>Nothing. No forecasting code exists.</dd>
+            <dd>A HAR cascade in logs — daily, weekly and monthly realised-variance terms — is implemented against a continuous SPY spot series, with its own uncertainty band. The spot series it consumes is built on a schedule; the forecast itself is not, and no out-of-sample evaluation has been run. Fitting is done in logs so the heavy right tail of realised variance does not dominate, and forecasts exponentiate back to variance.</dd>
           </div>
           <div class="stage__field">
             <dt>Designed to</dt>

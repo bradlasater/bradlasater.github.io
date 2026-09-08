@@ -24,9 +24,14 @@ audit, implied volatility is inverted per contract with own Greeks and checked
 each evening against put-call parity and reprice identities, and those are
 reduced to an ATM implied-volatility term structure — one row per date, root and
 expiry, back to 2022-08-31 — with the forward recovered from put-call parity
-because no index level is entitled on this data tier. There is no smile fit and
-no interpolator yet, so nothing off-strike or between expiries can be evaluated,
-and every stage downstream of that is designed and not built.
+because no index level is entitled on this data tier. On top of that curve a
+raw-SVI (Gatheral) smile is fitted per expiry over OTM strikes for SPX and SPXW,
+with butterfly and calendar arbitrage repaired inside the fit rather than
+checked afterwards; SPY is refused because its strikes are American and would
+invert under the wrong exercise boundary. A HAR-RV baseline realised-variance
+forecast is implemented and tested but not yet scheduled or evaluated out of
+sample. Every stage downstream of that — sizing, risk authorisation, execution —
+is designed and not built.
 
 The target architecture, none of which yet runs: it estimates physical variance,
 extracts the market's risk-neutral

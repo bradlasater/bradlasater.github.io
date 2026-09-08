@@ -14,8 +14,14 @@
       "outputs": "Partitioned Parquet under DATA_ROOT: option_snapshots, option_trades, option_day_bars, option_minute_bars, contracts, dividends, treasury_yields, forwards.",
       "blocked_by": "Option NBBO is a 403 on the current data tier. There is no bid, ask or mid anywhere in the warehouse, so every price is a traded price — last trade, else day close. Dropping crossed and locked quotes and filtering by spread width are defined in terms of fields this tier does not provide.",
       "evidence": [
-        { "label": "Coverage audit report", "href": "/vol/evidence/coverage.html" },
-        { "label": "Handbook: ingest", "href": "/handbook/ingest.html" }
+        {
+          "label": "Coverage audit report",
+          "href": "/vol/evidence/coverage.html"
+        },
+        {
+          "label": "Handbook: ingest",
+          "href": "/handbook/ingest.html"
+        }
       ],
       "validated_on": null,
       "next_acceptance": "Publish a dated coverage report showing expected versus observed sessions, missing partitions and the largest inter-sweep gap, generated from the running audit rather than written by hand."
@@ -33,9 +39,18 @@
       "outputs": "Own IV and Greeks per contract; a daily pass or fail with median reprice error, identity failure counts and the thresholds applied.",
       "blocked_by": null,
       "evidence": [
-        { "label": "Pricing validation report", "href": "/vol/evidence/pricing-validation.html" },
-        { "label": "Handbook: pricing", "href": "/handbook/pricing.html" },
-        { "label": "Handbook: daily canary", "href": "/handbook/canary.html" }
+        {
+          "label": "Pricing validation report",
+          "href": "/vol/evidence/pricing-validation.html"
+        },
+        {
+          "label": "Handbook: pricing",
+          "href": "/handbook/pricing.html"
+        },
+        {
+          "label": "Handbook: daily canary",
+          "href": "/handbook/canary.html"
+        }
       ],
       "validated_on": null,
       "next_acceptance": "Publish a dated pricing-validation report naming the identities tested, the tolerance for each, the inversion failures, and the Greek conventions in force — vega per 1.00 of volatility, theta per year of calendar time."
@@ -53,8 +68,14 @@
       "outputs": "atm_term_structure — one row per (date, root, expiry).",
       "blocked_by": null,
       "evidence": [
-        { "label": "Term-structure diagnostic", "href": "/vol/evidence/term-structure.html" },
-        { "label": "Handbook: warehouse math", "href": "/handbook/warehouse-math.html" }
+        {
+          "label": "Term-structure diagnostic",
+          "href": "/vol/evidence/term-structure.html"
+        },
+        {
+          "label": "Handbook: warehouse math",
+          "href": "/handbook/warehouse-math.html"
+        }
       ],
       "validated_on": null,
       "next_acceptance": "Publish a diagnostic separating the informative case from the tautological one. When put-call parity selects the same strike as the ATM search, both legs invert to the same volatility by construction and their agreement is evidence of nothing; the acceptance test is a residual distribution computed only over the dates where the two strikes differ, together with the rejected-observation count and the reasons."
@@ -64,32 +85,50 @@
       "order": 4,
       "name": "Smile & surface",
       "layer": "Analytics",
-      "state": "planned",
-      "summary": "No smile fit and no interpolator. Nothing off-strike or between expiries can be evaluated yet.",
-      "current_behaviour": "Nothing. There is no smile fit and no interpolator, and no surfaces module in the tree. This is the single largest gap between what runs and what the rest of the architecture assumes.",
-      "design_intent": "A parametric fit in total implied variance — SVI per slice, moving toward SSVI for a globally consistent surface — with calendar-spread and butterfly no-arbitrage constraints enforced on the fit rather than checked afterwards, so that downstream Greeks are internally consistent.",
-      "inputs": "Per-contract implied volatilities across the full chain; the parity forward per expiry.",
-      "outputs": "A fitted slice per expiry, its parameters, its residuals, and the observations it rejected.",
-      "blocked_by": null,
-      "evidence": [],
+      "state": "implemented_unvalidated",
+      "summary": "Raw SVI per expiry over OTM strikes, SPX/SPXW only, with butterfly and calendar arbitrage repaired inside the fit. Runs daily.",
+      "current_behaviour": "A raw-SVI (Gatheral) smile is fitted per date, root and expiry to total implied variance against log-moneyness, over own-inverted OTM strikes from option day bars — calls above the parity forward, puts below. Butterfly and calendar constraints are repaired inside the fit rather than checked after it, and a slice that cannot be repaired raises rather than writing an arbitrageable smile. The fitted surface evaluates at any strike and maturity, interpolating linearly in total variance between expiries and holding flat outside them. It sits alongside the ATM curve rather than replacing it, and is built from the same chain, the same forward and the same inversion, so agreement between the two at the money is a cross-check between datasets rather than a calibration target. Scheduled daily after the term structure; the archive rebuilds separately.",
+      "design_intent": "A globally consistent, arbitrage-free volatility surface across the whole chain, extended to SSVI, that downstream Greeks and any off-strike valuation can rely on.",
+      "inputs": "option_day_bars via the same chain helpers the ATM curve uses; the parity forward per expiry.",
+      "outputs": "vol_surface — fitted slice parameters per (date, root, expiry), read back by the surface loader.",
+      "blocked_by": "SPY is refused: its strikes are American and would invert under the wrong exercise boundary in a European fit path. An American inverter exists, so this is follow-up work rather than a structural limit. VIX options sit on the VX future and are a different modelling question.",
+      "evidence": [
+        {
+          "label": "Surface diagnostic",
+          "href": "/vol/evidence/surface.html"
+        },
+        {
+          "label": "Handbook: not built",
+          "href": "/handbook/not-built.html"
+        },
+        {
+          "label": "Handbook: target architecture",
+          "href": "/handbook/architecture.html"
+        }
+      ],
       "validated_on": null,
-      "next_acceptance": "Fit one slice on one date and publish the residuals, the rejected observations and the failure cases alongside the fitted curve — not a smooth chart. A fit is accepted only when it reproduces the ATM term structure at the money to within the pricing layer's own reprice tolerance."
+      "next_acceptance": "Publish the residuals, the rejected observations and the slices that failed to repair — not a smooth chart. The stage advances to operational when a downstream consumer reads the surface in anger: the daily canary's off-ATM check is the intended first one, and it is not wired yet."
     },
     {
       "id": "forecasting",
       "order": 5,
       "name": "Volatility forecasting",
       "layer": "Analytics",
-      "state": "planned",
-      "summary": "Realised-volatility estimators and HAR-RV and GARCH baselines, before any learned model is considered.",
-      "current_behaviour": "Nothing. No forecasting code exists.",
+      "state": "in_progress",
+      "summary": "A HAR-RV baseline forecast is implemented and tested on a continuous SPY series; it is not yet scheduled or evaluated.",
+      "current_behaviour": "A HAR cascade in logs — daily, weekly and monthly realised-variance terms — is implemented against a continuous SPY spot series, with its own uncertainty band. The spot series it consumes is built on a schedule; the forecast itself is not, and no out-of-sample evaluation has been run. Fitting is done in logs so the heavy right tail of realised variance does not dominate, and forecasts exponentiate back to variance.",
       "design_intent": "Realised-volatility estimators that use the full bar — Parkinson, Garman-Klass, Yang-Zhang — rather than close-to-close, feeding HAR-RV and GARCH-family baselines. Learned models are promoted only where they show incremental out-of-sample value over those baselines; a model that fails to beat them is a result, not a defect.",
       "inputs": "Underlying minute and day bars; the ATM term structure as the implied-volatility side of the comparison.",
       "outputs": "A forecast of realised volatility at a stated horizon, with its baseline comparison and out-of-sample error.",
       "blocked_by": null,
-      "evidence": [],
+      "evidence": [
+        {
+          "label": "Handbook: target architecture",
+          "href": "/handbook/architecture.html"
+        }
+      ],
       "validated_on": null,
-      "next_acceptance": "Reproduce the baseline forecast evaluation from a frozen dataset and configuration, with a documented target horizon and temporal split, and report the HAR-RV and GARCH baseline errors before any learned model is fitted."
+      "next_acceptance": "Reproduce the baseline forecast evaluation from a frozen dataset and configuration, with a documented target horizon and temporal split, and report the HAR-RV error before any learned model is fitted. Schedule the forecast so it produces a dated series rather than a run."
     },
     {
       "id": "sizing",
@@ -136,7 +175,10 @@
       "outputs": "Orders, fills, and the realised cost of each against its model.",
       "blocked_by": "The spread-dependent components of the cost model cannot be calibrated without an option NBBO entitlement. With no bid or ask the crossing cost can be bounded, roughly half the spread in volatility terms, but it cannot be measured or corrected for.",
       "evidence": [
-        { "label": "Handbook: box operations", "href": "/handbook/box-operations.html" }
+        {
+          "label": "Handbook: box operations",
+          "href": "/handbook/box-operations.html"
+        }
       ],
       "validated_on": null,
       "next_acceptance": "Reconcile a day of Flex-reported executions against the orders the system believed it sent, and report the difference between modelled and realised cost per fill."
@@ -154,8 +196,14 @@
       "outputs": "A judgement under rules fixed before the result existed.",
       "blocked_by": null,
       "evidence": [
-        { "label": "Evaluation protocol", "href": "/vol/methodology.html" },
-        { "label": "Track record", "href": "/vol/track-record.html" }
+        {
+          "label": "Evaluation protocol",
+          "href": "/vol/methodology.html"
+        },
+        {
+          "label": "Track record",
+          "href": "/vol/track-record.html"
+        }
       ],
       "validated_on": null,
       "next_acceptance": "Lock the three parameters the protocol currently leaves open — the confidence level, the underperformance window and the cost margin — into a named experiment record before the first evaluation runs, rather than describing them as fixed in advance while they remain unset."
@@ -173,7 +221,10 @@
       "outputs": "Alerts, audit reports, and the operational record.",
       "blocked_by": "Position and profit-and-loss reconciliation cannot exist before there are positions.",
       "evidence": [
-        { "label": "Handbook: box operations", "href": "/handbook/box-operations.html" }
+        {
+          "label": "Handbook: box operations",
+          "href": "/handbook/box-operations.html"
+        }
       ],
       "validated_on": null,
       "next_acceptance": "Publish the coverage and canary results as dated artifacts on this site, so that the operational claim is checkable by a reader rather than asserted."

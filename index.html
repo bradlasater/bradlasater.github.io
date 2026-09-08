@@ -220,7 +220,7 @@
     <dl class="statusstrip">
       <div class="statusstrip__item">
         <dt>Build phase</dt>
-        <dd>3 of 10 stages run today; the rest are designed and not built</dd>
+        <dd>4 of 10 stages run today; the rest are designed and not built</dd>
       </div>
       <div class="statusstrip__item">
         <dt>Latest validated evidence</dt>
@@ -228,7 +228,7 @@
       </div>
       <div class="statusstrip__item">
         <dt>Next milestone</dt>
-        <dd>Smile &amp; surface &mdash; Fit one slice on one date and publish the residuals, the rejected observations and the failure cases alongside the fitted curve — not a smooth chart.</dd>
+        <dd>Volatility forecasting &mdash; Reproduce the baseline forecast evaluation from a frozen dataset and configuration, with a documented target horizon and temporal split, and report the HAR-RV error before any learned model is fitted.</dd>
       </div>
     </dl>
     <p class="statusstrip__note">Counted from <a href="/data/components.json">the component manifest</a>, which is what the <a href="/vol/">architecture</a> and <a href="/vol/build-status.html">build status</a> pages render from.</p>
@@ -262,9 +262,12 @@
           against put–call parity and reprice identities; and those are reduced to an ATM
           implied-volatility term structure — one row per date, root and expiry, back to
           2022-08-31 — with the forward recovered from put–call parity, because no index level is
-          entitled on this data tier. There is no smile fit and no interpolator yet, so nothing
-          off-strike or between expiries can be evaluated. Everything downstream of that is
-          designed and not built.
+          entitled on this data tier. On top of that curve a raw-SVI smile is fitted per expiry
+          over OTM strikes for SPX and SPXW, with butterfly and calendar arbitrage repaired inside
+          the fit rather than checked afterwards; SPY is refused there because its strikes are
+          American. A HAR-RV baseline forecast is written and tested but not yet scheduled or
+          evaluated out of sample. Everything downstream of that &mdash; sizing, risk
+          authorisation, execution &mdash; is designed and not built.
         </p>
         <div class="actions">
           <a class="btn btn--primary" href="/vol/">System overview</a>
