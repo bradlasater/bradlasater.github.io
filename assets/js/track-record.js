@@ -29,6 +29,16 @@
    they are not merely imprecise but actively misleading (a two-day sample can
    produce an annualised Sharpe in the thousands), so they are withheld. This
    asymmetry is the whole point of the page.
+
+   RECORD KINDS ARE NEVER JOINED. Each observation declares a `record_kind`
+   saying how its numbers were produced — forward simulation against live data
+   with nothing at risk, or broker-executed and reconciled against actual
+   fills. Those answer different questions and carry very different weight, so
+   the page splits the record into one series per kind and computes every
+   statistic within a single kind. Concatenating them would produce one curve
+   whose early half is a simulator's marks and whose later half is real fills,
+   with a single Sharpe over both — precisely the laundering this page exists
+   to refuse. The kind selector switches series; it never merges them.
    ========================================================================== */
 
 (function () {
@@ -46,6 +56,26 @@
   /** Relative floor for the standard deviation, guarding against a NAV series
       that is smooth to within floating-point noise. */
   var REL_SD_FLOOR = 1e-8;
+
+  /** Record kinds, weakest evidence first. The order is the schema's, and the
+      validator refuses any observation that moves back down it. */
+  var RECORD_KINDS = ["forward_sim", "broker_executed"];
+
+  var RECORD_KIND_LABEL = {
+    forward_sim: "Forward simulation",
+    broker_executed: "Broker-executed"
+  };
+
+  /** One clause naming what the kind does and does not establish. Shown with
+      whichever series is on screen, so the weight a reader should give the
+      numbers arrives at the same time as the numbers. */
+  var RECORD_KIND_BLURB = {
+    forward_sim:
+      "live market data with nothing at risk; fills are modelled rather than " +
+      "obtained from a broker",
+    broker_executed:
+      "reconciled against actual broker fills"
+  };
 
   /* ---------------------------------------------------------------- math -- */
 
@@ -569,6 +599,15 @@
       if (!isNum(o.nav) || o.nav <= 0) {
         throw new Error("observation " + i + " has an invalid nav");
       }
+      // Required, never inferred. Every figure below depends on which kind of
+      // record a day belongs to, so a day that does not say is not a day this
+      // page can render — guessing would attach a claim to it that nobody made.
+      if (RECORD_KINDS.indexOf(o.record_kind) === -1) {
+        throw new Error(
+          "observation " + i + " has an unknown record_kind " +
+          JSON.stringify(o.record_kind)
+        );
+      }
     });
 
     var sorted = observations.slice().sort(function (a, b) {
@@ -578,17 +617,69 @@
       if (sorted[i].date === sorted[i - 1].date) {
         throw new Error("duplicate observation date " + sorted[i].date);
       }
+      // The schema forbids falling back to weaker evidence, and the renderer
+      // relies on it: one contiguous run per kind is what makes "this series
+      // is broker-executed" a statement about a date range rather than about a
+      // scatter of days. Refusing to draw is the right failure here — a page
+      // that renders a mislabelled record is worse than one that says it could
+      // not load.
+      var step =
+        RECORD_KINDS.indexOf(sorted[i].record_kind) -
+        RECORD_KINDS.indexOf(sorted[i - 1].record_kind);
+      if (step < 0) {
+        throw new Error(
+          "record kind regressed to " + sorted[i].record_kind + " on " +
+          sorted[i].date
+        );
+      }
     }
     return sorted;
   }
 
-  function renderHero(doc, observations, stats) {
-    var inception = parseDate(observations[0].date);
+  /**
+   * Split the record into one contiguous segment per kind, in date order.
+   * normalise() has already rejected a regressing sequence, so each kind
+   * appears at most once and a segment is a date range, not a filter.
+   * @param {Array<Object>} observations sorted ascending
+   * @returns {Array<{kind: string, observations: Array<Object>}>}
+   */
+  function segmentByKind(observations) {
+    var segments = [];
+    observations.forEach(function (o) {
+      var last = segments[segments.length - 1];
+      if (last && last.kind === o.record_kind) {
+        last.observations.push(o);
+      } else {
+        segments.push({ kind: o.record_kind, observations: [o] });
+      }
+    });
+    return segments;
+  }
+
+  /**
+   * @param {Array<Object>} observations the selected segment only
+   * @param {Stats} stats
+   * @param {{isLatest: boolean, multi: boolean}} opts isLatest — this segment
+   *   is the one still running; multi — the record holds more than one kind.
+   */
+  function renderHero(observations, stats, opts) {
+    var start = parseDate(observations[0].date);
     var latest = parseDate(observations[observations.length - 1].date);
-    // Clamp at 1: a viewer whose clock lags inception would otherwise see "0"
-    // or negative days on a record that has demonstrably started.
-    setText("tr-days", String(Math.max(1, daysBetweenUTC(inception, new Date()) + 1)));
-    setText("tr-inception", fmtDate(inception));
+
+    // Elapsed time accrues only for the segment that is still running. A
+    // segment the record has moved on from is closed, and counting it up to
+    // today would credit a finished series with days it never traded.
+    var through = opts.isLatest ? new Date() : latest;
+    // Clamp at 1: a viewer whose clock lags the first observation would
+    // otherwise see "0" or negative days on a record that has demonstrably
+    // started.
+    setText("tr-days", String(Math.max(1, daysBetweenUTC(start, through) + 1)));
+
+    // "Inception" belongs to the record as a whole. Once there is more than one
+    // kind, the date below is where *this series* starts, which is a different
+    // claim and has to be labelled as one.
+    setText("tr-start-label", opts.multi ? "Series began" : "Inception");
+    setText("tr-inception", fmtDate(start));
     setText("tr-latest", fmtDate(latest));
     setText("tr-obs", String(stats.n));
 
@@ -726,7 +817,15 @@
 
     for (var i = observations.length - 1; i >= 0; i--) {
       var o = observations[i];
-      var ret = i === 0 ? null : o.nav / observations[i - 1].nav - 1;
+      // A return spanning a kind boundary would divide a broker-executed NAV
+      // by a simulated one. The charts and every statistic already reset at
+      // that boundary; the table has to as well, or this column quietly
+      // reintroduces the one number the whole page promises never to compute.
+      // The first observation of each kind is a new baseline, not a return.
+      var prev = i === 0 ? null : observations[i - 1];
+      var ret = prev && prev.record_kind === o.record_kind
+        ? o.nav / prev.nav - 1
+        : null;
       var row = document.createElement("tr");
 
       [
@@ -739,7 +838,10 @@
         { text: isNum(o.gross_pnl) ? o.gross_pnl.toFixed(2) : "—", cls: "numeric" },
         { text: isNum(o.costs) ? o.costs.toFixed(2) : "—", cls: "numeric" },
         { text: isNum(o.positions) ? String(o.positions) : "—", cls: "numeric" },
-        { text: typeof o.mode === "string" && o.mode ? o.mode : "—", cls: "" }
+        { text: typeof o.mode === "string" && o.mode ? o.mode : "—", cls: "" },
+        // Per-row, so the table stays the complete record even while the
+        // statistics above are deliberately confined to one kind.
+        { text: RECORD_KIND_LABEL[o.record_kind] || "—", cls: "" }
       ].forEach(function (cell) {
         var td = document.createElement("td");
         if (cell.cls.trim()) td.className = cell.cls.trim();
@@ -777,28 +879,60 @@
     }
   }
 
-  function render(doc) {
-    var observations = normalise(doc);
+  /**
+   * State what the figures below are, and — when there is more than one kind —
+   * what they deliberately exclude. This sentence is the page's defence
+   * against the reader who scrolls to a Sharpe ratio and assumes it covers the
+   * whole record, so it is rendered with the numbers, not in the prose above.
+   */
+  function renderKindNote(segments, selected) {
+    var node = document.getElementById("tr-kind-note");
+    if (!node) return;
+    node.textContent = "";
 
-    if (!observations.length) {
-      showEmpty();
-      return;
+    var count = selected.observations.length;
+    var strong = document.createElement("strong");
+    strong.textContent = RECORD_KIND_LABEL[selected.kind];
+    node.appendChild(strong);
+
+    var others = segments.filter(function (s) {
+      return s.kind !== selected.kind;
+    });
+    var text =
+      " — " + RECORD_KIND_BLURB[selected.kind] + ". Every figure below is " +
+      "computed from these " + count + " observation" + (count === 1 ? "" : "s") +
+      " alone.";
+    if (others.length) {
+      text +=
+        " The " +
+        others
+          .map(function (s) {
+            return (
+              s.observations.length + " " +
+              RECORD_KIND_LABEL[s.kind].toLowerCase() + " observation" +
+              (s.observations.length === 1 ? "" : "s")
+            );
+          })
+          .join(" and ") +
+        " are reported as their own series and are never joined to this one. " +
+        "The table below lists every observation of every kind.";
     }
+    node.appendChild(document.createTextNode(text));
+  }
 
-    var periods = doc.periods_per_year || 252;
-    var stats = computeStats(observations, periods);
+  /** Draw everything that is scoped to a single record kind. */
+  function renderSegment(doc, segments, selected) {
+    var observations = selected.observations;
+    var stats = computeStats(observations, doc.periods_per_year || 252);
+    var isLatest = segments[segments.length - 1] === selected;
 
-    hideLoading();
-    var empty = document.getElementById("tr-empty");
-    var live = document.getElementById("tr-live");
-    if (empty) empty.hidden = true;
-    if (live) live.hidden = false;
-
-    renderHero(doc, observations, stats);
+    renderKindNote(segments, selected);
+    renderHero(observations, stats, { isLatest: isLatest, multi: segments.length > 1 });
     renderStats(doc, stats);
     renderVerdict(stats);
 
     var series = buildSeries(doc, observations);
+    var label = RECORD_KIND_LABEL[selected.kind].toLowerCase();
 
     var eqNode = document.getElementById("tr-chart-equity");
     if (eqNode) {
@@ -806,8 +940,9 @@
         kind: "equity",
         boundaries: series.boundaries,
         ariaLabel:
-          "Cumulative return since inception: " + pct(stats.cumulative) +
-          " over " + stats.n + " observations. Full values are in the table below."
+          "Cumulative return of the " + label + " series, indexed to its first " +
+          "observation: " + pct(stats.cumulative) + " over " + stats.n +
+          " observations. Full values are in the table below."
       });
     }
 
@@ -817,11 +952,91 @@
         kind: "drawdown",
         height: 180,
         ariaLabel:
-          "Drawdown from running peak. Maximum drawdown " + pct(stats.maxDrawdown) +
+          "Drawdown from running peak of the " + label + " series. Maximum " +
+          "drawdown " + pct(stats.maxDrawdown) +
           ". Full values are in the table below."
       });
     }
+  }
 
+  /**
+   * Build the series selector, or leave it hidden when there is only one kind.
+   *
+   * Radios rather than a <select>: the set is tiny and fixed, and every option
+   * stays visible, so a reader can see that a second series exists without
+   * interacting with the control. Selecting one re-renders the section from
+   * that segment; nothing is ever aggregated across segments.
+   *
+   * @returns {{kind: string, observations: Array<Object>}} the segment to show
+   */
+  function renderKindSwitch(doc, segments) {
+    var host = document.getElementById("tr-kind-switch");
+    if (segments.length < 2 || !host) {
+      if (host) {
+        host.textContent = "";
+        host.hidden = true;
+      }
+      return segments[0];
+    }
+    host.textContent = "";
+    host.hidden = false;
+
+    var set = document.createElement("fieldset");
+    set.className = "viewswitch__set";
+    var legend = document.createElement("legend");
+    legend.className = "viewswitch__legend";
+    legend.textContent = "Series";
+    set.appendChild(legend);
+
+    // Default to the last segment: the kinds only ever climb, so the newest is
+    // also the strongest evidence, and it is what the record currently is.
+    var initial = segments[segments.length - 1];
+
+    segments.forEach(function (segment) {
+      var id = "tr-kind-" + segment.kind;
+      var input = document.createElement("input");
+      input.className = "viewswitch__input";
+      input.type = "radio";
+      input.name = "tr-kind";
+      input.id = id;
+      input.checked = segment === initial;
+      input.addEventListener("change", function () {
+        if (input.checked) renderSegment(doc, segments, segment);
+      });
+
+      var label = document.createElement("label");
+      label.className = "viewswitch__label";
+      label.htmlFor = id;
+      label.textContent =
+        RECORD_KIND_LABEL[segment.kind] + " (" + segment.observations.length + ")";
+
+      set.appendChild(input);
+      set.appendChild(label);
+    });
+
+    host.appendChild(set);
+    return initial;
+  }
+
+  function render(doc) {
+    var observations = normalise(doc);
+
+    if (!observations.length) {
+      showEmpty();
+      return;
+    }
+
+    hideLoading();
+    var empty = document.getElementById("tr-empty");
+    var live = document.getElementById("tr-live");
+    if (empty) empty.hidden = true;
+    if (live) live.hidden = false;
+
+    var segments = segmentByKind(observations);
+    renderSegment(doc, segments, renderKindSwitch(doc, segments));
+
+    // The table is the complete record and is never filtered by the selector:
+    // the statistics are scoped, the raw data is not.
     renderTable(observations);
   }
 

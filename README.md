@@ -249,12 +249,20 @@ rescales the annualised return, volatility, Sharpe, PSR and MinTRL all at once.
 ```bash
 python3 scripts/append_observation.py \
     --date 2026-09-01 --nav 100123.45 \
-    --gross-pnl 150.00 --costs 26.55 --positions 4 --mode paper --commit
+    --gross-pnl 150.00 --costs 26.55 --positions 4 --mode paper \
+    --record-kind forward_sim --commit
 ```
 
 Run it from the repository root. It validates the whole document before writing,
 refuses out-of-order and future-dated entries, and with `--commit` commits only
 `data/track-record.json`.
+
+`--record-kind` is required and has no default: it says whether the day's
+numbers came from this system's simulator (`forward_sim`) or from reconciled
+broker fills (`broker_executed`), and the page reports the two as separate
+series that are never joined. It may never move back down that ladder, a `live`
+day must be `broker_executed`, and backtests are not appended here at all. The
+reasoning for all three is in [`data/SCHEMA.md`](data/SCHEMA.md).
 
 Recording the move from paper to real capital:
 
