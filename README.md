@@ -64,10 +64,11 @@ There is no deploy script and no build artefact to commit beyond what
 | `assets/js/track-record.js` | Computes and renders every track-record statistic |
 | `assets/css/handbook-chrome.css` | Site-owned interaction layer loaded last on every handbook page |
 | `assets/js/analytics.js` | GoatCounter loader (see setup below) |
+| `data/components.json` | Implementation status of every system stage. See below |
 | `data/track-record.json` | The append-only track record. See `data/SCHEMA.md` |
 | `scripts/append_observation.py` | Appends one day to the record |
 | `scripts/validate_track_record.py` | Structural + append-only validation |
-| `scripts/build_site.py` | Generates log entry pages and derived metadata |
+| `scripts/build_site.py` | Generates log entry pages, status surfaces, and derived metadata |
 | `scripts/sync_docs.py` | Copies the handbook in from `data_ingest_infra` |
 | `content/log/*.html` | Hand-authored research-log entry fragments |
 
@@ -80,6 +81,44 @@ Data flows one way:
 
 Nothing is precomputed. The page derives its statistics client-side so that it
 cannot disagree with the data file behind it.
+
+---
+
+## The component manifest (`data/components.json`)
+
+**One file decides what the site says is built.** `data/components.json` holds
+one entry per stage of the volatility system, and `scripts/build_site.py`
+renders it into the homepage status strip and the architecture grid on `/vol/`,
+between `BUILD:STATUS-STRIP` and `BUILD:ARCHITECTURE` markers. Nothing between
+those markers is hand-edited; the build overwrites it.
+
+This exists because of a specific failure. In September 2026 the public pages
+were edited to claim a raw SVI surface fit running over the archive. No such
+code was ever written — `pricing/__init__.py` in the system repository opens
+"Not a surface", and `handbook/not-built.html` said plainly that there was no
+smile fit and no interpolator. The handbook was right and was not updated,
+because it lives in another repository; the public pages were wrong and were.
+Both surfaces now render from one manifest, so a status is changed in one place
+or not at all.
+
+Each component carries four states — `operational`,
+`implemented_unvalidated`, `in_progress`, `planned` — and, separately,
+`current_behaviour` and `design_intent`. **Both text fields are required.** A
+badge on its own cannot distinguish a stage that runs from a stage that is
+merely specified, and that ambiguity is exactly what produced the SVI claim.
+`blocked_by` is optional and reserved for what an external constraint prevents
+(the missing option NBBO entitlement, mostly) rather than what is simply
+unwritten — a reader judging the work needs to tell those apart.
+
+`next_acceptance` is a test, not a task: what would have to be demonstrated for
+the stage to advance. `evidence` may name an artifact before it exists; links
+to site-local pages that are not yet on disk are dropped at render time rather
+than shipped as 404s.
+
+The loader validates hard and fails the build on a bad manifest — unknown
+state, missing or empty text field, misspelt key, duplicate `id` or `order`,
+a `validated_on` that is malformed, impossible, or in the future. A typo must
+not silently render as an absent field.
 
 ---
 

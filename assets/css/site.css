@@ -483,6 +483,70 @@ main { flex: 1; }
 .card__body { color: var(--c-text-secondary); font-size: var(--step--1); }
 .card__body > * + * { margin-top: var(--sp-3); }
 
+/* Stage cards carry four labelled fields, not a sentence, so they run far
+   taller than an ordinary card. Wider columns make them shorter: three columns
+   of 18rem produced a wall of text at desktop width. */
+.grid--stages { grid-template-columns: repeat(auto-fit, minmax(min(26rem, 100%), 1fr)); }
+
+/* Stage cards on /vol/, generated from data/components.json. Each carries the
+   same four parts in the same order, so two stages can be compared by eye
+   rather than by reading two different paragraph shapes. */
+.stage__order {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+.stage__num { color: var(--c-accent); }
+.stage__summary { color: var(--c-text); }
+.stage__fields { margin: var(--sp-4) 0 0; }
+.stage__field + .stage__field { margin-top: var(--sp-3); }
+.stage__field dt {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+.stage__field dd { margin: var(--sp-1) 0 0; }
+/* An entitlement gap is not the same kind of fact as unwritten code, and a
+   reader deciding whether the work is credible needs to tell them apart. */
+.stage__field--blocked dt { color: var(--c-warn); }
+.stage__field--blocked dd { border-left: 2px solid color-mix(in oklch, var(--c-warn) 35%, transparent); padding-left: var(--sp-3); }
+.stage__more { margin-top: var(--sp-4); font-size: var(--step--1); }
+
+/* Homepage status strip — three facts, counted from the manifest. */
+.statusstrip__wrap { padding-block: var(--sp-6); }
+.statusstrip {
+  display: grid;
+  gap: var(--sp-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  margin: 0;
+  padding: var(--sp-5);
+  background: var(--c-bg-subtle);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+}
+.statusstrip__item dt {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+.statusstrip__item dd {
+  margin: var(--sp-2) 0 0;
+  color: var(--c-text-secondary);
+  font-size: var(--step--1);
+}
+.statusstrip__note {
+  margin: var(--sp-3) 0 0;
+  font-size: var(--step--1);
+  color: var(--c-text-muted);
+}
+
 /* Feature card — the volatility system slot. */
 .feature {
   background:
@@ -515,8 +579,13 @@ main { flex: 1; }
   color: var(--c-text-muted);
   white-space: nowrap;
 }
-.badge--active { color: var(--c-warn); border-color: color-mix(in oklch, var(--c-warn) 40%, transparent); }
-.badge--live   { color: var(--c-pos);  border-color: color-mix(in oklch, var(--c-pos) 40%, transparent); }
+.badge--active   { color: var(--c-warn);   border-color: color-mix(in oklch, var(--c-warn) 40%, transparent); }
+.badge--live     { color: var(--c-pos);    border-color: color-mix(in oklch, var(--c-pos) 40%, transparent); }
+.badge--progress { color: var(--c-accent); border-color: color-mix(in oklch, var(--c-accent) 40%, transparent); }
+/* "Implemented — under validation" is the longest label of the four, and it
+   wraps rather than overflowing its card on a narrow viewport. The nowrap
+   above is right for the short states and wrong for this one. */
+.badge--active { white-space: normal; }
 .badge--dot::before {
   content: "";
   width: 6px; height: 6px;

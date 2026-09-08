@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Generate the derived parts of the site: log pages, feed, sitemap, timestamps.
 
-Everything this script writes is derived from two sources of truth:
+Everything this script writes is derived from three sources of truth:
 
   * ``content/log/*.html`` — one hand-authored fragment per research-log entry.
+  * ``data/components.json`` — the implementation status of every stage of the
+    volatility system.
   * ``git`` — the commit history, which supplies every ``lastmod`` and
     ``dateModified`` on the site.
 
@@ -20,7 +22,15 @@ Outputs (all generated, none hand-edited):
   * ``feed.xml``           — Atom feed of the research log
   * ``sitemap.xml``        — every indexable page, with real lastmod values
   * ``llms.txt``           — log section, injected between BUILD markers
+  * ``index.html``         — build-status strip, injected between BUILD markers
+  * ``vol/index.html``     — architecture grid, injected between BUILD markers
   * timestamps stamped into every page's metadata
+
+The component manifest exists because hand-written status prose is how this
+site came to advertise a volatility surface fit that no code implemented: the
+public pages were edited and the handbook, which was correct, was not. One
+manifest, rendered everywhere status appears, makes that particular mistake
+structurally harder — a status is changed in one place or not at all.
 
 Usage:
 
@@ -70,6 +80,20 @@ STATIC_PAGES = [
 ]
 
 ENTRY_SRC_DIR = ROOT / "content" / "log"
+
+COMPONENTS_PATH = ROOT / "data" / "components.json"
+
+# The four implementation states, in the order a component moves through them.
+# Each maps to a label and the badge classes that render it. A badge is never
+# the whole claim: every component also carries current_behaviour and
+# design_intent as separate required fields, so a reader can tell what a stage
+# does today from what it is designed to do eventually.
+STATES: dict[str, tuple[str, str]] = {
+    "operational": ("Operational", "badge badge--live badge--dot"),
+    "implemented_unvalidated": ("Implemented — under validation", "badge badge--active badge--dot"),
+    "in_progress": ("In progress", "badge badge--progress badge--dot"),
+    "planned": ("Planned", "badge"),
+}
 
 MARKER = re.compile(
     r"(<!-- BUILD:(?P<name>[A-Z-]+):START -->)(?P<body>.*?)(<!-- BUILD:(?P=name):END -->)",
@@ -213,6 +237,149 @@ def load_entries() -> list[Entry]:
         raise SystemExit(f"duplicate entry slugs: {', '.join(sorted(duplicate))}")
     entries.sort(key=lambda e: (e.date, e.slug), reverse=True)
     return entries
+
+
+# ---------------------------------------------------------------------------
+# components
+# ---------------------------------------------------------------------------
+
+class Component:
+    """One stage of the volatility system, parsed from data/components.json.
+
+    The manifest is the single source of implementation status for the whole
+    site: the homepage status strip, the architecture grid on /vol/, and the
+    build-status table all render from it. Hand-written status prose is how
+    the site came to claim a surface fit that no code implemented, so the only
+    defence is that there is one place to change and every surface follows it.
+    """
+
+    REQUIRED_TEXT = (
+        "id", "name", "layer", "state", "summary",
+        "current_behaviour", "design_intent", "inputs", "outputs",
+        "next_acceptance",
+    )
+
+    def __init__(self, raw: dict, index: int):
+        where = f"data/components.json[{index}]"
+
+        for key in self.REQUIRED_TEXT:
+            value = raw.get(key)
+            if not isinstance(value, str) or not value.strip():
+                raise SystemExit(f"{where}: {key!r} must be a non-empty string.")
+
+        self.id = raw["id"]
+        if not re.fullmatch(r"[a-z0-9-]+", self.id):
+            # Interpolated into DOM ids and fragment links unescaped.
+            raise SystemExit(f"{where}: id {self.id!r} must be lowercase letters, digits and hyphens.")
+
+        if raw["state"] not in STATES:
+            raise SystemExit(
+                f"{where}: state {raw['state']!r} is not one of {', '.join(STATES)}."
+            )
+
+        order = raw.get("order")
+        if not isinstance(order, int) or isinstance(order, bool) or order < 1:
+            raise SystemExit(f"{where}: 'order' must be a positive integer.")
+
+        validated = raw.get("validated_on")
+        if validated is not None:
+            if not isinstance(validated, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", validated):
+                raise SystemExit(f"{where}: 'validated_on' must be null or ISO YYYY-MM-DD.")
+            try:
+                parsed = dt.date.fromisoformat(validated)
+            except ValueError:
+                raise SystemExit(f"{where}: 'validated_on' {validated!r} is not a real date.") from None
+            if parsed > dt.date.today():
+                raise SystemExit(f"{where}: 'validated_on' {validated} is in the future.")
+
+        blocked = raw.get("blocked_by")
+        if blocked is not None and (not isinstance(blocked, str) or not blocked.strip()):
+            raise SystemExit(f"{where}: 'blocked_by' must be null or a non-empty string.")
+
+        evidence = raw.get("evidence", [])
+        if not isinstance(evidence, list):
+            raise SystemExit(f"{where}: 'evidence' must be a list.")
+        for item in evidence:
+            if not isinstance(item, dict) or not item.get("label") or not item.get("href"):
+                raise SystemExit(f"{where}: every evidence entry needs a label and an href.")
+
+        unknown = set(raw) - set(self.REQUIRED_TEXT) - {"order", "validated_on", "blocked_by", "evidence"}
+        if unknown:
+            # A typo in a key would otherwise be silently dropped, and the page
+            # would render as though the field had never been written.
+            raise SystemExit(f"{where}: unknown field(s) {', '.join(sorted(unknown))}.")
+
+        self.order = order
+        self.name = raw["name"]
+        self.layer = raw["layer"]
+        self.state = raw["state"]
+        self.summary = raw["summary"]
+        self.current_behaviour = raw["current_behaviour"]
+        self.design_intent = raw["design_intent"]
+        self.inputs = raw["inputs"]
+        self.outputs = raw["outputs"]
+        self.next_acceptance = raw["next_acceptance"]
+        self.validated_on = validated
+        self.blocked_by = blocked
+        self.evidence = evidence
+
+    @property
+    def label(self) -> str:
+        return STATES[self.state][0]
+
+    @property
+    def badge_class(self) -> str:
+        return STATES[self.state][1]
+
+    @property
+    def runs_today(self) -> bool:
+        return self.state in ("operational", "implemented_unvalidated")
+
+    def live_evidence(self) -> list[dict]:
+        """Evidence links whose target actually exists.
+
+        The manifest names the artifact a component will publish before it has
+        been published, so that the next acceptance test is legible. Rendering
+        those links regardless would ship 404s from the one page whose whole
+        purpose is that its claims can be checked.
+        """
+        out = []
+        for item in self.evidence:
+            href = item["href"]
+            if href.startswith("/"):
+                target = ROOT / href.lstrip("/")
+                if target.suffix and not target.exists():
+                    continue
+            out.append(item)
+        return out
+
+
+def load_components() -> list[Component]:
+    if not COMPONENTS_PATH.exists():
+        raise SystemExit("data/components.json is missing.")
+    try:
+        doc = json.loads(COMPONENTS_PATH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"data/components.json: {exc}") from None
+
+    if doc.get("schema_version") != 1 or isinstance(doc.get("schema_version"), bool):
+        raise SystemExit("data/components.json: schema_version must be 1.")
+    raw = doc.get("components")
+    if not isinstance(raw, list) or not raw:
+        raise SystemExit("data/components.json: 'components' must be a non-empty list.")
+
+    components = [Component(item, i) for i, item in enumerate(raw)]
+
+    ids = [c.id for c in components]
+    duplicate = {i for i in ids if ids.count(i) > 1}
+    if duplicate:
+        raise SystemExit(f"data/components.json: duplicate ids {', '.join(sorted(duplicate))}.")
+    orders = [c.order for c in components]
+    if len(set(orders)) != len(orders):
+        raise SystemExit("data/components.json: 'order' values must be unique.")
+
+    components.sort(key=lambda c: c.order)
+    return components
 
 
 # ---------------------------------------------------------------------------
@@ -484,6 +651,109 @@ def render_llms_log_section(entries: list[Entry]) -> str:
     return "\n".join(lines) + "\n\n"
 
 
+def render_architecture(components: list[Component]) -> str:
+    """The stage grid on /vol/ — status, what runs, what is designed.
+
+    Deliberately lighter than the build-status table: inputs, outputs,
+    evidence and acceptance tests live there, and each card links across.
+    """
+    cards = []
+    for c in components:
+        rows = [
+            f'          <div class="stage__field">\n'
+            f'            <dt>Runs today</dt>\n'
+            f'            <dd>{esc(c.current_behaviour)}</dd>\n'
+            f'          </div>',
+            f'          <div class="stage__field">\n'
+            f'            <dt>Designed to</dt>\n'
+            f'            <dd>{esc(c.design_intent)}</dd>\n'
+            f'          </div>',
+        ]
+        if c.blocked_by:
+            rows.append(
+                f'          <div class="stage__field stage__field--blocked">\n'
+                f'            <dt>Blocked by</dt>\n'
+                f'            <dd>{esc(c.blocked_by)}</dd>\n'
+                f'          </div>'
+            )
+        fields = "\n".join(rows)
+        cards.append(
+            f'      <article class="card stage" id="stage-{c.id}" aria-labelledby="stage-{c.id}-title">\n'
+            f'        <p class="stage__order"><span class="stage__num">{c.order:02d}</span> {esc(c.layer)}</p>\n'
+            f'        <h3 class="card__title" id="stage-{c.id}-title">{esc(c.name)}</h3>\n'
+            f'        <p class="card__status"><span class="{c.badge_class}">{esc(c.label)}</span></p>\n'
+            f'        <div class="card__body">\n'
+            f'          <p class="stage__summary">{esc(c.summary)}</p>\n'
+            f'          <dl class="stage__fields">\n{fields}\n          </dl>\n'
+            f'          <p class="stage__more">'
+            f'<a href="/vol/build-status.html#stage-{c.id}">Inputs, outputs and acceptance test &rarr;</a></p>\n'
+            f'        </div>\n'
+            f'      </article>'
+        )
+    return "\n\n" + "\n\n".join(cards) + "\n\n    "
+
+
+def first_sentence(text: str) -> str:
+    """The opening sentence, for places too small for a full acceptance test.
+
+    The strip is three cells wide; a paragraph in one of them unbalances the
+    row and buries the other two facts. The full text is one click away on the
+    build-status page, so the cell only has to carry the headline.
+    """
+    parts = re.split(r"(?<=[.?!])\s+", text.strip())
+    out = parts[0]
+    # A very short opener ("Nothing.") is a fragment rather than the claim;
+    # take the next sentence with it so the cell says something.
+    if len(out) < 60 and len(parts) > 1:
+        out = f"{out} {parts[1]}"
+    return out
+
+
+def render_status_strip(components: list[Component]) -> str:
+    """The homepage strip: where the build is, the latest evidence, what is next.
+
+    Every figure here is counted from the manifest rather than typed, so the
+    homepage cannot claim a build fraction the architecture page contradicts.
+    """
+    running = [c for c in components if c.runs_today]
+    total = len(components)
+
+    # The frontier is the first stage that is not yet running: what the build
+    # is actually working towards, rather than a stage picked by hand.
+    frontier = next((c for c in components if not c.runs_today), components[-1])
+
+    dated = [c for c in components if c.validated_on]
+    if dated:
+        latest = max(dated, key=lambda c: c.validated_on)
+        evidence_value = f"{esc(latest.name)} &middot; {esc(human_date(dt.date.fromisoformat(latest.validated_on)))}"
+    else:
+        evidence_value = "No component has a published validation date yet"
+
+    items = [
+        ("Build phase", f"{len(running)} of {total} stages run today; the rest are designed and not built"),
+        ("Latest validated evidence", evidence_value),
+        ("Next milestone", f"{esc(frontier.name)} &mdash; {esc(first_sentence(frontier.next_acceptance))}"),
+    ]
+    rendered = "\n".join(
+        f'      <div class="statusstrip__item">\n'
+        f'        <dt>{esc(label)}</dt>\n'
+        f'        <dd>{value}</dd>\n'
+        f'      </div>'
+        for label, value in items
+    )
+    return (
+        "\n"
+        '    <dl class="statusstrip">\n'
+        f"{rendered}\n"
+        "    </dl>\n"
+        '    <p class="statusstrip__note">'
+        'Counted from <a href="/data/components.json">the component manifest</a>, '
+        'which is what the <a href="/vol/">architecture</a> and '
+        '<a href="/vol/build-status.html">build status</a> pages render from.</p>\n'
+        "  "
+    )
+
+
 def render_feed(entries: list[Entry]) -> str:
     if entries:
         updated = max(e.modified for e in entries).isoformat()
@@ -627,6 +897,7 @@ def main() -> int:
     args = parser.parse_args()
 
     entries = load_entries()
+    components = load_components()
     planned: dict[str, str] = {}
 
     # 1. One page per entry.
@@ -646,13 +917,22 @@ def main() -> int:
     llms = (ROOT / "llms.txt").read_text(encoding="utf-8")
     planned["llms.txt"] = inject(llms, "LOG-ENTRIES", render_llms_log_section(entries))
 
-    # 5. Timestamps on every hand-authored page. Generated entry pages already
+    # 5. Implementation status, from data/components.json. One manifest drives
+    #    the homepage strip and the architecture grid, so the two cannot
+    #    disagree about what is built.
+    home = (ROOT / "index.html").read_text(encoding="utf-8")
+    planned["index.html"] = inject(home, "STATUS-STRIP", render_status_strip(components))
+
+    vol_index = (ROOT / "vol" / "index.html").read_text(encoding="utf-8")
+    planned["vol/index.html"] = inject(vol_index, "ARCHITECTURE", render_architecture(components))
+
+    # 6. Timestamps on every hand-authored page. Generated entry pages already
     #    carry their own, so they are stamped from their source fragment above.
     for rel in STATIC_PAGES:
         text = planned.get(rel) or (ROOT / rel).read_text(encoding="utf-8")
         planned[rel] = stamp(text, last_modified(rel))
 
-    # 6. Sitemap last, so it sees the final entry list.
+    # 7. Sitemap last, so it sees the final entry list.
     planned["sitemap.xml"] = render_sitemap(entries)
 
     # Remove generated entry pages whose source fragment is gone.

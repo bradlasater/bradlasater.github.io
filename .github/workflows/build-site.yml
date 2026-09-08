@@ -20,6 +20,7 @@ on:
     paths:
       - "**/*.html"
       - "content/log/**"
+      - "data/components.json"
       - "llms.txt"
       - "feed.xml"
       - "sitemap.xml"
@@ -29,6 +30,7 @@ on:
     paths:
       - "**/*.html"
       - "content/log/**"
+      - "data/components.json"
       - "llms.txt"
       - "feed.xml"
       - "sitemap.xml"
