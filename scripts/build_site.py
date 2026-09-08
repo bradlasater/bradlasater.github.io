@@ -830,7 +830,9 @@ def render_entry(entry: Entry, newer: Entry | None, older: Entry | None) -> str:
         stage_badge=stage_badge,
         body=body,
         pager="".join(pager_bits),
-        nav=nav("log"),
+        # An entry is inside the research log, not the log index itself, so the
+        # Research Log link is an ancestor rather than the current page.
+        nav=nav("", "log"),
         footer=site_footer(),
     )
 
@@ -983,9 +985,14 @@ def render_evidence_section(components: list[Component], reports: list[Evidence]
                     f'        </div>\n'
                     f'      </article>'
                 )
-        elif c.evidence:
-            # The component names an artifact it intends to publish.
-            names = ", ".join(esc(item["label"]) for item in c.evidence)
+        elif [item for item in c.evidence if item["href"].startswith("/vol/evidence/")]:
+            # Only diagnostics this site would publish count here. A component's
+            # evidence list also carries links to handbook pages that are already
+            # live, and naming those under "Not yet published" would be false.
+            names = ", ".join(
+                esc(item["label"]) for item in c.evidence
+                if item["href"].startswith("/vol/evidence/")
+            )
             cards.append(
                 f'      <article class="card">\n'
                 f'        <p class="proof__kicker">{esc(c.name)}</p>\n'
