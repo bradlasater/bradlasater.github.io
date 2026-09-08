@@ -6,7 +6,7 @@
   <link href="https://bradlasater.com/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="https://bradlasater.com/log/" rel="alternate" type="text/html"/>
   <id>https://bradlasater.com/log/</id>
-  <updated>2026-09-07T19:30:36-06:00</updated>
+  <updated>2026-09-08T10:32:27-06:00</updated>
   <author>
     <name>Brad Lasater</name>
     <email>brad@bradlasater.com</email>
@@ -36,7 +36,7 @@
     <link href="https://bradlasater.com/log/2026-09-07-atm-term-structure-before-a-surface.html" rel="alternate" type="text/html"/>
     <id>https://bradlasater.com/log/2026-09-07-atm-term-structure-before-a-surface.html</id>
     <published>2026-09-07T12:00:00+00:00</published>
-    <updated>2026-09-07T19:30:36-06:00</updated>
+    <updated>2026-09-08T10:32:27-06:00</updated>
     <summary type="text">The term structure inverts both the call and the put at the at-the-money strike and writes out both. When put-call parity happens to select that same strike, the two legs invert to identical volatilities as an algebraic identity — so their agreement proves nothing, and only the dates where the two strikes differ carry information.</summary>
     <author><name>Brad Lasater</name></author>
   </entry>
