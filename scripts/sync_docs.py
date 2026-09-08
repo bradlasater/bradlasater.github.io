@@ -99,6 +99,11 @@ COLOR_MAP = {
     "#1c2328": "oklch(0.215 0.013 255)",   # --bg-3       → --c-surface
     "#2a3238": "oklch(0.300 0.015 255)",   # --line       → --c-border
     "#6a6458": "oklch(0.520 0.018 255)",   # diagram grey → --c-border-strong
+    # architecture.html draws its pipeline in SVG. On the source's light ground
+    # this is a strong near-black stroke; the dark-theme equivalent of "clearly
+    # visible line" is a light one, so it maps up rather than down. Mapping it
+    # by lightness instead would put a 0.300 stroke on a 0.165 ground.
+    "#4f4a42": "oklch(0.790 0.011 255)",   # diagram stroke → --c-text-secondary
     "#e8e4d9": "oklch(0.955 0.004 255)",   # --ink        → --c-text
     "#d4cfc3": "oklch(0.790 0.011 255)",   # --body       → --c-text-secondary
     "#9a9386": "oklch(0.680 0.013 255)",   # --muted      → --c-text-muted

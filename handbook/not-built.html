@@ -51,8 +51,18 @@
         <li><a href="pricing.html">pricing</a></li>
         <li><a href="warehouse-math.html">Warehouse → math</a></li>
         <li><a href="canary.html">Daily canary</a></li>
+        <li><a href="red-day.html">Red day</a></li>
         <li><a href="conventions.html">Desk conventions</a></li>
-        <li><a href="not-built.html" class="active">Not built</a></li>
+        <li>
+          <a href="not-built.html" class="active">Not built</a>
+          <ol class="sub">
+            <li><a href="not-built.html#nb-curves-calendars">Curves and calendars</a></li>
+            <li><a href="not-built.html#nb-market-data-pricing">Market data and pricing</a></li>
+            <li><a href="not-built.html#nb-infra-stack">Infra and stack</a></li>
+          </ol>
+        </li>
+        <li><a href="architecture.html">Target architecture</a></li>
+        <li><a href="latent.html">Latent holes</a></li>
         <li><a href="formula-stubs.html">Formula stubs</a></li>
         <li><a href="knobs.html">Documented knobs</a></li>
         <li class="toc-sep"></li>
@@ -70,6 +80,8 @@
       </header>
 
       <p>Do not treat these as missing files in a half-landed feature — they are not in the tree.</p>
+
+      <h2 id="nb-curves-calendars">Curves and calendars</h2>
       <table>
         <thead>
           <tr><th>Item</th><th>Status</th><th>What exists instead</th></tr>
@@ -77,8 +89,8 @@
         <tbody>
           <tr>
             <td>Vol surfaces / interpolator</td>
-            <td><span class="badge missing">not built</span></td>
-            <td>The <em>ATM</em> curve is built — <code>atm_term_structure</code>, one row per (date, root, expiry), 2022-08-31 onward. There is still no smile fit and no interpolator, so there is nothing to evaluate off-strike or between expiries.</td>
+            <td><span class="badge shipped">built</span></td>
+            <td><code>pricing.surface</code> fits raw SVI (Gatheral) per (date, root, expiry) over own-IV OTM strikes from <code>option_day_bars</code> — calls above the parity forward, puts below — SPX/SPXW only. Butterfly (<code>g(k) ≥ 0</code>) and calendar (total variance non-decreasing in T) are repaired inside the fit; an unrepairable slice raises <code>SurfaceArbitrageError</code> rather than write an arbitrageable smile. <code>Surface.vol(K, T)</code> interpolates linearly in total variance between expiries, flat outside — alongside the ATM curve, not replacing it. Scheduled Tue–Sat 12:15 ET; rebuilds over the archive via <code>scripts/build_surface.py</code> into <code>vol_surface</code>; <code>load_surface</code> reads the landed parameters back. Still not built: an SPY smile (American strikes under a European fit path — follow-up, not a flag), a VIX surface (options on the VX future), and the calibration consumers (drift_check's off-ATM slice).</td>
           </tr>
           <tr>
             <td>Rates warehouse / curve</td>
@@ -87,9 +99,18 @@
           </tr>
           <tr>
             <td>Holiday calendar for T / trading-day theta</td>
-            <td><span class="badge missing">not built</span></td>
-            <td>Pricing T is still ACT/365 and 252 is still a constant, not a calendar — nothing here is trading-day aware. A verified <em>historical</em> calendar does now exist as a by-product of <code>history_audit</code> (<code>_meta/trading_days.json</code>, every weekday since 2022-08-31 marked session or holiday against the vendor), so the input for trading-day theta is available even though nothing consumes it. The ingest gate still uses <code>_meta/holidays.json</code>, which only covers upcoming dates.</td>
+            <td><span class="badge shipped">partial</span></td>
+            <td>Day-bar vol time defaults to the hybrid in <code>pricing.daycount</code>: sessions over 252 inside the attested + upcoming calendar, ACT/365 past the horizon, stamped per row on <code>atm_term_structure</code> and <code>vol_surface</code>. <code>TRADING_DAYS_PER_YEAR</code> (252) annualizes that session-based vol time in <code>TradingSessions.year_fraction</code> and still rescales per-trading-day theta output in <code>GreeksConventions</code> — two uses of the same constant, not the same quantity. The live path (<code>from_market.year_fraction</code>) is still ACT/365 to the settlement instant — that is step 4, not this row going red again.</td>
           </tr>
+        </tbody>
+      </table>
+
+      <h2 id="nb-market-data-pricing">Market data and pricing</h2>
+      <table>
+        <thead>
+          <tr><th>Item</th><th>Status</th><th>What exists instead</th></tr>
+        </thead>
+        <tbody>
           <tr>
             <td>NBBO mid</td>
             <td><span class="badge forbidden">not entitled</span></td>
@@ -97,14 +118,28 @@
           </tr>
           <tr>
             <td>American IV solver</td>
-            <td><span class="badge missing">not built</span></td>
-            <td>European invert, then American CRR for SPY value/Greeks.</td>
+            <td><span class="badge shipped">built</span></td>
+            <td>
+              <code>pricing.iv.implied_vol_american</code> inverts the CRR
+              tree by Brent. SPY sigma now comes off the same engine that
+              prices it; a price at intrinsic returns 0.0, because an American
+              put exercised now is worth that at every sigma.
+            </td>
           </tr>
           <tr>
             <td>Index levels (I:SPX, I:VIX, …)</td>
             <td><span class="badge forbidden">403</span></td>
             <td>Parity forwards on the option chain.</td>
           </tr>
+        </tbody>
+      </table>
+
+      <h2 id="nb-infra-stack">Infra and stack</h2>
+      <table>
+        <thead>
+          <tr><th>Item</th><th>Status</th><th>What exists instead</th></tr>
+        </thead>
+        <tbody>
           <tr>
             <td>ClickHouse</td>
             <td><span class="badge missing">not built</span></td>
@@ -124,6 +159,11 @@
             <td>pandas</td>
             <td><span class="badge missing">deliberately unused</span></td>
             <td>PyArrow + numpy + scipy.</td>
+          </tr>
+          <tr>
+            <td>Decision-log writers</td>
+            <td><span class="badge missing">not built</span></td>
+            <td>The append-only <code>decision_log</code> schema and writer (<code>ingest.common.decision_log.write_decisions</code>) exist; nothing produces rows yet. The backtester (event replay) and the strategy engine are the intended writers — both unbuilt.</td>
           </tr>
         </tbody>
       </table>

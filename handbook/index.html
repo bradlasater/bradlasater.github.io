@@ -34,7 +34,14 @@
       <div class="toc-kicker">Crack the Sky</div>
       <div class="toc-title">System handbook</div>
       <ol>
-        <li><a href="index.html" class="active">Overview</a></li>
+        <li>
+          <a href="index.html" class="active">Overview</a>
+          <ol class="sub">
+            <li><a href="index.html#index-slide">The whole system on one slide</a></li>
+            <li><a href="index.html#index-glance">Warehouse → math at a glance</a></li>
+            <li><a href="index.html#index-sections">Sections</a></li>
+          </ol>
+        </li>
         <li><a href="repo-layout.html">Repo layout</a></li>
         <li><a href="data-flow.html">Data flow</a></li>
         <li>
@@ -51,8 +58,11 @@
         <li><a href="pricing.html">pricing</a></li>
         <li><a href="warehouse-math.html">Warehouse → math</a></li>
         <li><a href="canary.html">Daily canary</a></li>
+        <li><a href="red-day.html">Red day</a></li>
         <li><a href="conventions.html">Desk conventions</a></li>
         <li><a href="not-built.html">Not built</a></li>
+        <li><a href="architecture.html">Target architecture</a></li>
+        <li><a href="latent.html">Latent holes</a></li>
         <li><a href="formula-stubs.html">Formula stubs</a></li>
         <li><a href="knobs.html">Documented knobs</a></li>
         <li class="toc-sep"></li>
@@ -78,8 +88,9 @@
         code on <code>main</code> and Brad’s mental model stay the same document.
       </p>
       <div class="callout">
-        <strong>Rule.</strong> If these pages and the Python disagree, the Python
-        on <code>origin/main</code> wins. Status chips mark
+        <strong>Rule.</strong> If these pages and the running code disagree, the
+        function body and the tests that import it win — not a stale module
+        docstring. Status chips mark
         <span class="badge shipped">shipped</span>
         <span class="badge writeonly">write-only</span>
         <span class="badge forbidden">403 / not entitled</span>
@@ -92,7 +103,7 @@
         derivations here. No pandas lecture, no secrets, no API keys.
       </p>
 
-      <h2>The whole system on one slide</h2>
+      <h2 id="index-slide">The whole system on one slide</h2>
       <div class="diagram" aria-label="System overview">
         <svg viewBox="0 0 1180 320" xmlns="http://www.w3.org/2000/svg" role="img">
           <title>Sources into ingest into the warehouse into math into the canary</title>
@@ -121,7 +132,7 @@
           <text x="331" y="82" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.5">CAPTURE</text>
           <rect x="246" y="96" width="170" height="128" fill="oklch(0.195 0.012 255)" stroke="oklch(0.300 0.015 255)"/>
           <text x="331" y="128" text-anchor="middle" fill="oklch(0.955 0.004 255)" font-family="JetBrains Mono, monospace" font-size="12">ingest/ jobs</text>
-          <text x="331" y="150" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="Inter, sans-serif" font-size="11">cron · flock · ET</text>
+          <text x="331" y="150" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="Inter, sans-serif" font-size="11">timers · flock · ET</text>
           <text x="331" y="170" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="Inter, sans-serif" font-size="11">15-min delayed</text>
           <text x="331" y="196" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="Inter, sans-serif" font-size="10">snapshots are irreplaceable;</text>
           <text x="331" y="210" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="Inter, sans-serif" font-size="10">flat file always wins</text>
@@ -141,7 +152,7 @@
           <text x="806" y="100" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="Inter, sans-serif" font-size="11">typed as-of reads · fail-loud</text>
           <rect x="706" y="156" width="200" height="76" fill="oklch(0.195 0.012 255)" stroke="oklch(0.300 0.015 255)"/>
           <text x="806" y="184" text-anchor="middle" fill="oklch(0.955 0.004 255)" font-family="JetBrains Mono, monospace" font-size="12">pricing/</text>
-          <text x="806" y="204" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="Inter, sans-serif" font-size="11">own IV · BSM / American CRR</text>
+          <text x="806" y="204" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="Inter, sans-serif" font-size="11">own IV · BSM / CRR · SVI</text>
 
           <!-- watchdog -->
           <text x="1065" y="38" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1.5">WATCHDOG</text>
@@ -150,7 +161,7 @@
           <text x="1065" y="100" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="Inter, sans-serif" font-size="11">17:00 ET · ATM identities</text>
           <rect x="966" y="156" width="198" height="76" fill="oklch(0.195 0.012 255)" stroke="oklch(0.300 0.015 255)"/>
           <text x="1065" y="184" text-anchor="middle" fill="oklch(0.955 0.004 255)" font-family="JetBrains Mono, monospace" font-size="12">Healthchecks</text>
-          <text x="1065" y="204" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="Inter, sans-serif" font-size="11">one check per cron job · /fail</text>
+          <text x="1065" y="204" text-anchor="middle" fill="oklch(0.680 0.013 255)" font-family="Inter, sans-serif" font-size="11">one check per scheduled job · /fail</text>
 
           <!-- arrows -->
           <line x1="186" y1="52" x2="246" y2="120" stroke="oklch(0.520 0.018 255)" stroke-width="1.2" marker-end="url(#arrow)"/>
@@ -171,7 +182,7 @@
         </div>
       </div>
 
-      <h2>Warehouse → math at a glance</h2>
+      <h2 id="index-glance">Warehouse → math at a glance</h2>
       <div class="flow" aria-label="Warehouse to canary">
         <div class="step">
           <div class="n">1 parquet</div>
@@ -183,7 +194,7 @@
         </div>
         <div class="step">
           <div class="n">3 own IV</div>
-          <p>European BSM invert of last/close. Never NaN; never vendor σ</p>
+          <p>Own invert of last/close — European BSM or American CRR. Never NaN; never vendor σ</p>
         </div>
         <div class="step">
           <div class="n">4 own Greeks</div>
@@ -196,11 +207,11 @@
       </div>
       <p class="flow-caption">python -m pricing.from_market &nbsp;→&nbsp; python -m pricing.drift_check</p>
 
-      <h2>Sections</h2>
+      <h2 id="index-sections">Sections</h2>
       <div class="cards">
         <a class="card" href="repo-layout.html">
           <div class="card-title">Repo layout</div>
-          <p>Three packages — ingest, marketdata, pricing — plus tests, deploy, scripts.</p>
+          <p>Four packages — ingest, marketdata, pricing, signals — plus tests, deploy, scripts.</p>
         </a>
         <a class="card" href="data-flow.html">
           <div class="card-title">Data flow</div>
@@ -208,15 +219,15 @@
         </a>
         <a class="card" href="ingest.html">
           <div class="card-title">Ingest</div>
-          <p>Sources, vendor constraints, every job, the NY crontab, session timeline, entitlements.</p>
+          <p>Sources, vendor constraints, every job, the NY schedule (timers + crontab fallback), session timeline, entitlements.</p>
         </a>
         <a class="card" href="marketdata.html">
           <div class="card-title">marketdata</div>
-          <p>Typed parquet reads, OPRA allowlist, as-of semantics, fail-loud validate.</p>
+          <p>Typed parquet reads, OPRA allowlist (SPY/SPX/SPXW/VIX/VIXW), as-of semantics, fail-loud validate.</p>
         </a>
         <a class="card" href="pricing.html">
           <div class="card-title">pricing</div>
-          <p>Engines (European BSM / American CRR), IV invert, greek conventions catalog.</p>
+          <p>Engines (European BSM / American CRR), both IV inverters, ATM curve, raw-SVI surface.</p>
         </a>
         <a class="card" href="warehouse-math.html">
           <div class="card-title">Warehouse → math</div>
@@ -224,7 +235,11 @@
         </a>
         <a class="card" href="canary.html">
           <div class="card-title">Daily canary</div>
-          <p><code>drift_check</code> at 17:00 ET — identity-first pass/fail, alert path.</p>
+          <p><code>drift_check</code> at 17:00 ET — identity-first pass/fail, and what a FAIL means.</p>
+        </a>
+        <a class="card" href="red-day.html">
+          <div class="card-title">Red day</div>
+          <p>Which Healthcheck fired, whether <code>repair.sh</code> can help, early close, disk/prune.</p>
         </a>
         <a class="card" href="conventions.html">
           <div class="card-title">Desk conventions</div>
@@ -232,7 +247,15 @@
         </a>
         <a class="card" href="not-built.html">
           <div class="card-title">Not built</div>
-          <p>Surfaces, rates warehouse, ClickHouse — deliberately absent, not half-landed.</p>
+          <p>ClickHouse, VVIX, trading-day theta, SPY/VIX smiles — deliberately absent. SVI surface and the rates warehouse have shipped.</p>
+        </a>
+        <a class="card" href="architecture.html">
+          <div class="card-title">Target architecture</div>
+          <p>The end-to-end loop this system is aiming at — execution, ledger, and portfolio risk included. A proposal, not the box.</p>
+        </a>
+        <a class="card" href="latent.html">
+          <div class="card-title">Latent holes</div>
+          <p>In the tree, deliberately unfixed — the desk index of <code>IMPROVEMENTS.md</code>.</p>
         </a>
         <a class="card" href="formula-stubs.html">
           <div class="card-title">Formula stubs</div>
@@ -249,7 +272,7 @@
       </div>
 
       <footer>
-        Source of schedule: deploy/crontab.
+        Source of schedule: deploy/schedule.json.
         Packages: ingest/ · marketdata/ · pricing/.
         One page per section — this index is docs/index.html.
         Do not commit .env.

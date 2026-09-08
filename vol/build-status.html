@@ -21,7 +21,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="article:modified_time" content="2026-09-07T20:09:43-06:00">
+<meta property="article:modified_time" content="2026-09-08T10:32:27-06:00">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -41,7 +41,7 @@
       "headline": "Build status — what runs, what does not, and what is next",
       "description": "Stage-by-stage implementation status of a systematic volatility research and execution platform: what each stage does today, what it is designed to do, its input and output contracts, its published validation evidence, and the acceptance test it must pass to advance. Trading has not started, so this page reports engineering progress rather than performance.",
       "inLanguage": "en-US",
-      "dateModified": "2026-09-07T20:09:43-06:00",
+      "dateModified": "2026-09-08T10:32:27-06:00",
       "author": { "@id": "https://bradlasater.com/#brad" },
       "publisher": { "@id": "https://bradlasater.com/#brad" },
       "isPartOf": { "@id": "https://bradlasater.com/#website" }
@@ -268,38 +268,42 @@
             </div>
           </dl>
         </li>
-        <li class="pipeline__row" id="stage-surface">
+        <li class="pipeline__row is-running" id="stage-surface">
           <div class="pipeline__head">
             <span class="pipeline__num">04</span>
             <h3 class="pipeline__name">Smile &amp; surface</h3>
             <span class="pipeline__layer">Analytics</span>
-            <span class="badge">Planned</span>
+            <span class="badge badge--active badge--dot">Implemented — under validation</span>
           </div>
-          <p class="pipeline__summary">No smile fit and no interpolator. Nothing off-strike or between expiries can be evaluated yet.</p>
+          <p class="pipeline__summary">Raw SVI per expiry over OTM strikes, SPX/SPXW only, with butterfly and calendar arbitrage repaired inside the fit. Runs daily.</p>
           <dl class="stage__fields">
             <div class="stage__field">
               <dt>Runs today</dt>
-              <dd>Nothing. There is no smile fit and no interpolator, and no surfaces module in the tree. This is the single largest gap between what runs and what the rest of the architecture assumes.</dd>
+              <dd>A raw-SVI (Gatheral) smile is fitted per date, root and expiry to total implied variance against log-moneyness, over own-inverted OTM strikes from option day bars — calls above the parity forward, puts below. Butterfly and calendar constraints are repaired inside the fit rather than checked after it, and a slice that cannot be repaired raises rather than writing an arbitrageable smile. The fitted surface evaluates at any strike and maturity, interpolating linearly in total variance between expiries and holding flat outside them. It sits alongside the ATM curve rather than replacing it, and is built from the same chain, the same forward and the same inversion, so agreement between the two at the money is a cross-check between datasets rather than a calibration target. Scheduled daily after the term structure; the archive rebuilds separately.</dd>
             </div>
             <div class="stage__field">
               <dt>Designed to</dt>
-              <dd>A parametric fit in total implied variance — SVI per slice, moving toward SSVI for a globally consistent surface — with calendar-spread and butterfly no-arbitrage constraints enforced on the fit rather than checked afterwards, so that downstream Greeks are internally consistent.</dd>
+              <dd>A globally consistent, arbitrage-free volatility surface across the whole chain, extended to SSVI, that downstream Greeks and any off-strike valuation can rely on.</dd>
+            </div>
+            <div class="stage__field stage__field--blocked">
+              <dt>Blocked by</dt>
+              <dd>SPY is refused: its strikes are American and would invert under the wrong exercise boundary in a European fit path. An American inverter exists, so this is follow-up work rather than a structural limit. VIX options sit on the VX future and are a different modelling question.</dd>
             </div>
             <div class="stage__field">
               <dt>Inputs</dt>
-              <dd>Per-contract implied volatilities across the full chain; the parity forward per expiry.</dd>
+              <dd>option_day_bars via the same chain helpers the ATM curve uses; the parity forward per expiry.</dd>
             </div>
             <div class="stage__field">
               <dt>Outputs</dt>
-              <dd>A fitted slice per expiry, its parameters, its residuals, and the observations it rejected.</dd>
+              <dd>vol_surface — fitted slice parameters per (date, root, expiry), read back by the surface loader.</dd>
             </div>
             <div class="stage__field">
               <dt>Validation evidence</dt>
-              <dd>None published yet.</dd>
+              <dd><a href="/handbook/not-built.html">Handbook: not built</a>, <a href="/handbook/architecture.html">Handbook: target architecture</a></dd>
             </div>
             <div class="stage__field stage__field--next">
               <dt>Next acceptance test</dt>
-              <dd>Fit one slice on one date and publish the residuals, the rejected observations and the failure cases alongside the fitted curve — not a smooth chart. A fit is accepted only when it reproduces the ATM term structure at the money to within the pricing layer&#x27;s own reprice tolerance.</dd>
+              <dd>Publish the residuals, the rejected observations and the slices that failed to repair — not a smooth chart. The stage advances to operational when a downstream consumer reads the surface in anger: the daily canary&#x27;s off-ATM check is the intended first one, and it is not wired yet.</dd>
             </div>
           </dl>
         </li>
@@ -308,13 +312,13 @@
             <span class="pipeline__num">05</span>
             <h3 class="pipeline__name">Volatility forecasting</h3>
             <span class="pipeline__layer">Analytics</span>
-            <span class="badge">Planned</span>
+            <span class="badge badge--progress badge--dot">In progress</span>
           </div>
-          <p class="pipeline__summary">Realised-volatility estimators and HAR-RV and GARCH baselines, before any learned model is considered.</p>
+          <p class="pipeline__summary">A HAR-RV baseline forecast is implemented and tested on a continuous SPY series; it is not yet scheduled or evaluated.</p>
           <dl class="stage__fields">
             <div class="stage__field">
               <dt>Runs today</dt>
-              <dd>Nothing. No forecasting code exists.</dd>
+              <dd>A HAR cascade in logs — daily, weekly and monthly realised-variance terms — is implemented against a continuous SPY spot series, with its own uncertainty band. The spot series it consumes is built on a schedule; the forecast itself is not, and no out-of-sample evaluation has been run. Fitting is done in logs so the heavy right tail of realised variance does not dominate, and forecasts exponentiate back to variance.</dd>
             </div>
             <div class="stage__field">
               <dt>Designed to</dt>
@@ -330,11 +334,11 @@
             </div>
             <div class="stage__field">
               <dt>Validation evidence</dt>
-              <dd>None published yet.</dd>
+              <dd><a href="/handbook/architecture.html">Handbook: target architecture</a></dd>
             </div>
             <div class="stage__field stage__field--next">
               <dt>Next acceptance test</dt>
-              <dd>Reproduce the baseline forecast evaluation from a frozen dataset and configuration, with a documented target horizon and temporal split, and report the HAR-RV and GARCH baseline errors before any learned model is fitted.</dd>
+              <dd>Reproduce the baseline forecast evaluation from a frozen dataset and configuration, with a documented target horizon and temporal split, and report the HAR-RV error before any learned model is fitted. Schedule the forecast so it produces a dated series rather than a run.</dd>
             </div>
           </dl>
         </li>
@@ -522,7 +526,7 @@
           </dl>
         </li>
       </ol>
-      <p class="pipeline__empty">3 of 10 stages run today. Switch to the target system to see the rest.</p>
+      <p class="pipeline__empty">4 of 10 stages run today. Switch to the target system to see the rest.</p>
     <!-- BUILD:COMPONENT-TABLE:END -->
     </div>
   </section>
@@ -563,6 +567,14 @@
         <p class="card__status"><span class="badge">Not yet published</span></p>
         <div class="card__body">
           <p><strong>What would make it publishable:</strong> Publish a diagnostic separating the informative case from the tautological one. When put-call parity selects the same strike as the ATM search, both legs invert to the same volatility by construction and their agreement is evidence of nothing; the acceptance test is a residual distribution computed only over the dates where the two strikes differ, together with the rejected-observation count and the reasons.</p>
+        </div>
+      </article>
+      <article class="card">
+        <p class="proof__kicker">Smile &amp; surface</p>
+        <h3 class="card__title">Surface diagnostic</h3>
+        <p class="card__status"><span class="badge">Not yet published</span></p>
+        <div class="card__body">
+          <p><strong>What would make it publishable:</strong> Publish the residuals, the rejected observations and the slices that failed to repair — not a smooth chart. The stage advances to operational when a downstream consumer reads the surface in anger: the daily canary&#x27;s off-ATM check is the intended first one, and it is not wired yet.</p>
         </div>
       </article>
     </div>
@@ -615,8 +627,8 @@
     </div>
     <!-- BUILD:NEXT-MILESTONE:START -->
     <div class="verdict verdict--pending">
-      <p class="verdict__label">Smile &amp; surface</p>
-      <p class="verdict__text">Fit one slice on one date and publish the residuals, the rejected observations and the failure cases alongside the fitted curve — not a smooth chart. A fit is accepted only when it reproduces the ATM term structure at the money to within the pricing layer&#x27;s own reprice tolerance.</p>
+      <p class="verdict__label">Volatility forecasting</p>
+      <p class="verdict__text">Reproduce the baseline forecast evaluation from a frozen dataset and configuration, with a documented target horizon and temporal split, and report the HAR-RV error before any learned model is fitted. Schedule the forecast so it produces a dated series rather than a run.</p>
       <p class="verdict__note">This is the first stage in the pipeline that does not yet run, which is what makes it the frontier. Its status and this test are both read from <a href="/data/components.json">the manifest</a>; nothing on this page is typed by hand.</p>
     </div>
   <!-- BUILD:NEXT-MILESTONE:END -->
@@ -625,7 +637,7 @@
   <section class="shell section" aria-label="Page metadata">
     <div class="prose">
       <p class="page-updated">
-        This page was last updated <time class="page-updated__time" datetime="2026-09-07T20:09:43-06:00">September 7, 2026</time>.
+        This page was last updated <time class="page-updated__time" datetime="2026-09-08T10:32:27-06:00">September 8, 2026</time>.
         Its contents are generated from <a href="/data/components.json">data/components.json</a>;
         the manifest's own history is in the repository.
       </p>

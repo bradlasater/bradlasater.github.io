@@ -51,10 +51,21 @@
         <li><a href="pricing.html">pricing</a></li>
         <li><a href="warehouse-math.html">Warehouse → math</a></li>
         <li><a href="canary.html">Daily canary</a></li>
+        <li><a href="red-day.html">Red day</a></li>
         <li><a href="conventions.html">Desk conventions</a></li>
         <li><a href="not-built.html">Not built</a></li>
+        <li><a href="architecture.html">Target architecture</a></li>
+        <li><a href="latent.html">Latent holes</a></li>
         <li><a href="formula-stubs.html">Formula stubs</a></li>
-        <li><a href="knobs.html" class="active">Documented knobs</a></li>
+        <li>
+          <a href="knobs.html" class="active">Documented knobs</a>
+          <ol class="sub">
+            <li><a href="knobs.html#knobs-credentials">Credentials and endpoints</a></li>
+            <li><a href="knobs.html#knobs-paths">Paths</a></li>
+            <li><a href="knobs.html#knobs-healthchecks">Healthchecks and canary</a></li>
+            <li><a href="knobs.html#knobs-code-tuning">Code-side knobs</a></li>
+          </ol>
+        </li>
         <li class="toc-sep"></li>
         <li><a href="box-operations.html">Box operations (off-repo)</a></li>
       </ol>
@@ -74,6 +85,7 @@
         the file. Do not commit <code>.env</code>. Where each value actually lives
         on the box: <a href="box-operations.html">box operations</a>.
       </p>
+      <h2 id="knobs-credentials">Credentials and endpoints</h2>
       <table>
         <thead>
           <tr><th>Name</th><th>Role</th></tr>
@@ -84,20 +96,62 @@
           <tr><td class="job">WS_DELAYED_URL</td><td>Default <code>wss://delayed.massive.com/options</code>.</td></tr>
           <tr><td class="job">MASSIVE_S3_ACCESS_KEY_ID<br>MASSIVE_S3_SECRET_ACCESS_KEY</td><td>Flat-file access keys (placeholders exit 3 on pull).</td></tr>
           <tr><td class="job">MASSIVE_S3_ENDPOINT<br>MASSIVE_S3_BUCKET</td><td>Flat-file endpoint and bucket (defaults <code>https://files.massive.com</code> / <code>flatfiles</code>).</td></tr>
+          <tr><td class="job">IBKR_FLEX_TOKEN<br>IBKR_FLEX_QUERY_ID<br>IBKR_ACCOUNT_ID</td><td>Read-only Flex Web Service (no gateway). Commented in <code>.env.example</code>; required only for <code>ibkr_executions</code>. Token expires ~yearly.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="knobs-paths">Paths</h2>
+      <table>
+        <thead>
+          <tr><th>Name</th><th>Role</th></tr>
+        </thead>
+        <tbody>
           <tr><td class="job">DATA_ROOT</td><td>Warehouse root. Default <code>/data/massive</code>.</td></tr>
           <tr><td class="job">LOG_ROOT</td><td>Logs. Default <code>DATA_ROOT/logs</code> (not the warehouse root). <code>Settings.load</code> in <code>ingest/common/config.py</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="knobs-healthchecks">Healthchecks and canary</h2>
+      <table>
+        <thead>
+          <tr><th>Name</th><th>Role</th></tr>
+        </thead>
+        <tbody>
           <tr><td class="job">HEALTHCHECKS_PING_KEY</td><td>Per-job checks. Without it, a dead job is silent.</td></tr>
           <tr><td class="job">HEALTHCHECKS_API_KEY</td><td>Management key used only by <code>scripts/setup_healthchecks.py</code> to create/update the checks. Not read at run time, and not the ping key.</td></tr>
           <tr><td class="job">HEALTHCHECKS_BASE</td><td>Ping root (hosted <code>https://hc-ping.com</code>; self-host <code>https://&lt;host&gt;/ping</code>).</td></tr>
-          <tr><td class="job">DRIFT_CHECK_R</td><td>Scalar r for the 17:00 canary (default 0.04).</td></tr>
+          <tr><td class="job">DRIFT_CHECK_R</td><td>Optional scalar r override for the 17:00 canary. Unset → landed Treasury curve per contract. <code>0.04</code> is only the fallback when <code>rates_sync</code> has never run.</td></tr>
           <tr><td class="job">DRIFT_ALERT_WEBHOOK</td><td>Optional FAIL POST. Healthchecks + exit 1 remain the alert.</td></tr>
         </tbody>
       </table>
+
+      <h2 id="knobs-code-tuning">Code-side knobs</h2>
       <p>
         Also in code, not in <code>.env.example</code>:
-        <code>MASSIVE_MAX_RPS</code> / <code>MASSIVE_BURST</code> (40),
+        <code>MASSIVE_MAX_RPS</code> (60 — sustained; probed clean to 100 rps
+        on 2026-09-03) and <code>MASSIVE_BURST</code> (40 — held back
+        deliberately, because the 429s seen on 2026-08-31 came from tight
+        bursts rather than sustained pacing),
+        <code>MASSIVE_RATELIMIT_SHARED</code> (1 — the token bucket is
+        cross-process by default, so every job on the box draws on one
+        allowance rather than one each; set 0 for the old per-process
+        behaviour),
+        <code>MASSIVE_RATELIMIT_STATE</code>
+        (<code>DATA_ROOT/_meta/ratelimit.json</code>),
+        <code>MASSIVE_PRIORITY_RESERVE</code> (0.35 — the fraction of the
+        bucket reserved for <code>snapshot_sweep</code>; every other capture
+        job draws at low priority and stops at this floor, which is where
+        &ldquo;everything else yields API budget to it&rdquo; is actually
+        enforced),
+        <code>MASSIVE_PRIORITY_CLAIM_S</code> (1.0 — a waiting NORMAL caller
+        stamps this so LOW callers stand aside),
         <code>TRADES_CONCURRENCY</code> (8),
+        <code>TRADES_BACKOFF_MAX</code> (4 — adaptive poll slots; set 1 to disable),
         <code>RETAIN_DAYS</code> (90),
+        <code>QUARANTINE_RETAIN_DAYS</code> (30 — superseded re-filter output
+        under <code>_quarantine/</code>, pruned on the monthly run),
+        <code>FLATFILE_RETAIN_DAYS</code> (365 — only consulted with
+        <code>prune_raw.sh --flatfiles</code>, which is opt-in),
         <code>MIN_FREE_GB</code> (100 on backfill),
         <code>TZ_NAME</code> (America/New_York),
         <code>JOB_MAX_ATTEMPTS</code> (3) / <code>JOB_RETRY_BASE_S</code> (30s,

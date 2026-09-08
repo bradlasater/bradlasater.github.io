@@ -51,8 +51,18 @@
         <li><a href="pricing.html">pricing</a></li>
         <li><a href="warehouse-math.html">Warehouse → math</a></li>
         <li><a href="canary.html">Daily canary</a></li>
-        <li><a href="conventions.html" class="active">Desk conventions</a></li>
+        <li><a href="red-day.html">Red day</a></li>
+        <li>
+          <a href="conventions.html" class="active">Desk conventions</a>
+          <ol class="sub">
+            <li><a href="conventions.html#conventions-greeks">Greeks units</a></li>
+            <li><a href="conventions.html#conventions-inputs">Pricing inputs</a></li>
+            <li><a href="conventions.html#conventions-market-data">Market data</a></li>
+          </ol>
+        </li>
         <li><a href="not-built.html">Not built</a></li>
+        <li><a href="architecture.html">Target architecture</a></li>
+        <li><a href="latent.html">Latent holes</a></li>
         <li><a href="formula-stubs.html">Formula stubs</a></li>
         <li><a href="knobs.html">Documented knobs</a></li>
         <li class="toc-sep"></li>
@@ -69,6 +79,7 @@
         <div class="meta"><a href="index.html">← overview</a></div>
       </header>
 
+      <h2 id="conventions-greeks">Greeks units</h2>
       <table>
         <thead>
           <tr><th>Thing</th><th>This repo</th><th>Usual vendor / desk trap</th></tr>
@@ -85,28 +96,46 @@
             <td>per calendar day → × 365; trading-day would be / 252 (available on <code>GreeksConventions</code>, not the default)</td>
           </tr>
           <tr>
-            <td>F</td>
-            <td>put-call parity on the chain: undiscounted approximation <code>F = K + C − P</code> at min |C−P| (exact parity is <code>F = K + e<sup>rT</sup>(C − P)</code>). Matches <code>forward_from_parity</code>; ingest is unchanged.</td>
-            <td>I:SPX print (not entitled)</td>
-          </tr>
-          <tr>
-            <td>T</td>
-            <td>ACT/365 to settlement instant (SPX 09:30 ET, SPY/SPXW 16:00 ET)</td>
-            <td>expiry date at UTC midnight understates T (~108 bp IV at 7 DTE)</td>
-          </tr>
-          <tr>
-            <td>r</td>
-            <td>scalar <code>--r</code> / <code>DRIFT_CHECK_R=0.04</code></td>
-            <td>a rates warehouse (not built)</td>
-          </tr>
-          <tr>
             <td>Delta / gamma</td>
             <td>spot (∂/∂S); dual always also filled</td>
             <td>forward / dual-only reports</td>
           </tr>
+        </tbody>
+      </table>
+
+      <h2 id="conventions-inputs">Pricing inputs</h2>
+      <table>
+        <thead>
+          <tr><th>Thing</th><th>This repo</th><th>Usual vendor / desk trap</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>F</td>
+            <td>put-call parity on the chain at min |C−P|: <code>F = K + e<sup>rT</sup>(C − P)</code> when the Treasury curve is present (<code>method=parity</code>); undiscounted <code>F = K + C − P</code> otherwise (<code>parity-r0</code>). For VIX this is the VX future of that expiry, not a spot VIX.</td>
+            <td>I:SPX print (not entitled)</td>
+          </tr>
+          <tr>
+            <td>T</td>
+            <td>ACT/365 to settlement instant on the live path (SPY/SPXW 16:00 ET PM; SPX monthlies and VIX/VIXW 09:30 ET AM). On the day-bar path the day count is a passed object (<code>pricing.daycount</code>); the default is the hybrid — sessions over 252 where the calendar can vouch, ACT/365 past the horizon — and every landed <code>atm_term_structure</code> / <code>vol_surface</code> row stamps which convention produced its <code>t_years</code> (<code>bus/252</code> or <code>act/365</code>, never the name <code>hybrid</code>). Two quantities are kept apart there: <em>vol time</em>, the T in σ√T, is what the convention decides; <em>money time</em>, the T in e<sup>−rT</sup> and the Treasury-curve tenor, is always ACT/365 because interest accrues on weekends.</td>
+            <td>expiry date at UTC midnight understates T (~108 bp IV at 7 DTE); converting the discount factor and the curve tenor along with σ√T</td>
+          </tr>
+          <tr>
+            <td>r</td>
+            <td>Treasury curve via <code>rate_for</code> (scalar <code>--r</code> / <code>DRIFT_CHECK_R</code> override)</td>
+            <td>one flat scalar rate for every maturity</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="conventions-market-data">Market data</h2>
+      <table>
+        <thead>
+          <tr><th>Thing</th><th>This repo</th><th>Usual vendor / desk trap</th></tr>
+        </thead>
+        <tbody>
           <tr>
             <td>Market price</td>
-            <td>last trade else day close</td>
+            <td>last trade else day close. A last print older than <code>--max-trade-age-min</code> (default 60) is skipped, not fallen back to close.</td>
             <td>NBBO mid (not entitled)</td>
           </tr>
         </tbody>
