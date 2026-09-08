@@ -52,9 +52,32 @@
 
   /**
    * Render one chart into `container`.
-   * @param {HTMLElement} container
-   * @param {Array<{date: Date, value: number}>} series
-   * @param {{kind: string, height?: number, boundaries?: Array, ariaLabel?: string}} opts
+   *
+   * `formatValue` and `formatDate` are how the caller keeps its own units: this
+   * module never assumes a series is a percentage or that a date should be
+   * rendered any particular way. Both default to `String`, which renders but
+   * reads badly, so a caller that cares should always pass them.
+   *
+   * @param {HTMLElement} container Emptied before drawing.
+   * @param {Array<{date: Date, value: number}>} series Ascending by date. An
+   *   empty series draws nothing rather than emitting NaN path data.
+   * @param {Object} opts
+   * @param {string} opts.kind Suffix on the drawn elements' classes, e.g.
+   *   "equity" gives `chart__line--equity`. Also behavioural: the value
+   *   "drawdown" clamps the upper bound to zero, since a drawdown series that
+   *   never reaches its peak would otherwise float its own axis.
+   * @param {number} [opts.height=260] Height of the viewBox; width is fixed at 760.
+   * @param {Array<{index: number, label: string}>} [opts.boundaries] Vertical
+   *   rules with labels, positioned by **index into `series`** rather than by
+   *   date — the caller has already resolved which observation a boundary falls
+   *   on, and resolving it twice invites the two answers to differ.
+   * @param {string} [opts.ariaLabel] Accessible name for the chart. Say what the
+   *   series shows and where the full values are, not "a chart".
+   * @param {function(number, number=): string} [opts.formatValue=String] Formats
+   *   a y-value for the axis ticks and the hover tooltip. The optional second
+   *   argument is a digit count, passed for axis labels.
+   * @param {function(Date): string} [opts.formatDate=String] Formats a date for
+   *   the x-axis endpoints and the hover tooltip.
    */
   function drawChart(container, series, opts) {
     container.textContent = "";

@@ -638,6 +638,21 @@
   }
 
   function showError(message) {
+    showFailure("Could not load the track record data (" + message + ").");
+  }
+
+  /**
+   * A failure that is not about the data.
+   *
+   * Kept separate from showError because the two send a reader somewhere
+   * different: a data failure means the record could not be fetched or parsed,
+   * and a render failure means the page itself is broken while the record may
+   * be perfectly fine. Reporting the second as the first sends whoever is
+   * debugging it to look at the JSON.
+   *
+   * @param {string} message Full sentence, already punctuated.
+   */
+  function showFailure(message) {
     hideLoading();
     var fail = document.getElementById("tr-error");
     var empty = document.getElementById("tr-empty");
@@ -646,7 +661,7 @@
     if (empty) empty.hidden = true;
     if (fail) {
       fail.hidden = false;
-      fail.textContent = "Could not load the track record data (" + message + ").";
+      fail.textContent = message;
     }
   }
 
@@ -825,7 +840,10 @@
     // it would render statistics with two empty boxes where the charts belong,
     // which reads as "no data" rather than "broken deployment".
     if (typeof window.SiteChart === "undefined" || typeof window.SiteChart.draw !== "function") {
-      showError("the chart module (assets/js/chart.js) did not load");
+      showFailure(
+        "This page could not render: the chart module at /assets/js/chart.js did not load. " +
+        "The track record itself is unaffected and can be read at /data/track-record.json."
+      );
       return;
     }
 
