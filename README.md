@@ -53,8 +53,9 @@ There is no deploy script and no build artefact to commit beyond what
 | `index.html` | Home — positioning, selected experience, capabilities, contact |
 | `cv.html` | Full CV, including military and teaching service |
 | `vol/index.html` | Volatility system overview: premise, architecture with per-stage status, sources |
+| `vol/build-status.html` | The engineering record: pipeline, contracts, evidence, next acceptance test |
 | `vol/methodology.html` | The evaluation protocol, written before results exist |
-| `vol/track-record.html` | Build status and live out-of-sample record (see below) |
+| `vol/track-record.html` | The live out-of-sample trading record (see below) |
 | `log/index.html` | Research log index |
 | `handbook/` | System handbook, synced from `data_ingest_infra` (see below) |
 | `docs/` | Local HTML mirrors of notes, audits, and the roadmap. Unpublished. |
@@ -291,16 +292,24 @@ would close that.
   the experience list without adding signal. The third-person summary that an
   answer engine needs still exists in the JSON-LD `Person` description and in
   `llms.txt`, which is where a retrieval fetcher looks first anyway.
-- The nav is hand-maintained in seven HTML files *and* in the `nav()` function
-  of `scripts/build_site.py`. Changing it means editing both, or generated log
-  pages will drift from the static ones. Handbook pages are the exception: they
-  come from another repository and keep their own sidebar, so they carry a link
-  back to the site rather than the site nav.
-- The header stacks below `56rem`. That breakpoint is a measurement, not a
-  round number: brand plus seven items fit at 880px and wrap at 850px, so it
-  sits just above the measured threshold. A wrapped bar strands the GitHub rule
-  on its own line and reads as broken, so re-measure in a browser whenever a
-  nav item is added or renamed.
+- **The nav and footer are generated, not hand-maintained.** `NAV_ITEMS`,
+  `SECTION_ITEMS` and `site_footer()` in `scripts/build_site.py` are the only
+  definitions; `build_site.py` injects them into every page between
+  `BUILD:SITE-NAV`, `BUILD:SECTION-NAV` and `BUILD:SITE-FOOTER` markers, and
+  `CHROME_PAGES` maps each page to the nav state it should show. This replaced
+  a nav copy-pasted into seven files plus a second copy in `nav()`, and five
+  different footers across seven pages. Handbook pages are still the exception:
+  they come from another repository and keep their own sidebar, so they carry a
+  link back to the site rather than the site nav.
+- The primary bar is five items. Build Status, the evaluation protocol, the
+  trading record and the handbook live in the `/vol/` **section bar** instead,
+  because they are parts of the volatility system rather than peers of it.
+- The header stacks below `46rem`. That breakpoint is a measurement, not a
+  round number: brand plus the current five items fit at 528px and wrap at
+  527px, so it sits just above the measured threshold with room for a font that
+  loads late with wider metrics. It was `56rem` when the bar carried seven
+  items. A wrapped bar strands the GitHub rule on its own line and reads as
+  broken, so re-measure in a browser whenever a nav item is added or renamed.
 - The GitHub link closes the nav in its own `.site-nav__ext` item. It leaves the
   site, so it never takes `aria-current` and is separated by a rule rather than
   reading as one more page. It is in the header because the homepage bio is long

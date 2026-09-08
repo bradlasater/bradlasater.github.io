@@ -281,12 +281,15 @@ main { flex: 1; }
    forcing the document wider than the viewport. Stack them, and drop the
    sticky behaviour so the header does not eat scarce vertical space.
 
-   Raised from 44rem when "Handbook" was added and again when the GitHub link
-   was added. Measured, not guessed: seven items plus the brand fit at 880px and wrap
-   at 850px, so this sits just above the measured threshold. A wrapped bar puts
-   the GitHub rule on its own line and reads as broken, so re-measure in the
-   browser whenever an item is added or renamed. */
-@media (max-width: 56rem) {
+   Measured, not guessed, and re-measured every time the bar changes. It was
+   56rem for seven items (which fit at 880px and wrapped at 850px). The bar is
+   now five items plus the brand, because Build Status, the evaluation protocol,
+   the trading record and the handbook moved into the /vol/ section bar: it
+   fits at 528px and wraps at 527px, so 46rem sits just above the threshold with
+   room for a font that loads late with wider metrics. A wrapped bar puts the
+   GitHub rule on its own line and reads as broken, so re-measure in the browser
+   whenever an item is added or renamed. */
+@media (max-width: 46rem) {
   .site-header { position: static; }
   .site-header__inner {
     flex-direction: column;
@@ -638,6 +641,43 @@ main { flex: 1; }
   font-size: var(--step--1);
   color: var(--c-text-muted);
 }
+
+/* Section bar for /vol/. Sits under the primary header on every page inside
+   the volatility system, so Build Status, the protocol, the record and the
+   handbook are reachable without taking four top-level nav slots. */
+.section-nav {
+  border-bottom: 1px solid var(--c-border);
+  background: var(--c-bg-subtle);
+}
+.section-nav__inner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-5);
+  padding-block: var(--sp-3);
+}
+.section-nav__label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+.section-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.section-nav a {
+  color: var(--c-text-secondary);
+  font-size: var(--step--1);
+  text-decoration: none;
+}
+.section-nav a:hover { color: var(--c-text); }
+.section-nav a[aria-current] { color: var(--c-accent); }
 
 /* Callout — used where a page has to qualify its own claim. Warm rule rather
    than a card, so it reads as an aside to the text it interrupts. */

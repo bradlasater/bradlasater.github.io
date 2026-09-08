@@ -82,6 +82,23 @@ STATIC_PAGES = [
 
 ENTRY_SRC_DIR = ROOT / "content" / "log"
 
+# Every page that carries the site header and footer, with the nav state it
+# should show: (primary active, primary ancestor, section-bar active).
+# index.html marks nothing current — "Work" and "Contact" are anchors on it,
+# and aria-current on a link to the page you are already on is noise.
+# 404.html appears here but not in STATIC_PAGES: it needs the same chrome as
+# every other page but carries noindex and must never reach the sitemap.
+CHROME_PAGES: dict[str, tuple[str, str, str]] = {
+    "index.html":              ("",    "",    ""),
+    "cv.html":                 ("cv",  "",    ""),
+    "404.html":                ("",    "",    ""),
+    "log/index.html":          ("log", "",    ""),
+    "vol/index.html":          ("vol", "",    "vol-overview"),
+    "vol/build-status.html":   ("",    "vol", "vol-build-status"),
+    "vol/methodology.html":    ("",    "vol", "vol-methodology"),
+    "vol/track-record.html":   ("",    "vol", "vol-track-record"),
+}
+
 COMPONENTS_PATH = ROOT / "data" / "components.json"
 
 # The four implementation states, in the order a component moves through them.
@@ -403,18 +420,49 @@ def human_date(value: dt.date | dt.datetime) -> str:
     return f"{_MONTHS[value.month - 1]} {value.day}, {value.year}"
 
 
-def nav(active: str) -> str:
-    items = [
-        ("/vol/", "Volatility System", "vol"),
-        ("/vol/build-status.html", "Build Status", "build-status"),
-        ("/handbook/", "Handbook", "handbook"),
-        ("/log/", "Research Log", "log"),
-        ("/cv.html", "CV", "cv"),
-        ("/#contact", "Contact", "contact"),
-    ]
+# The primary bar, in the order a visitor needs them: who this is, the project,
+# the working record, the credential, the way to make contact. Build Status,
+# the Methodology and the Handbook are all *inside* the volatility system and
+# reached from its section bar rather than competing for a top-level slot —
+# seven top-level items made the section look like seven unrelated sites.
+NAV_ITEMS = [
+    ("/#work", "Work", "work"),
+    ("/vol/", "Volatility System", "vol"),
+    ("/log/", "Research Log", "log"),
+    ("/cv.html", "CV", "cv"),
+    ("/#contact", "Contact", "contact"),
+]
+
+GITHUB_URL = "https://github.com/bradlasater/Crack-the-Sky"
+
+# The volatility system's own bar. Appears on every page under /vol/ and on no
+# other page, so a reader who arrives at the handbook or the build status can
+# see where they are without going back to the top level.
+SECTION_ITEMS = [
+    ("/vol/", "Overview", "vol-overview"),
+    ("/vol/build-status.html", "Build Status", "vol-build-status"),
+    ("/vol/methodology.html", "Evaluation Protocol", "vol-methodology"),
+    ("/vol/track-record.html", "Trading Record", "vol-track-record"),
+    ("/handbook/", "Handbook", "vol-handbook"),
+]
+
+
+def nav(active: str, ancestor: str = "") -> str:
+    """The primary nav list items.
+
+    ``active`` marks the page itself with ``aria-current="page"``; ``ancestor``
+    marks a section the page belongs to but is not, with ``aria-current="true"``
+    — used by every page under /vol/, which highlights Volatility System while
+    navigating somewhere else.
+    """
     lis = []
-    for href, label, key in items:
-        current = ' aria-current="page"' if key == active else ""
+    for href, label, key in NAV_ITEMS:
+        if key == active:
+            current = ' aria-current="page"'
+        elif key == ancestor:
+            current = ' aria-current="true"'
+        else:
+            current = ""
         lis.append(f'        <li><a href="{href}"{current}>{label}</a></li>')
     # GitHub closes the bar but is not a section of this site: it never takes
     # aria-current, and it carries its own separator so it does not read as one
@@ -422,9 +470,58 @@ def nav(active: str) -> str:
     # looks for the code first and should not have to scroll to find it.
     lis.append(
         '        <li class="site-nav__ext">'
-        '<a href="https://github.com/bradlasater/Crack-the-Sky" target="_blank" rel="noopener">GitHub</a></li>'
+        f'<a href="{GITHUB_URL}" target="_blank" rel="noopener">GitHub</a></li>'
     )
     return "\n".join(lis)
+
+
+def section_nav(active: str) -> str:
+    """The /vol/ section bar. Empty string for pages outside the section."""
+    if not active:
+        return ""
+    lis = []
+    for href, label, key in SECTION_ITEMS:
+        current = ' aria-current="page"' if key == active else ""
+        lis.append(f'      <li><a href="{href}"{current}>{label}</a></li>')
+    return (
+        "\n"
+        '  <nav class="section-nav" aria-label="Volatility system">\n'
+        '    <div class="shell section-nav__inner">\n'
+        '      <span class="section-nav__label">Volatility system</span>\n'
+        "      <ul>\n" + "\n".join(lis) + "\n      </ul>\n"
+        "    </div>\n"
+        "  </nav>\n"
+    )
+
+
+def site_footer() -> str:
+    """One footer for every page.
+
+    There were five distinct footers across seven pages, and 404.html — the page
+    that most needs wayfinding — carried a single mailto link.
+    """
+    links = [
+        ("/", "Home"),
+        ("/vol/", "Volatility System"),
+        ("/vol/build-status.html", "Build Status"),
+        ("/handbook/", "Handbook"),
+        ("/log/", "Research Log"),
+        ("/cv.html", "CV"),
+        (GITHUB_URL, "GitHub"),
+        ("https://www.linkedin.com/in/bradlasater", "LinkedIn"),
+        ("mailto:brad@bradlasater.com", "Email"),
+        ("/feed.xml", "Feed"),
+    ]
+    lis = []
+    for href, label in links:
+        ext = ' target="_blank" rel="noopener"' if href.startswith("http") else ""
+        lis.append(f'      <li><a href="{href}"{ext}>{label}</a></li>')
+    return (
+        "\n"
+        '    <span>&copy; 2026 Brad Lasater</span>\n'
+        "    <ul>\n" + "\n".join(lis) + "\n    </ul>\n"
+        "  "
+    )
 
 
 ENTRY_TEMPLATE = """<!DOCTYPE html>
@@ -537,17 +634,7 @@ ENTRY_TEMPLATE = """<!DOCTYPE html>
 </main>
 
 <footer class="site-footer">
-  <div class="shell site-footer__inner">
-    <span>&copy; {year} Brad Lasater</span>
-    <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/log/">Research Log</a></li>
-      <li><a href="/vol/">Volatility System</a></li>
-      <li><a href="/handbook/">Handbook</a></li>
-      <li><a href="/feed.xml">Feed</a></li>
-      <li><a href="mailto:brad@bradlasater.com">Email</a></li>
-    </ul>
-  </div>
+  <div class="shell site-footer__inner">{footer}</div>
 </footer>
 
 </body>
@@ -606,7 +693,7 @@ def render_entry(entry: Entry, newer: Entry | None, older: Entry | None) -> str:
         body=body,
         pager="".join(pager_bits),
         nav=nav("log"),
-        year=dt.date.today().year,
+        footer=site_footer(),
     )
 
 
@@ -1021,13 +1108,24 @@ def main() -> int:
         build_status, "NEXT-MILESTONE", render_next_milestone(components)
     )
 
-    # 6. Timestamps on every hand-authored page. Generated entry pages already
+    # 6. Site chrome. The nav used to be hand-maintained in seven HTML files and
+    #    again in nav() here, and there were five different footers; both now
+    #    come from one definition, so a nav change is a one-place edit.
+    for rel, (active, ancestor, section) in CHROME_PAGES.items():
+        text = planned.get(rel) or (ROOT / rel).read_text(encoding="utf-8")
+        text = inject(text, "SITE-NAV", "\n" + nav(active, ancestor) + "\n      ")
+        text = inject(text, "SITE-FOOTER", site_footer())
+        if section:
+            text = inject(text, "SECTION-NAV", section_nav(section))
+        planned[rel] = text
+
+    # 7. Timestamps on every hand-authored page. Generated entry pages already
     #    carry their own, so they are stamped from their source fragment above.
     for rel in STATIC_PAGES:
         text = planned.get(rel) or (ROOT / rel).read_text(encoding="utf-8")
         planned[rel] = stamp(text, last_modified(rel))
 
-    # 7. Sitemap last, so it sees the final entry list.
+    # 8. Sitemap last, so it sees the final entry list.
     planned["sitemap.xml"] = render_sitemap(entries)
 
     # Remove generated entry pages whose source fragment is gone.
