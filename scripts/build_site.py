@@ -73,6 +73,7 @@ BUILD_COMMIT_SUBJECT = "chore: rebuild derived site metadata"
 STATIC_PAGES = [
     "index.html",
     "vol/index.html",
+    "vol/build-status.html",
     "vol/methodology.html",
     "vol/track-record.html",
     "log/index.html",
@@ -405,7 +406,7 @@ def human_date(value: dt.date | dt.datetime) -> str:
 def nav(active: str) -> str:
     items = [
         ("/vol/", "Volatility System", "vol"),
-        ("/vol/track-record.html", "Build Status", "track"),
+        ("/vol/build-status.html", "Build Status", "build-status"),
         ("/handbook/", "Handbook", "handbook"),
         ("/log/", "Research Log", "log"),
         ("/cv.html", "CV", "cv"),
@@ -693,6 +694,94 @@ def render_architecture(components: list[Component]) -> str:
     return "\n\n" + "\n\n".join(cards) + "\n\n    "
 
 
+def render_component_table(components: list[Component]) -> str:
+    """The full pipeline on the build-status page: contracts, evidence, tests.
+
+    An ordered list rather than a table or a drawn diagram. A table of ten rows
+    by nine columns is unreadable on a phone, and a diagram shrunk to phone
+    width is worse — an ordered list is already the correct mobile form, and
+    numbering it carries the one thing the card grid on /vol/ cannot: that
+    these stages are a sequence, each consuming the one above it.
+    """
+    rows = []
+    for c in components:
+        fields = [
+            ("Runs today", esc(c.current_behaviour), ""),
+            ("Designed to", esc(c.design_intent), ""),
+        ]
+        if c.blocked_by:
+            fields.append(("Blocked by", esc(c.blocked_by), " stage__field--blocked"))
+        fields.extend([
+            ("Inputs", esc(c.inputs), ""),
+            ("Outputs", esc(c.outputs), ""),
+        ])
+
+        evidence = c.live_evidence()
+        if evidence:
+            links = ", ".join(
+                f'<a href="{esc(item["href"])}">{esc(item["label"])}</a>' for item in evidence
+            )
+        else:
+            links = "None published yet."
+        fields.append(("Validation evidence", links, ""))
+
+        if c.validated_on:
+            fields.append(
+                ("Last validated", esc(human_date(dt.date.fromisoformat(c.validated_on))), "")
+            )
+
+        fields.append(("Next acceptance test", esc(c.next_acceptance), " stage__field--next"))
+
+        body = "\n".join(
+            f'            <div class="stage__field{extra}">\n'
+            f'              <dt>{esc(label)}</dt>\n'
+            f'              <dd>{value}</dd>\n'
+            f'            </div>'
+            for label, value, extra in fields
+        )
+        running = " is-running" if c.runs_today else ""
+        rows.append(
+            f'        <li class="pipeline__row{running}" id="stage-{c.id}">\n'
+            f'          <div class="pipeline__head">\n'
+            f'            <span class="pipeline__num">{c.order:02d}</span>\n'
+            f'            <h3 class="pipeline__name">{esc(c.name)}</h3>\n'
+            f'            <span class="pipeline__layer">{esc(c.layer)}</span>\n'
+            f'            <span class="{c.badge_class}">{esc(c.label)}</span>\n'
+            f'          </div>\n'
+            f'          <p class="pipeline__summary">{esc(c.summary)}</p>\n'
+            f'          <dl class="stage__fields">\n{body}\n          </dl>\n'
+            f'        </li>'
+        )
+
+    running_count = sum(1 for c in components if c.runs_today)
+    return (
+        "\n"
+        '      <ol class="pipeline">\n'
+        + "\n".join(rows)
+        + "\n      </ol>\n"
+        '      <p class="pipeline__empty">'
+        f"{running_count} of {len(components)} stages run today. "
+        "Switch to the target system to see the rest.</p>\n"
+        "    "
+    )
+
+
+def render_next_milestone(components: list[Component]) -> str:
+    """The frontier stage's acceptance test, stated in full."""
+    frontier = next((c for c in components if not c.runs_today), components[-1])
+    return (
+        "\n"
+        '    <div class="verdict verdict--pending">\n'
+        f'      <p class="verdict__label">{esc(frontier.name)}</p>\n'
+        f'      <p class="verdict__text">{esc(frontier.next_acceptance)}</p>\n'
+        f'      <p class="verdict__note">This is the first stage in the pipeline that does not yet '
+        f'run, which is what makes it the frontier. Its status and this test are both read from '
+        f'<a href="/data/components.json">the manifest</a>; nothing on this page is typed by hand.</p>\n'
+        "    </div>\n"
+        "  "
+    )
+
+
 def first_sentence(text: str) -> str:
     """The opening sentence, for places too small for a full acceptance test.
 
@@ -925,6 +1014,12 @@ def main() -> int:
 
     vol_index = (ROOT / "vol" / "index.html").read_text(encoding="utf-8")
     planned["vol/index.html"] = inject(vol_index, "ARCHITECTURE", render_architecture(components))
+
+    build_status = (ROOT / "vol" / "build-status.html").read_text(encoding="utf-8")
+    build_status = inject(build_status, "COMPONENT-TABLE", render_component_table(components))
+    planned["vol/build-status.html"] = inject(
+        build_status, "NEXT-MILESTONE", render_next_milestone(components)
+    )
 
     # 6. Timestamps on every hand-authored page. Generated entry pages already
     #    carry their own, so they are stamped from their source fragment above.

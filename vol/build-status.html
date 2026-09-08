@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build Status — Brad Lasater</title>
+<meta name="description" content="What is built and what is not, stage by stage: implementation status, input and output contracts, validation evidence, and the acceptance test each stage must pass next. Generated from a single component manifest.">
+<link rel="canonical" href="https://bradlasater.com/vol/build-status.html">
+<meta name="theme-color" content="#14171c">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<link rel="alternate" type="application/atom+xml" title="Brad Lasater — Research Log" href="/feed.xml">
+<link rel="me" href="https://github.com/bradlasater">
+<link rel="me" href="https://www.linkedin.com/in/bradlasater">
+
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bradlasater.com/vol/build-status.html">
+<meta property="og:title" content="Build status — what runs, what does not, and what is next">
+<meta property="og:description" content="Every stage of the volatility system with its implementation status, contracts, evidence, and next acceptance test. Trading has not started; this is the engineering record.">
+<meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta property="og:site_name" content="Brad Lasater">
+<meta property="og:locale" content="en_US">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:modified_time" content="2026-09-08T01:21:41+00:00">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://bradlasater.com/vol/build-status.html#article",
+      "mainEntityOfPage": "https://bradlasater.com/vol/build-status.html",
+      "headline": "Build status — what runs, what does not, and what is next",
+      "description": "Stage-by-stage implementation status of a systematic volatility research and execution platform: what each stage does today, what it is designed to do, its input and output contracts, its published validation evidence, and the acceptance test it must pass to advance. Trading has not started, so this page reports engineering progress rather than performance.",
+      "inLanguage": "en-US",
+      "dateModified": "2026-09-08T01:21:41+00:00",
+      "author": { "@id": "https://bradlasater.com/#brad" },
+      "publisher": { "@id": "https://bradlasater.com/#brad" },
+      "isPartOf": { "@id": "https://bradlasater.com/#website" }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://bradlasater.com/#brad",
+      "name": "Brad Lasater",
+      "url": "https://bradlasater.com/",
+      "image": "https://bradlasater.com/assets/headshot.jpg"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://bradlasater.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Volatility System", "item": "https://bradlasater.com/vol/" },
+        { "@type": "ListItem", "position": 3, "name": "Build Status" }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/assets/js/analytics.js" defer></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href="/">Brad Lasater<span class="brand__dot">.</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="/vol/" aria-current="true">Volatility System</a></li>
+        <li><a href="/vol/build-status.html" aria-current="page">Build Status</a></li>
+        <li><a href="/handbook/">Handbook</a></li>
+        <li><a href="/log/">Research Log</a></li>
+        <li><a href="/cv.html">CV</a></li>
+        <li><a href="/#contact">Contact</a></li>
+        <li class="site-nav__ext"><a href="https://github.com/bradlasater/Crack-the-Sky" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="shell hero">
+    <p class="hero__role">Volatility System &middot; Build Status</p>
+    <h1 class="hero__name" style="margin-top: var(--sp-4);">What is built, and what is not</h1>
+    <p class="hero__bio">
+      Trading has not started, so there is no performance to report. What there is instead is an
+      engineering record: every stage of the system with its implementation status, what it does
+      today as distinct from what it is designed to do, its input and output contracts, whatever
+      validation evidence has been published, and the specific test it has to pass before it
+      advances. The system is built in the open under the codename
+      <strong>Crack the Sky</strong>, which is the repository name behind the GitHub links on this
+      site.
+    </p>
+    <p class="hero__bio">
+      Everything below is generated from
+      <a href="/data/components.json">one component manifest</a>. The same file renders the status
+      strip on the homepage and the architecture grid on the
+      <a href="/vol/">system overview</a>, so no two pages here can disagree about what is
+      finished.
+    </p>
+    <div class="actions">
+      <a class="btn btn--primary" href="/vol/">System overview</a>
+      <a class="btn" href="/vol/methodology.html">Evaluation protocol</a>
+      <a class="btn" href="/vol/track-record.html">Trading record</a>
+      <a class="btn" href="https://github.com/bradlasater/Crack-the-Sky" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </section>
+
+  <section class="shell section" id="pipeline" aria-labelledby="pipeline-title">
+    <div class="section__head">
+      <span class="section__eyebrow">01 &middot; Architecture</span>
+      <h2 class="section__title" id="pipeline-title">The pipeline, in order</h2>
+      <p class="section__lede">
+        Numbered because it is a sequence: each stage consumes the one above it. Switch between the
+        two views to see the system as it runs today and as it is designed to end up &mdash; the
+        difference between them is the honest measure of how far along this is.
+      </p>
+    </div>
+
+    <!--
+      A CSS-only filter. Radio inputs rather than a script because the page has
+      no other reason to load JavaScript, and because the fallback with CSS
+      disabled is every stage visible, which is the correct default.
+    -->
+    <div class="viewswitch">
+      <fieldset class="viewswitch__set">
+        <legend class="viewswitch__legend">View</legend>
+        <input class="viewswitch__input" type="radio" name="pipeline-view" id="view-target" checked>
+        <label class="viewswitch__label" for="view-target">Target system</label>
+        <input class="viewswitch__input" type="radio" name="pipeline-view" id="view-running">
+        <label class="viewswitch__label" for="view-running">Running today</label>
+      </fieldset>
+
+      <!-- BUILD:COMPONENT-TABLE:START -->
+      <ol class="pipeline">
+        <li class="pipeline__row is-running" id="stage-data">
+          <div class="pipeline__head">
+            <span class="pipeline__num">01</span>
+            <h3 class="pipeline__name">Data &amp; cleaning</h3>
+            <span class="pipeline__layer">Data</span>
+            <span class="badge badge--live badge--dot">Operational</span>
+          </div>
+          <p class="pipeline__summary">Options chains, trades, day bars, dividends and the Treasury curve land on a schedule under a daily coverage audit.</p>
+          <dl class="stage__fields">
+            <div class="stage__field">
+              <dt>Runs today</dt>
+              <dd>End-of-day and intraday options chains, option trades and day bars, underlying prices, dividend schedules and the Treasury curve land on a cron schedule. A daily coverage audit reports on the absence of a job rather than only on its failures, which is how a dataset can otherwise go missing for weeks while every log line looks healthy. Cleaning on the entitled inputs filters by open interest, flags prices that violate static no-arbitrage bounds, and reconstructs the forward from put-call parity rather than trusting a vendor field.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Designed to</dt>
+              <dd>A point-in-time warehouse in which every field used by a model can be reconstructed as it stood at the decision timestamp, with quote-level hygiene sufficient to trust a fill assumption.</dd>
+            </div>
+            <div class="stage__field stage__field--blocked">
+              <dt>Blocked by</dt>
+              <dd>Option NBBO is a 403 on the current data tier. There is no bid, ask or mid anywhere in the warehouse, so every price is a traded price — last trade, else day close. Dropping crossed and locked quotes and filtering by spread width are defined in terms of fields this tier does not provide.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Inputs</dt>
+              <dd>Vendor REST and flat-file feeds; S3 archive; the option-chain snapshot sweep.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Outputs</dt>
+              <dd>Partitioned Parquet under DATA_ROOT: option_snapshots, option_trades, option_day_bars, option_minute_bars, contracts, dividends, treasury_yields, forwards.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Validation evidence</dt>
+              <dd><a href="/handbook/ingest.html">Handbook: ingest</a></dd>
+            </div>
+            <div class="stage__field stage__field--next">
+              <dt>Next acceptance test</dt>
+              <dd>Publish a dated coverage report showing expected versus observed sessions, missing partitions and the largest inter-sweep gap, generated from the running audit rather than written by hand.</dd>
+            </div>
+          </dl>
+        </li>
+        <li class="pipeline__row is-running" id="stage-pricing">
+          <div class="pipeline__head">
+            <span class="pipeline__num">02</span>
+            <h3 class="pipeline__name">Pricing &amp; identities</h3>
+            <span class="pipeline__layer">Data</span>
+            <span class="badge badge--live badge--dot">Operational</span>
+          </div>
+          <p class="pipeline__summary">Own implied volatility and Greeks, checked every evening against reprice and put-call parity identities.</p>
+          <dl class="stage__fields">
+            <div class="stage__field">
+              <dt>Runs today</dt>
+              <dd>Implied volatility is inverted per contract from the traded price by Newton with bounds and a Brent fallback; a price outside the discounted no-arbitrage bounds raises an error rather than returning a NaN. Greeks are computed from the full named catalogue, European closed-form for SPX and SPXW and a binomial tree for American-style SPY. Vendor implied volatility and Greeks are copied as diagnostics and are never inputs. A daily canary re-checks the stored numbers against three identities on at-the-money names: that the engine reprices its own input, that call and put gamma and vega agree, and that put-call parity holds.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Designed to</dt>
+              <dd>A pricing layer whose every output can be re-derived from declared inputs and conventions, so that a downstream error is attributable to a model rather than to arithmetic.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Inputs</dt>
+              <dd>option_snapshots as of a stated instant, the parity forward, and the landed Treasury curve interpolated to each contract&#x27;s maturity.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Outputs</dt>
+              <dd>Own IV and Greeks per contract; a daily pass or fail with median reprice error, identity failure counts and the thresholds applied.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Validation evidence</dt>
+              <dd><a href="/handbook/pricing.html">Handbook: pricing</a>, <a href="/handbook/canary.html">Handbook: daily canary</a></dd>
+            </div>
+            <div class="stage__field stage__field--next">
+              <dt>Next acceptance test</dt>
+              <dd>Publish a dated pricing-validation report naming the identities tested, the tolerance for each, the inversion failures, and the Greek conventions in force — vega per 1.00 of volatility, theta per year of calendar time.</dd>
+            </div>
+          </dl>
+        </li>
+        <li class="pipeline__row is-running" id="stage-term-structure">
+          <div class="pipeline__head">
+            <span class="pipeline__num">03</span>
+            <h3 class="pipeline__name">ATM term structure</h3>
+            <span class="pipeline__layer">Analytics</span>
+            <span class="badge badge--active badge--dot">Implemented — under validation</span>
+          </div>
+          <p class="pipeline__summary">One row per date, root and expiry over the archive back to 2022-08-31, with the forward recovered from parity.</p>
+          <dl class="stage__fields">
+            <div class="stage__field">
+              <dt>Runs today</dt>
+              <dd>Per-contract implied volatilities are reduced to an at-the-money term structure: one row per date, root and expiry, carrying the parity forward, the ATM strike and both leg implied volatilities. It is built from option day bars rather than chain snapshots because day bars reach back to 2022-08-31 while the snapshot sweep only begins in 2026. Pricing is done in the forward measure, which reduces Black-Scholes-Merton to Black-76, because a spot price and a dividend yield are exactly what this tier does not provide. The whole archive rebuilds in about seven minutes.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Designed to</dt>
+              <dd>The level and slope of at-the-money volatility, queryable per root and expiry, as the input a 5-45 day book is actually traded off — and as the baseline any later surface fit must beat.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Inputs</dt>
+              <dd>option_day_bars, contract terms parsed from the OPRA symbol, and the Treasury curve.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Outputs</dt>
+              <dd>atm_term_structure — one row per (date, root, expiry).</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Validation evidence</dt>
+              <dd><a href="/handbook/warehouse-math.html">Handbook: warehouse math</a></dd>
+            </div>
+            <div class="stage__field stage__field--next">
+              <dt>Next acceptance test</dt>
+              <dd>Publish a diagnostic separating the informative case from the tautological one. When put-call parity selects the same strike as the ATM search, both legs invert to the same volatility by construction and their agreement is evidence of nothing; the acceptance test is a residual distribution computed only over the dates where the two strikes differ, together with the rejected-observation count and the reasons.</dd>
+            </div>
+          </dl>
+        </li>
+        <li class="pipeline__row" id="stage-surface">
+          <div class="pipeline__head">
+            <span class="pipeline__num">04</span>
+            <h3 class="pipeline__name">Smile &amp; surface</h3>
+            <span class="pipeline__layer">Analytics</span>
+            <span class="badge">Planned</span>
+          </div>
+          <p class="pipeline__summary">No smile fit and no interpolator. Nothing off-strike or between expiries can be evaluated yet.</p>
+          <dl class="stage__fields">
+            <div class="stage__field">
+              <dt>Runs today</dt>
+              <dd>Nothing. There is no smile fit and no interpolator, and no surfaces module in the tree. This is the single largest gap between what runs and what the rest of the architecture assumes.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Designed to</dt>
+              <dd>A parametric fit in total implied variance — SVI per slice, moving toward SSVI for a globally consistent surface — with calendar-spread and butterfly no-arbitrage constraints enforced on the fit rather than checked afterwards, so that downstream Greeks are internally consistent.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Inputs</dt>
+              <dd>Per-contract implied volatilities across the full chain; the parity forward per expiry.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Outputs</dt>
+              <dd>A fitted slice per expiry, its parameters, its residuals, and the observations it rejected.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Validation evidence</dt>
+              <dd>None published yet.</dd>
+            </div>
+            <div class="stage__field stage__field--next">
+              <dt>Next acceptance test</dt>
+              <dd>Fit one slice on one date and publish the residuals, the rejected observations and the failure cases alongside the fitted curve — not a smooth chart. A fit is accepted only when it reproduces the ATM term structure at the money to within the pricing layer&#x27;s own reprice tolerance.</dd>
+            </div>
+          </dl>
+        </li>
+        <li class="pipeline__row" id="stage-forecasting">
+          <div class="pipeline__head">
+            <span class="pipeline__num">05</span>
+            <h3 class="pipeline__name">Volatility forecasting</h3>
+            <span class="pipeline__layer">Analytics</span>
+            <span class="badge">Planned</span>
+          </div>
+          <p class="pipeline__summary">Realised-volatility estimators and HAR-RV and GARCH baselines, before any learned model is considered.</p>
+          <dl class="stage__fields">
+            <div class="stage__field">
+              <dt>Runs today</dt>
+              <dd>Nothing. No forecasting code exists.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Designed to</dt>
+              <dd>Realised-volatility estimators that use the full bar — Parkinson, Garman-Klass, Yang-Zhang — rather than close-to-close, feeding HAR-RV and GARCH-family baselines. Learned models are promoted only where they show incremental out-of-sample value over those baselines; a model that fails to beat them is a result, not a defect.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Inputs</dt>
+              <dd>Underlying minute and day bars; the ATM term structure as the implied-volatility side of the comparison.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Outputs</dt>
+              <dd>A forecast of realised volatility at a stated horizon, with its baseline comparison and out-of-sample error.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Validation evidence</dt>
+              <dd>None published yet.</dd>
+            </div>
+            <div class="stage__field stage__field--next">
+              <dt>Next acceptance test</dt>
+              <dd>Reproduce the baseline forecast evaluation from a frozen dataset and configuration, with a documented target horizon and temporal split, and report the HAR-RV and GARCH baseline errors before any learned model is fitted.</dd>
+            </div>
+          </dl>
+        </li>
+        <li class="pipeline__row" id="stage-sizing">
+          <div class="pipeline__head">
+            <span class="pipeline__num">06</span>
+            <h3 class="pipeline__name">Signal &amp; target sizing</h3>
+            <span class="pipeline__layer">Analytics</span>
+            <span class="badge">Planned</span>
+          </div>
+          <p class="pipeline__summary">Converts a forecast-versus-implied spread into a target position, subject to Greek budgets.</p>
+          <dl class="stage__fields">
+            <div class="stage__field">
+              <dt>Runs today</dt>
+              <dd>Nothing. No signal or sizing code exists.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Designed to</dt>
+              <dd>The spread between forecast realised and market implied volatility becomes a signal only after it clears modelled costs. Sizing separates direction from conviction by meta-labelling: one model decides whether to act, a second sizes the bet, and the portfolio is constrained by vega, gamma and net-liquidation budgets rather than by notional. This layer proposes a target; it does not authorise one.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Inputs</dt>
+              <dd>The volatility forecast, the surface, and the modelled cost of the candidate structure.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Outputs</dt>
+              <dd>A target position per structure, with the budget it consumes.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Validation evidence</dt>
+              <dd>None published yet.</dd>
+            </div>
+            <div class="stage__field stage__field--next">
+              <dt>Next acceptance test</dt>
+              <dd>Given a frozen forecast and a frozen cost model, produce a target book that is reproducible from those two inputs alone, and show the no-trade gate rejecting the cases where the modelled edge does not clear the modelled cost.</dd>
+            </div>
+          </dl>
+        </li>
+        <li class="pipeline__row" id="stage-risk">
+          <div class="pipeline__head">
+            <span class="pipeline__num">07</span>
+            <h3 class="pipeline__name">Risk authorisation &amp; hedging</h3>
+            <span class="pipeline__layer">Trading control</span>
+            <span class="badge">Planned</span>
+          </div>
+          <p class="pipeline__summary">The independent authority that can veto a target. Continuous Greek accounting, banded delta hedging, margin modelling.</p>
+          <dl class="stage__fields">
+            <div class="stage__field">
+              <dt>Runs today</dt>
+              <dd>Nothing. No risk or hedging code exists.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Designed to</dt>
+              <dd>Continuous Greek accounting with discrete delta hedging against an explicit rebalancing band, where hedging error is a cost to be optimised rather than a nuisance; scenario and stress grids across spot and volatility shocks; and margin modelling, because a strategy that survives a drawdown on paper can still be closed out by a margin call. This layer is deliberately separate from sizing: it authorises or vetoes the target that analytics proposes, and it can only reduce risk, never raise it.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Inputs</dt>
+              <dd>The target book from sizing; the current position; the surface; margin rules.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Outputs</dt>
+              <dd>An authorised book, or a veto with its reason recorded.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Validation evidence</dt>
+              <dd>None published yet.</dd>
+            </div>
+            <div class="stage__field stage__field--next">
+              <dt>Next acceptance test</dt>
+              <dd>Demonstrate the veto path before the sizing path: a target that breaches a vega, gamma or margin budget must be rejected and logged, with the authorised book never exceeding the proposed one on any constrained dimension.</dd>
+            </div>
+          </dl>
+        </li>
+        <li class="pipeline__row" id="stage-execution">
+          <div class="pipeline__head">
+            <span class="pipeline__num">08</span>
+            <h3 class="pipeline__name">Execution</h3>
+            <span class="pipeline__layer">Trading control</span>
+            <span class="badge">Planned</span>
+          </div>
+          <p class="pipeline__summary">Fills at achievable prices, legging risk on multi-leg structures, and the SPY assignment hazards of Phase 1.</p>
+          <dl class="stage__fields">
+            <div class="stage__field">
+              <dt>Runs today</dt>
+              <dd>Nothing is executed. Interactive Brokers Flex reporting is connected read-only, with no gateway and no trading permission, so executions can be ingested but none can be sent.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Designed to</dt>
+              <dd>Fills modelled at achievable prices rather than at the mid, because in options the quoted spread is frequently wider than the modelled edge. Multi-leg structures carry legging risk, and index settlement carries hazards of its own — AM-settled SPX expiries print off the opening auction, not the close. Early assignment, stock borrow and share delivery do not apply to SPX and SPXW, which are European-style and cash-settled, but they do apply to SPY, which is American-style and physically settled, and are therefore first-class Phase 1 execution risks.</dd>
+            </div>
+            <div class="stage__field stage__field--blocked">
+              <dt>Blocked by</dt>
+              <dd>The spread-dependent components of the cost model cannot be calibrated without an option NBBO entitlement. With no bid or ask the crossing cost can be bounded, roughly half the spread in volatility terms, but it cannot be measured or corrected for.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Inputs</dt>
+              <dd>The authorised book; the live chain; the venue.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Outputs</dt>
+              <dd>Orders, fills, and the realised cost of each against its model.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Validation evidence</dt>
+              <dd><a href="/handbook/box-operations.html">Handbook: box operations</a></dd>
+            </div>
+            <div class="stage__field stage__field--next">
+              <dt>Next acceptance test</dt>
+              <dd>Reconcile a day of Flex-reported executions against the orders the system believed it sent, and report the difference between modelled and realised cost per fill.</dd>
+            </div>
+          </dl>
+        </li>
+        <li class="pipeline__row" id="stage-evaluation">
+          <div class="pipeline__head">
+            <span class="pipeline__num">09</span>
+            <h3 class="pipeline__name">Evaluation</h3>
+            <span class="pipeline__layer">Evaluation</span>
+            <span class="badge">Planned</span>
+          </div>
+          <p class="pipeline__summary">Purged and embargoed cross-validation, walk-forward testing, and deflated Sharpe ratios beside raw ones.</p>
+          <dl class="stage__fields">
+            <div class="stage__field">
+              <dt>Runs today</dt>
+              <dd>The protocol is written and published, and dated in version control, but nothing has been evaluated under it because nothing produces a result yet. The track-record page&#x27;s statistics are implemented and withhold every inferential figure below twenty returns.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Designed to</dt>
+              <dd>Purged and embargoed cross-validation, walk-forward testing as the headline, deflated Sharpe ratios reported alongside raw ones, and an explicit count of every configuration tried so that the probability of backtest overfitting can be estimated rather than ignored.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Inputs</dt>
+              <dd>Every trial run, with its configuration and its out-of-sample window.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Outputs</dt>
+              <dd>A judgement under rules fixed before the result existed.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Validation evidence</dt>
+              <dd><a href="/vol/methodology.html">Evaluation protocol</a>, <a href="/vol/track-record.html">Track record</a></dd>
+            </div>
+            <div class="stage__field stage__field--next">
+              <dt>Next acceptance test</dt>
+              <dd>Lock the three parameters the protocol currently leaves open — the confidence level, the underperformance window and the cost margin — into a named experiment record before the first evaluation runs, rather than describing them as fixed in advance while they remain unset.</dd>
+            </div>
+          </dl>
+        </li>
+        <li class="pipeline__row" id="stage-operations">
+          <div class="pipeline__head">
+            <span class="pipeline__num">10</span>
+            <h3 class="pipeline__name">Operations &amp; logging</h3>
+            <span class="pipeline__layer">Operations</span>
+            <span class="badge badge--progress badge--dot">In progress</span>
+          </div>
+          <p class="pipeline__summary">Scheduled jobs, structured logs and dead-man alerting run; position and P&amp;L reconciliation does not exist yet.</p>
+          <dl class="stage__fields">
+            <div class="stage__field">
+              <dt>Runs today</dt>
+              <dd>The ingest box runs on an installed crontab with a continuous-integration alarm that fires when the running schedule drifts from the one declared in the repository. Every job writes structured JSON lines and pings a dead-man&#x27;s-switch service, so a job that silently stops running raises an alert rather than going unnoticed. Entitlements are probed rather than assumed, and the probe fails in either direction — a capability gained is as much a change as one lost.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Designed to</dt>
+              <dd>Structured logs at every stage, daily reconciliation of expected against actual positions and profit and loss, and an alerting layer for silent failures — a stale data feed that produces plausible-looking numbers is far more dangerous than one that crashes.</dd>
+            </div>
+            <div class="stage__field stage__field--blocked">
+              <dt>Blocked by</dt>
+              <dd>Position and profit-and-loss reconciliation cannot exist before there are positions.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Inputs</dt>
+              <dd>Every job&#x27;s exit status, log stream and heartbeat.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Outputs</dt>
+              <dd>Alerts, audit reports, and the operational record.</dd>
+            </div>
+            <div class="stage__field">
+              <dt>Validation evidence</dt>
+              <dd><a href="/handbook/box-operations.html">Handbook: box operations</a></dd>
+            </div>
+            <div class="stage__field stage__field--next">
+              <dt>Next acceptance test</dt>
+              <dd>Publish the coverage and canary results as dated artifacts on this site, so that the operational claim is checkable by a reader rather than asserted.</dd>
+            </div>
+          </dl>
+        </li>
+      </ol>
+      <p class="pipeline__empty">3 of 10 stages run today. Switch to the target system to see the rest.</p>
+    <!-- BUILD:COMPONENT-TABLE:END -->
+    </div>
+  </section>
+
+  <section class="shell section" id="evidence" aria-labelledby="evidence-title">
+    <div class="section__head">
+      <span class="section__eyebrow">02 &middot; Evidence</span>
+      <h2 class="section__title" id="evidence-title">Diagnostic reports</h2>
+      <p class="section__lede">
+        The jobs that produce these run daily on the ingest box. Publishing their output here is a
+        separate decision from running them, and it has not been made yet for any of the three
+        below &mdash; so this section lists what each report will contain and what would make it
+        publishable, rather than showing numbers that do not exist.
+      </p>
+    </div>
+
+    <div class="grid">
+      <article class="card">
+        <h3 class="card__title">Historical coverage</h3>
+        <p class="card__status"><span class="badge">Not yet published</span></p>
+        <div class="card__body">
+          <p>
+            Expected versus observed sessions, missing partitions, the largest gap between
+            consecutive sweeps, and per-underlying ticker counts so that a hole in one root cannot
+            look like a healthy run. A weekly audit walks every weekday since 2022-08-31 and asks
+            the vendor whether a missing day was a holiday or a genuine gap.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3 class="card__title">Pricing validation</h3>
+        <p class="card__status"><span class="badge">Not yet published</span></p>
+        <div class="card__body">
+          <p>
+            The identities tested and the tolerance applied to each: that the engine reprices its
+            own stored input, that call and put gamma and vega agree at a shared volatility, and
+            that put-call parity holds. Inversion failures, the median absolute reprice error, and
+            the Greek conventions in force &mdash; vega per 1.00 of volatility, theta per year of
+            calendar time.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3 class="card__title">Term-structure diagnostic</h3>
+        <p class="card__status"><span class="badge">Not yet published</span></p>
+        <div class="card__body">
+          <p>
+            Input observations, fitted output, residuals, rejected observations and failure cases
+            &mdash; not a smooth chart. The one caveat that has to lead: when put-call parity
+            selects the same strike as the at-the-money search, both legs invert to the same
+            volatility <em>by construction</em>, so their agreement is a tautology rather than
+            evidence. Only the dates where the two strikes differ are informative.
+          </p>
+        </div>
+      </article>
+    </div>
+
+    <div class="prose" style="margin-top: var(--sp-6);">
+      <p>
+        Every report published here will carry four things alongside its numbers: the timestamp of
+        the data it was computed from, the kind of input that produced it, the version of the code
+        that produced it, and its known limitations. The second of those matters more than it
+        sounds. This warehouse has no option NBBO, so every analytic on this site is derived from
+        traded prices &mdash; last trade, else day close &mdash; and never from a quote midpoint.
+        A report that did not say so could be mistaken for one that was quote-based, and they are
+        not comparable.
+      </p>
+    </div>
+  </section>
+
+  <section class="shell section" id="record" aria-labelledby="record-title">
+    <div class="section__head">
+      <span class="section__eyebrow">03 &middot; Performance</span>
+      <h2 class="section__title" id="record-title">Trading record has not started</h2>
+    </div>
+    <div class="prose">
+      <p>
+        No capital has been deployed and no observation has been recorded. The
+        <a href="/vol/track-record.html">track-record page</a> exists, computes every statistic in
+        your browser from a public data file, and currently says so plainly rather than showing a
+        placeholder.
+      </p>
+      <p>
+        When it does start, three kinds of result will be reported separately rather than joined
+        into one line: <strong>backtest</strong> results from historical simulation,
+        <strong>forward simulation</strong> against live data with no money at risk, and
+        <strong>broker-executed</strong> results reconciled against actual fills. They answer
+        different questions and carry very different evidential weight, and running them together
+        is one of the more common ways a track record misleads.
+      </p>
+    </div>
+  </section>
+
+  <section class="shell section" id="milestone" aria-labelledby="milestone-title">
+    <div class="section__head">
+      <span class="section__eyebrow">04 &middot; Next</span>
+      <h2 class="section__title" id="milestone-title">The next milestone</h2>
+      <p class="section__lede">
+        Stated as an acceptance test rather than a task, so that it can be judged as passed or
+        failed rather than as progress.
+      </p>
+    </div>
+    <!-- BUILD:NEXT-MILESTONE:START -->
+    <div class="verdict verdict--pending">
+      <p class="verdict__label">Smile &amp; surface</p>
+      <p class="verdict__text">Fit one slice on one date and publish the residuals, the rejected observations and the failure cases alongside the fitted curve — not a smooth chart. A fit is accepted only when it reproduces the ATM term structure at the money to within the pricing layer&#x27;s own reprice tolerance.</p>
+      <p class="verdict__note">This is the first stage in the pipeline that does not yet run, which is what makes it the frontier. Its status and this test are both read from <a href="/data/components.json">the manifest</a>; nothing on this page is typed by hand.</p>
+    </div>
+  <!-- BUILD:NEXT-MILESTONE:END -->
+  </section>
+
+  <section class="shell section" aria-label="Page metadata">
+    <div class="prose">
+      <p class="page-updated">
+        This page was last updated <time class="page-updated__time" datetime="2026-09-08T01:21:41+00:00">September 8, 2026</time>.
+        Its contents are generated from <a href="/data/components.json">data/components.json</a>;
+        the manifest's own history is in the repository.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <span>&copy; 2026 Brad Lasater</span>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/vol/">Volatility System</a></li>
+      <li><a href="/log/">Research Log</a></li>
+      <li><a href="/cv.html">CV</a></li>
+      <li><a href="mailto:brad@bradlasater.com">Email</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>

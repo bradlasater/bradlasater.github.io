@@ -517,6 +517,98 @@ main { flex: 1; }
 .stage__field--blocked dd { border-left: 2px solid color-mix(in oklch, var(--c-warn) 35%, transparent); padding-left: var(--sp-3); }
 .stage__more { margin-top: var(--sp-4); font-size: var(--step--1); }
 
+/* Build-status pipeline. An ordered list, because these stages are a sequence
+   and the card grid on /vol/ reflows and cannot say so. This is also already
+   the right shape on a phone, which a diagram is not. */
+.pipeline { list-style: none; margin: var(--sp-5) 0 0; padding: 0; counter-reset: none; }
+.pipeline__row {
+  padding: var(--sp-5) 0;
+  border-top: 1px solid var(--c-border);
+}
+.pipeline__row:last-child { border-bottom: 1px solid var(--c-border); }
+.pipeline__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+.pipeline__num {
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  color: var(--c-accent);
+}
+.pipeline__name { margin: 0; font-size: var(--step-1); letter-spacing: -0.02em; }
+.pipeline__layer {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+.pipeline__summary {
+  margin: var(--sp-3) 0 0;
+  color: var(--c-text);
+  max-width: var(--measure);
+}
+.pipeline .stage__fields { max-width: var(--measure); }
+.pipeline__empty { margin-top: var(--sp-5); color: var(--c-text-muted); font-size: var(--step--1); }
+/* The acceptance test is the operative line on this page: it is what would
+   have to be true for the stage to move, so it gets the accent rule. */
+.stage__field--next dt { color: var(--c-accent); }
+.stage__field--next dd {
+  border-left: 2px solid var(--c-accent-quiet);
+  padding-left: var(--sp-3);
+}
+
+/* Running-today / target-system filter, CSS only. */
+.viewswitch__set {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.viewswitch__legend {
+  padding: 0 var(--sp-3) 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+/* Visually hidden, not display:none — the radio must stay focusable and
+   reachable by keyboard, and its label is the visible control. */
+.viewswitch__input {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.viewswitch__label {
+  padding: 0.3rem var(--sp-4);
+  border: 1px solid var(--c-border-strong);
+  border-radius: 999px;
+  font-size: var(--step--1);
+  color: var(--c-text-secondary);
+  cursor: pointer;
+}
+.viewswitch__label:hover { color: var(--c-text); background: var(--c-surface-hover); }
+.viewswitch__input:checked + .viewswitch__label {
+  color: var(--c-on-accent);
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+}
+.viewswitch__input:focus-visible + .viewswitch__label { outline: var(--ring); outline-offset: 3px; }
+/* :has() rather than a sibling combinator, because the radios sit inside a
+   fieldset for grouping semantics and are therefore not siblings of the list.
+   Support is broader than the color-mix(in oklch) this file already needs. */
+.viewswitch:has(#view-running:checked) .pipeline__row:not(.is-running) { display: none; }
+
 /* Homepage status strip — three facts, counted from the manifest. */
 .statusstrip__wrap { padding-block: var(--sp-6); }
 .statusstrip {
