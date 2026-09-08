@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Every price in this system is a traded price, and that changes which tests are even meaningful — Research Log — Brad Lasater</title>
+<meta name="description" content="Option NBBO is a 403 on this data tier, so implied volatility is inverted from last trade or day close rather than from a quote midpoint. The consequence is not merely noisier numbers — it invalidates one of the three daily identity checks whenever either leg of a pair is a stale print, and it makes the spread-based cost model uncalibratable rather than approximate.">
+<link rel="canonical" href="https://bradlasater.com/log/2026-09-07-pricing-with-imperfect-market-inputs.html">
+<meta name="theme-color" content="#14171c">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Brad Lasater">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://bradlasater.com/log/2026-09-07-pricing-with-imperfect-market-inputs.html">
+<meta property="og:title" content="Every price in this system is a traded price, and that changes which tests are even meaningful">
+<meta property="og:description" content="Option NBBO is a 403 on this data tier, so implied volatility is inverted from last trade or day close rather than from a quote midpoint. The consequence is not merely noisier numbers — it invalidates one of the three daily identity checks whenever either leg of a pair is a stale print, and it makes the spread-based cost model uncalibratable rather than approximate.">
+<meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:published_time" content="2026-09-07T12:00:00+00:00">
+<meta property="article:modified_time" content="2026-09-07T19:30:36-06:00">
+<meta property="article:author" content="Brad Lasater">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" title="Brad Lasater — Research Log" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://bradlasater.com/log/2026-09-07-pricing-with-imperfect-market-inputs.html#post",
+      "isPartOf": { "@id": "https://bradlasater.com/log/#blog" },
+      "mainEntityOfPage": "https://bradlasater.com/log/2026-09-07-pricing-with-imperfect-market-inputs.html",
+      "headline": "Every price in this system is a traded price, and that changes which tests are even meaningful",
+      "description": "Option NBBO is a 403 on this data tier, so implied volatility is inverted from last trade or day close rather than from a quote midpoint. The consequence is not merely noisier numbers \u2014 it invalidates one of the three daily identity checks whenever either leg of a pair is a stale print, and it makes the spread-based cost model uncalibratable rather than approximate.",
+      "datePublished": "2026-09-07T12:00:00+00:00",
+      "dateModified": "2026-09-07T19:30:36-06:00",
+      "inLanguage": "en-US",
+      "author": { "@id": "https://bradlasater.com/#brad" },
+      "publisher": { "@id": "https://bradlasater.com/#brad" },
+      "image": "https://bradlasater.com/assets/og.png",
+      "keywords": "pricing & identities, volatility trading, systematic trading, quantitative research"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://bradlasater.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Research Log", "item": "https://bradlasater.com/log/" },
+        { "@type": "ListItem", "position": 3, "name": "Every price in this system is a traded price, and that changes which tests are even meaningful" }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/assets/js/analytics.js" defer></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href="/">Brad Lasater<span class="brand__dot">.</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="/#work">Work</a></li>
+        <li><a href="/vol/">Volatility System</a></li>
+        <li><a href="/log/" aria-current="true">Research Log</a></li>
+        <li><a href="/cv.html">CV</a></li>
+        <li><a href="/#contact">Contact</a></li>
+        <li class="site-nav__ext"><a href="https://github.com/bradlasater/Crack-the-Sky" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <article class="shell shell--narrow section">
+
+    <div class="role__meta" style="margin-bottom: var(--sp-3);">
+      <time class="badge" datetime="2026-09-07">September 7, 2026</time>
+      <span class="badge">Pricing &amp; identities</span>
+    </div>
+
+    <h1 class="hero__name" style="font-size: var(--step-3);">Every price in this system is a traded price, and that changes which tests are even meaningful</h1>
+
+    <p class="hero__bio" style="margin-top: var(--sp-4);">Option NBBO is a 403 on this data tier, so implied volatility is inverted from last trade or day close rather than from a quote midpoint. The consequence is not merely noisier numbers — it invalidates one of the three daily identity checks whenever either leg of a pair is a stale print, and it makes the spread-based cost model uncalibratable rather than approximate.</p>
+
+    <div class="prose" style="margin-top: var(--sp-6);">
+      <h2>The constraint</h2>
+      <p>
+        This warehouse is not entitled to option NBBO. The REST quotes endpoint and the
+        <code>quotes_v1</code> flat file both return 403, and so do all index levels
+        (<code>I:SPX</code>, <code>I:VIX</code>). There is no bid, no ask, no mid and no displayed
+        depth anywhere in the data. The only price available for a contract is its last trade,
+        falling back to the day close.
+      </p>
+      <p>
+        Entitlements are probed rather than assumed: a job walks every endpoint the system relies
+        on and exits non-zero on drift <em>in either direction</em>, because a capability silently
+        gained is as much a change to reason about as one lost.
+      </p>
+
+      <h2>What I expected</h2>
+      <p>
+        I expected this to be a precision problem. Without a midpoint, the inverted volatility
+        carries an unknown offset bounded by roughly half the spread, so I expected to characterise
+        that bound once, carry it as an error bar, and otherwise proceed as normal.
+      </p>
+
+      <h2>What happened</h2>
+      <p>
+        The offset is real and is bounded roughly as expected. What I did not anticipate is that the
+        missing quote breaks a <em>validation</em> step rather than only degrading an estimate.
+      </p>
+      <p>
+        The daily canary checks three identities on at-the-money names, where at-the-money means
+        <code>|K/F &minus; 1| &le; 5%</code>:
+      </p>
+      <ul>
+        <li><strong>Reprice.</strong> The stored engine price must reproduce the input price. Independent for American-style SPY rows, which are priced on a binomial tree while the check runs against the stored value.</li>
+        <li><strong>Pair symmetry.</strong> For European pairs, call and put gamma must agree, and call and put vega must agree, at a shared volatility.</li>
+        <li><strong>Put&ndash;call parity.</strong> The call minus the put must equal the discounted forward less the discounted strike.</li>
+      </ul>
+      <p>
+        The third one cannot be run when either leg carries a last-trade price. Put&ndash;call parity
+        is a statement about a call and a put observed <em>at the same instant</em>. Two last trades
+        are two different instants, sometimes hours apart on an illiquid strike, and a parity
+        violation computed across them measures the gap between the prints rather than any error in
+        the pricing. So the check is skipped for those rows rather than being run and quietly failing.
+      </p>
+
+      <h2>Diagnosis</h2>
+      <p>
+        There is a general lesson here that I had to be shown rather than reason my way to. A missing
+        input does not degrade every consumer equally. It degrades <em>estimates</em> smoothly and it
+        breaks <em>tests</em> discontinuously, because a test is usually an equality that holds under
+        an assumption the missing input was quietly supplying. Here that assumption was simultaneity.
+      </p>
+      <p>
+        Two related decisions follow from the same reasoning.
+      </p>
+      <p>
+        <strong>Vendor implied volatility and Greeks are copied into the warehouse but are never
+        inputs.</strong> They are unit-aligned for comparison and written into the daily report as
+        diagnostics. A null vendor volatility is not a failure and does not fail the job. The reason
+        is that a vendor number computed from a quote midpoint I cannot see is not a check on my
+        arithmetic; it is a second, differently-wrong number, and treating it as ground truth would
+        hide exactly the errors the canary exists to find. The live test is my own math on new
+        prices.
+      </p>
+      <p>
+        <strong>Inversion raises rather than returning a NaN.</strong> A price outside the discounted
+        no-arbitrage bounds has no implied volatility, and Newton with a Brent fallback will not find
+        one. Returning a NaN would let that row flow downstream and be dropped silently somewhere
+        later, at which point the dataset has a hole nobody chose. Raising forces the decision to be
+        made where the information is.
+      </p>
+      <p>
+        The forward is recovered from put&ndash;call parity rather than from a spot price, since no
+        index level is entitled either. Pricing then happens in the forward measure, which reduces
+        Black&ndash;Scholes&ndash;Merton to Black-76 &mdash; a spot and a dividend yield are precisely
+        the two things this tier does not provide, so the parameterisation that avoids needing them is
+        the correct one rather than a workaround.
+      </p>
+
+      <h2>What this forbids downstream</h2>
+      <p>
+        The site previously claimed the cleaning layer dropped stale and crossed quotes and filtered
+        by spread width, and that the cost model charged half-spread crossing scaled by quoted width
+        and displayed depth. Crossed and locked are definitionally bid-and-ask states. Quoted width
+        and displayed depth are NBBO fields. None of it was implementable on this tier, and the claim
+        has been removed rather than softened.
+      </p>
+      <p>
+        The cost consequence is the one that matters, and it is worse than an approximation. In
+        options the spread is frequently wider than the entire modelled edge, so a cost model that
+        cannot measure the spread cannot be calibrated at all &mdash; it can only be bounded. A
+        backtest published under those conditions would be reporting the size of its own assumption.
+        That is why no backtest result will be published under this protocol until the input situation
+        is resolved and stated on the result itself.
+      </p>
+
+      <h2>What changed as a result</h2>
+      <p>
+        The parity check now skips rather than fails when either leg is a last trade, and the skip is
+        recorded rather than silent. The canary's pass/fail rests on median reprice error and the
+        fraction of at-the-money names failing identities, not on far-out-of-the-money ticks, which
+        are noise rather than signal. The public pages now distinguish the hygiene that runs on
+        entitled inputs from the hygiene that is blocked behind an entitlement, and the build-status
+        page carries that distinction as a separate field so that a reader can tell unwritten code
+        from an unavailable input.
+      </p>
+      <p>
+        Every diagnostic this project publishes will state the kind of input it was computed from.
+        Traded-price analytics and quote-based analytics are not comparable, and a report that omits
+        which one it is invites the reader to assume the better of the two.
+      </p>
+    </div>
+
+    <p class="muted" style="margin-top: var(--sp-7);">
+      Published <time datetime="2026-09-07">September 7, 2026</time>.
+      This entry follows the pre-committed
+      <a href="/vol/methodology.html">evaluation protocol</a>; it is versioned in the
+      repository, and any later correction appears as a dated commit rather than a silent edit.
+    </p>
+
+    <nav class="actions" aria-label="More research-log entries">
+      <a class="btn" href="/log/2026-09-07-historical-completeness-vs-point-in-time.html">&larr; Half my datasets can be backfilled and half cannot, and that decides what a replay may claim</a>
+      <a class="btn btn--primary" href="/log/">All entries</a>
+    </nav>
+
+  </article>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <span>&copy; 2026 Brad Lasater</span>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/vol/">Volatility System</a></li>
+      <li><a href="/vol/build-status.html">Build Status</a></li>
+      <li><a href="/handbook/">Handbook</a></li>
+      <li><a href="/log/">Research Log</a></li>
+      <li><a href="/cv.html">CV</a></li>
+      <li><a href="https://github.com/bradlasater/Crack-the-Sky" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/bradlasater" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="mailto:brad@bradlasater.com">Email</a></li>
+      <li><a href="/feed.xml">Feed</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>

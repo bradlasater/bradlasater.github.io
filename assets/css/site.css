@@ -281,12 +281,15 @@ main { flex: 1; }
    forcing the document wider than the viewport. Stack them, and drop the
    sticky behaviour so the header does not eat scarce vertical space.
 
-   Raised from 44rem when "Handbook" was added and again when the GitHub link
-   was added. Measured, not guessed: seven items plus the brand fit at 880px and wrap
-   at 850px, so this sits just above the measured threshold. A wrapped bar puts
-   the GitHub rule on its own line and reads as broken, so re-measure in the
-   browser whenever an item is added or renamed. */
-@media (max-width: 56rem) {
+   Measured, not guessed, and re-measured every time the bar changes. It was
+   56rem for seven items (which fit at 880px and wrapped at 850px). The bar is
+   now five items plus the brand, because Build Status, the evaluation protocol,
+   the trading record and the handbook moved into the /vol/ section bar: it
+   fits at 528px and wraps at 527px, so 46rem sits just above the threshold with
+   room for a font that loads late with wider metrics. A wrapped bar puts the
+   GitHub rule on its own line and reads as broken, so re-measure in the browser
+   whenever an item is added or renamed. */
+@media (max-width: 46rem) {
   .site-header { position: static; }
   .site-header__inner {
     flex-direction: column;
@@ -483,6 +486,263 @@ main { flex: 1; }
 .card__body { color: var(--c-text-secondary); font-size: var(--step--1); }
 .card__body > * + * { margin-top: var(--sp-3); }
 
+/* Stage cards carry four labelled fields, not a sentence, so they run far
+   taller than an ordinary card. Wider columns make them shorter: three columns
+   of 18rem produced a wall of text at desktop width. */
+.grid--stages { grid-template-columns: repeat(auto-fit, minmax(min(26rem, 100%), 1fr)); }
+
+/* Stage cards on /vol/, generated from data/components.json. Each carries the
+   same four parts in the same order, so two stages can be compared by eye
+   rather than by reading two different paragraph shapes. */
+.stage__order {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+.stage__num { color: var(--c-accent); }
+.stage__summary { color: var(--c-text); }
+.stage__fields { margin: var(--sp-4) 0 0; }
+.stage__field + .stage__field { margin-top: var(--sp-3); }
+.stage__field dt {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+.stage__field dd { margin: var(--sp-1) 0 0; }
+/* An entitlement gap is not the same kind of fact as unwritten code, and a
+   reader deciding whether the work is credible needs to tell them apart. */
+.stage__field--blocked dt { color: var(--c-warn); }
+.stage__field--blocked dd { border-left: 2px solid color-mix(in oklch, var(--c-warn) 35%, transparent); padding-left: var(--sp-3); }
+.stage__more { margin-top: var(--sp-4); font-size: var(--step--1); }
+
+/* Build-status pipeline. An ordered list, because these stages are a sequence
+   and the card grid on /vol/ reflows and cannot say so. This is also already
+   the right shape on a phone, which a diagram is not. */
+.pipeline { list-style: none; margin: var(--sp-5) 0 0; padding: 0; counter-reset: none; }
+.pipeline__row {
+  padding: var(--sp-5) 0;
+  border-top: 1px solid var(--c-border);
+}
+.pipeline__row:last-child { border-bottom: 1px solid var(--c-border); }
+.pipeline__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+.pipeline__num {
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  color: var(--c-accent);
+}
+.pipeline__name { margin: 0; font-size: var(--step-1); letter-spacing: -0.02em; }
+.pipeline__layer {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+.pipeline__summary {
+  margin: var(--sp-3) 0 0;
+  color: var(--c-text);
+  max-width: var(--measure);
+}
+.pipeline .stage__fields { max-width: var(--measure); }
+.pipeline__empty { margin-top: var(--sp-5); color: var(--c-text-muted); font-size: var(--step--1); }
+/* The acceptance test is the operative line on this page: it is what would
+   have to be true for the stage to move, so it gets the accent rule. */
+.stage__field--next dt { color: var(--c-accent); }
+.stage__field--next dd {
+  border-left: 2px solid var(--c-accent-quiet);
+  padding-left: var(--sp-3);
+}
+
+/* Running-today / target-system filter, CSS only. */
+.viewswitch__set {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.viewswitch__legend {
+  padding: 0 var(--sp-3) 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+/* Visually hidden, not display:none — the radio must stay focusable and
+   reachable by keyboard, and its label is the visible control. */
+.viewswitch__input {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.viewswitch__label {
+  padding: 0.3rem var(--sp-4);
+  border: 1px solid var(--c-border-strong);
+  border-radius: 999px;
+  font-size: var(--step--1);
+  color: var(--c-text-secondary);
+  cursor: pointer;
+}
+.viewswitch__label:hover { color: var(--c-text); background: var(--c-surface-hover); }
+.viewswitch__input:checked + .viewswitch__label {
+  color: var(--c-on-accent);
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+}
+.viewswitch__input:focus-visible + .viewswitch__label { outline: var(--ring); outline-offset: 3px; }
+/* :has() rather than a sibling combinator, because the radios sit inside a
+   fieldset for grouping semantics and are therefore not siblings of the list.
+   Support is broader than the color-mix(in oklch) this file already needs. */
+.viewswitch:has(#view-running:checked) .pipeline__row:not(.is-running) { display: none; }
+
+/* Homepage status strip — three facts, counted from the manifest. */
+.statusstrip__wrap { padding-block: var(--sp-6); }
+.statusstrip {
+  display: grid;
+  gap: var(--sp-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  margin: 0;
+  padding: var(--sp-5);
+  background: var(--c-bg-subtle);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+}
+.statusstrip__item dt {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+.statusstrip__item dd {
+  margin: var(--sp-2) 0 0;
+  color: var(--c-text-secondary);
+  font-size: var(--step--1);
+}
+.statusstrip__note {
+  margin: var(--sp-3) 0 0;
+  font-size: var(--step--1);
+  color: var(--c-text-muted);
+}
+
+/* Section bar for /vol/. Sits under the primary header on every page inside
+   the volatility system, so Build Status, the protocol, the record and the
+   handbook are reachable without taking four top-level nav slots. */
+.section-nav {
+  border-bottom: 1px solid var(--c-border);
+  background: var(--c-bg-subtle);
+}
+.section-nav__inner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-5);
+  padding-block: var(--sp-3);
+}
+.section-nav__label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+.section-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.section-nav a {
+  color: var(--c-text-secondary);
+  font-size: var(--step--1);
+  text-decoration: none;
+}
+.section-nav a:hover { color: var(--c-text); }
+.section-nav a[aria-current] { color: var(--c-accent); }
+
+/* Published diagnostic reports. Rendered generically from the job's own JSON,
+   so the styling has to survive arbitrary nesting rather than a known shape. */
+.report__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+}
+.report__table th,
+.report__table td {
+  padding: var(--sp-2) var(--sp-3);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--c-border);
+}
+.report__table th {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--c-text-secondary);
+  white-space: nowrap;
+  width: 1%;
+}
+.report__table td { font-family: var(--font-mono); color: var(--c-text); }
+/* A nested object is a table inside a cell; strip its outer padding and rule so
+   it reads as a sub-list rather than a second, misaligned grid. */
+.report__table .report__table { margin: calc(var(--sp-2) * -1) 0; }
+.report__table .report__table tr:last-child th,
+.report__table .report__table tr:last-child td { border-bottom: 0; }
+.report__list { margin: 0; padding-left: var(--sp-4); font-family: var(--font-mono); }
+.report__none { color: var(--c-text-muted); font-style: italic; }
+.report__meta { color: var(--c-text-muted); font-size: var(--step--1); }
+
+/* Callout — used where a page has to qualify its own claim. Warm rule rather
+   than a card, so it reads as an aside to the text it interrupts. */
+.callout {
+  margin-top: var(--sp-5);
+  padding: var(--sp-4) var(--sp-5);
+  border-left: 3px solid color-mix(in oklch, var(--c-warn) 45%, transparent);
+  background: var(--c-bg-subtle);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--c-text-secondary);
+  font-size: var(--step--1);
+}
+.callout > * + * { margin-top: var(--sp-3); }
+.callout strong { color: var(--c-text); }
+
+/* Proof-point cards on the homepage: problem, contribution, outcome. */
+.proof__kicker {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+.proof .card__body strong { color: var(--c-text); }
+
+/* Availability, promoted into the hero beside the actions. */
+.hero__availability {
+  margin-top: var(--sp-5);
+  color: var(--c-text-secondary);
+  font-size: var(--step--1);
+}
+.hero__availability strong { color: var(--c-text); }
+
 /* Feature card — the volatility system slot. */
 .feature {
   background:
@@ -515,8 +775,13 @@ main { flex: 1; }
   color: var(--c-text-muted);
   white-space: nowrap;
 }
-.badge--active { color: var(--c-warn); border-color: color-mix(in oklch, var(--c-warn) 40%, transparent); }
-.badge--live   { color: var(--c-pos);  border-color: color-mix(in oklch, var(--c-pos) 40%, transparent); }
+.badge--active   { color: var(--c-warn);   border-color: color-mix(in oklch, var(--c-warn) 40%, transparent); }
+.badge--live     { color: var(--c-pos);    border-color: color-mix(in oklch, var(--c-pos) 40%, transparent); }
+.badge--progress { color: var(--c-accent); border-color: color-mix(in oklch, var(--c-accent) 40%, transparent); }
+/* "Implemented — under validation" is the longest label of the four, and it
+   wraps rather than overflowing its card on a narrow viewport. The nowrap
+   above is right for the short states and wrong for this one. */
+.badge--active { white-space: normal; }
 .badge--dot::before {
   content: "";
   width: 6px; height: 6px;

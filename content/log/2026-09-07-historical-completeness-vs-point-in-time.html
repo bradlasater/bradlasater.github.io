@@ -1,0 +1,132 @@
+<!--meta
+title: Half my datasets can be backfilled and half cannot, and that decides what a replay may claim
+date: 2026-09-07
+stage: Data & cleaning
+summary: Option day bars reach back to 2022-08-31 and can be rebuilt from the vendor archive at any time; chain snapshots exist only from 2026-08-31 because there is no historical snapshot endpoint. That asymmetry, not storage cost, is what limits which backtests this system will ever be allowed to run.
+-->
+
+<h2>The question</h2>
+<p>
+  Every dataset in this warehouse looks the same once it has landed: partitioned Parquet
+  under one root, queried the same way. That similarity is misleading. Some of these
+  datasets can be reconstructed from the vendor at any point in the future, and some exist
+  only because a process was running at a particular moment and wrote them down. If I lose
+  the second kind, it is gone permanently — there is no endpoint that will sell it back to
+  me.
+</p>
+<p>
+  The question this entry settles is which is which, and what each category is allowed to
+  support in a backtest.
+</p>
+
+<h2>What I expected</h2>
+<p>
+  I expected the split to fall along the usual lines: recent data cheap and available,
+  older data expensive and available. The plan I started with assumed I could backfill the
+  option-chain snapshots the same way I backfill trades and bars, and that the only cost of
+  starting the capture later would be a gap I could fill in afterwards.
+</p>
+
+<h2>What happened</h2>
+<p>
+  The datasets separate into four categories, not two, and the boundary is availability
+  rather than age.
+</p>
+<ul>
+  <li>
+    <strong>Irreplaceable.</strong> <code>option_snapshots</code> and the parity forwards
+    derived from them. There is no historical snapshot endpoint on this vendor at any tier.
+    The archive begins on <strong>2026-08-31</strong>, the first capture day, because that
+    is the day the sweep started running. A day not captured is a day that does not exist.
+  </li>
+  <li>
+    <strong>Backfillable.</strong> Option trades, minute bars and day bars, all of which
+    can be pulled from the vendor's flat-file archive on demand. <code>option_day_bars</code>
+    reach back to <strong>2022-08-31</strong>. When the websocket capture and the flat file
+    disagree, the flat file wins and the reconciliation job rewrites the local copy.
+  </li>
+  <li>
+    <strong>Write-only.</strong> <code>contracts_expired</code> and
+    <code>underlying_day_bars</code>. Captured on a schedule, consumed by nothing yet.
+    Worth capturing anyway precisely because the first category exists: the cost of storing
+    something I do not need is bounded, and the cost of not having captured it is not.
+  </li>
+  <li>
+    <strong>Derived.</strong> The ATM term structure, rebuildable from the day bars in about
+    seven minutes. Nothing here needs protecting; it needs only to be reproducible.
+  </li>
+</ul>
+<p>
+  The four-year gap between those two dates &mdash; 2022-08-31 for day bars, 2026-08-31 for
+  snapshots &mdash; is the whole finding.
+</p>
+
+<h2>Diagnosis</h2>
+<p>
+  A snapshot is a statement about what the market looked like at an instant, including which
+  contracts existed, their strikes and expiries, and their open interest. That is a fact about
+  a moment, and a vendor that did not record it cannot manufacture it later. A day bar is an
+  aggregate over a session, computed from a trade tape that is itself archived, so it can be
+  recomputed indefinitely.
+</p>
+<p>
+  The practical consequence is that <em>the richer dataset has the shorter history, and it
+  always will</em>. Every additional day of snapshot history costs one day of waiting and
+  cannot be bought. Meanwhile the poorer dataset &mdash; day bars, carrying no contract terms
+  at all, with the strike and expiry recovered by parsing the OPRA symbol &mdash; is the only
+  one long enough to fit anything to.
+</p>
+<p>
+  This is also why a coverage audit that reports only on job failures is insufficient. A job
+  that stops running produces no failures at all, and for an irreplaceable dataset the loss is
+  permanent by the time anybody notices. The audit therefore asserts what <em>should</em> have
+  landed for a given session &mdash; sweep counts derived from the market calendar rather than
+  hardcoded, so early closes are handled &mdash; and fails when the observed count falls short.
+  Two real holes were found this way and neither had produced a single error line: an
+  SPX-shaped gap in the trades watchlist, and a websocket job that had never once written a
+  file.
+</p>
+
+<h2>What this means for a replay, and what it forbids</h2>
+<p>
+  A backtest is a claim that the system would have made these decisions with the information
+  available at the time. Which claims this warehouse can support:
+</p>
+<ul>
+  <li>
+    <strong>Supported from 2022-08-31:</strong> anything that needs only at-the-money level
+    and slope per expiry. That is what the term structure carries, and it is genuinely what a
+    5&ndash;45 day book is traded off.
+  </li>
+  <li>
+    <strong>Supported from 2026-08-31 only:</strong> anything needing the full chain at an
+    instant &mdash; open-interest filters, strike-space selection, anything off-strike.
+  </li>
+  <li>
+    <strong>Not supported at any date:</strong> anything needing a bid, an ask, a mid or
+    displayed depth. Option NBBO is not entitled on this tier. This is a separate limit from
+    the two above and it does not improve with waiting; it improves with money.
+  </li>
+</ul>
+<p>
+  The trap I am most concerned about is the second category quietly borrowing the first
+  category's history. A model developed on four years of term structure, then evaluated with
+  a filter that needs open interest, has silently restricted itself to two weeks of data
+  while appearing to use four years.
+</p>
+
+<h2>What changed as a result</h2>
+<p>
+  Three things. The snapshot sweep is now the job whose failure is treated most seriously,
+  because it is the only one whose output cannot be recovered. A weekly history audit walks
+  every weekday since 2022-08-31 and distinguishes a market holiday from a genuine hole by
+  asking the vendor rather than by consulting a hardcoded calendar. And datasets that nothing
+  currently consumes are captured anyway and labelled write-only, rather than being switched
+  off as waste.
+</p>
+<p>
+  The evaluation consequence is a rule I am fixing now, before there is any result that would
+  make it inconvenient: <strong>every backtest states the earliest date its inputs actually
+  support, and that date is derived from the scarcest input it touches, not the most
+  abundant.</strong>
+</p>

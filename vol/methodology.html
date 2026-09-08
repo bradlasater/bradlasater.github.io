@@ -21,7 +21,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="article:modified_time" content="2026-09-06T11:54:20+00:00">
+<meta property="article:modified_time" content="2026-09-07T19:35:52-06:00">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -41,7 +41,7 @@
       "headline": "Evaluation protocol for a systematic volatility trading system",
       "description": "The pre-committed rules for judging a systematic volatility research and execution platform, whose Phase 1 universe is defined-risk SPY and SPX/SPXW structures at roughly 5-45 days to expiry: purged and embargoed cross-validation, mandatory baselines, cost and friction modelling, deflated performance statistics, and kill criteria fixed in advance.",
       "inLanguage": "en-US",
-      "dateModified": "2026-09-06T11:54:20+00:00",
+      "dateModified": "2026-09-07T19:35:52-06:00",
       "author": { "@id": "https://bradlasater.com/#brad" },
       "publisher": { "@id": "https://bradlasater.com/#brad" },
       "isPartOf": { "@id": "https://bradlasater.com/#website" },
@@ -73,13 +73,13 @@
           "@type": "Question",
           "@id": "https://bradlasater.com/vol/methodology.html#baselines",
           "name": "What baselines must a volatility forecast beat before it is allowed to size a position?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Four baselines are mandatory: implied volatility itself as the forecast of realised volatility, HAR-RV on high-frequency realised variance, a GARCH-family conditional variance model, and \u2014 for the strategy as a whole \u2014 naive short-variance carry, unconditionally sized. A learned model that cannot beat HAR-RV is not a discovery. It is a defect, and it gets debugged rather than deployed." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Four baselines are mandatory: implied volatility itself as the forecast of realised volatility, HAR-RV on high-frequency realised variance, a GARCH-family conditional variance model, and \u2014 for the strategy as a whole \u2014 naive short-variance carry, unconditionally sized. The rule is a promotion rule rather than a presumption that a more complex model must work: a learned model is promoted only where it demonstrates incremental out-of-sample value over the appropriate baseline. A model that fails to beat HAR-RV has produced a result, not a defect, and that result gets written up rather than debugged away." }
         },
         {
           "@type": "Question",
           "@id": "https://bradlasater.com/vol/methodology.html#costs",
           "name": "How are execution costs and frictions modelled in an options backtest?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Fills are never assumed at the mid, because in options the spread is frequently larger than the entire modelled edge. The cost model charges half-spread crossing scaled by quoted width and order size relative to displayed depth, commissions and exchange fees per contract, legging risk on multi-leg structures, delta-hedging costs at the actual rebalancing frequency including the hedge's own spread, SPY early-assignment and borrow costs (while SPX/SPXW remain European-style and cash-settled), and margin requirements modelled well enough to know whether a drawdown becomes a forced liquidation." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Fills are never assumed at the mid, because in options the spread is frequently larger than the entire modelled edge. The intended cost model charges half-spread crossing scaled by quoted width and order size relative to displayed depth, commissions and exchange fees per contract, legging risk on multi-leg structures, delta-hedging costs at the actual rebalancing frequency including the hedge's own spread, SPY early-assignment and borrow costs (while SPX/SPXW remain European-style and cash-settled), and margin requirements modelled well enough to know whether a drawdown becomes a forced liquidation. The spread-dependent components of that model cannot be calibrated on the current data entitlement, which carries no option NBBO: every price available is a traded price, so the crossing cost can be bounded but not measured. No backtest result will be published under this protocol until that is resolved and stated." }
         },
         {
           "@type": "Question",
@@ -130,17 +130,33 @@
     <a class="brand" href="/">Brad Lasater<span class="brand__dot">.</span></a>
     <nav class="site-nav" aria-label="Primary">
       <ul>
+        <!-- BUILD:SITE-NAV:START -->
+        <li><a href="/#work">Work</a></li>
         <li><a href="/vol/" aria-current="true">Volatility System</a></li>
-        <li><a href="/vol/track-record.html">Build Status</a></li>
-        <li><a href="/handbook/">Handbook</a></li>
         <li><a href="/log/">Research Log</a></li>
         <li><a href="/cv.html">CV</a></li>
         <li><a href="/#contact">Contact</a></li>
         <li class="site-nav__ext"><a href="https://github.com/bradlasater/Crack-the-Sky" target="_blank" rel="noopener">GitHub</a></li>
+      <!-- BUILD:SITE-NAV:END -->
       </ul>
     </nav>
   </div>
 </header>
+
+<!-- BUILD:SECTION-NAV:START -->
+  <nav class="section-nav" aria-label="Volatility system">
+    <div class="shell section-nav__inner">
+      <span class="section-nav__label">Volatility system</span>
+      <ul>
+      <li><a href="/vol/">Overview</a></li>
+      <li><a href="/vol/build-status.html">Build Status</a></li>
+      <li><a href="/vol/methodology.html" aria-current="page">Evaluation Protocol</a></li>
+      <li><a href="/vol/track-record.html">Trading Record</a></li>
+      <li><a href="/handbook/">Handbook</a></li>
+      </ul>
+    </div>
+  </nav>
+<!-- BUILD:SECTION-NAV:END -->
 
 <main id="main">
 
@@ -195,9 +211,17 @@
           curve. Any field that cannot be reconstructed point-in-time is excluded from the model.
         </li>
         <li>
-          <strong>Quote hygiene:</strong> stale, crossed, and locked quotes dropped; static
-          no-arbitrage bounds enforced; forward implied from put&ndash;call parity rather than
-          taken from a vendor field.
+          <strong>Quote hygiene, on the entitled inputs:</strong> static no-arbitrage bounds
+          enforced &mdash; a price outside the discounted bounds raises rather than returning a
+          NaN &mdash; open-interest filtering, and the forward implied from put&ndash;call parity
+          rather than taken from a vendor field.
+        </li>
+        <li>
+          <strong>Quote hygiene that is blocked, and why:</strong> dropping crossed and locked
+          quotes and filtering by spread width are defined in terms of bid and ask. Option NBBO
+          is not entitled on the current data tier, so no bid, ask or mid exists anywhere in the
+          warehouse and every price is a traded price &mdash; last trade, else day close. These
+          checks are specified and unimplemented, not implemented and unmentioned.
         </li>
       </ul>
 
@@ -241,18 +265,25 @@
         <li>For the strategy as a whole: naive short-variance carry, unconditionally sized.</li>
       </ul>
       <p>
-        A learned model that cannot beat HAR-RV is not a discovery. It is a defect, and it gets
-        debugged rather than deployed.
+        The rule is a promotion rule, not a presumption that the more complex model must work: a
+        learned model is promoted only where it demonstrates incremental out-of-sample value over
+        the appropriate baseline. A model that fails to beat HAR-RV has produced a result &mdash;
+        that on this data, at this horizon, the cheap forecast is the better one &mdash; and that
+        result gets written up rather than debugged away. Most of them will be that.
       </p>
 
       <h2 id="costs">How are execution costs and frictions modelled in an options backtest?</h2>
       <p>
         Fills are never assumed at the mid, because in options the spread is frequently larger than
-        the entire modelled edge. Every backtested trade in this system is charged for the following,
-        at minimum:
+        the entire modelled edge. Every backtested trade in this system is to be charged for the
+        following, at minimum:
       </p>
       <ul>
-        <li>Half-spread crossing, scaled by quoted width at the decision time and by order size relative to displayed depth.</li>
+        <li>Half-spread crossing, scaled by quoted width at the decision time and by order size
+            relative to displayed depth. <strong>Not yet calibratable:</strong> quoted width and
+            displayed depth are NBBO fields, and option NBBO is not entitled on the current data
+            tier. With no bid or ask the crossing cost can be bounded &mdash; roughly half the
+            spread in volatility terms &mdash; but it cannot be measured or corrected for.</li>
         <li>Commissions and exchange fees per contract.</li>
         <li>Legging risk on multi-leg structures.</li>
         <li>Delta-hedging costs at the actual rebalancing frequency, including the hedge&rsquo;s own spread.</li>
@@ -294,17 +325,33 @@
 
       <h2 id="kill">What pre-committed conditions retire a strategy?</h2>
       <p>
-        Kill criteria are fixed in advance, because the temptation to keep adjusting a losing
-        strategy is the expensive one and it is strongest exactly when judgement is worst. Any one
-        of the following retires a strategy from this system to the research log rather than the
-        portfolio:
+        Kill criteria have to be fixed in advance, because the temptation to keep adjusting a
+        losing strategy is the expensive one and it is strongest exactly when judgement is worst.
+        Any one of the following retires a strategy from this system to the research log rather
+        than the portfolio:
       </p>
       <ul>
-        <li>Deflated Sharpe not distinguishable from zero at the chosen confidence level.</li>
-        <li>Live out-of-sample performance below the lower bound of the backtest&rsquo;s predicted range for a pre-set window.</li>
-        <li>Realised costs exceeding modelled costs by more than a pre-set margin — the model was wrong about the world, whatever the P&amp;L says.</li>
+        <li>Deflated Sharpe not distinguishable from zero at the confidence level fixed for the experiment.</li>
+        <li>Live out-of-sample performance below the lower bound of the backtest&rsquo;s predicted range for the underperformance window fixed for the experiment.</li>
+        <li>Realised costs exceeding modelled costs by more than the cost margin fixed for the experiment — the model was wrong about the world, whatever the P&amp;L says.</li>
         <li>Return attribution showing the P&amp;L came from an exposure the strategy was not intended to take, even if that P&amp;L is positive.</li>
       </ul>
+      <div class="callout">
+        <p>
+          <strong>Three of those four are unresolved parameters, and saying otherwise would be the
+          same error this document exists to prevent.</strong> The confidence level, the
+          underperformance window and the cost margin are named above but have no values yet,
+          because no experiment has been specified. They are locked per experiment, in the
+          experiment&rsquo;s own record, before it runs &mdash; which is the only point at which
+          &ldquo;fixed in advance&rdquo; means anything. Until then this section states the shape
+          of the rule, not the rule.
+        </p>
+        <p>
+          One number <em>is</em> fixed, because it is already in use: the minimum track record
+          length on the <a href="/vol/track-record.html">trading record</a> is computed at 95%
+          confidence, one-sided.
+        </p>
+      </div>
       <p>
         That last one matters most. A strategy that makes money for reasons other than its thesis
         is not a working strategy; it is an unmeasured risk that has not yet been paid for.
@@ -321,12 +368,16 @@
         <li>Every result with its full statistics table, never a headline number alone.</li>
         <li>Every dead hypothesis, with what was expected and what actually happened.</li>
         <li>Every material change to this protocol, dated, with the reasoning.</li>
-        <li>Trade-level logs behind any live track record, so the reported statistics can be recomputed independently.</li>
+        <li>Trade-level logs behind any live track record, so the reported statistics can be
+            recomputed independently. <em>Not yet backed:</em> the published data contract stores
+            daily aggregates and cannot express a trade, so this commitment requires a schema
+            extension that has not been made. It is listed here because it was promised, and
+            deleting it quietly would be worse than flagging it.</li>
       </ul>
 
       <p class="muted">
         This protocol is versioned in the repository. Changes are commits, not edits —
-        last revised <time class="page-updated__time" datetime="2026-09-06T11:54:20+00:00">September 6, 2026</time>.
+        last revised <time class="page-updated__time" datetime="2026-09-07T19:35:52-06:00">September 7, 2026</time>.
       </p>
 
       <div class="actions">
@@ -341,14 +392,21 @@
 
 <footer class="site-footer">
   <div class="shell site-footer__inner">
+    <!-- BUILD:SITE-FOOTER:START -->
     <span>&copy; 2026 Brad Lasater</span>
     <ul>
       <li><a href="/">Home</a></li>
       <li><a href="/vol/">Volatility System</a></li>
+      <li><a href="/vol/build-status.html">Build Status</a></li>
+      <li><a href="/handbook/">Handbook</a></li>
       <li><a href="/log/">Research Log</a></li>
       <li><a href="/cv.html">CV</a></li>
+      <li><a href="https://github.com/bradlasater/Crack-the-Sky" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/bradlasater" target="_blank" rel="noopener">LinkedIn</a></li>
       <li><a href="mailto:brad@bradlasater.com">Email</a></li>
+      <li><a href="/feed.xml">Feed</a></li>
     </ul>
+  <!-- BUILD:SITE-FOOTER:END -->
   </div>
 </footer>
 

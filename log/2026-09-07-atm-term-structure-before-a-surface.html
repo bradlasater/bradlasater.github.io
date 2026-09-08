@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The ATM term structure agrees with itself by construction, so I had to work out when its agreement is evidence — Research Log — Brad Lasater</title>
+<meta name="description" content="The term structure inverts both the call and the put at the at-the-money strike and writes out both. When put-call parity happens to select that same strike, the two legs invert to identical volatilities as an algebraic identity — so their agreement proves nothing, and only the dates where the two strikes differ carry information.">
+<link rel="canonical" href="https://bradlasater.com/log/2026-09-07-atm-term-structure-before-a-surface.html">
+<meta name="theme-color" content="#14171c">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Brad Lasater">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://bradlasater.com/log/2026-09-07-atm-term-structure-before-a-surface.html">
+<meta property="og:title" content="The ATM term structure agrees with itself by construction, so I had to work out when its agreement is evidence">
+<meta property="og:description" content="The term structure inverts both the call and the put at the at-the-money strike and writes out both. When put-call parity happens to select that same strike, the two legs invert to identical volatilities as an algebraic identity — so their agreement proves nothing, and only the dates where the two strikes differ carry information.">
+<meta property="og:image" content="https://bradlasater.com/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:published_time" content="2026-09-07T12:00:00+00:00">
+<meta property="article:modified_time" content="2026-09-07T19:30:36-06:00">
+<meta property="article:author" content="Brad Lasater">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" title="Brad Lasater — Research Log" href="/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=JetBrains+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting",
+      "@id": "https://bradlasater.com/log/2026-09-07-atm-term-structure-before-a-surface.html#post",
+      "isPartOf": { "@id": "https://bradlasater.com/log/#blog" },
+      "mainEntityOfPage": "https://bradlasater.com/log/2026-09-07-atm-term-structure-before-a-surface.html",
+      "headline": "The ATM term structure agrees with itself by construction, so I had to work out when its agreement is evidence",
+      "description": "The term structure inverts both the call and the put at the at-the-money strike and writes out both. When put-call parity happens to select that same strike, the two legs invert to identical volatilities as an algebraic identity \u2014 so their agreement proves nothing, and only the dates where the two strikes differ carry information.",
+      "datePublished": "2026-09-07T12:00:00+00:00",
+      "dateModified": "2026-09-07T19:30:36-06:00",
+      "inLanguage": "en-US",
+      "author": { "@id": "https://bradlasater.com/#brad" },
+      "publisher": { "@id": "https://bradlasater.com/#brad" },
+      "image": "https://bradlasater.com/assets/og.png",
+      "keywords": "atm term structure, volatility trading, systematic trading, quantitative research"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://bradlasater.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Research Log", "item": "https://bradlasater.com/log/" },
+        { "@type": "ListItem", "position": 3, "name": "The ATM term structure agrees with itself by construction, so I had to work out when its agreement is evidence" }
+      ]
+    }
+  ]
+}
+</script>
+<script src="/assets/js/analytics.js" defer></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="brand" href="/">Brad Lasater<span class="brand__dot">.</span></a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul>
+        <li><a href="/#work">Work</a></li>
+        <li><a href="/vol/">Volatility System</a></li>
+        <li><a href="/log/" aria-current="true">Research Log</a></li>
+        <li><a href="/cv.html">CV</a></li>
+        <li><a href="/#contact">Contact</a></li>
+        <li class="site-nav__ext"><a href="https://github.com/bradlasater/Crack-the-Sky" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <article class="shell shell--narrow section">
+
+    <div class="role__meta" style="margin-bottom: var(--sp-3);">
+      <time class="badge" datetime="2026-09-07">September 7, 2026</time>
+      <span class="badge">ATM term structure</span>
+    </div>
+
+    <h1 class="hero__name" style="font-size: var(--step-3);">The ATM term structure agrees with itself by construction, so I had to work out when its agreement is evidence</h1>
+
+    <p class="hero__bio" style="margin-top: var(--sp-4);">The term structure inverts both the call and the put at the at-the-money strike and writes out both. When put-call parity happens to select that same strike, the two legs invert to identical volatilities as an algebraic identity — so their agreement proves nothing, and only the dates where the two strikes differ carry information.</p>
+
+    <div class="prose" style="margin-top: var(--sp-6);">
+      <h2>What this stage is, and what it deliberately is not</h2>
+      <p>
+        Everything upstream of this point stops at a single claim: that the implied volatility of one
+        contract is correct. A 5&ndash;45 day book is not traded off single contracts. It is traded off
+        the level and slope of the at-the-money curve, and off implied against forecast realised.
+        Neither is queryable until per-contract data is reduced to a term structure, which is what this
+        builds: one row per date, root and expiry, carrying the parity forward, the at-the-money strike,
+        and both leg implied volatilities.
+      </p>
+      <p>
+        It is <strong>not</strong> a surface. There is no smile fit and no interpolator, so nothing
+        off-strike or between expiries can be evaluated. That is the largest gap between what runs and
+        what the rest of the architecture assumes, and it is the next thing to build.
+      </p>
+
+      <h2>Alternatives considered</h2>
+      <p>
+        <strong>Build from chain snapshots.</strong> The obvious source. Snapshots already carry strike,
+        expiry and open interest, so no symbol parsing is needed. Rejected on history: snapshots exist
+        only from 2026-08-31, because there is no historical snapshot endpoint at any tier. A term
+        structure with two weeks of history cannot be fitted to anything.
+      </p>
+      <p>
+        <strong>Build from option day bars.</strong> Chosen. Day bars reach back to 2022-08-31 and are
+        backfillable from the vendor archive at any time. The cost is that they carry no contract terms
+        whatsoever, so strike and expiry must be recovered by parsing the OPRA symbol. That parsing is
+        the price of four years of history instead of two weeks, and it was worth paying.
+      </p>
+      <p>
+        <strong>Go straight to a smile fit.</strong> Rejected as sequencing. A parametric fit needs
+        something to be checked against, and the at-the-money point is the one place where an
+        independent value is cheaply available. Fitting first would mean having no baseline for the fit.
+      </p>
+
+      <h2>The trap: agreement that is a tautology</h2>
+      <p>
+        The forward is recovered from put&ndash;call parity, because no index level is entitled on this
+        tier. The procedure takes the strike minimising <code>|C &minus; P|</code> and returns
+        <code>F = K + e^{rT}(C &minus; P)</code>. Separately, the at-the-money strike is defined as the
+        strike nearest the forward, and both its legs are inverted and written out.
+      </p>
+      <p>
+        Those are two different searches &mdash; one minimises <code>|C &minus; P|</code>, the other
+        minimises <code>|K &minus; F|</code> &mdash; and frequently they land on the same strike. When
+        they do, <code>C &minus; P = (F &minus; K)e^{-rT}</code> holds <em>by construction</em>, because
+        that is the equation the forward was defined by. The call and the put then invert to exactly the
+        same implied volatility, and they would do so regardless of whether the pricing code were
+        correct.
+      </p>
+      <p>
+        This is the kind of check that looks like validation and is not. Reporting "call and put legs
+        agree at the money on 99% of dates" would be reporting an algebraic identity as though it were an
+        empirical result.
+      </p>
+      <p>
+        The legs are still both written out rather than averaged, because when the two searches select
+        <em>different</em> strikes the spread between the legs is genuinely informative. That is exactly
+        why the acceptance test for this stage is a residual distribution computed only over the dates
+        where the two strikes differ, together with the count of rejected observations and the reason
+        each was rejected. A diagnostic over all dates would be dominated by the tautological ones and
+        would look far better than the system deserves.
+      </p>
+
+      <h2>What the term structure answers, and what it cannot</h2>
+      <p>
+        <strong>Answers:</strong> where at-the-money volatility sits for a given root and expiry; the
+        slope of that curve across expiries; how implied at the money compares against a realised
+        forecast, once a forecast exists. Over the archive back to 2022-08-31, rebuilt end to end in
+        about seven minutes.
+      </p>
+      <p>
+        <strong>Cannot answer:</strong> anything requiring a volatility at a strike that was not traded,
+        or at an expiry between two listed ones. That means no skew measure, no risk-reversal or
+        butterfly construction, no model-free variance extraction over a strike continuum, and no Greeks
+        for a structure whose strikes are not all at the money. Every one of those is assumed by a stage
+        further down the pipeline, which is why this stage is marked implemented but not yet validated
+        rather than finished.
+      </p>
+
+      <h2>Acceptance tests for the stage after this one</h2>
+      <p>
+        Written now, before the fit exists, so they cannot be adjusted to suit a result:
+      </p>
+      <ul>
+        <li>
+          <strong>Reproduce the baseline.</strong> A fitted slice must reproduce the at-the-money term
+          structure at the money to within the pricing layer's own reprice tolerance. A surface that
+          disagrees with the ATM curve is wrong at the one point where an independent value exists.
+        </li>
+        <li>
+          <strong>Publish the residuals, not the curve.</strong> Input observations, fitted output,
+          residuals, rejected observations, and failure cases. A smooth chart of a fitted smile is not
+          evidence; it is what a fit produces whether or not it is any good.
+        </li>
+        <li>
+          <strong>Constraints enforced in the fit, not checked afterwards.</strong> Calendar-spread and
+          butterfly no-arbitrage constraints belong in the optimisation, so that downstream Greeks are
+          internally consistent by construction rather than by inspection.
+        </li>
+        <li>
+          <strong>Report the failures.</strong> The dates and roots where no admissible fit was found,
+          with the reason. A fitter that always succeeds is not being told about enough of the data.
+        </li>
+      </ul>
+
+      <h2>What changed as a result</h2>
+      <p>
+        Both legs are written out rather than the mean alone, so the tautological cases can be identified
+        and excluded rather than silently inflating an agreement statistic. The stage is labelled
+        <em>implemented &mdash; under validation</em> rather than operational, because it runs but its
+        diagnostic has not been published. And the public pages, which had claimed a raw SVI fit with
+        arbitrage constraints enforced in the fit running over the archive, now say what is actually
+        there: an at-the-money curve, no smile, no interpolator.
+      </p>
+    </div>
+
+    <p class="muted" style="margin-top: var(--sp-7);">
+      Published <time datetime="2026-09-07">September 7, 2026</time>.
+      This entry follows the pre-committed
+      <a href="/vol/methodology.html">evaluation protocol</a>; it is versioned in the
+      repository, and any later correction appears as a dated commit rather than a silent edit.
+    </p>
+
+    <nav class="actions" aria-label="More research-log entries">
+      <a class="btn btn--primary" href="/log/">All entries</a>
+      <a class="btn" href="/log/2026-09-07-historical-completeness-vs-point-in-time.html">Half my datasets can be backfilled and half cannot, and that decides what a replay may claim &rarr;</a>
+    </nav>
+
+  </article>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell site-footer__inner">
+    <span>&copy; 2026 Brad Lasater</span>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/vol/">Volatility System</a></li>
+      <li><a href="/vol/build-status.html">Build Status</a></li>
+      <li><a href="/handbook/">Handbook</a></li>
+      <li><a href="/log/">Research Log</a></li>
+      <li><a href="/cv.html">CV</a></li>
+      <li><a href="https://github.com/bradlasater/Crack-the-Sky" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/bradlasater" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="mailto:brad@bradlasater.com">Email</a></li>
+      <li><a href="/feed.xml">Feed</a></li>
+    </ul>
+  </div>
+</footer>
+
+</body>
+</html>

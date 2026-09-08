@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "components": [
+    {
+      "id": "data",
+      "order": 1,
+      "name": "Data & cleaning",
+      "layer": "Data",
+      "state": "operational",
+      "summary": "Options chains, trades, day bars, dividends and the Treasury curve land on a schedule under a daily coverage audit.",
+      "current_behaviour": "End-of-day and intraday options chains, option trades and day bars, underlying prices, dividend schedules and the Treasury curve land on a cron schedule. A daily coverage audit reports on the absence of a job rather than only on its failures, which is how a dataset can otherwise go missing for weeks while every log line looks healthy. Cleaning on the entitled inputs filters by open interest, flags prices that violate static no-arbitrage bounds, and reconstructs the forward from put-call parity rather than trusting a vendor field.",
+      "design_intent": "A point-in-time warehouse in which every field used by a model can be reconstructed as it stood at the decision timestamp, with quote-level hygiene sufficient to trust a fill assumption.",
+      "inputs": "Vendor REST and flat-file feeds; S3 archive; the option-chain snapshot sweep.",
+      "outputs": "Partitioned Parquet under DATA_ROOT: option_snapshots, option_trades, option_day_bars, option_minute_bars, contracts, dividends, treasury_yields, forwards.",
+      "blocked_by": "Option NBBO is a 403 on the current data tier. There is no bid, ask or mid anywhere in the warehouse, so every price is a traded price — last trade, else day close. Dropping crossed and locked quotes and filtering by spread width are defined in terms of fields this tier does not provide.",
+      "evidence": [
+        { "label": "Coverage audit report", "href": "/vol/evidence/coverage.html" },
+        { "label": "Handbook: ingest", "href": "/handbook/ingest.html" }
+      ],
+      "validated_on": null,
+      "next_acceptance": "Publish a dated coverage report showing expected versus observed sessions, missing partitions and the largest inter-sweep gap, generated from the running audit rather than written by hand."
+    },
+    {
+      "id": "pricing",
+      "order": 2,
+      "name": "Pricing & identities",
+      "layer": "Data",
+      "state": "operational",
+      "summary": "Own implied volatility and Greeks, checked every evening against reprice and put-call parity identities.",
+      "current_behaviour": "Implied volatility is inverted per contract from the traded price by Newton with bounds and a Brent fallback; a price outside the discounted no-arbitrage bounds raises an error rather than returning a NaN. Greeks are computed from the full named catalogue, European closed-form for SPX and SPXW and a binomial tree for American-style SPY. Vendor implied volatility and Greeks are copied as diagnostics and are never inputs. A daily canary re-checks the stored numbers against three identities on at-the-money names: that the engine reprices its own input, that call and put gamma and vega agree, and that put-call parity holds.",
+      "design_intent": "A pricing layer whose every output can be re-derived from declared inputs and conventions, so that a downstream error is attributable to a model rather than to arithmetic.",
+      "inputs": "option_snapshots as of a stated instant, the parity forward, and the landed Treasury curve interpolated to each contract's maturity.",
+      "outputs": "Own IV and Greeks per contract; a daily pass or fail with median reprice error, identity failure counts and the thresholds applied.",
+      "blocked_by": null,
+      "evidence": [
+        { "label": "Pricing validation report", "href": "/vol/evidence/pricing-validation.html" },
+        { "label": "Handbook: pricing", "href": "/handbook/pricing.html" },
+        { "label": "Handbook: daily canary", "href": "/handbook/canary.html" }
+      ],
+      "validated_on": null,
+      "next_acceptance": "Publish a dated pricing-validation report naming the identities tested, the tolerance for each, the inversion failures, and the Greek conventions in force — vega per 1.00 of volatility, theta per year of calendar time."
+    },
+    {
+      "id": "term-structure",
+      "order": 3,
+      "name": "ATM term structure",
+      "layer": "Analytics",
+      "state": "implemented_unvalidated",
+      "summary": "One row per date, root and expiry over the archive back to 2022-08-31, with the forward recovered from parity.",
+      "current_behaviour": "Per-contract implied volatilities are reduced to an at-the-money term structure: one row per date, root and expiry, carrying the parity forward, the ATM strike and both leg implied volatilities. It is built from option day bars rather than chain snapshots because day bars reach back to 2022-08-31 while the snapshot sweep only begins in 2026. Pricing is done in the forward measure, which reduces Black-Scholes-Merton to Black-76, because a spot price and a dividend yield are exactly what this tier does not provide. The whole archive rebuilds in about seven minutes.",
+      "design_intent": "The level and slope of at-the-money volatility, queryable per root and expiry, as the input a 5-45 day book is actually traded off — and as the baseline any later surface fit must beat.",
+      "inputs": "option_day_bars, contract terms parsed from the OPRA symbol, and the Treasury curve.",
+      "outputs": "atm_term_structure — one row per (date, root, expiry).",
+      "blocked_by": null,
+      "evidence": [
+        { "label": "Term-structure diagnostic", "href": "/vol/evidence/term-structure.html" },
+        { "label": "Handbook: warehouse math", "href": "/handbook/warehouse-math.html" }
+      ],
+      "validated_on": null,
+      "next_acceptance": "Publish a diagnostic separating the informative case from the tautological one. When put-call parity selects the same strike as the ATM search, both legs invert to the same volatility by construction and their agreement is evidence of nothing; the acceptance test is a residual distribution computed only over the dates where the two strikes differ, together with the rejected-observation count and the reasons."
+    },
+    {
+      "id": "surface",
+      "order": 4,
+      "name": "Smile & surface",
+      "layer": "Analytics",
+      "state": "planned",
+      "summary": "No smile fit and no interpolator. Nothing off-strike or between expiries can be evaluated yet.",
+      "current_behaviour": "Nothing. There is no smile fit and no interpolator, and no surfaces module in the tree. This is the single largest gap between what runs and what the rest of the architecture assumes.",
+      "design_intent": "A parametric fit in total implied variance — SVI per slice, moving toward SSVI for a globally consistent surface — with calendar-spread and butterfly no-arbitrage constraints enforced on the fit rather than checked afterwards, so that downstream Greeks are internally consistent.",
+      "inputs": "Per-contract implied volatilities across the full chain; the parity forward per expiry.",
+      "outputs": "A fitted slice per expiry, its parameters, its residuals, and the observations it rejected.",
+      "blocked_by": null,
+      "evidence": [],
+      "validated_on": null,
+      "next_acceptance": "Fit one slice on one date and publish the residuals, the rejected observations and the failure cases alongside the fitted curve — not a smooth chart. A fit is accepted only when it reproduces the ATM term structure at the money to within the pricing layer's own reprice tolerance."
+    },
+    {
+      "id": "forecasting",
+      "order": 5,
+      "name": "Volatility forecasting",
+      "layer": "Analytics",
+      "state": "planned",
+      "summary": "Realised-volatility estimators and HAR-RV and GARCH baselines, before any learned model is considered.",
+      "current_behaviour": "Nothing. No forecasting code exists.",
+      "design_intent": "Realised-volatility estimators that use the full bar — Parkinson, Garman-Klass, Yang-Zhang — rather than close-to-close, feeding HAR-RV and GARCH-family baselines. Learned models are promoted only where they show incremental out-of-sample value over those baselines; a model that fails to beat them is a result, not a defect.",
+      "inputs": "Underlying minute and day bars; the ATM term structure as the implied-volatility side of the comparison.",
+      "outputs": "A forecast of realised volatility at a stated horizon, with its baseline comparison and out-of-sample error.",
+      "blocked_by": null,
+      "evidence": [],
+      "validated_on": null,
+      "next_acceptance": "Reproduce the baseline forecast evaluation from a frozen dataset and configuration, with a documented target horizon and temporal split, and report the HAR-RV and GARCH baseline errors before any learned model is fitted."
+    },
+    {
+      "id": "sizing",
+      "order": 6,
+      "name": "Signal & target sizing",
+      "layer": "Analytics",
+      "state": "planned",
+      "summary": "Converts a forecast-versus-implied spread into a target position, subject to Greek budgets.",
+      "current_behaviour": "Nothing. No signal or sizing code exists.",
+      "design_intent": "The spread between forecast realised and market implied volatility becomes a signal only after it clears modelled costs. Sizing separates direction from conviction by meta-labelling: one model decides whether to act, a second sizes the bet, and the portfolio is constrained by vega, gamma and net-liquidation budgets rather than by notional. This layer proposes a target; it does not authorise one.",
+      "inputs": "The volatility forecast, the surface, and the modelled cost of the candidate structure.",
+      "outputs": "A target position per structure, with the budget it consumes.",
+      "blocked_by": null,
+      "evidence": [],
+      "validated_on": null,
+      "next_acceptance": "Given a frozen forecast and a frozen cost model, produce a target book that is reproducible from those two inputs alone, and show the no-trade gate rejecting the cases where the modelled edge does not clear the modelled cost."
+    },
+    {
+      "id": "risk",
+      "order": 7,
+      "name": "Risk authorisation & hedging",
+      "layer": "Trading control",
+      "state": "planned",
+      "summary": "The independent authority that can veto a target. Continuous Greek accounting, banded delta hedging, margin modelling.",
+      "current_behaviour": "Nothing. No risk or hedging code exists.",
+      "design_intent": "Continuous Greek accounting with discrete delta hedging against an explicit rebalancing band, where hedging error is a cost to be optimised rather than a nuisance; scenario and stress grids across spot and volatility shocks; and margin modelling, because a strategy that survives a drawdown on paper can still be closed out by a margin call. This layer is deliberately separate from sizing: it authorises or vetoes the target that analytics proposes, and it can only reduce risk, never raise it.",
+      "inputs": "The target book from sizing; the current position; the surface; margin rules.",
+      "outputs": "An authorised book, or a veto with its reason recorded.",
+      "blocked_by": null,
+      "evidence": [],
+      "validated_on": null,
+      "next_acceptance": "Demonstrate the veto path before the sizing path: a target that breaches a vega, gamma or margin budget must be rejected and logged, with the authorised book never exceeding the proposed one on any constrained dimension."
+    },
+    {
+      "id": "execution",
+      "order": 8,
+      "name": "Execution",
+      "layer": "Trading control",
+      "state": "planned",
+      "summary": "Fills at achievable prices, legging risk on multi-leg structures, and the SPY assignment hazards of Phase 1.",
+      "current_behaviour": "Nothing is executed. Interactive Brokers Flex reporting is connected read-only, with no gateway and no trading permission, so executions can be ingested but none can be sent.",
+      "design_intent": "Fills modelled at achievable prices rather than at the mid, because in options the quoted spread is frequently wider than the modelled edge. Multi-leg structures carry legging risk, and index settlement carries hazards of its own — AM-settled SPX expiries print off the opening auction, not the close. Early assignment, stock borrow and share delivery do not apply to SPX and SPXW, which are European-style and cash-settled, but they do apply to SPY, which is American-style and physically settled, and are therefore first-class Phase 1 execution risks.",
+      "inputs": "The authorised book; the live chain; the venue.",
+      "outputs": "Orders, fills, and the realised cost of each against its model.",
+      "blocked_by": "The spread-dependent components of the cost model cannot be calibrated without an option NBBO entitlement. With no bid or ask the crossing cost can be bounded, roughly half the spread in volatility terms, but it cannot be measured or corrected for.",
+      "evidence": [
+        { "label": "Handbook: box operations", "href": "/handbook/box-operations.html" }
+      ],
+      "validated_on": null,
+      "next_acceptance": "Reconcile a day of Flex-reported executions against the orders the system believed it sent, and report the difference between modelled and realised cost per fill."
+    },
+    {
+      "id": "evaluation",
+      "order": 9,
+      "name": "Evaluation",
+      "layer": "Evaluation",
+      "state": "planned",
+      "summary": "Purged and embargoed cross-validation, walk-forward testing, and deflated Sharpe ratios beside raw ones.",
+      "current_behaviour": "The protocol is written and published, and dated in version control, but nothing has been evaluated under it because nothing produces a result yet. The track-record page's statistics are implemented and withhold every inferential figure below twenty returns.",
+      "design_intent": "Purged and embargoed cross-validation, walk-forward testing as the headline, deflated Sharpe ratios reported alongside raw ones, and an explicit count of every configuration tried so that the probability of backtest overfitting can be estimated rather than ignored.",
+      "inputs": "Every trial run, with its configuration and its out-of-sample window.",
+      "outputs": "A judgement under rules fixed before the result existed.",
+      "blocked_by": null,
+      "evidence": [
+        { "label": "Evaluation protocol", "href": "/vol/methodology.html" },
+        { "label": "Track record", "href": "/vol/track-record.html" }
+      ],
+      "validated_on": null,
+      "next_acceptance": "Lock the three parameters the protocol currently leaves open — the confidence level, the underperformance window and the cost margin — into a named experiment record before the first evaluation runs, rather than describing them as fixed in advance while they remain unset."
+    },
+    {
+      "id": "operations",
+      "order": 10,
+      "name": "Operations & logging",
+      "layer": "Operations",
+      "state": "in_progress",
+      "summary": "Scheduled jobs, structured logs and dead-man alerting run; position and P&L reconciliation does not exist yet.",
+      "current_behaviour": "The ingest box runs on an installed crontab with a continuous-integration alarm that fires when the running schedule drifts from the one declared in the repository. Every job writes structured JSON lines and pings a dead-man's-switch service, so a job that silently stops running raises an alert rather than going unnoticed. Entitlements are probed rather than assumed, and the probe fails in either direction — a capability gained is as much a change as one lost.",
+      "design_intent": "Structured logs at every stage, daily reconciliation of expected against actual positions and profit and loss, and an alerting layer for silent failures — a stale data feed that produces plausible-looking numbers is far more dangerous than one that crashes.",
+      "inputs": "Every job's exit status, log stream and heartbeat.",
+      "outputs": "Alerts, audit reports, and the operational record.",
+      "blocked_by": "Position and profit-and-loss reconciliation cannot exist before there are positions.",
+      "evidence": [
+        { "label": "Handbook: box operations", "href": "/handbook/box-operations.html" }
+      ],
+      "validated_on": null,
+      "next_acceptance": "Publish the coverage and canary results as dated artifacts on this site, so that the operational claim is checkable by a reader rather than asserted."
+    }
+  ]
+}

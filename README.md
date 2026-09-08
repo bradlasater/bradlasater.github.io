@@ -53,8 +53,9 @@ There is no deploy script and no build artefact to commit beyond what
 | `index.html` | Home — positioning, selected experience, capabilities, contact |
 | `cv.html` | Full CV, including military and teaching service |
 | `vol/index.html` | Volatility system overview: premise, architecture with per-stage status, sources |
+| `vol/build-status.html` | The engineering record: pipeline, contracts, evidence, next acceptance test |
 | `vol/methodology.html` | The evaluation protocol, written before results exist |
-| `vol/track-record.html` | Build status and live out-of-sample record (see below) |
+| `vol/track-record.html` | The live out-of-sample trading record (see below) |
 | `log/index.html` | Research log index |
 | `handbook/` | System handbook, synced from `data_ingest_infra` (see below) |
 | `docs/` | Local HTML mirrors of notes, audits, and the roadmap. Unpublished. |
@@ -64,10 +65,12 @@ There is no deploy script and no build artefact to commit beyond what
 | `assets/js/track-record.js` | Computes and renders every track-record statistic |
 | `assets/css/handbook-chrome.css` | Site-owned interaction layer loaded last on every handbook page |
 | `assets/js/analytics.js` | GoatCounter loader (see setup below) |
+| `data/components.json` | Implementation status of every system stage. See below |
+| `data/evidence/*.json` | Published diagnostic reports, one per file. See below |
 | `data/track-record.json` | The append-only track record. See `data/SCHEMA.md` |
 | `scripts/append_observation.py` | Appends one day to the record |
 | `scripts/validate_track_record.py` | Structural + append-only validation |
-| `scripts/build_site.py` | Generates log entry pages and derived metadata |
+| `scripts/build_site.py` | Generates log entry pages, status surfaces, and derived metadata |
 | `scripts/sync_docs.py` | Copies the handbook in from `data_ingest_infra` |
 | `content/log/*.html` | Hand-authored research-log entry fragments |
 
@@ -80,6 +83,92 @@ Data flows one way:
 
 Nothing is precomputed. The page derives its statistics client-side so that it
 cannot disagree with the data file behind it.
+
+---
+
+## The component manifest (`data/components.json`)
+
+**One file decides what the site says is built.** `data/components.json` holds
+one entry per stage of the volatility system, and `scripts/build_site.py`
+renders it into the homepage status strip and the architecture grid on `/vol/`,
+between `BUILD:STATUS-STRIP` and `BUILD:ARCHITECTURE` markers. Nothing between
+those markers is hand-edited; the build overwrites it.
+
+This exists because of a specific failure. In September 2026 the public pages
+were edited to claim a raw SVI surface fit running over the archive. No such
+code was ever written — `pricing/__init__.py` in the system repository opens
+"Not a surface", and `handbook/not-built.html` said plainly that there was no
+smile fit and no interpolator. The handbook was right and was not updated,
+because it lives in another repository; the public pages were wrong and were.
+Both surfaces now render from one manifest, so a status is changed in one place
+or not at all.
+
+Each component carries four states — `operational`,
+`implemented_unvalidated`, `in_progress`, `planned` — and, separately,
+`current_behaviour` and `design_intent`. **Both text fields are required.** A
+badge on its own cannot distinguish a stage that runs from a stage that is
+merely specified, and that ambiguity is exactly what produced the SVI claim.
+`blocked_by` is optional and reserved for what an external constraint prevents
+(the missing option NBBO entitlement, mostly) rather than what is simply
+unwritten — a reader judging the work needs to tell those apart.
+
+`next_acceptance` is a test, not a task: what would have to be demonstrated for
+the stage to advance. `evidence` may name an artifact before it exists; links
+to site-local pages that are not yet on disk are dropped at render time rather
+than shipped as 404s.
+
+The loader validates hard and fails the build on a bad manifest — unknown
+state, missing or empty text field, misspelt key, duplicate `id` or `order`,
+a `validated_on` that is malformed, impossible, or in the future. A typo must
+not silently render as an absent field.
+
+---
+
+## Published diagnostics (`data/evidence/`)
+
+One JSON file per published report, rendered to `/vol/evidence/<slug>.html` and
+listed on the build-status page. The filename is the URL.
+
+**These are the ingest box's own outputs, copied in verbatim under `report`.**
+`coverage_audit` writes `_meta/coverage.json` and `drift_check` writes
+`_meta/drift_check.json` on the box; publishing one here is a deliberate act of
+copying it in, not an automatic export. Nothing is invented: a component with no
+report shows its next acceptance test instead of a number, the same rule
+`/vol/track-record.html` already follows.
+
+Every file needs a provenance envelope, and the build refuses without it:
+
+| Field | Why it is required |
+|---|---|
+| `data_timestamp` | A diagnostic without a date is not checkable |
+| `input_type` | With no NBBO entitlement every analytic here comes from traded prices; a reader who assumed a quote midpoint would draw the wrong conclusion from an identical-looking number |
+| `code_version` | A `Crack-the-Sky` commit SHA, so the number can be traced to the code that produced it |
+| `known_limitations` | A non-empty list of what the report does **not** establish |
+
+`component` must name a stage in `data/components.json`, so a report cannot be
+orphaned from the thing it is evidence for.
+
+The `report` object is rendered generically rather than by a per-report
+template, because these payloads are the box's own dataclasses and will gain
+fields without asking this renderer first — a template that knew only today's
+fields would silently drop tomorrow's, which on a page whose purpose is
+checkability is the one failure that matters.
+
+Adding or withdrawing a report converges in a single build: the sitemap, the
+component table's evidence links, and the generated page all derive from the
+source list rather than from what happens to be on disk mid-pass. Withdrawing a
+report deletes its page.
+
+### Not yet done
+
+The term-structure diagnostic needs a chart showing residuals, rejected
+observations and failure cases. `assets/js/track-record.js` already contains a
+dependency-free SVG chart engine that should be extracted to a shared
+`assets/js/chart.js` and used by both. That extraction is deliberately **not**
+done yet: it is a pure refactor of working, carefully-commented code that has no
+automated test, and doing it before there is a second consumer to validate
+against risks breaking the one page that currently depends on it. Extract it
+when the term-structure report exists.
 
 ---
 
@@ -252,16 +341,24 @@ would close that.
   the experience list without adding signal. The third-person summary that an
   answer engine needs still exists in the JSON-LD `Person` description and in
   `llms.txt`, which is where a retrieval fetcher looks first anyway.
-- The nav is hand-maintained in seven HTML files *and* in the `nav()` function
-  of `scripts/build_site.py`. Changing it means editing both, or generated log
-  pages will drift from the static ones. Handbook pages are the exception: they
-  come from another repository and keep their own sidebar, so they carry a link
-  back to the site rather than the site nav.
-- The header stacks below `56rem`. That breakpoint is a measurement, not a
-  round number: brand plus seven items fit at 880px and wrap at 850px, so it
-  sits just above the measured threshold. A wrapped bar strands the GitHub rule
-  on its own line and reads as broken, so re-measure in a browser whenever a
-  nav item is added or renamed.
+- **The nav and footer are generated, not hand-maintained.** `NAV_ITEMS`,
+  `SECTION_ITEMS` and `site_footer()` in `scripts/build_site.py` are the only
+  definitions; `build_site.py` injects them into every page between
+  `BUILD:SITE-NAV`, `BUILD:SECTION-NAV` and `BUILD:SITE-FOOTER` markers, and
+  `CHROME_PAGES` maps each page to the nav state it should show. This replaced
+  a nav copy-pasted into seven files plus a second copy in `nav()`, and five
+  different footers across seven pages. Handbook pages are still the exception:
+  they come from another repository and keep their own sidebar, so they carry a
+  link back to the site rather than the site nav.
+- The primary bar is five items. Build Status, the evaluation protocol, the
+  trading record and the handbook live in the `/vol/` **section bar** instead,
+  because they are parts of the volatility system rather than peers of it.
+- The header stacks below `46rem`. That breakpoint is a measurement, not a
+  round number: brand plus the current five items fit at 528px and wrap at
+  527px, so it sits just above the measured threshold with room for a font that
+  loads late with wider metrics. It was `56rem` when the bar carried seven
+  items. A wrapped bar strands the GitHub rule on its own line and reads as
+  broken, so re-measure in a browser whenever a nav item is added or renamed.
 - The GitHub link closes the nav in its own `.site-nav__ext` item. It leaves the
   site, so it never takes `aria-current` and is separated by a rule rather than
   reading as one more page. It is in the header because the homepage bio is long
