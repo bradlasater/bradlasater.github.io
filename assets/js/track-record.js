@@ -817,7 +817,15 @@
 
     for (var i = observations.length - 1; i >= 0; i--) {
       var o = observations[i];
-      var ret = i === 0 ? null : o.nav / observations[i - 1].nav - 1;
+      // A return spanning a kind boundary would divide a broker-executed NAV
+      // by a simulated one. The charts and every statistic already reset at
+      // that boundary; the table has to as well, or this column quietly
+      // reintroduces the one number the whole page promises never to compute.
+      // The first observation of each kind is a new baseline, not a return.
+      var prev = i === 0 ? null : observations[i - 1];
+      var ret = prev && prev.record_kind === o.record_kind
+        ? o.nav / prev.nav - 1
+        : null;
       var row = document.createElement("tr");
 
       [

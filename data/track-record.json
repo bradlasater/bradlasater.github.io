@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "strategy": "Systematic volatility — end-to-end system",
   "inception": null,
   "base_currency": "USD",

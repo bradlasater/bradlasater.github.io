@@ -357,8 +357,8 @@ def validate_structure(doc: dict[str, Any]) -> list[str]:
     # `True == 1` and `1.0 == 1` in Python, so a bare `!= 1` would let a
     # boolean or float through; the schema says integer.
     version = doc.get("schema_version")
-    if not isinstance(version, int) or isinstance(version, bool) or version != 1:
-        raise Failure(f"schema_version must be the integer 1, got {version!r}")
+    if not isinstance(version, int) or isinstance(version, bool) or version != 2:
+        raise Failure(f"schema_version must be the integer 2, got {version!r}")
 
     for field in ("strategy", "base_currency"):
         if not isinstance(doc.get(field), str):

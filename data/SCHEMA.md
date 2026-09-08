@@ -29,7 +29,7 @@ repository.
 
 | Field | Type | Notes |
 |---|---|---|
-| `schema_version` | integer | Currently `1`. Bump on any breaking change. |
+| `schema_version` | integer | Currently `2`. Bump on any breaking change. Version 2 added the required `record_kind` field to every observation; a version 1 document has no way to express one and is not accepted. |
 | `strategy` | string | Human-readable name shown on the page. |
 | `inception` | `YYYY-MM-DD` or `null` | Date tracking began. `null` until the first observation is appended, at which point the append script sets it. |
 | `base_currency` | string | Display only. |
