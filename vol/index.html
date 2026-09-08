@@ -21,7 +21,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="article:modified_time" content="2026-09-08T10:32:27-06:00">
+<meta property="article:modified_time" content="2026-09-08T11:23:38-06:00">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
@@ -41,7 +41,7 @@
       "headline": "An end-to-end volatility system, under active construction",
       "description": "The architecture of a systematic volatility research and execution platform, beginning with SPY and SPX/SPXW options at roughly 5-45 days to expiry, with VIX options captured for the term structure: point-in-time options data and cleaning, implied-volatility inversion and an ATM term structure, a planned arbitrage-free smile and surface fit, volatility forecasting, signal and sizing, risk and hedging, execution with modelled frictions, evaluation, and operations. Each stage is labelled with its current implementation status, and most of them are not yet built.",
       "inLanguage": "en-US",
-      "dateModified": "2026-09-08T10:32:27-06:00",
+      "dateModified": "2026-09-08T11:23:38-06:00",
       "author": { "@id": "https://bradlasater.com/#brad" },
       "publisher": { "@id": "https://bradlasater.com/#brad" },
       "isPartOf": { "@id": "https://bradlasater.com/#website" },
@@ -222,7 +222,7 @@
           <dl class="stage__fields">
           <div class="stage__field">
             <dt>Runs today</dt>
-            <dd>Implied volatility is inverted per contract from the traded price by Newton with bounds and a Brent fallback; a price outside the discounted no-arbitrage bounds raises an error rather than returning a NaN. Greeks are computed from the full named catalogue, European closed-form for SPX and SPXW and a binomial tree for American-style SPY. Vendor implied volatility and Greeks are copied as diagnostics and are never inputs. A daily canary re-checks the stored numbers against three identities on at-the-money names: that the engine reprices its own input, that call and put gamma and vega agree, and that put-call parity holds.</dd>
+            <dd>Implied volatility is inverted per contract from the traded price: Newton with bounds and a Brent fallback for European contracts, and a Brent inversion of the binomial tree for American-style SPY, so SPY volatility now comes off the same engine that prices it. A price outside the discounted no-arbitrage bounds raises an error rather than returning a NaN, and an American put priced at intrinsic inverts to zero rather than failing, because exercised now it is worth that at every volatility. Greeks are computed from the full named catalogue, European closed-form for SPX and SPXW and a binomial tree for American-style SPY. Vendor implied volatility and Greeks are copied as diagnostics and are never inputs. A daily canary re-checks the stored numbers against three identities on at-the-money names: that the engine reprices its own input, that call and put gamma and vega agree, and that put-call parity holds.</dd>
           </div>
           <div class="stage__field">
             <dt>Designed to</dt>
@@ -242,7 +242,7 @@
           <dl class="stage__fields">
           <div class="stage__field">
             <dt>Runs today</dt>
-            <dd>Per-contract implied volatilities are reduced to an at-the-money term structure: one row per date, root and expiry, carrying the parity forward, the ATM strike and both leg implied volatilities. It is built from option day bars rather than chain snapshots because day bars reach back to 2022-08-31 while the snapshot sweep only begins in 2026. Pricing is done in the forward measure, which reduces Black-Scholes-Merton to Black-76, because a spot price and a dividend yield are exactly what this tier does not provide. The whole archive rebuilds in about seven minutes.</dd>
+            <dd>Per-contract implied volatilities are reduced to an at-the-money term structure: one row per date, root and expiry, carrying the parity forward, the ATM strike and both leg implied volatilities. It is built from option day bars rather than chain snapshots because day bars reach back to 2022-08-31 while the snapshot sweep only begins in 2026. Pricing is done in the forward measure, which reduces Black-Scholes-Merton to Black-76, because a spot price and a dividend yield are exactly what this tier does not provide. Vol time is a hybrid rather than a flat day count: trading sessions over 252 inside the attested and upcoming exchange calendar, falling back to ACT/365 past the horizon the calendar covers, and stamped per row so a later reader can tell which convention produced a given number rather than having to infer it. The whole archive rebuilds in about seven minutes.</dd>
           </div>
           <div class="stage__field">
             <dt>Designed to</dt>
@@ -480,7 +480,7 @@
       </div>
     </dl>
     <p class="muted" style="margin-top: var(--sp-6);">
-      This page was last updated <time class="page-updated__time" datetime="2026-09-08T10:32:27-06:00">September 8, 2026</time>.
+      This page was last updated <time class="page-updated__time" datetime="2026-09-08T11:23:38-06:00">September 8, 2026</time>.
       Every stage above is versioned in the repository; changes are commits, not edits.
     </p>
   </section>
